@@ -2208,7 +2208,8 @@
   // Get these from: https://supabase.com → Project Settings → API
   // ======================================================
   const SUPABASE_URL = 'https://lxwebkcqaqmyguawqipw.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx4d2Via2NxYXFteWd1YXdxaXB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyMDk2NDgsImV4cCI6MjA5NDc4NTY0OH0.Es1RXWv7orK97TYaQzLmpnMwQND-sth6XyRts3WRBcg';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx4d2Via2NxYXFteWd1YXdxaXB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyMDk2NDgsImV4cCI6MjA5NDc4NTY0OH0.Es1RXWv7orK97TYaQzLmpnMwQND-sth6XyRts3WRBcg
+';
 
   const sbClient = (SUPABASE_URL !== 'YOUR_SUPABASE_URL')
     ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
@@ -2357,18 +2358,65 @@
     if (e.target === document.getElementById('paywall-overlay')) closePaywall();
   }
 
-  function activatePro() {
-    isPro = true;
-    closePaywall();
-    applyProState();
-    // Show confirmation
-    const bar = document.getElementById('account-bar');
-    bar.classList.add('premium');
-    document.getElementById('ab-status').textContent = '⭐ Pro Plan — all features unlocked';
-    document.getElementById('ab-plan-badge').textContent = '⭐ Pro';
-    document.getElementById('ab-plan-badge').classList.add('premium-plan');
-    document.getElementById('ab-action-btn').textContent = 'Manage Subscription';
-    document.getElementById('ab-action-btn').onclick = () => alert('Subscription management would connect to your payment provider (e.g. Stripe).');
+  async function activatePro() {
+    const btn = document.querySelector('.pw-cta.primary');
+    if (btn) { btn.disabled = true; btn.textContent = 'Redirecting to checkout...'; }
+    try {
+      const response = await fetch('/.netlify/functions/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: currentUser?.email || '' })
+      });
+      const data = await response.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert('Something went wrong. Please try again.');
+        if (btn) { btn.disabled = false; btn.textContent = 'Start Pro — $4.99/mo'; }
+      }
+    } catch (err) {
+      alert('Something went wrong. Please try again.');
+      if (btn) { btn.disabled = false; btn.textContent = 'Start Pro — $4.99/mo'; }
+    }
+  }
+
+  function handleUpgradeReturn() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('upgraded') === 'true') {
+      isPro = true;
+      applyProState();
+      const bar = document.getElementById('account-bar');
+      bar.classList.add('premium');
+      document.getElementById('ab-status').textContent = '⭐ Pro Plan — all features unlocked';
+      document.getElementById('ab-plan-badge').textContent = '⭐ Pro';
+      document.getElementById('ab-plan-badge').classList.add('premium-plan');
+      document.getElementById('ab-action-btn').textContent = 'Manage Subscription';
+      document.getElementById('ab-action-btn').onclick = cancelSubscription;
+      window.history.replaceState({}, '', window.location.pathname);
+      setTimeout(() => alert('🎉 Welcome to Fintrail Pro! All features are now unlocked.'), 500);
+    }
+    if (params.get('cancelled') === 'true') {
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }
+
+  async function cancelSubscription() {
+    if (!confirm('Are you sure you want to cancel your Pro subscription? You will keep access until the end of your billing period.')) return;
+    try {
+      const response = await fetch('/.netlify/functions/cancel-subscription', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: currentUser?.email || '' })
+      });
+      const data = await response.json();
+      if (data.message) {
+        alert(`✅ Subscription cancelled. You will have Pro access until ${data.cancel_at}.`);
+      } else {
+        alert('Something went wrong. Please try again or contact support.');
+      }
+    } catch (err) {
+      alert('Something went wrong. Please try again.');
+    }
   }
 
   function applyProState() {
@@ -3242,6 +3290,7 @@ Guidelines:
   renderGoals();
   calcLoan();
   checkBillAlerts();
+  handleUpgradeReturn();
 </script>
 </body>
 </html>
