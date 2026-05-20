@@ -2539,7 +2539,6 @@
   }
 
   async function cancelSubscription() {
-    if (!confirm('Are you sure you want to cancel your Pro subscription? You will keep access until the end of your billing period.')) return;
     try {
       const response = await fetch('/.netlify/functions/cancel-subscription', {
         method: 'POST',
@@ -2547,10 +2546,10 @@
         body: JSON.stringify({ email: currentUser?.email || '' })
       });
       const data = await response.json();
-      if (data.message) {
-        alert(`✅ Subscription cancelled. You will have Pro access until ${data.cancel_at}.`);
+      if (data.url) {
+        window.location.href = data.url;
       } else {
-        alert('Something went wrong. Please try again or contact support.');
+        alert('No active subscription found for this account.');
       }
     } catch (err) {
       alert('Something went wrong. Please try again.');
