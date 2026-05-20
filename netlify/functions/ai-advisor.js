@@ -1,10 +1,12 @@
-// Fintrail AI Advisor Function v2
+// Fintrail AI Advisor Function v3
 exports.handler = async function(event) {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
   try {
     const { messages, system } = JSON.parse(event.body);
+    console.log('API Key exists:', !!process.env.ANTHROPIC_API_KEY);
+    console.log('API Key prefix:', process.env.ANTHROPIC_API_KEY?.substring(0, 15));
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -20,12 +22,15 @@ exports.handler = async function(event) {
       })
     });
     const data = await response.json();
+    console.log('Anthropic status:', response.status);
+    console.log('Anthropic response:', JSON.stringify(data).substring(0, 200));
     if (!response.ok) {
       return { statusCode: response.status, body: JSON.stringify({ error: data.error?.message || 'API error' }) };
     }
     const reply = data.content?.map(b => b.text || '').join('') || '';
     return { statusCode: 200, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reply }) };
   } catch (err) {
+    console.log('Error:', err.message);
     return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
   }
 };
