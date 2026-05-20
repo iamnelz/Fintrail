@@ -1109,9 +1109,19 @@
   .method-btn { padding:0.55rem; border-radius:8px; border:1.5px solid var(--border); background:none; font-family:'Sora',sans-serif; font-size:0.82rem; font-weight:600; cursor:pointer; color:var(--muted); transition:all 0.2s; }
   .method-btn.active { background:rgba(240,85,85,0.08); border-color:var(--accent); color:var(--accent); }
   .plan-result { background:var(--bg); border-radius:10px; padding:1.1rem; margin-top:0.75rem; }
-  .plan-result-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0.75rem; text-align:center; }
-  .pr-item .pr-val { font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--accent); }
-  .pr-item .pr-label { font-size:0.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.05em; margin-top:0.2rem; }
+  .plan-result-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; text-align:center; }
+  .plan-col { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:1rem; }
+  .plan-col.highlight { border-color:var(--income-color); background:rgba(0,184,148,0.05); }
+  .plan-col-title { font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.75rem; color:var(--muted); }
+  .plan-col.highlight .plan-col-title { color:var(--income-color); }
+  .plan-stat { margin-bottom:0.6rem; }
+  .plan-stat-val { font-family:'Playfair Display',serif; font-size:1.4rem; color:var(--text); line-height:1.1; }
+  .plan-stat-val.good { color:var(--income-color); }
+  .plan-stat-val.bad { color:var(--expense-color); }
+  .plan-stat-label { font-size:0.7rem; color:var(--muted); margin-top:0.15rem; }
+  .plan-savings-banner { background:linear-gradient(135deg,rgba(0,184,148,0.1),rgba(0,184,148,0.05)); border:1px solid var(--income-color); border-radius:10px; padding:0.85rem; text-align:center; margin-top:0.75rem; }
+  .plan-savings-banner .psb-val { font-family:'Playfair Display',serif; font-size:1.5rem; color:var(--income-color); }
+  .plan-savings-banner .psb-label { font-size:0.78rem; color:var(--text-soft); margin-top:0.2rem; }
   .payoff-timeline { margin-top:1rem; display:flex; flex-direction:column; gap:0.4rem; }
   .pt-row { display:flex; align-items:center; gap:0.75rem; font-size:0.8rem; }
   .pt-name { width:100px; color:var(--text-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -1140,6 +1150,34 @@
   .notif-status.granted { background:rgba(0,184,148,0.1); color:var(--income-color); }
   .notif-status.denied { background:rgba(240,85,85,0.1); color:var(--danger); }
   .notif-status.pending { background:rgba(245,166,35,0.1); color:var(--accent2); }
+
+  /* INVESTMENT CALCULATOR */
+  .invest-layout { display:grid; grid-template-columns:360px 1fr; gap:1.5rem; align-items:start; }
+  .invest-result-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:1.5rem; }
+  .invest-result-card h2 { font-family:'Playfair Display',serif; font-size:1.1rem; margin-bottom:1.25rem; color:var(--text); }
+  .invest-big-number { text-align:center; padding:1.5rem; background:linear-gradient(135deg,#1a1a2e,#2d1b4e); border-radius:12px; margin-bottom:1.25rem; }
+  .ibn-label { font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:rgba(255,255,255,0.5); margin-bottom:0.35rem; }
+  .ibn-val { font-family:'Playfair Display',serif; font-size:2.8rem; color:#fff; line-height:1.1; }
+  .ibn-sub { font-size:0.8rem; color:rgba(255,255,255,0.5); margin-top:0.25rem; }
+  .invest-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:0.75rem; margin-bottom:1.25rem; }
+  .invest-stat { background:var(--bg); border-radius:10px; padding:0.85rem; text-align:center; border:1px solid var(--border); }
+  .is-val { font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--text); }
+  .is-label { font-size:0.7rem; color:var(--muted); margin-top:0.2rem; text-transform:uppercase; letter-spacing:0.05em; }
+  .invest-growth-bar { margin-bottom:1.25rem; }
+  .igb-row { display:flex; align-items:center; gap:0.75rem; margin-bottom:0.4rem; font-size:0.8rem; }
+  .igb-label { width:100px; color:var(--text-soft); flex-shrink:0; }
+  .igb-track { flex:1; height:22px; background:var(--border); border-radius:5px; overflow:hidden; }
+  .igb-fill { height:100%; border-radius:5px; display:flex; align-items:center; padding-left:0.5rem; font-size:0.72rem; font-weight:700; color:#fff; transition:width 0.8s ease; }
+  .igb-val { width:72px; text-align:right; font-weight:600; flex-shrink:0; }
+  .invest-timeline { display:flex; flex-direction:column; gap:0.5rem; }
+  .itl-row { display:flex; align-items:center; justify-content:space-between; padding:0.6rem 0.85rem; background:var(--bg); border-radius:8px; border:1px solid var(--border); font-size:0.83rem; }
+  .itl-year { font-weight:600; color:var(--text); }
+  .itl-val { font-weight:700; color:var(--income-color); font-family:'Playfair Display',serif; font-size:1rem; }
+  .itl-growth { font-size:0.72rem; color:var(--muted); }
+  .range-slider { width:100%; accent-color:var(--accent); margin-top:0.3rem; }
+  .range-display { display:flex; justify-content:space-between; font-size:0.75rem; color:var(--muted); margin-top:0.2rem; }
+
+  @media (max-width:860px) { .invest-layout { grid-template-columns:1fr; } }
 
   @media (max-width: 700px) {
     .two-col { grid-template-columns: 1fr; }
@@ -1234,6 +1272,7 @@
     <button onclick="guardedTab('guide', this)">📘 <span>Guide</span><span class="pro-pill">PRO</span></button>
     <button onclick="guardedTab('ai', this)">💬 <span>AI Advisor</span><span class="pro-pill">PRO</span></button>
     <button onclick="showTab('savings', this)">🎯 <span>Goals</span></button>
+    <button onclick="showTab('invest', this)">📈 <span>Invest</span></button>
     <button onclick="guardedTab('premium', this)">🏆 <span>Premium</span><span class="pro-pill">PRO</span></button>
     <button class="upgrade-btn-nav" onclick="showPaywall('nav')">⭐ <span>Go Pro</span></button>
   </nav>
@@ -1463,14 +1502,20 @@
         <div class="card">
           <div class="schedule-header">
             <h2>📅 6-Month Schedule</h2>
-            <div class="payday-row">
-              <label>Pay Frequency</label>
-              <select class="payday-select" id="pay-frequency" onchange="renderSchedule()">
-                <option value="biweekly">Bi-weekly</option>
-                <option value="semimonthly">Semi-monthly (1st & 15th)</option>
-                <option value="monthly">Monthly</option>
-                <option value="weekly">Weekly</option>
-              </select>
+            <div style="display:flex;flex-wrap:wrap;gap:0.75rem;align-items:center;">
+              <div class="payday-row">
+                <label>Pay Frequency</label>
+                <select class="payday-select" id="pay-frequency" onchange="renderSchedule()">
+                  <option value="biweekly">Bi-weekly</option>
+                  <option value="semimonthly">Semi-monthly (1st & 15th)</option>
+                  <option value="monthly">Monthly</option>
+                  <option value="weekly">Weekly</option>
+                </select>
+              </div>
+              <div class="payday-row">
+                <label>Next Payday</label>
+                <input type="date" class="payday-select" id="next-payday" onchange="renderSchedule()" style="font-size:0.85rem;">
+              </div>
             </div>
           </div>
           <div id="schedule-output">
@@ -2028,7 +2073,7 @@
 
         <div class="planner-inputs">
           <div class="form-group"><label>Extra Monthly Payment ($)</label><input type="number" id="extra-payment" value="200" placeholder="e.g. 200" oninput="runPayoffPlan()"></div>
-          <div class="form-group"><label>Annual Return on Savings (%)</label><input type="number" id="savings-rate" value="4.5" step="0.1" placeholder="e.g. 4.5" oninput="runPayoffPlan()"></div>
+          <div class="form-group"><label>Minimum Payment Override ($)</label><input type="number" id="min-payment" value="0" placeholder="Leave 0 for auto" oninput="runPayoffPlan()"></div>
         </div>
 
         <!-- ADD DEBT FORM -->
@@ -2058,6 +2103,100 @@
       </div>
 
     </div>
+  </div>
+
+  <!-- INVESTMENT CALCULATOR TAB -->
+  <div class="tab-section" id="tab-invest">
+
+    <div class="invest-layout">
+
+      <!-- INPUTS -->
+      <div class="card">
+        <h2>📈 Compound Interest Calculator</h2>
+        <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:1.25rem;line-height:1.6;">See how your money grows over time with the power of compound interest — the earlier you start, the more you earn.</p>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Initial Investment ($)</label>
+            <input type="number" id="inv-principal" value="1000" min="0" oninput="calcInvestment()">
+          </div>
+          <div class="form-group">
+            <label>Monthly Contribution ($)</label>
+            <input type="number" id="inv-monthly" value="200" min="0" oninput="calcInvestment()">
+          </div>
+          <div class="form-group">
+            <label>Annual Interest Rate (%)</label>
+            <input type="range" id="inv-rate" class="range-slider" min="1" max="15" value="7" step="0.5" oninput="updateRateDisplay(); calcInvestment()">
+            <div class="range-display">
+              <span>1%</span>
+              <span id="inv-rate-display" style="font-weight:700;color:var(--accent)">7%</span>
+              <span>15%</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Time Period (Years)</label>
+            <input type="range" id="inv-years" class="range-slider" min="1" max="40" value="20" step="1" oninput="updateYearsDisplay(); calcInvestment()">
+            <div class="range-display">
+              <span>1yr</span>
+              <span id="inv-years-display" style="font-weight:700;color:var(--accent)">20 years</span>
+              <span>40yr</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Compound Frequency</label>
+            <select id="inv-freq" onchange="calcInvestment()">
+              <option value="12">Monthly</option>
+              <option value="4">Quarterly</option>
+              <option value="1">Annually</option>
+              <option value="365">Daily</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="tip-bar" style="margin-top:1.25rem">
+          <div class="tip-icon">💡</div>
+          <p><strong>S&P 500 average:</strong> The stock market has historically returned about <strong>7-10%</strong> annually over long periods. Index funds are a simple way to capture this growth.</p>
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div class="invest-result-card">
+        <h2>Your Investment Growth</h2>
+
+        <div class="invest-big-number">
+          <div class="ibn-label">Final Balance</div>
+          <div class="ibn-val" id="inv-final">$0</div>
+          <div class="ibn-sub" id="inv-final-sub">after 20 years</div>
+        </div>
+
+        <div class="invest-stats">
+          <div class="invest-stat">
+            <div class="is-val" id="inv-contributed">$0</div>
+            <div class="is-label">Total Contributed</div>
+          </div>
+          <div class="invest-stat">
+            <div class="is-val" id="inv-interest-earned" style="color:var(--income-color)">$0</div>
+            <div class="is-label">Interest Earned</div>
+          </div>
+          <div class="invest-stat">
+            <div class="is-val" id="inv-multiplier" style="color:var(--accent)">0x</div>
+            <div class="is-label">Money Multiplied</div>
+          </div>
+        </div>
+
+        <div class="invest-growth-bar" id="inv-growth-bar"></div>
+
+        <h2 style="margin-bottom:0.75rem;font-size:1rem;">Growth Milestones</h2>
+        <div class="invest-timeline" id="inv-timeline"></div>
+      </div>
+
+    </div>
+
+    <div class="tip-bar">
+      <div class="tip-icon">⏰</div>
+      <p><strong>Time is your greatest asset.</strong> Starting 10 years earlier can <strong>double or triple</strong> your final balance. Even small monthly contributions grow significantly over decades — start today!</p>
+    </div>
+
   </div>
 
 </main>
@@ -2939,9 +3078,13 @@ Guidelines:
       return;
     }
     const frequency = document.getElementById('pay-frequency').value;
-    const today = new Date();
-    today.setHours(0,0,0,0);
-    const paydays = getPaydays(frequency, today, 6);
+    const paydayInput = document.getElementById('next-payday').value;
+
+    // Use selected next payday or default to today
+    let startDate = paydayInput ? new Date(paydayInput + 'T00:00:00') : new Date();
+    startDate.setHours(0,0,0,0);
+
+    const paydays = getPaydays(frequency, startDate, 6);
 
     // Group paydays by month
     const byMonth = {};
@@ -3144,59 +3287,94 @@ Guidelines:
       return;
     }
     const extra = parseFloat(document.getElementById('extra-payment').value) || 0;
-    let debts = planDebts.map(d => ({ ...d, remaining: d.balance, monthlyMin: Math.max(25, d.balance * 0.02) }));
+    const minOverride = parseFloat(document.getElementById('min-payment').value) || 0;
 
-    // Sort by method
-    if (payoffMethod === 'avalanche') debts.sort((a,b) => b.apr - a.apr);
-    else debts.sort((a,b) => a.balance - b.balance);
+    function simulate(extraPayment) {
+      let debts = planDebts.map(d => ({
+        ...d,
+        remaining: d.balance,
+        monthlyMin: minOverride > 0 ? minOverride : Math.max(25, d.balance * 0.02)
+      }));
+      if (payoffMethod === 'avalanche') debts.sort((a,b) => b.apr - a.apr);
+      else debts.sort((a,b) => a.balance - b.balance);
 
-    let month = 0;
-    let totalInterest = 0;
-    const maxMonths = 360;
-    const debtMonths = {};
-    debts.forEach(d => debtMonths[d.id] = null);
+      let month = 0;
+      let totalInterest = 0;
+      const maxMonths = 360;
+      const debtMonths = {};
+      debts.forEach(d => debtMonths[d.id] = null);
 
-    while (debts.some(d => d.remaining > 0) && month < maxMonths) {
-      month++;
-      let extraLeft = extra;
-      debts.forEach((d, i) => {
-        if (d.remaining <= 0) return;
-        const interest = (d.apr / 100 / 12) * d.remaining;
-        totalInterest += interest;
-        d.remaining += interest;
-        let payment = d.monthlyMin;
-        if (i === 0) payment += extraLeft;
-        payment = Math.min(payment, d.remaining);
-        d.remaining -= payment;
-        if (d.remaining <= 0.01) { d.remaining = 0; if (!debtMonths[d.id]) debtMonths[d.id] = month; }
-      });
-      // Roll freed payments to next debt
-      debts.forEach((d, i) => {
-        if (d.remaining <= 0 && i < debts.length - 1) {
-          debts[i+1].monthlyMin += d.monthlyMin;
-        }
-      });
+      while (debts.some(d => d.remaining > 0) && month < maxMonths) {
+        month++;
+        debts.forEach((d, i) => {
+          if (d.remaining <= 0) return;
+          const interest = (d.apr / 100 / 12) * d.remaining;
+          totalInterest += interest;
+          d.remaining += interest;
+          let payment = d.monthlyMin;
+          if (i === 0) payment += extraPayment;
+          payment = Math.min(payment, d.remaining);
+          d.remaining -= payment;
+          if (d.remaining <= 0.01) { d.remaining = 0; if (!debtMonths[d.id]) debtMonths[d.id] = month; }
+        });
+        debts.forEach((d, i) => {
+          if (d.remaining <= 0 && i < debts.length - 1) debts[i+1].monthlyMin += d.monthlyMin;
+        });
+      }
+      return { months: month, totalInterest, debtMonths };
     }
 
-    const totalPaid = planDebts.reduce((s,d) => s+d.balance, 0) + totalInterest;
+    const minResult = simulate(0);
+    const extraResult = simulate(extra);
+    const totalDebt = planDebts.reduce((s,d) => s+d.balance, 0);
+    const interestSaved = minResult.totalInterest - extraResult.totalInterest;
+    const monthsSaved = minResult.months - extraResult.months;
+
+    function fmtMonths(m) {
+      const yrs = Math.floor(m/12);
+      const mos = m % 12;
+      if (yrs === 0) return `${mos}mo`;
+      if (mos === 0) return `${yrs}yr`;
+      return `${yrs}yr ${mos}mo`;
+    }
+
     document.getElementById('plan-result').style.display = 'block';
     document.getElementById('plan-empty').style.display = 'none';
-    document.getElementById('plan-summary').innerHTML = `
-      <div class="pr-item"><div class="pr-val">${month}mo</div><div class="pr-label">Debt Free In</div></div>
-      <div class="pr-item"><div class="pr-val">$${totalInterest.toFixed(0)}</div><div class="pr-label">Total Interest</div></div>
-      <div class="pr-item"><div class="pr-val">$${totalPaid.toFixed(0)}</div><div class="pr-label">Total Paid</div></div>`;
 
-    const maxM = Math.max(...Object.values(debtMonths).filter(Boolean));
+    document.getElementById('plan-summary').innerHTML = `
+      <div class="plan-col">
+        <div class="plan-col-title">💳 Minimum Payments Only</div>
+        <div class="plan-stat"><div class="plan-stat-val bad">${fmtMonths(minResult.months)}</div><div class="plan-stat-label">Time to debt free</div></div>
+        <div class="plan-stat"><div class="plan-stat-val bad">$${minResult.totalInterest.toFixed(0)}</div><div class="plan-stat-label">Total interest paid</div></div>
+        <div class="plan-stat"><div class="plan-stat-val">$${(totalDebt + minResult.totalInterest).toFixed(0)}</div><div class="plan-stat-label">Total amount paid</div></div>
+      </div>
+      <div class="plan-col highlight">
+        <div class="plan-col-title">🚀 With $${extra}/mo Extra</div>
+        <div class="plan-stat"><div class="plan-stat-val good">${fmtMonths(extraResult.months)}</div><div class="plan-stat-label">Time to debt free</div></div>
+        <div class="plan-stat"><div class="plan-stat-val good">$${extraResult.totalInterest.toFixed(0)}</div><div class="plan-stat-label">Total interest paid</div></div>
+        <div class="plan-stat"><div class="plan-stat-val">$${(totalDebt + extraResult.totalInterest).toFixed(0)}</div><div class="plan-stat-label">Total amount paid</div></div>
+      </div>
+      ${interestSaved > 0 ? `
+      <div class="plan-savings-banner" style="grid-column:1/-1">
+        <div class="psb-val">💰 You save $${interestSaved.toFixed(0)} and get debt free ${monthsSaved} months sooner!</div>
+        <div class="psb-label">by paying an extra $${extra}/mo</div>
+      </div>` : ''}
+    `;
+
+    // Timeline
     const colors = ['#f05555','#f5a623','#00b894','#818cf8','#06d6a0'];
-    document.getElementById('payoff-timeline').innerHTML = planDebts.map((d,i) => {
-      const m = debtMonths[d.id] || month;
-      const pct = Math.max(5, (m / maxM) * 100);
-      return `<div class="pt-row">
-        <div class="pt-name" title="${d.name}">${d.name}</div>
-        <div class="pt-bar-track"><div class="pt-bar-fill" style="width:${pct}%;background:${colors[i%colors.length]}">${m}mo</div></div>
-        <div class="pt-months">${m}mo</div>
-      </div>`;
-    }).join('');
+    const maxM = Math.max(...Object.values(extraResult.debtMonths).filter(Boolean), 1);
+    document.getElementById('payoff-timeline').innerHTML = `
+      <div style="font-size:0.78rem;font-weight:700;color:var(--muted);margin-bottom:0.4rem;text-transform:uppercase;letter-spacing:0.06em">Payoff Timeline (with extra payment)</div>
+      ${planDebts.map((d,i) => {
+        const m = extraResult.debtMonths[d.id] || extraResult.months;
+        const pct = Math.max(5, (m / maxM) * 100);
+        return `<div class="pt-row">
+          <div class="pt-name" title="${d.name}">${d.name}</div>
+          <div class="pt-bar-track"><div class="pt-bar-fill" style="width:${pct}%;background:${colors[i%colors.length]}">${fmtMonths(m)}</div></div>
+          <div class="pt-months">${fmtMonths(m)}</div>
+        </div>`;
+      }).join('')}`;
 
     calculateHealthScore();
   }
@@ -3281,6 +3459,77 @@ Guidelines:
     }
   }
 
+  // INVESTMENT CALCULATOR
+  function updateRateDisplay() {
+    document.getElementById('inv-rate-display').textContent = document.getElementById('inv-rate').value + '%';
+  }
+  function updateYearsDisplay() {
+    const y = document.getElementById('inv-years').value;
+    document.getElementById('inv-years-display').textContent = y + ' year' + (y > 1 ? 's' : '');
+  }
+
+  function calcInvestment() {
+    const principal = parseFloat(document.getElementById('inv-principal').value) || 0;
+    const monthly = parseFloat(document.getElementById('inv-monthly').value) || 0;
+    const rate = parseFloat(document.getElementById('inv-rate').value) / 100;
+    const years = parseInt(document.getElementById('inv-years').value);
+    const n = parseInt(document.getElementById('inv-freq').value);
+
+    const r = rate / n;
+    const t = years * n;
+
+    // Compound interest formula
+    const principalGrowth = principal * Math.pow(1 + r, t);
+    const monthlyN = 12;
+    const monthlyR = rate / monthlyN;
+    const monthlyGrowth = monthly * ((Math.pow(1 + monthlyR, years * monthlyN) - 1) / monthlyR);
+    const finalBalance = principalGrowth + monthlyGrowth;
+
+    const totalContributed = principal + (monthly * years * 12);
+    const interestEarned = finalBalance - totalContributed;
+    const multiplier = totalContributed > 0 ? (finalBalance / totalContributed).toFixed(1) : 0;
+
+    // Update main display
+    document.getElementById('inv-final').textContent = '$' + Math.round(finalBalance).toLocaleString();
+    document.getElementById('inv-final-sub').textContent = `after ${years} year${years > 1 ? 's' : ''}`;
+    document.getElementById('inv-contributed').textContent = '$' + Math.round(totalContributed).toLocaleString();
+    document.getElementById('inv-interest-earned').textContent = '$' + Math.round(interestEarned).toLocaleString();
+    document.getElementById('inv-multiplier').textContent = multiplier + 'x';
+
+    // Growth bar
+    const contribPct = Math.round((totalContributed / finalBalance) * 100);
+    const interestPct = 100 - contribPct;
+    document.getElementById('inv-growth-bar').innerHTML = `
+      <div class="igb-row">
+        <div class="igb-label">Contributions</div>
+        <div class="igb-track"><div class="igb-fill" style="width:${contribPct}%;background:#818cf8">${contribPct}%</div></div>
+        <div class="igb-val" style="color:#818cf8">$${Math.round(totalContributed).toLocaleString()}</div>
+      </div>
+      <div class="igb-row">
+        <div class="igb-label">Interest Earned</div>
+        <div class="igb-track"><div class="igb-fill" style="width:${interestPct}%;background:var(--income-color)">${interestPct}%</div></div>
+        <div class="igb-val" style="color:var(--income-color)">$${Math.round(interestEarned).toLocaleString()}</div>
+      </div>`;
+
+    // Milestones
+    const milestoneYears = [1, 5, 10, 15, 20, 25, 30, 40].filter(y2 => y2 <= years);
+    if (!milestoneYears.includes(years)) milestoneYears.push(years);
+    milestoneYears.sort((a,b) => a-b);
+
+    document.getElementById('inv-timeline').innerHTML = milestoneYears.map(y2 => {
+      const pGrowth = principal * Math.pow(1 + rate/n, y2*n);
+      const mGrowth = monthly * ((Math.pow(1 + monthlyR, y2*12) - 1) / monthlyR);
+      const bal = pGrowth + mGrowth;
+      const contrib = principal + (monthly * y2 * 12);
+      const gain = bal - contrib;
+      return `<div class="itl-row">
+        <span class="itl-year">Year ${y2}</span>
+        <span class="itl-growth" style="color:var(--muted)">+$${Math.round(gain).toLocaleString()} interest</span>
+        <span class="itl-val">$${Math.round(bal).toLocaleString()}</span>
+      </div>`;
+    }).join('');
+  }
+
   // INIT
   initAuth();
   applyProState();
@@ -3290,6 +3539,10 @@ Guidelines:
   calcLoan();
   checkBillAlerts();
   handleUpgradeReturn();
+  calcInvestment();
+  // Set default next payday to today
+  const todayStr = new Date().toISOString().split('T')[0];
+  document.getElementById('next-payday').value = todayStr;
 </script>
 </body>
 </html>
