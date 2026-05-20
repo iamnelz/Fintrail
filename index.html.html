@@ -1,0 +1,3247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fintrail — Your Personal Finance Toolkit</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f0f2f5;
+    --surface: #ffffff;
+    --surface2: #e8eaed;
+    --dark: #1a1a2e;
+    --accent: #f05555;
+    --accent2: #f5a623;
+    --accent3: #06d6a0;
+    --muted: #8a8fa8;
+    --text: #1a1a2e;
+    --text-soft: #5a6072;
+    --danger: #f05555;
+    --border: #e0e3ea;
+    --income-color: #00b894;
+    --expense-color: #e84393;
+    --glow-red: rgba(240,85,85,0.15);
+    --glow-teal: rgba(6,214,160,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: #ffffff;
+    backdrop-filter: blur(12px);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+  }
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.45rem;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+  }
+  .logo span { color: var(--dark); }
+  nav { display: flex; gap: 0.2rem; flex-wrap: wrap; }
+  nav button {
+    background: none;
+    border: none;
+    color: var(--text-soft);
+    font-family: 'Sora', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 0.45rem 0.85rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  nav button:hover { color: var(--dark); background: var(--surface2); }
+  nav button.active { color: var(--accent); background: rgba(240,85,85,0.08); }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(160deg, #1a1a2e 0%, #2d1b4e 50%, #1a2a3e 100%);
+    padding: 4.5rem 2rem 3.5rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse, rgba(240,85,85,0.2) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    color: #ffffff;
+    line-height: 1.15;
+    max-width: 640px;
+    margin: 0 auto 1rem;
+  }
+  .hero h1 em { color: var(--accent); font-style: italic; }
+  .hero p { color: rgba(255,255,255,0.7); font-size: 1rem; max-width: 460px; margin: 0 auto; line-height: 1.7; }
+  .hero-chips { display: flex; gap: 0.6rem; justify-content: center; margin-top: 1.5rem; flex-wrap: wrap; }
+  .hero-chip {
+    font-size: 0.75rem; font-weight: 600; padding: 0.3rem 0.85rem;
+    border-radius: 20px; border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.08);
+  }
+
+  /* MAIN */
+  main { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+  /* TABS */
+  .tab-section { display: none; }
+  .tab-section.visible { display: block; }
+
+  /* SUMMARY CARDS */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .summary-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .summary-card:hover { border-color: #3a3a48; }
+  .summary-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .summary-card.income::before { background: linear-gradient(90deg, var(--income-color), transparent); }
+  .summary-card.expense::before { background: linear-gradient(90deg, var(--expense-color), transparent); }
+  .summary-card.balance::before { background: linear-gradient(90deg, var(--accent2), transparent); }
+  .summary-card label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .summary-card .amount {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.85rem;
+    color: var(--text);
+  }
+  .summary-card.income .amount { color: var(--income-color); }
+  .summary-card.expense .amount { color: var(--expense-color); }
+
+  /* LAYOUT */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: #3a3a48; }
+  .card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    margin-bottom: 1.25rem;
+    color: var(--text);
+  }
+
+  /* FORM */
+  .form-row { display: flex; flex-direction: column; gap: 0.75rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.3rem; }
+  .form-group label { font-size: 0.72rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .form-group input, .form-group select {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.65rem 0.9rem;
+    font-family: 'Sora', sans-serif;
+    font-size: 0.875rem;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .form-group input:focus, .form-group select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--glow-red);
+  }
+  .form-group select option { background: var(--surface2); }
+  .type-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+  .type-btn {
+    padding: 0.55rem;
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    background: none;
+    font-family: 'Sora', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--muted);
+  }
+  .type-btn.income.active { background: rgba(6,214,160,0.1); border-color: var(--income-color); color: var(--income-color); }
+  .type-btn.expense.active { background: rgba(255,77,109,0.1); border-color: var(--expense-color); color: var(--expense-color); }
+  .add-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem;
+    font-family: 'Sora', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 0.25rem;
+  }
+  .add-btn:hover { background: #d94444; transform: translateY(-1px); box-shadow: 0 4px 16px var(--glow-red); }
+
+  /* TRANSACTION LIST */
+  .transaction-list { display: flex; flex-direction: column; gap: 0.5rem; max-height: 340px; overflow-y: auto; }
+  .transaction-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.65rem 0.85rem;
+    border-radius: 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    animation: slideIn 0.25s ease;
+    transition: border-color 0.15s;
+  }
+  .transaction-item:hover { border-color: #3a3a48; }
+  @keyframes slideIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+  .transaction-item .t-info { display: flex; flex-direction: column; }
+  .transaction-item .t-name { font-weight: 500; font-size: 0.875rem; color: var(--text); }
+  .transaction-item .t-cat { font-size: 0.72rem; color: var(--muted); margin-top:0.1rem; }
+  .transaction-item .t-right { display: flex; align-items: center; gap: 0.75rem; }
+  .transaction-item .t-amount { font-weight: 600; font-size: 0.9rem; }
+  .transaction-item.income .t-amount { color: var(--income-color); }
+  .transaction-item.expense .t-amount { color: var(--expense-color); }
+  .del-btn { background: none; border: none; color: var(--border); cursor: pointer; font-size: 0.9rem; transition: color 0.15s; }
+  .del-btn:hover { color: var(--danger); }
+  .empty-state { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 2rem 0; }
+
+  /* CHART */
+  .chart-section { margin-top: 1.5rem; }
+  .chart-section h2 { font-family: 'Playfair Display', serif; font-size: 1.15rem; margin-bottom: 1rem; }
+  .bar-chart { display: flex; flex-direction: column; gap: 0.6rem; }
+  .bar-row { display: flex; align-items: center; gap: 0.75rem; }
+  .bar-label { font-size: 0.8rem; color: var(--muted); width: 80px; text-align: right; flex-shrink: 0; }
+  .bar-track { flex: 1; height: 22px; background: var(--border); border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+  .bar-val { font-size: 0.8rem; font-weight: 600; width: 64px; flex-shrink: 0; }
+
+  /* RESOURCES */
+  .resources-hero {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.75rem 2rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+  .resources-hero h2 { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 0.35rem; color: var(--text); }
+  .resources-hero p { color: var(--text-soft); font-size: 0.875rem; }
+  .filter-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .filter-btn {
+    padding: 0.38rem 0.95rem;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: none;
+    font-family: 'Sora', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+  .filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .filter-btn:hover:not(.active) { border-color: var(--accent); color: var(--accent); }
+  .resources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+  .resource-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem;
+    transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+    animation: slideIn 0.3s ease;
+  }
+  .resource-card:hover { box-shadow: 0 4px 24px rgba(0,0,0,0.3); transform: translateY(-2px); border-color: #3a3a48; }
+  .resource-card .rc-tag {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    margin-bottom: 0.75rem;
+  }
+  .tag-loans { background: rgba(99,102,241,0.15); color: #818cf8; }
+  .tag-grants { background: rgba(6,214,160,0.12); color: var(--income-color); }
+  .tag-tools { background: rgba(255,209,102,0.12); color: var(--accent2); }
+  .tag-education { background: rgba(240,85,85,0.12); color: var(--accent); }
+  .tag-government { background: rgba(255,77,109,0.12); color: var(--danger); }
+  .resource-card h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--text); }
+  .resource-card p { font-size: 0.83rem; color: var(--text-soft); line-height: 1.55; margin-bottom: 1rem; }
+  .rc-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent);
+    text-decoration: none;
+    transition: gap 0.2s;
+  }
+  .rc-link:hover { gap: 0.5rem; }
+
+  /* AFFILIATE RESOURCE CARDS */
+  .rc-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:0.5rem; }
+  .rc-badges { display:flex; flex-wrap:wrap; gap:0.35rem; margin-bottom:0.75rem; }
+  .rc-badge { font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; padding:0.18rem 0.55rem; border-radius:4px; }
+  .badge-featured { background:rgba(255,209,102,0.15); color:var(--accent2); }
+  .badge-low { background:rgba(6,214,160,0.12); color:var(--income-color); }
+  .badge-nofe { background:rgba(99,102,241,0.15); color:#818cf8; }
+  .badge-fast { background:rgba(240,85,85,0.12); color:var(--accent); }
+  .badge-cashout { background:rgba(255,77,109,0.12); color:var(--danger); }
+  .rc-rate-display { display:flex; background:var(--surface2); border-radius:8px; border:1px solid var(--border); margin-bottom:0.85rem; overflow:hidden; }
+  .rc-rate-item { flex:1; padding:0.6rem 0.75rem; text-align:center; }
+  .rri-val { font-family:'Playfair Display',serif; font-size:1.15rem; color:var(--accent); line-height:1.1; }
+  .rri-label { font-size:0.67rem; color:var(--muted); margin-top:0.15rem; text-transform:uppercase; letter-spacing:0.04em; }
+  .rc-divider { width:1px; background:var(--border); flex-shrink:0; }
+  .rc-cta { display:block; width:100%; text-align:center; background:var(--accent); color:#fff; border:none; border-radius:8px; padding:0.65rem; font-family:'Sora',sans-serif; font-size:0.875rem; font-weight:600; cursor:pointer; transition:all 0.2s; text-decoration:none; }
+  .rc-cta:hover { background:#d94444; transform:translateY(-1px); }
+  .rc-cta.secondary { background:none; color:var(--accent); border:1.5px solid var(--accent); }
+  .rc-cta.secondary:hover { background:rgba(240,85,85,0.08); }
+  .rc-fine { font-size:0.72rem; color:var(--muted); line-height:1.5; margin-top:0.5rem; }
+  .commission-note { font-size:0.72rem; font-weight:600; color:var(--income-color); background:rgba(6,214,160,0.1); border-radius:6px; padding:0.3rem 0.7rem; margin-top:0.6rem; display:inline-block; }
+
+  /* RATE BANNER CHIPS */
+  .rate-chip { background:var(--surface2); border:1px solid var(--border); border-radius:12px; padding:1rem 1.25rem; text-align:center; }
+  .rc-type { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; color:var(--muted); margin-bottom:0.25rem; }
+  .rc-rate { font-family:'Playfair Display',serif; font-size:1.5rem; color:var(--accent2); line-height:1; }
+  .rc-label { font-size:0.7rem; color:var(--muted); margin-top:0.2rem; }
+
+  /* LOAN COMPARE TOOL */
+  .compare-tool { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:1.5rem; margin-bottom:1.5rem; }
+  .compare-tool h2 { font-family:'Playfair Display',serif; font-size:1.1rem; margin-bottom:0.25rem; color:var(--text); }
+  .compare-tool p { font-size:0.82rem; color:var(--text-soft); margin-bottom:1rem; }
+  .compare-inputs { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:0.75rem; margin-bottom:1rem; }
+  .compare-results { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:0.75rem; }
+  .compare-result-card { background:var(--surface2); border-radius:10px; padding:1rem; text-align:center; border:1px solid var(--border); }
+  .crr-label { font-size:0.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.3rem; }
+  .crr-val { font-family:'Playfair Display',serif; font-size:1.35rem; color:var(--text); }
+  .crr-sub { font-size:0.7rem; color:var(--muted); margin-top:0.2rem; }
+
+  /* TIP BAR */
+  .tip-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 12px;
+    padding: 1.1rem 1.5rem;
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .tip-icon { font-size: 1.4rem; flex-shrink: 0; }
+  .tip-bar p { font-size: 0.85rem; line-height: 1.6; color: var(--text-soft); }
+  .tip-bar p strong { color: var(--accent2); }
+
+  /* GUIDE TAB */
+  .guide-intro {
+    background: linear-gradient(135deg, #1a1a2e 0%, #2d1b4e 100%);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  .guide-intro-card {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .guide-intro-card:hover, .guide-intro-card.active {
+    background: rgba(240,85,85,0.15);
+    border-color: var(--accent);
+  }
+  .guide-intro-card .gi-icon { font-size: 1.75rem; margin-bottom: 0.5rem; }
+  .guide-intro-card h3 { font-family: 'Playfair Display', serif; color: #fff; font-size: 1.1rem; margin-bottom: 0.3rem; }
+  .guide-intro-card p { font-size: 0.82rem; color: rgba(255,255,255,0.6); line-height: 1.5; }
+
+  .guide-panel { display: none; }
+  .guide-panel.visible { display: block; }
+
+  .score-bands {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem;
+    margin: 1.25rem 0;
+  }
+  .score-band {
+    border-radius: 8px;
+    padding: 0.75rem 0.5rem;
+    text-align: center;
+  }
+  .score-band .sb-range { font-size: 0.75rem; font-weight: 700; margin-bottom: 0.2rem; }
+  .score-band .sb-label { font-size: 0.7rem; }
+  .band-poor { background: rgba(255,77,109,0.15); color: #ff8fa3; }
+  .band-fair { background: rgba(240,85,85,0.12); color: #ffaa80; }
+  .band-good { background: rgba(255,209,102,0.12); color: var(--accent2); }
+  .band-vgood { background: rgba(6,214,160,0.12); color: var(--income-color); }
+  .band-exc { background: rgba(99,102,241,0.15); color: #818cf8; }
+
+  .steps-list { display: flex; flex-direction: column; gap: 1rem; margin-top: 0.5rem; }
+  .step-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 1.1rem 1.25rem;
+    background: var(--surface2);
+    border-radius: 10px;
+    border-left: 3px solid var(--accent);
+    transition: border-color 0.2s;
+  }
+  .step-item:hover { border-left-color: var(--accent2); }
+  .step-num {
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .step-content h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.25rem; color: var(--text); }
+  .step-content p { font-size: 0.83rem; color: var(--text-soft); line-height: 1.55; }
+  .step-content .step-impact {
+    display: inline-block; margin-top: 0.4rem; font-size: 0.7rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.05em; padding: 0.15rem 0.5rem; border-radius: 4px;
+  }
+  .step-impact.high { background: rgba(240,85,85,0.12); color: var(--accent); }
+  .step-impact.medium { background: rgba(255,209,102,0.1); color: var(--accent2); }
+
+  /* DTI CALCULATOR */
+  .dti-calc { background: var(--surface2); border-radius: 12px; padding: 1.5rem; margin-top: 1.25rem; border: 1px solid var(--border); }
+  .dti-calc h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; margin-bottom: 1rem; color: var(--text); }
+  .dti-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem; }
+  .dti-result { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; text-align: center; }
+  .dti-pct { font-family: 'Playfair Display', serif; font-size: 3rem; line-height: 1; margin-bottom: 0.25rem; }
+  .dti-label { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.75rem; }
+  .dti-bar-track { height: 10px; background: var(--border); border-radius: 5px; overflow: hidden; margin-bottom: 0.75rem; }
+  .dti-bar-fill { height: 100%; border-radius: 5px; transition: width 0.5s ease, background 0.5s; }
+  .dti-verdict { font-size: 0.85rem; font-weight: 600; }
+  .dti-zones {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  .dti-zone {
+    border-radius: 8px;
+    padding: 0.6rem;
+    text-align: center;
+    font-size: 0.75rem;
+  }
+  .dti-zone .dz-range { font-weight: 700; display: block; margin-bottom: 0.15rem; }
+  .zone-good { background: #e8f5ee; color: #1a5c35; }
+  .zone-ok { background: #fef9e0; color: #7a6000; }
+  .zone-high { background: #fde8e8; color: #a01a1a; }
+
+  .dti-tips { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
+  .dti-tip {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+    padding: 1rem 1.1rem;
+    background: var(--bg);
+    border-radius: 10px;
+    border-left: 3px solid #e9c46a;
+  }
+  .dti-tip .dt-icon { font-size: 1.1rem; flex-shrink: 0; }
+  .dti-tip h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.2rem; }
+  .dti-tip p { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+
+  .guide-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+  .guide-tab-btn {
+    padding: 0.5rem 1.25rem;
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    background: none;
+    font-family: 'Sora', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+  .guide-tab-btn.active { background: var(--dark); color: #fff; border-color: var(--dark); }
+
+  /* AI CHAT */
+  .ai-layout { display: grid; grid-template-columns: 280px 1fr; gap: 1.5rem; align-items: start; }
+  .ai-sidebar { display: flex; flex-direction: column; gap: 1rem; }
+  .ai-sidebar .card { padding: 1.25rem; }
+  .ai-sidebar h3 { font-family: 'Playfair Display', serif; font-size: 1rem; margin-bottom: 0.75rem; }
+  .suggested-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.6rem 0.85rem;
+    font-family: 'Sora', sans-serif;
+    font-size: 0.82rem;
+    color: var(--text-soft);
+    cursor: pointer;
+    margin-bottom: 0.4rem;
+    transition: border-color 0.2s, background 0.2s;
+    line-height: 1.4;
+  }
+  .suggested-btn:hover { border-color: var(--accent); background: rgba(240,85,85,0.08); color: var(--text); }
+  .chat-window {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+  }
+  .chat-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--surface2);
+    border-radius: 12px 12px 0 0;
+  }
+  .chat-avatar {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .chat-header-info h3 { font-size: 0.95rem; font-weight: 600; color: var(--text); }
+  .chat-header-info p { font-size: 0.75rem; color: var(--text-soft); }
+  .online-dot { display: inline-block; width: 7px; height: 7px; background: var(--income-color); border-radius: 50%; margin-right: 4px; }
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background: var(--bg);
+  }
+  .msg { display: flex; gap: 0.75rem; align-items: flex-start; animation: slideIn 0.2s ease; }
+  .msg.user { flex-direction: row-reverse; }
+  .msg-avatar {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+  }
+  .msg.ai .msg-avatar { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; }
+  .msg.user .msg-avatar { background: var(--accent); color: #fff; }
+  .msg-bubble {
+    max-width: 75%;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+  .msg.ai .msg-bubble { background: #ffffff; border: 1px solid var(--border); color: var(--text); border-top-left-radius: 2px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+  .msg.user .msg-bubble { background: var(--accent); color: #fff; border-top-right-radius: 2px; }
+  .msg-bubble p { margin-bottom: 0.4rem; color: inherit; }
+  .msg-bubble p:last-child { margin-bottom: 0; }
+  .msg-bubble strong { font-weight: 600; color: var(--accent2); }
+  .typing-indicator { display: flex; gap: 4px; align-items: center; padding: 0.5rem 0; }
+  .typing-dot { width: 7px; height: 7px; background: var(--muted); border-radius: 50%; animation: bounce 1.2s infinite; }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+  .chat-input-area {
+    padding: 1rem 1.25rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-end;
+    background: var(--surface);
+    border-radius: 0 0 12px 12px;
+  }
+  .chat-input {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.65rem 1rem;
+    font-family: 'Sora', sans-serif;
+    font-size: 0.875rem;
+    color: var(--text);
+    outline: none;
+    resize: none;
+    max-height: 120px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .chat-input::placeholder { color: var(--muted); }
+  .chat-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--glow-red); }
+  .send-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    width: 40px; height: 40px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .send-btn:hover { background: #d94444; transform: translateY(-1px); }
+  .send-btn:disabled { background: var(--border); cursor: not-allowed; transform: none; }
+  .disclaimer {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-align: center;
+    padding: 0.4rem 1rem 0.75rem;
+    background: var(--surface);
+  }
+  @media (max-width: 800px) { .ai-layout { grid-template-columns: 1fr; } }
+
+  /* SAVINGS GOALS */
+  .goals-top { display: grid; grid-template-columns: 1fr 340px; gap: 1.5rem; align-items: start; margin-bottom: 1.5rem; }
+  .goals-summary { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin-bottom: 1.5rem; }
+  .goal-stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.1rem 1.25rem;
+    position: relative; overflow: hidden;
+  }
+  .goal-stat::before { content:''; position:absolute; top:0;left:0;right:0; height:3px; background: var(--accent2); }
+  .goal-stat label { font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); display:block; margin-bottom:0.3rem; }
+  .goal-stat .gs-val { font-family:'Playfair Display',serif; font-size:1.7rem; color:var(--dark); }
+
+  .goals-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+  .goal-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    position: relative;
+    animation: slideIn 0.25s ease;
+    transition: box-shadow 0.2s;
+  }
+  .goal-card:hover { box-shadow: 0 4px 18px rgba(0,0,0,0.07); }
+  .goal-card-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:0.9rem; }
+  .goal-card-title { display:flex; align-items:center; gap:0.6rem; }
+  .goal-icon { font-size:1.5rem; }
+  .goal-name { font-weight:600; font-size:0.95rem; }
+  .goal-category { font-size:0.72rem; color:var(--muted); }
+  .goal-actions { display:flex; gap:0.4rem; }
+  .goal-action-btn { background:none; border:none; cursor:pointer; font-size:0.85rem; color:var(--muted); padding:0.2rem; border-radius:4px; transition:color 0.15s; }
+  .goal-action-btn:hover { color:var(--dark); }
+  .goal-action-btn.del:hover { color:var(--danger); }
+
+  .goal-amounts { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.5rem; }
+  .goal-saved { font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--accent); }
+  .goal-target { font-size:0.8rem; color:var(--muted); }
+  .goal-progress-track { height:10px; background:var(--border); border-radius:5px; overflow:hidden; margin-bottom:0.6rem; }
+  .goal-progress-fill { height:100%; border-radius:5px; transition: width 0.6s ease; }
+  .goal-meta { display:flex; justify-content:space-between; font-size:0.76rem; color:var(--muted); }
+  .goal-pct { font-weight:700; }
+  .goal-deadline { }
+  .goal-monthly { margin-top:0.6rem; padding-top:0.6rem; border-top:1px solid var(--border); font-size:0.78rem; color:var(--muted); }
+  .goal-monthly strong { color:var(--dark); }
+
+  .add-deposit-row { display:flex; gap:0.5rem; margin-top:0.75rem; }
+  .deposit-input {
+    flex:1; background:var(--bg); border:1px solid var(--border); border-radius:8px;
+    padding:0.45rem 0.75rem; font-family:'Sora',sans-serif; font-size:0.82rem;
+    color:var(--dark); outline:none;
+  }
+  .deposit-input:focus { border-color:var(--accent); }
+  .deposit-btn {
+    background:var(--accent); color:#fff; border:none; border-radius:8px;
+    padding:0.45rem 0.85rem; font-family:'Sora',sans-serif; font-size:0.82rem;
+    font-weight:600; cursor:pointer; transition:background 0.2s;
+  }
+  .deposit-btn:hover { background:#235a40; }
+  .goal-complete-badge {
+    display:inline-block; background:#e8f5ee; color:var(--accent);
+    font-size:0.72rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:20px;
+    margin-top:0.4rem;
+  }
+
+  .new-goal-form .form-row { gap:0.65rem; }
+  .emoji-picker { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.3rem; }
+  .emoji-opt {
+    background:var(--bg); border:1.5px solid var(--border); border-radius:8px;
+    width:36px; height:36px; font-size:1.1rem; cursor:pointer; display:flex;
+    align-items:center; justify-content:center; transition:border-color 0.15s;
+  }
+  .emoji-opt.selected { border-color:var(--accent); background:#e8f5ee; }
+  .empty-goals { text-align:center; color:var(--muted); padding:3rem 1rem; }
+  .empty-goals .eg-icon { font-size:2.5rem; margin-bottom:0.75rem; }
+
+  @media (max-width:860px) { .goals-top { grid-template-columns:1fr; } }
+  /* BILL SCHEDULE */
+  .schedule-toggle { display:flex; gap:0.5rem; margin-bottom:1.5rem; margin-top:0.25rem; }
+  .sched-tab-btn {
+    padding:0.45rem 1.1rem; border-radius:8px; border:1.5px solid var(--border);
+    background:none; font-family:'Sora',sans-serif; font-size:0.85rem; font-weight:600;
+    cursor:pointer; color:var(--muted); transition:all 0.2s;
+  }
+  .sched-tab-btn.active { background:var(--dark); color:#fff; border-color:var(--dark); }
+
+  .budget-sub { display:none; }
+  .budget-sub.visible { display:block; }
+
+  .bill-setup-grid { display:grid; grid-template-columns:360px 1fr; gap:1.5rem; align-items:start; }
+  .bill-list { display:flex; flex-direction:column; gap:0.6rem; max-height:420px; overflow-y:auto; }
+  .bill-item {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0.7rem 1rem; background:var(--bg); border-radius:8px;
+    border-left:3px solid var(--border); animation:slideIn 0.2s ease;
+  }
+  .bill-item.recurring { border-left-color: var(--accent2); }
+  .bill-item .bi-left { display:flex; align-items:center; gap:0.65rem; }
+  .bill-icon { font-size:1.1rem; }
+  .bi-info .bi-name { font-weight:600; font-size:0.88rem; }
+  .bi-info .bi-meta { font-size:0.73rem; color:var(--muted); }
+  .bi-right { display:flex; align-items:center; gap:0.75rem; }
+  .bi-amount { font-weight:700; font-size:0.9rem; color:var(--expense-color); }
+  .bi-del { background:none; border:none; color:#ccc; cursor:pointer; font-size:0.85rem; transition:color 0.15s; }
+  .bi-del:hover { color:var(--danger); }
+
+  /* 6-MONTH SCHEDULE */
+  .schedule-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem; flex-wrap:wrap; gap:0.75rem; }
+  .schedule-header h2 { font-family:'Playfair Display',serif; font-size:1.15rem; }
+  .payday-row { display:flex; align-items:center; gap:0.6rem; font-size:0.85rem; }
+  .payday-row label { color:var(--muted); font-weight:600; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.05em; }
+  .payday-select {
+    background:var(--bg); border:1px solid var(--border); border-radius:8px;
+    padding:0.4rem 0.75rem; font-family:'Sora',sans-serif; font-size:0.85rem;
+    color:var(--dark); outline:none; cursor:pointer;
+  }
+  .payday-select:focus { border-color:var(--accent); }
+
+  .month-block { margin-bottom:1.5rem; }
+  .month-label {
+    font-family:'Playfair Display',serif; font-size:1rem;
+    color:var(--dark); margin-bottom:0.6rem;
+    display:flex; align-items:center; gap:0.6rem;
+  }
+  .month-label .ml-badge {
+    font-family:'Sora',sans-serif; font-size:0.72rem; font-weight:700;
+    background:var(--dark); color:var(--accent2);
+    padding:0.15rem 0.55rem; border-radius:20px;
+  }
+  .payday-block {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:10px; margin-bottom:0.6rem; overflow:hidden;
+  }
+  .payday-block-header {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0.7rem 1rem; background:linear-gradient(135deg, #1a1a2e, #2d1b4e); cursor:pointer;
+    user-select:none; border-radius: 10px 10px 0 0;
+  }
+  .payday-block-header .pd-date { font-size:0.85rem; font-weight:600; color:#fff; display:flex; align-items:center; gap:0.5rem; }
+  .payday-block-header .pd-date .pd-icon { font-size:1rem; }
+  .payday-block-header .pd-summary { font-size:0.8rem; color:rgba(255,255,255,0.6); }
+  .payday-block-header .pd-toggle { color:rgba(255,255,255,0.6); font-size:0.8rem; transition:transform 0.2s; }
+  .payday-block-header.open .pd-toggle { transform:rotate(180deg); }
+  .payday-bills { padding:0.6rem 0.85rem; display:flex; flex-direction:column; gap:0.45rem; }
+  .payday-bill-row {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0.5rem 0.75rem; border-radius:7px; background:var(--bg);
+  }
+  .payday-bill-row.overdue { background:#fdf0eb; }
+  .pbr-left { display:flex; align-items:center; gap:0.55rem; font-size:0.85rem; }
+  .pbr-right { display:flex; align-items:center; gap:0.75rem; }
+  .pbr-amount { font-weight:700; font-size:0.85rem; color:var(--expense-color); }
+  .pbr-due { font-size:0.72rem; color:var(--muted); }
+  .paid-check {
+    width:18px; height:18px; border-radius:50%; border:2px solid var(--border);
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
+    font-size:0.65rem; transition:all 0.15s; flex-shrink:0;
+  }
+  .paid-check.checked { background:var(--accent); border-color:var(--accent); color:#fff; }
+  .payday-bill-row.paid-row { opacity:0.5; }
+  .payday-bill-row.paid-row .pbr-left { text-decoration:line-through; }
+  .sched-empty { text-align:center; color:var(--muted); padding:2.5rem 1rem; font-size:0.875rem; }
+  .month-totals { display:flex; gap:1rem; margin-bottom:0.6rem; flex-wrap:wrap; }
+  .mt-chip {
+    font-size:0.75rem; font-weight:600; padding:0.25rem 0.75rem;
+    border-radius:20px; background:var(--surface); border:1px solid var(--border);
+  }
+
+  @media (max-width:860px) { .bill-setup-grid { grid-template-columns:1fr; } }
+
+  /* AFFILIATE RESOURCE CARDS */
+  .rate-chip {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1rem 1.25rem;
+    display: flex; flex-direction: column; gap: 0.2rem;
+    position: relative; overflow: hidden;
+  }
+  .rate-chip::before { content:''; position:absolute; top:0;left:0;right:0; height:3px; background: var(--accent2); }
+  .rate-chip .rc-type { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; color:var(--muted); }
+  .rate-chip .rc-rate { font-family:'Playfair Display',serif; font-size:1.6rem; color:var(--dark); line-height:1.1; }
+  .rate-chip .rc-label { font-size:0.72rem; color:var(--muted); }
+
+  .resource-card .rc-header { display:flex; align-items:flex-start; justify-content:space-between; gap:0.5rem; margin-bottom:0.6rem; }
+  .resource-card .rc-badges { display:flex; flex-wrap:wrap; gap:0.35rem; margin-bottom:0.65rem; }
+  .rc-badge {
+    font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;
+    padding:0.18rem 0.55rem; border-radius:4px;
+  }
+  .badge-featured { background:#fff8e1; color:#b8860b; border:1px solid #f5d76e; }
+  .badge-low { background:#e8f5ee; color:#1a6b3a; }
+  .badge-fast { background:#e8f0fe; color:#1a56b0; }
+  .badge-nofe { background:#f3e8fd; color:#6b2fa0; }
+  .badge-cashout { background:#fde8e8; color:#a01a1a; }
+
+  .resource-card .rc-rate-display {
+    background: var(--bg); border-radius:8px; padding:0.65rem 0.85rem;
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:0.75rem; flex-wrap:wrap; gap:0.5rem;
+  }
+  .rc-rate-item { text-align:center; }
+  .rc-rate-item .rri-val { font-family:'Playfair Display',serif; font-size:1.1rem; color:var(--accent); }
+  .rc-rate-item .rri-label { font-size:0.67rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.05em; }
+  .rc-divider { width:1px; height:28px; background:var(--border); }
+
+  .rc-cta {
+    display:block; width:100%; text-align:center;
+    background: var(--accent); color:#fff; border:none; border-radius:8px;
+    padding:0.65rem; font-family:'Sora',sans-serif; font-size:0.875rem;
+    font-weight:700; cursor:pointer; text-decoration:none;
+    transition: background 0.2s, transform 0.15s;
+    margin-bottom:0.5rem;
+  }
+  .rc-cta:hover { background:#235a40; transform:translateY(-1px); }
+  .rc-cta.secondary {
+    background:none; color:var(--accent); border:1.5px solid var(--accent);
+  }
+  .rc-cta.secondary:hover { background:#e8f5ee; transform:translateY(-1px); }
+  .rc-fine { font-size:0.68rem; color:var(--muted); text-align:center; line-height:1.4; }
+  .resource-card .commission-note {
+    font-size:0.68rem; color:var(--muted); margin-top:0.4rem;
+    padding-top:0.4rem; border-top:1px solid var(--border); text-align:center;
+  }
+
+  /* PREMIUM SYSTEM */
+  .premium-badge {
+    display:inline-flex; align-items:center; gap:0.3rem;
+    background: linear-gradient(135deg, #b8860b, #e9c46a);
+    color:#1a1a0f; font-size:0.65rem; font-weight:800;
+    text-transform:uppercase; letter-spacing:0.08em;
+    padding:0.18rem 0.55rem; border-radius:20px;
+    vertical-align:middle; margin-left:0.4rem;
+  }
+  .pro-pill {
+    display:inline-flex; align-items:center; gap:0.25rem;
+    background:linear-gradient(135deg,#b8860b,#e9c46a);
+    color:#1a1a0f; font-size:0.62rem; font-weight:800;
+    padding:0.12rem 0.45rem; border-radius:10px;
+    text-transform:uppercase; letter-spacing:0.06em;
+    margin-left:0.3rem; vertical-align:middle;
+  }
+  .upgrade-btn-nav {
+    background: linear-gradient(135deg, #b8860b, #e9c46a) !important;
+    color: #1a1a0f !important;
+    font-weight: 700 !important;
+    border-radius: 20px !important;
+    padding: 0.4rem 1rem !important;
+  }
+  .upgrade-btn-nav:hover { opacity:0.9; }
+
+  /* PAYWALL OVERLAY */
+  .paywall-overlay {
+    position:fixed; inset:0; background:rgba(0,0,0,0.75);
+    z-index:1000; display:flex; align-items:center; justify-content:center;
+    backdrop-filter:blur(6px); animation:fadeIn 0.2s ease;
+  }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  .paywall-modal {
+    background:var(--surface); border:1px solid var(--border); border-radius:20px; width:100%;
+    max-width:480px; margin:1.5rem; overflow:hidden;
+    box-shadow:0 24px 60px rgba(0,0,0,0.6); animation:slideUp 0.25s ease;
+  }
+  @keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  .paywall-top {
+    background: linear-gradient(135deg, var(--dark) 0%, #1a1020 100%);
+    padding:2rem 2rem 1.5rem; text-align:center; position:relative; overflow:hidden;
+  }
+  .paywall-top::before {
+    content:''; position:absolute; top:-50px; left:50%; transform:translateX(-50%);
+    width:300px; height:200px;
+    background:radial-gradient(ellipse, rgba(240,85,85,0.2) 0%, transparent 70%);
+    pointer-events:none;
+  }
+  .paywall-close {
+    position:absolute; top:1rem; right:1rem;
+    background:rgba(255,255,255,0.08); border:1px solid var(--border); color:var(--text-soft);
+    width:28px; height:28px; border-radius:50%; font-size:0.85rem;
+    cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s; z-index:1;
+  }
+  .paywall-close:hover { background:rgba(255,255,255,0.15); color:var(--text); }
+  .paywall-icon { font-size:2.5rem; margin-bottom:0.5rem; position:relative; }
+  .paywall-top h2 { font-family:'Playfair Display',serif; color:var(--text); font-size:1.5rem; margin-bottom:0.35rem; position:relative; }
+  .paywall-top p { color:var(--text-soft); font-size:0.875rem; position:relative; }
+  .paywall-price { text-align:center; padding:1.25rem 2rem 0; }
+  .price-display { display:flex; align-items:baseline; justify-content:center; gap:0.25rem; margin-bottom:0.3rem; }
+  .price-amount { font-family:'Playfair Display',serif; font-size:3rem; color:var(--text); line-height:1; }
+  .price-period { font-size:0.9rem; color:var(--muted); }
+  .price-sub { font-size:0.78rem; color:var(--muted); }
+  .paywall-features { padding:1rem 2rem; }
+  .pw-feature { display:flex; align-items:center; gap:0.65rem; padding:0.5rem 0; border-bottom:1px solid var(--border); font-size:0.875rem; color:var(--text-soft); }
+  .pw-feature:last-child { border-bottom:none; }
+  .pw-check { color:var(--income-color); font-weight:700; font-size:1rem; flex-shrink:0; }
+  .paywall-actions { padding:0 2rem 2rem; display:flex; flex-direction:column; gap:0.6rem; }
+  .pw-cta { width:100%; padding:0.85rem; border-radius:10px; border:none; font-family:'Sora',sans-serif; font-size:0.9rem; font-weight:700; cursor:pointer; transition:all 0.2s; }
+  .pw-cta.primary { background:linear-gradient(135deg,#d94444,var(--accent2)); color:#1a1a0f; }
+  .pw-cta.primary:hover { opacity:0.92; transform:translateY(-1px); box-shadow:0 6px 20px var(--glow-red); }
+  .pw-cta.secondary { background:none; color:var(--muted); font-size:0.82rem; font-weight:500; }
+  .pw-cta.secondary:hover { color:var(--text); }
+  .pw-trial { font-size:0.72rem; color:var(--muted); text-align:center; margin-top:0.25rem; }
+
+  /* PREMIUM LOCK */
+  .premium-badge {
+    display:inline-flex; align-items:center; gap:0.3rem;
+    background:linear-gradient(135deg,#b8860b,#e9c46a);
+    color:#1a1a0f; font-size:0.65rem; font-weight:800;
+    text-transform:uppercase; letter-spacing:0.08em;
+    padding:0.18rem 0.55rem; border-radius:20px; vertical-align:middle; margin-left:0.4rem;
+  }
+  .pro-pill {
+    display:inline-flex; align-items:center;
+    background:linear-gradient(135deg,#b8860b,#e9c46a);
+    color:#1a1a0f; font-size:0.6rem; font-weight:800;
+    padding:0.1rem 0.4rem; border-radius:8px;
+    text-transform:uppercase; letter-spacing:0.06em; margin-left:0.3rem; vertical-align:middle;
+  }
+  .upgrade-btn-nav {
+    background:linear-gradient(135deg,#d94444,var(--accent2)) !important;
+    color:#1a1a0f !important; font-weight:700 !important;
+    border-radius:20px !important; padding:0.4rem 1rem !important;
+  }
+  .upgrade-btn-nav:hover { opacity:0.9; }
+  .lock-gate {
+    text-align:center; padding:3rem 1.5rem;
+    background:var(--surface); border:1px solid var(--border); border-radius:14px; margin-top:1rem;
+  }
+  .lock-gate .lg-icon { font-size:2.25rem; margin-bottom:0.6rem; }
+  .lock-gate h3 { font-family:'Playfair Display',serif; font-size:1.2rem; margin-bottom:0.4rem; color:var(--text); }
+  .lock-gate p { font-size:0.85rem; color:var(--text-soft); margin-bottom:1.25rem; max-width:340px; margin-left:auto; margin-right:auto; line-height:1.6; }
+  .lock-gate-btn {
+    background:linear-gradient(135deg,#d94444,var(--accent2));
+    color:#1a1a0f; border:none; border-radius:10px;
+    padding:0.75rem 2rem; font-family:'Sora',sans-serif;
+    font-size:0.9rem; font-weight:700; cursor:pointer; transition:all 0.2s;
+  }
+  .lock-gate-btn:hover { opacity:0.9; transform:translateY(-1px); }
+
+  /* ACCOUNT BAR */
+  .account-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0.55rem 2rem; display: flex; align-items: center;
+    justify-content: space-between; font-size: 0.8rem;
+  }
+  .account-bar.premium { background: linear-gradient(135deg, rgba(240,85,85,0.08), rgba(255,209,102,0.05)); }
+  .ab-left { color: var(--text-soft); display: flex; align-items: center; gap: 0.5rem; }
+  .ab-right { display: flex; align-items: center; gap: 0.75rem; }
+  .ab-plan { font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.65rem; border-radius: 20px; background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+  .ab-plan.premium-plan { background: linear-gradient(135deg, #b8860b, #e9c46a); color: #1a1a0f; border: none; }
+  .ab-manage { background: none; border: 1px solid var(--border); color: var(--muted); font-family: 'Sora', sans-serif; font-size: 0.72rem; padding: 0.25rem 0.75rem; border-radius: 6px; cursor: pointer; transition: all 0.15s; }
+  .ab-manage:hover { color: var(--text); border-color: var(--accent); }
+
+  /* AUTH SCREEN */
+  #auth-screen {
+    position:fixed; inset:0;
+    background: linear-gradient(160deg, #1a1a2e 0%, #2d1b4e 50%, #1a2a3e 100%);
+    z-index:2000; display:flex; align-items:center; justify-content:center; padding:1.5rem;
+  }
+  .auth-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; width: 100%; max-width: 420px; overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.6); animation: slideUp 0.3s ease;
+  }
+  .auth-top {
+    background: linear-gradient(135deg, var(--dark) 0%, #1a1020 100%);
+    padding: 2rem 2rem 1.5rem; text-align: center;
+    border-bottom: 1px solid var(--border); position: relative; overflow: hidden;
+  }
+  .auth-top::before {
+    content: ''; position: absolute; top: -40px; left: 50%; transform: translateX(-50%);
+    width: 300px; height: 200px;
+    background: radial-gradient(ellipse, rgba(240,85,85,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .auth-logo { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--accent); margin-bottom: 0.25rem; position: relative; }
+  .auth-logo span { color: #ffffff; }
+  .auth-top p { color: var(--text-soft); font-size: 0.85rem; margin-top: 0.3rem; position: relative; }
+  .auth-body { padding: 1.75rem 2rem 2rem; }
+  .auth-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1.5rem; }
+  .auth-tab {
+    padding: 0.55rem; border-radius: 8px; border: 1px solid var(--border);
+    background: none; font-family: 'Sora', sans-serif; font-size: 0.875rem;
+    font-weight: 600; cursor: pointer; color: var(--muted); transition: all 0.2s;
+  }
+  .auth-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .auth-form { display: flex; flex-direction: column; gap: 0.85rem; }
+  .auth-input-group { display: flex; flex-direction: column; gap: 0.3rem; }
+  .auth-input-group label { font-size: 0.72rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .auth-input {
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+    padding: 0.7rem 1rem; font-family: 'Sora', sans-serif; font-size: 0.875rem;
+    color: var(--text); outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .auth-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--glow-red); }
+  .auth-input::placeholder { color: var(--muted); }
+  .auth-submit {
+    background: var(--accent); color: #fff; border: none; border-radius: 10px;
+    padding: 0.8rem; font-family: 'Sora', sans-serif; font-size: 0.9rem;
+    font-weight: 700; cursor: pointer; transition: all 0.2s; margin-top: 0.25rem;
+  }
+  .auth-submit:hover { background: #d94444; transform: translateY(-1px); box-shadow: 0 6px 20px var(--glow-red); }
+  .auth-submit:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; transform: none; box-shadow: none; }
+  .auth-divider { display: flex; align-items: center; gap: 0.75rem; margin: 0.25rem 0; }
+  .auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .auth-divider span { font-size: 0.72rem; color: var(--muted); }
+  .auth-google {
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 10px;
+    padding: 0.7rem; font-family: 'Sora', sans-serif; font-size: 0.875rem;
+    font-weight: 600; cursor: pointer; transition: all 0.2s; color: var(--text);
+    display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+  }
+  .auth-google:hover { border-color: var(--accent); background: rgba(240,85,85,0.06); }
+  .auth-msg { font-size: 0.8rem; text-align: center; padding: 0.5rem; border-radius: 8px; }
+  .auth-msg.error { background: rgba(255,77,109,0.12); color: var(--danger); }
+  .auth-msg.success { background: rgba(6,214,160,0.1); color: var(--income-color); }
+  .auth-footer { font-size: 0.73rem; color: var(--muted); text-align: center; margin-top: 0.75rem; line-height: 1.6; }
+  .auth-footer a { color: var(--accent); text-decoration: none; }
+
+  /* SETUP BANNER */
+  .setup-banner {
+    background: linear-gradient(135deg, rgba(240,85,85,0.1), rgba(255,209,102,0.05));
+    border-bottom: 1px solid rgba(240,85,85,0.2);
+    padding: 0.65rem 2rem; display: flex; align-items: center;
+    justify-content: space-between; gap: 1rem; font-size: 0.82rem; color: var(--text-soft);
+  }
+  .setup-banner strong { color: var(--accent2); }
+  .setup-dismiss { background: rgba(255,255,255,0.08); border: 1px solid var(--border); color: var(--text-soft); padding: 0.28rem 0.8rem; border-radius: 6px; font-family: 'Sora', sans-serif; font-size: 0.75rem; cursor: pointer; }
+
+  /* PREMIUM FEATURES TAB */
+  .premium-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:1.5rem; margin-bottom:1.5rem; }
+
+  /* HEALTH SCORE */
+  .health-score-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:1.75rem; text-align:center; }
+  .health-score-card h2 { font-family:'Playfair Display',serif; font-size:1.1rem; margin-bottom:1.25rem; color:var(--text); text-align:left; }
+  .score-gauge { position:relative; width:180px; height:100px; margin:0 auto 1rem; }
+  .gauge-bg { fill:none; stroke:var(--border); stroke-width:16; stroke-linecap:round; }
+  .gauge-fill { fill:none; stroke-width:16; stroke-linecap:round; transition:stroke-dashoffset 1s ease, stroke 0.5s; }
+  .score-number { font-family:'Playfair Display',serif; font-size:2.5rem; font-weight:700; display:block; }
+  .score-label { font-size:0.78rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; }
+  .score-breakdown { display:flex; flex-direction:column; gap:0.6rem; margin-top:1.25rem; text-align:left; }
+  .sb-row { display:flex; align-items:center; justify-content:space-between; gap:0.75rem; }
+  .sb-row-left { display:flex; align-items:center; gap:0.5rem; font-size:0.82rem; color:var(--text-soft); }
+  .sb-bar-track { flex:1; height:6px; background:var(--border); border-radius:3px; overflow:hidden; }
+  .sb-bar-fill { height:100%; border-radius:3px; transition:width 0.8s ease; }
+  .sb-score { font-size:0.78rem; font-weight:700; width:32px; text-align:right; }
+
+  /* DEBT PAYOFF PLANNER */
+  .planner-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:1.75rem; }
+  .planner-card h2 { font-family:'Playfair Display',serif; font-size:1.1rem; margin-bottom:0.5rem; color:var(--text); }
+  .planner-card p { font-size:0.82rem; color:var(--text-soft); margin-bottom:1.25rem; line-height:1.6; }
+  .planner-inputs { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1rem; }
+  .method-toggle { display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; margin-bottom:1rem; }
+  .method-btn { padding:0.55rem; border-radius:8px; border:1.5px solid var(--border); background:none; font-family:'Sora',sans-serif; font-size:0.82rem; font-weight:600; cursor:pointer; color:var(--muted); transition:all 0.2s; }
+  .method-btn.active { background:rgba(240,85,85,0.08); border-color:var(--accent); color:var(--accent); }
+  .plan-result { background:var(--bg); border-radius:10px; padding:1.1rem; margin-top:0.75rem; }
+  .plan-result-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0.75rem; text-align:center; }
+  .pr-item .pr-val { font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--accent); }
+  .pr-item .pr-label { font-size:0.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.05em; margin-top:0.2rem; }
+  .payoff-timeline { margin-top:1rem; display:flex; flex-direction:column; gap:0.4rem; }
+  .pt-row { display:flex; align-items:center; gap:0.75rem; font-size:0.8rem; }
+  .pt-name { width:100px; color:var(--text-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .pt-bar-track { flex:1; height:18px; background:var(--border); border-radius:4px; overflow:hidden; }
+  .pt-bar-fill { height:100%; border-radius:4px; display:flex; align-items:center; padding-left:0.5rem; font-size:0.68rem; font-weight:700; color:#fff; transition:width 0.8s ease; }
+  .pt-months { width:48px; color:var(--muted); font-size:0.75rem; text-align:right; }
+
+  /* ALERTS */
+  .alerts-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:1.75rem; }
+  .alerts-card h2 { font-family:'Playfair Display',serif; font-size:1.1rem; margin-bottom:0.5rem; color:var(--text); }
+  .alerts-card p { font-size:0.82rem; color:var(--text-soft); margin-bottom:1.25rem; line-height:1.6; }
+  .alert-toggle-row { display:flex; align-items:center; justify-content:space-between; padding:0.85rem 1rem; background:var(--bg); border-radius:10px; margin-bottom:0.6rem; border:1px solid var(--border); }
+  .atr-left { display:flex; align-items:center; gap:0.65rem; }
+  .atr-icon { font-size:1.1rem; }
+  .atr-info h4 { font-size:0.875rem; font-weight:600; color:var(--text); }
+  .atr-info p { font-size:0.75rem; color:var(--muted); margin-top:0.1rem; }
+  .toggle-switch { position:relative; width:40px; height:22px; flex-shrink:0; }
+  .toggle-switch input { opacity:0; width:0; height:0; }
+  .toggle-slider { position:absolute; inset:0; background:var(--border); border-radius:22px; cursor:pointer; transition:0.3s; }
+  .toggle-slider::before { content:''; position:absolute; width:16px; height:16px; left:3px; bottom:3px; background:#fff; border-radius:50%; transition:0.3s; }
+  .toggle-switch input:checked + .toggle-slider { background:var(--accent); }
+  .toggle-switch input:checked + .toggle-slider::before { transform:translateX(18px); }
+  .alert-test-btn { width:100%; margin-top:0.75rem; padding:0.7rem; background:none; border:1.5px solid var(--accent); color:var(--accent); border-radius:8px; font-family:'Sora',sans-serif; font-size:0.875rem; font-weight:600; cursor:pointer; transition:all 0.2s; }
+  .alert-test-btn:hover { background:rgba(240,85,85,0.08); }
+  .notif-status { font-size:0.75rem; text-align:center; margin-top:0.5rem; padding:0.4rem; border-radius:6px; }
+  .notif-status.granted { background:rgba(0,184,148,0.1); color:var(--income-color); }
+  .notif-status.denied { background:rgba(240,85,85,0.1); color:var(--danger); }
+  .notif-status.pending { background:rgba(245,166,35,0.1); color:var(--accent2); }
+
+  @media (max-width: 700px) {
+    .two-col { grid-template-columns: 1fr; }
+    .summary-grid { grid-template-columns: 1fr; }
+    .resources-hero { flex-direction: column; }
+    nav button span { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- AUTH SCREEN -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-top">
+      <div class="auth-logo">Fin<span>trail</span></div>
+      <p>Your personal finance toolkit — budget, save, and grow.</p>
+    </div>
+    <div class="auth-body">
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-signin" onclick="switchAuthTab('signin')">Sign In</button>
+        <button class="auth-tab" id="tab-signup" onclick="switchAuthTab('signup')">Create Account</button>
+      </div>
+
+      <div id="auth-msg" class="auth-msg" style="display:none"></div>
+
+      <!-- SIGN IN FORM -->
+      <div id="form-signin" class="auth-form">
+        <div class="auth-input-group">
+          <label>Email</label>
+          <input class="auth-input" type="email" id="si-email" placeholder="you@email.com" autocomplete="email">
+        </div>
+        <div class="auth-input-group">
+          <label>Password</label>
+          <input class="auth-input" type="password" id="si-password" placeholder="••••••••" autocomplete="current-password">
+        </div>
+        <button class="auth-submit" id="si-btn" onclick="signIn()">Sign In</button>
+        <div class="auth-divider"><span>or</span></div>
+        <button class="auth-google" onclick="signInGoogle()">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Continue with Google
+        </button>
+        <div class="auth-footer">
+          <a href="#" onclick="showForgotPassword()">Forgot your password?</a>
+        </div>
+      </div>
+
+      <!-- SIGN UP FORM -->
+      <div id="form-signup" class="auth-form" style="display:none">
+        <div class="auth-input-group">
+          <label>Full Name</label>
+          <input class="auth-input" type="text" id="su-name" placeholder="Jane Smith" autocomplete="name">
+        </div>
+        <div class="auth-input-group">
+          <label>Email</label>
+          <input class="auth-input" type="email" id="su-email" placeholder="you@email.com" autocomplete="email">
+        </div>
+        <div class="auth-input-group">
+          <label>Password</label>
+          <input class="auth-input" type="password" id="su-password" placeholder="At least 8 characters" autocomplete="new-password">
+        </div>
+        <div class="auth-input-group">
+          <label>Confirm Password</label>
+          <input class="auth-input" type="password" id="su-confirm" placeholder="••••••••" autocomplete="new-password">
+        </div>
+        <button class="auth-submit" id="su-btn" onclick="signUp()">Create Free Account</button>
+        <div class="auth-divider"><span>or</span></div>
+        <button class="auth-google" onclick="signInGoogle()">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Continue with Google
+        </button>
+        <div class="auth-footer">
+          By signing up you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- SETUP BANNER (shown after first signup) -->
+<div class="setup-banner" id="setup-banner" style="display:none">
+  <span>👋 Welcome to Fintrail! <strong>Add your Supabase credentials</strong> in the script below to enable real accounts & data sync.</span>
+  <button class="setup-dismiss" onclick="this.parentElement.style.display='none'">Got it</button>
+</div>
+
+<header>
+  <div class="logo">Fin<span>trail</span></div>
+  <nav>
+    <button class="active" onclick="showTab('budget', this)">📊 <span>Budget</span></button>
+    <button onclick="showTab('resources', this)">🔍 <span>Resources</span></button>
+    <button onclick="guardedTab('guide', this)">📘 <span>Guide</span><span class="pro-pill">PRO</span></button>
+    <button onclick="guardedTab('ai', this)">💬 <span>AI Advisor</span><span class="pro-pill">PRO</span></button>
+    <button onclick="showTab('savings', this)">🎯 <span>Goals</span></button>
+    <button onclick="guardedTab('premium', this)">🏆 <span>Premium</span><span class="pro-pill">PRO</span></button>
+    <button class="upgrade-btn-nav" onclick="showPaywall('nav')">⭐ <span>Go Pro</span></button>
+  </nav>
+</header>
+
+<!-- ACCOUNT BAR -->
+<div class="account-bar" id="account-bar">
+  <div class="ab-left">👤 <span id="ab-status">Free Plan — upgrade to unlock all features</span></div>
+  <div class="ab-right">
+    <span class="ab-plan" id="ab-plan-badge">Free</span>
+    <button class="ab-manage" id="ab-action-btn" onclick="showPaywall('bar')">Upgrade to Pro →</button>
+    <button class="ab-manage" onclick="signOut()" style="margin-left:0.25rem">Sign Out</button>
+  </div>
+</div>
+
+<!-- PAYWALL MODAL -->
+<div class="paywall-overlay" id="paywall-overlay" style="display:none" onclick="closePaywallOutside(event)">
+  <div class="paywall-modal">
+    <div class="paywall-top">
+      <button class="paywall-close" onclick="closePaywall()">✕</button>
+      <div class="paywall-icon">⭐</div>
+      <h2>Fintrail Pro</h2>
+      <p>Unlock the full toolkit and take control of your finances.</p>
+    </div>
+    <div class="paywall-price">
+      <div class="price-display">
+        <span class="price-amount">$4.99</span>
+        <span class="price-period">/month</span>
+      </div>
+      <div class="price-sub">Cancel anytime · No hidden fees</div>
+    </div>
+    <div class="paywall-features">
+      <div class="pw-feature"><span class="pw-check">✓</span> Everything in Free</div>
+      <div class="pw-feature"><span class="pw-check">✓</span> 💬 AI Financial Advisor — unlimited chat</div>
+      <div class="pw-feature"><span class="pw-check">✓</span> 🏆 Financial Health Score & tracking</div>
+      <div class="pw-feature"><span class="pw-check">✓</span> 🎯 Personalized Debt Payoff Planner</div>
+      <div class="pw-feature"><span class="pw-check">✓</span> 📱 Budget Alerts & Bill Reminders</div>
+      <div class="pw-feature"><span class="pw-check">✓</span> 📘 Full Credit Score Improvement Guide</div>
+      <div class="pw-feature"><span class="pw-check">✓</span> 🏦 Partner Lender Rates & Affiliate Offers</div>
+    </div>
+    <div class="paywall-actions">
+      <button class="pw-cta primary" onclick="activatePro()">Start Pro — $4.99/mo</button>
+      <div class="pw-trial">🎉 First 7 days free · then $4.99/mo</div>
+      <button class="pw-cta secondary" onclick="closePaywall()">Maybe later</button>
+    </div>
+  </div>
+</div>
+
+<div class="hero">
+  <h1>Take control of your <em>finances</em>, one step at a time.</h1>
+  <p>Fintrail gives you the tools to budget smarter, save faster, and build lasting financial health — all in one place, for free.</p>
+  <div class="hero-chips">
+    <span class="hero-chip">📊 Budget Tracker</span>
+    <span class="hero-chip">🎯 Savings Goals</span>
+    <span class="hero-chip">💬 AI Advisor</span>
+    <span class="hero-chip">🏦 Lender Rates</span>
+    <span class="hero-chip">📅 Bill Schedule</span>
+  </div>
+</div>
+
+<main>
+
+  <!-- BUDGET TAB -->
+  <div class="tab-section visible" id="tab-budget">
+
+    <!-- SUB NAV -->
+    <div class="schedule-toggle">
+      <button class="sched-tab-btn active" onclick="showBudgetSub('tracker', this)">📊 Tracker</button>
+      <button class="sched-tab-btn" onclick="showBudgetSub('schedule', this)">📅 Bill Schedule</button>
+    </div>
+
+    <!-- TRACKER SUB -->
+    <div class="budget-sub visible" id="bsub-tracker">
+    <div class="summary-grid">
+      <div class="summary-card income">
+        <label>Total Income</label>
+        <div class="amount" id="total-income">$0.00</div>
+      </div>
+      <div class="summary-card expense">
+        <label>Total Expenses</label>
+        <div class="amount" id="total-expenses">$0.00</div>
+      </div>
+      <div class="summary-card balance">
+        <label>Net Balance</label>
+        <div class="amount" id="net-balance">$0.00</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <!-- ADD FORM -->
+      <div class="card">
+        <h2>Add Transaction</h2>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Type</label>
+            <div class="type-toggle">
+              <button class="type-btn income active" id="btn-income" onclick="setType('income')">+ Income</button>
+              <button class="type-btn expense" id="btn-expense" onclick="setType('expense')">− Expense</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <input type="text" id="desc" placeholder="e.g. Salary, Rent, Groceries">
+          </div>
+          <div class="form-group">
+            <label>Amount ($)</label>
+            <input type="number" id="amount" placeholder="0.00" min="0" step="0.01">
+          </div>
+          <div class="form-group">
+            <label>Category</label>
+            <select id="category">
+              <option value="Salary">Salary</option>
+              <option value="Freelance">Freelance</option>
+              <option value="Investment">Investment</option>
+              <option value="Housing">Housing</option>
+              <option value="Food">Food</option>
+              <option value="Transport">Transport</option>
+              <option value="Healthcare">Healthcare</option>
+              <option value="Entertainment">Entertainment</option>
+              <option value="Education">Education</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <button class="add-btn" onclick="addTransaction()">Add Transaction</button>
+        </div>
+      </div>
+
+      <!-- TRANSACTIONS -->
+      <div class="card">
+        <h2>Transactions</h2>
+        <div class="transaction-list" id="transaction-list">
+          <div class="empty-state">No transactions yet.<br>Add one to get started!</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SPENDING CHART -->
+    <div class="chart-section card" style="margin-top:1.5rem;" id="chart-section">
+      <h2>Spending by Category</h2>
+      <div class="bar-chart" id="bar-chart">
+        <div class="empty-state">Add expenses to see your spending breakdown.</div>
+      </div>
+    </div>
+
+    <div class="tip-bar">
+      <div class="tip-icon">💡</div>
+      <p><strong>Pro tip:</strong> The 50/30/20 rule — spend 50% on needs, 30% on wants, and save 20%. Use this tracker to see how close you are!</p>
+    </div>
+    </div><!-- end bsub-tracker -->
+
+    <!-- BILL SCHEDULE SUB -->
+    <div class="budget-sub" id="bsub-schedule">
+      <div class="bill-setup-grid">
+
+        <!-- ADD BILL FORM -->
+        <div class="card">
+          <h2>Add Recurring Bill</h2>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Bill Name</label>
+              <input type="text" id="bill-name" placeholder="e.g. Rent, Netflix, Car Payment">
+            </div>
+            <div class="form-group">
+              <label>Amount ($)</label>
+              <input type="number" id="bill-amount" placeholder="0.00" min="0" step="0.01">
+            </div>
+            <div class="form-group">
+              <label>Due Day of Month</label>
+              <select id="bill-day">
+                <option value="1">1st of each month</option>
+                <option value="2">2nd of each month</option>
+                <option value="3">3rd of each month</option>
+                <option value="4">4th of each month</option>
+                <option value="5">5th of each month</option>
+                <option value="6">6th of each month</option>
+                <option value="7">7th of each month</option>
+                <option value="8">8th of each month</option>
+                <option value="9">9th of each month</option>
+                <option value="10">10th of each month</option>
+                <option value="11">11th of each month</option>
+                <option value="12">12th of each month</option>
+                <option value="13">13th of each month</option>
+                <option value="14">14th of each month</option>
+                <option value="15">15th of each month</option>
+                <option value="16">16th of each month</option>
+                <option value="17">17th of each month</option>
+                <option value="18">18th of each month</option>
+                <option value="19">19th of each month</option>
+                <option value="20">20th of each month</option>
+                <option value="21">21st of each month</option>
+                <option value="22">22nd of each month</option>
+                <option value="23">23rd of each month</option>
+                <option value="24">24th of each month</option>
+                <option value="25">25th of each month</option>
+                <option value="26">26th of each month</option>
+                <option value="27">27th of each month</option>
+                <option value="28">28th of each month</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Category</label>
+              <select id="bill-cat">
+                <option>🏠 Housing</option>
+                <option>🚗 Auto</option>
+                <option>💡 Utilities</option>
+                <option>📱 Phone/Internet</option>
+                <option>🎬 Subscriptions</option>
+                <option>🏥 Insurance/Health</option>
+                <option>🎓 Education/Loans</option>
+                <option>💳 Credit Card</option>
+                <option>🐾 Pet</option>
+                <option>📦 Other</option>
+              </select>
+            </div>
+            <button class="add-btn" onclick="addBill()">+ Add Bill</button>
+          </div>
+
+          <div style="margin-top:1.25rem;">
+            <h2 style="margin-bottom:0.75rem;">Your Bills</h2>
+            <div class="bill-list" id="bill-list">
+              <div class="empty-state">No bills added yet.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6-MONTH SCHEDULE -->
+        <div class="card">
+          <div class="schedule-header">
+            <h2>📅 6-Month Schedule</h2>
+            <div class="payday-row">
+              <label>Pay Frequency</label>
+              <select class="payday-select" id="pay-frequency" onchange="renderSchedule()">
+                <option value="biweekly">Bi-weekly</option>
+                <option value="semimonthly">Semi-monthly (1st & 15th)</option>
+                <option value="monthly">Monthly</option>
+                <option value="weekly">Weekly</option>
+              </select>
+            </div>
+          </div>
+          <div id="schedule-output">
+            <div class="sched-empty">Add bills and your pay frequency to generate your 6-month payment schedule.</div>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- end bsub-schedule -->
+
+  </div><!-- end tab-budget -->
+
+  <!-- RESOURCES TAB -->
+  <div class="tab-section" id="tab-resources">
+
+    <!-- HERO -->
+    <div class="resources-hero">
+      <div>
+        <h2>Financial Resources & Partner Rates</h2>
+        <p>Curated lenders, grants, tools & education. Compare rates and find the best fit for you.</p>
+      </div>
+      <div class="filter-row" id="filter-row">
+        <button class="filter-btn active" onclick="filterResources('all', this)">All</button>
+        <button class="filter-btn" onclick="filterResources('mortgage', this)">🏠 Mortgages</button>
+        <button class="filter-btn" onclick="filterResources('personal', this)">💳 Personal Loans</button>
+        <button class="filter-btn" onclick="filterResources('auto', this)">🚗 Auto Loans</button>
+        <button class="filter-btn" onclick="filterResources('refi', this)">🔄 Refinance</button>
+        <button class="filter-btn" onclick="filterResources('grants', this)">🎁 Grants</button>
+        <button class="filter-btn" onclick="filterResources('tools', this)">🛠 Tools</button>
+        <button class="filter-btn" onclick="filterResources('education', this)">📚 Education</button>
+      </div>
+    </div>
+
+    <!-- LOAN COMPARISON CALCULATOR -->
+    <div class="compare-tool">
+      <h2>🧮 Loan Payment Calculator</h2>
+      <p>Estimate your monthly payment before you apply. Adjust the numbers to compare scenarios.</p>
+      <div class="compare-inputs">
+        <div class="form-group"><label>Loan Amount ($)</label><input type="number" id="cmp-amount" value="25000" oninput="calcLoan()"></div>
+        <div class="form-group"><label>Interest Rate (% APR)</label><input type="number" id="cmp-rate" value="6.99" step="0.01" oninput="calcLoan()"></div>
+        <div class="form-group"><label>Loan Term</label>
+          <select id="cmp-term" onchange="calcLoan()">
+            <option value="12">1 year</option>
+            <option value="24">2 years</option>
+            <option value="36" selected>3 years</option>
+            <option value="48">4 years</option>
+            <option value="60">5 years</option>
+            <option value="84">7 years</option>
+            <option value="120">10 years</option>
+            <option value="180">15 years</option>
+            <option value="240">20 years</option>
+            <option value="360">30 years</option>
+          </select>
+        </div>
+      </div>
+      <div class="compare-results" id="compare-results"></div>
+    </div>
+
+    <!-- FEATURED RATE BANNER + AFFILIATE (Pro only) -->
+    <div id="affiliate-gate">
+      <div class="lock-gate" style="margin-bottom:1.5rem;">
+        <div class="lg-icon">🏦</div>
+        <h3>Partner Lender Rates <span class="premium-badge">PRO</span></h3>
+        <p>Access exclusive mortgage, personal loan, auto loan, and refinance rates from top lenders — plus our loan payment calculator and rate comparison tools.</p>
+        <button class="lock-gate-btn" onclick="showPaywall('resources')">Unlock with Pro — $4.99/mo</button>
+        <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--muted)">7-day free trial · Cancel anytime</div>
+      </div>
+    </div>
+
+    <div id="affiliate-content" style="display:none">
+      <div id="rate-banner" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1.75rem;"></div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0.65rem 1rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:0.6rem;">
+        <span style="font-size:1rem;">ℹ️</span>
+        <p style="font-size:0.75rem;color:var(--muted);line-height:1.5;"><strong style="color:var(--dark);">Affiliate Disclosure:</strong> Fintrail may earn a commission when you apply through our partner links, at no extra cost to you. Rates shown are representative and subject to change. Always verify current rates directly with the lender.</p>
+      </div>
+    </div>
+
+    <div class="resources-grid" id="resources-grid"></div>
+  </div>
+
+  <!-- GUIDE TAB -->
+  <div class="tab-section" id="tab-guide">
+
+    <!-- PREMIUM GATE (shown when not pro) -->
+    <div id="guide-gate" style="display:none">
+      <div class="lock-gate">
+        <div class="lg-icon">📘</div>
+        <h3>Credit & DTI Guides <span class="premium-badge">PRO</span></h3>
+        <p>Get step-by-step credit score improvement plans, spending factor breakdowns, and advanced debt-to-income reduction strategies — all in one place.</p>
+        <button class="lock-gate-btn" onclick="showPaywall('guide')">Unlock with Pro — $4.99/mo</button>
+        <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--muted)">7-day free trial · Cancel anytime</div>
+      </div>
+    </div>
+
+    <!-- GUIDE CONTENT (shown when pro) -->
+    <div id="guide-content">
+    <div class="guide-intro">
+      <div class="guide-intro-card active" id="gi-credit" onclick="switchGuide('credit')">
+        <div class="gi-icon">⭐</div>
+        <h3>Improve Your Credit Score</h3>
+        <p>Step-by-step actions to build and maintain a strong credit profile.</p>
+      </div>
+      <div class="guide-intro-card" id="gi-dti" onclick="switchGuide('dti')">
+        <div class="gi-icon">⚖️</div>
+        <h3>Lower Your Debt-to-Income</h3>
+        <p>Calculate your DTI ratio and get a personalized plan to reduce it.</p>
+      </div>
+    </div>
+
+    <!-- CREDIT SCORE PANEL -->
+    <div class="guide-panel visible" id="panel-credit">
+      <div class="card">
+        <h2>Understanding Your Credit Score</h2>
+        <p style="color:var(--muted);font-size:0.875rem;line-height:1.6;">Your credit score is a 3-digit number (300–850) that lenders use to judge your creditworthiness. A higher score means better loan rates, lower insurance premiums, and more financial opportunities.</p>
+
+        <div class="score-bands">
+          <div class="score-band band-poor"><div class="sb-range">300–579</div><div class="sb-label">Poor</div></div>
+          <div class="score-band band-fair"><div class="sb-range">580–669</div><div class="sb-label">Fair</div></div>
+          <div class="score-band band-good"><div class="sb-range">670–739</div><div class="sb-label">Good</div></div>
+          <div class="score-band band-vgood"><div class="sb-range">740–799</div><div class="sb-label">Very Good</div></div>
+          <div class="score-band band-exc"><div class="sb-range">800–850</div><div class="sb-label">Exceptional</div></div>
+        </div>
+
+        <h2 style="margin-top:1.5rem;">What Makes Up Your Score?</h2>
+        <div style="margin:1rem 0;">
+          <div class="bar-row" style="margin-bottom:0.5rem;"><div class="bar-label" style="width:160px;text-align:left;font-weight:600;font-size:0.82rem;">Payment History</div><div class="bar-track"><div class="bar-fill" style="width:35%;background:var(--accent);"></div></div><div class="bar-val" style="color:var(--accent);">35%</div></div>
+          <div class="bar-row" style="margin-bottom:0.5rem;"><div class="bar-label" style="width:160px;text-align:left;font-weight:600;font-size:0.82rem;">Amounts Owed</div><div class="bar-track"><div class="bar-fill" style="width:30%;background:#2196a3;"></div></div><div class="bar-val" style="color:#2196a3;">30%</div></div>
+          <div class="bar-row" style="margin-bottom:0.5rem;"><div class="bar-label" style="width:160px;text-align:left;font-weight:600;font-size:0.82rem;">Credit History Length</div><div class="bar-track"><div class="bar-fill" style="width:15%;background:var(--accent2);"></div></div><div class="bar-val" style="color:#8a6500;">15%</div></div>
+          <div class="bar-row" style="margin-bottom:0.5rem;"><div class="bar-label" style="width:160px;text-align:left;font-weight:600;font-size:0.82rem;">Credit Mix</div><div class="bar-track"><div class="bar-fill" style="width:10%;background:#a06bb5;"></div></div><div class="bar-val" style="color:#6b2fa0;">10%</div></div>
+          <div class="bar-row"><div class="bar-label" style="width:160px;text-align:left;font-weight:600;font-size:0.82rem;">New Credit</div><div class="bar-track"><div class="bar-fill" style="width:10%;background:#c1440e;"></div></div><div class="bar-val" style="color:var(--expense-color);">10%</div></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:1.5rem;">
+        <h2>Action Plan: Boost Your Score</h2>
+        <div class="steps-list">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Always Pay On Time</h4>
+              <p>Payment history is the single biggest factor at 35%. Even one missed payment can drop your score by 50–100 points. Set up autopay for at least the minimum on all accounts.</p>
+              <span class="step-impact high">🔥 Highest Impact</span>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>Keep Credit Utilization Below 30%</h4>
+              <p>Utilization is how much of your credit limit you're using. If your card limit is $5,000, keep your balance under $1,500. Under 10% is ideal. Pay down balances or request a limit increase.</p>
+              <span class="step-impact high">🔥 Highest Impact</span>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>Don't Close Old Accounts</h4>
+              <p>Length of credit history matters. Closing an old card reduces your average account age and total available credit — both can hurt your score. Keep old accounts open, even if unused.</p>
+              <span class="step-impact medium">⚡ Medium Impact</span>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <h4>Limit Hard Inquiries</h4>
+              <p>Every time you apply for new credit, a hard inquiry is recorded. Each one can lower your score by 5–10 points. Only apply for credit when you truly need it, and do rate shopping within a 14-day window.</p>
+              <span class="step-impact medium">⚡ Medium Impact</span>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">5</div>
+            <div class="step-content">
+              <h4>Dispute Errors on Your Credit Report</h4>
+              <p>1 in 5 credit reports contain errors. Check yours for free at AnnualCreditReport.com. Dispute inaccuracies with the bureaus (Equifax, Experian, TransUnion) — errors must be corrected within 30 days.</p>
+              <span class="step-impact high">🔥 High Impact</span>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">6</div>
+            <div class="step-content">
+              <h4>Diversify Your Credit Mix</h4>
+              <p>Having a mix of credit types — credit cards, installment loans, auto loans — shows lenders you can manage different kinds of debt responsibly. Don't open accounts just for this, but keep it in mind.</p>
+              <span class="step-impact medium">⚡ Medium Impact</span>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">7</div>
+            <div class="step-content">
+              <h4>Become an Authorized User</h4>
+              <p>Ask a trusted family member or friend with good credit to add you as an authorized user on their card. Their positive history can boost your score — even if you never use the card.</p>
+              <span class="step-impact medium">⚡ Medium Impact</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip-bar" style="margin-top:1.5rem;">
+        <div class="tip-icon">📅</div>
+        <p><strong>Timeline reality check:</strong> With consistent effort, most people see meaningful improvement in <strong style="color:var(--accent2);">3–6 months</strong>. Severe damage (bankruptcy, collections) can take 2–7 years to fade. Start now — time is your best tool.</p>
+      </div>
+    </div>
+
+    <!-- DTI PANEL -->
+    <div class="guide-panel" id="panel-dti">
+      <div class="card">
+        <h2>What Is Debt-to-Income Ratio?</h2>
+        <p style="color:var(--muted);font-size:0.875rem;line-height:1.6;margin-bottom:1rem;">Your DTI ratio compares your total monthly debt payments to your gross monthly income. Lenders use it to decide if you can afford new debt. A lower DTI means less financial stress and better loan eligibility.</p>
+        <p style="color:var(--muted);font-size:0.875rem;line-height:1.6;"><strong style="color:var(--dark);">Formula:</strong> (Total Monthly Debt Payments ÷ Gross Monthly Income) × 100</p>
+
+        <div class="dti-zones" style="margin-top:1.25rem;">
+          <div class="dti-zone zone-good"><span class="dz-range">Under 36%</span>Healthy — most lenders approve</div>
+          <div class="dti-zone zone-ok"><span class="dz-range">36% – 49%</span>Needs attention — harder to borrow</div>
+          <div class="dti-zone zone-high"><span class="dz-range">50%+</span>High risk — focus on reducing now</div>
+        </div>
+
+        <!-- DTI CALCULATOR -->
+        <div class="dti-calc">
+          <h3>🧮 Calculate Your DTI</h3>
+          <div class="dti-inputs">
+            <div class="form-group"><label>Gross Monthly Income ($)</label><input type="number" id="dti-income" placeholder="e.g. 5000" oninput="calcDTI()"></div>
+            <div class="form-group"><label>Monthly Rent / Mortgage ($)</label><input type="number" id="dti-rent" placeholder="e.g. 1200" oninput="calcDTI()"></div>
+            <div class="form-group"><label>Car Payment ($)</label><input type="number" id="dti-car" placeholder="e.g. 350" oninput="calcDTI()"></div>
+            <div class="form-group"><label>Credit Card Minimums ($)</label><input type="number" id="dti-cc" placeholder="e.g. 150" oninput="calcDTI()"></div>
+            <div class="form-group"><label>Student Loans ($)</label><input type="number" id="dti-student" placeholder="e.g. 200" oninput="calcDTI()"></div>
+            <div class="form-group"><label>Other Monthly Debts ($)</label><input type="number" id="dti-other" placeholder="e.g. 100" oninput="calcDTI()"></div>
+          </div>
+          <div class="dti-result" id="dti-result" style="display:none;">
+            <div class="dti-pct" id="dti-pct">—</div>
+            <div class="dti-label">Debt-to-Income Ratio</div>
+            <div class="dti-bar-track"><div class="dti-bar-fill" id="dti-bar"></div></div>
+            <div class="dti-verdict" id="dti-verdict"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:1.5rem;">
+        <h2>How to Lower Your DTI</h2>
+        <div class="dti-tips">
+          <div class="dti-tip">
+            <div class="dt-icon">💳</div>
+            <div>
+              <h4>Pay Down High-Balance Debts First (Avalanche Method)</h4>
+              <p>List all debts by interest rate. Put any extra money toward the highest-rate debt while paying minimums on others. This saves the most money over time and reduces your DTI faster.</p>
+            </div>
+          </div>
+          <div class="dti-tip">
+            <div class="dt-icon">🎯</div>
+            <div>
+              <h4>Try the Snowball Method for Motivation</h4>
+              <p>Pay off your smallest debt first regardless of interest rate. The psychological win of eliminating accounts keeps you motivated and reduces the number of monthly payments in your DTI.</p>
+            </div>
+          </div>
+          <div class="dti-tip">
+            <div class="dt-icon">🔄</div>
+            <div>
+              <h4>Refinance or Consolidate Debt</h4>
+              <p>Combine multiple high-interest debts into one lower-rate loan. This can reduce your total monthly payment amount, directly lowering your DTI. Look for balance transfer cards with 0% APR intro offers.</p>
+            </div>
+          </div>
+          <div class="dti-tip">
+            <div class="dt-icon">📈</div>
+            <div>
+              <h4>Increase Your Income</h4>
+              <p>DTI improves by raising your income just as much as reducing debt. Consider a side gig, freelance work, selling unused items, or negotiating a raise. Even a small income boost noticeably shifts your ratio.</p>
+            </div>
+          </div>
+          <div class="dti-tip">
+            <div class="dt-icon">🚫</div>
+            <div>
+              <h4>Avoid Taking On New Debt</h4>
+              <p>While paying down existing debt, avoid adding new monthly obligations. Hold off on car loans, new credit cards, or financing purchases until your DTI is in a healthy range.</p>
+            </div>
+          </div>
+          <div class="dti-tip">
+            <div class="dt-icon">🏠</div>
+            <div>
+              <h4>Reduce Your Biggest Fixed Expenses</h4>
+              <p>Housing is often the largest DTI component. If rent or mortgage exceeds 30% of income alone, consider downsizing, getting a roommate, or refinancing your mortgage to a lower rate.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip-bar" style="margin-top:1.5rem;">
+        <div class="tip-icon">🎯</div>
+        <p><strong>Lender target:</strong> Most mortgage lenders want a DTI under <strong style="color:var(--accent2);">43%</strong>, and the best rates go to borrowers under <strong style="color:var(--accent2);">36%</strong>. Getting below 20% puts you in elite financial health territory.</p>
+      </div>
+    </div>
+
+  </div><!-- end guide-content -->
+  </div><!-- end tab-guide -->
+
+  <!-- AI ADVISOR TAB -->
+  <div class="tab-section" id="tab-ai">
+
+    <!-- PREMIUM GATE -->
+    <div id="ai-gate" style="display:none">
+      <div class="lock-gate">
+        <div class="lg-icon">💬</div>
+        <h3>AI Financial Advisor <span class="premium-badge">PRO</span></h3>
+        <p>Chat with your personal AI finance coach — ask about budgeting, credit, debt payoff, investing basics, and more. Unlimited questions, instant answers.</p>
+        <button class="lock-gate-btn" onclick="showPaywall('ai')">Unlock with Pro — $4.99/mo</button>
+        <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--muted)">7-day free trial · Cancel anytime</div>
+      </div>
+    </div>
+
+    <!-- AI CONTENT -->
+    <div id="ai-content">
+    <div class="ai-layout">
+
+      <!-- SIDEBAR -->
+      <div class="ai-sidebar">
+        <div class="card">
+          <h3>💡 Suggested Questions</h3>
+          <button class="suggested-btn" onclick="askSuggested(this)">How do I start building credit from scratch?</button>
+          <button class="suggested-btn" onclick="askSuggested(this)">What's the fastest way to pay off credit card debt?</button>
+          <button class="suggested-btn" onclick="askSuggested(this)">How much should I have in an emergency fund?</button>
+          <button class="suggested-btn" onclick="askSuggested(this)">What's the difference between a Roth IRA and a 401k?</button>
+          <button class="suggested-btn" onclick="askSuggested(this)">How can I improve my chances of getting a loan approved?</button>
+          <button class="suggested-btn" onclick="askSuggested(this)">What are the best ways to save money on a tight budget?</button>
+          <button class="suggested-btn" onclick="askSuggested(this)">Should I pay off debt or invest first?</button>
+        </div>
+        <div class="card">
+          <h3>ℹ️ About this Advisor</h3>
+          <p style="font-size:0.8rem;color:var(--muted);line-height:1.6;">This AI provides general financial education and guidance. It is not a licensed financial advisor. For personalized advice, consult a certified financial planner (CFP).</p>
+        </div>
+      </div>
+
+      <!-- CHAT WINDOW -->
+      <div class="chat-window">
+        <div class="chat-header">
+          <div class="chat-avatar">💰</div>
+          <div class="chat-header-info">
+            <h3>Fintrail AI Advisor</h3>
+            <p><span class="online-dot"></span>Online — ask me anything about finances</p>
+          </div>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+          <div class="msg ai">
+            <div class="msg-avatar">💰</div>
+            <div class="msg-bubble">
+              <p>Hi! I'm your Fintrail AI Advisor. I can help you with budgeting, credit scores, debt management, saving, investing, and more.</p>
+              <p>What financial question can I help you with today?</p>
+            </div>
+          </div>
+        </div>
+        <div class="chat-input-area">
+          <textarea class="chat-input" id="chat-input" rows="1" placeholder="Ask a finance question..." onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+          <button class="send-btn" id="send-btn" onclick="sendMessage()">➤</button>
+        </div>
+        <div class="disclaimer">For educational purposes only. Not financial advice.</div>
+      </div>
+
+    </div>
+  </div><!-- end ai-content -->
+  </div><!-- end tab-ai -->
+  <div class="tab-section" id="tab-savings">
+
+    <!-- SUMMARY STATS -->
+    <div class="goals-summary">
+      <div class="goal-stat"><label>Total Goals</label><div class="gs-val" id="gs-count">0</div></div>
+      <div class="goal-stat"><label>Total Saved</label><div class="gs-val" id="gs-saved">$0</div></div>
+      <div class="goal-stat"><label>Total Target</label><div class="gs-val" id="gs-target">$0</div></div>
+    </div>
+
+    <div class="goals-top">
+      <!-- GOALS LIST -->
+      <div>
+        <div class="goals-grid" id="goals-grid">
+          <div class="empty-goals" id="goals-empty">
+            <div class="eg-icon">🎯</div>
+            <p style="font-weight:600;margin-bottom:0.3rem;">No goals yet</p>
+            <p style="font-size:0.85rem;">Add your first savings goal to get started!</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADD GOAL FORM -->
+      <div class="card new-goal-form">
+        <h2>Add New Goal</h2>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Goal Name</label>
+            <input type="text" id="g-name" placeholder="e.g. Emergency Fund, Vacation">
+          </div>
+          <div class="form-group">
+            <label>Icon</label>
+            <div class="emoji-picker" id="emoji-picker">
+              <div class="emoji-opt selected" onclick="selectEmoji(this)">🎯</div>
+              <div class="emoji-opt" onclick="selectEmoji(this)">🏠</div>
+              <div class="emoji-opt" onclick="selectEmoji(this)">🚗</div>
+              <div class="emoji-opt" onclick="selectEmoji(this)">✈️</div>
+              <div class="emoji-opt" onclick="selectEmoji(this)">🎓</div>
+              <div class="emoji-opt" onclick="selectEmoji(this)">💍</div>
+              <div class="emoji-opt" onclick="selectEmoji(this)">👶</div>
+              <div class="emoji-opt" onclick="selectEmoji(this)">💻</div>
+              <div class="emoji-opt" onclick="selectEmoji(this)">🏥</div>
+              <div class="emoji-opt" onclick="selectEmoji(this)">🐾</div>
+              <div class="emoji-opt" onclick="selectEmoji(this)">💰</div>
+              <div class="emoji-opt" onclick="selectEmoji(this)">🌟</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Target Amount ($)</label>
+            <input type="number" id="g-target" placeholder="e.g. 5000" min="1">
+          </div>
+          <div class="form-group">
+            <label>Already Saved ($)</label>
+            <input type="number" id="g-saved" placeholder="0" min="0">
+          </div>
+          <div class="form-group">
+            <label>Target Date (optional)</label>
+            <input type="date" id="g-date">
+          </div>
+          <div class="form-group">
+            <label>Category</label>
+            <select id="g-category">
+              <option>Emergency Fund</option>
+              <option>Home</option>
+              <option>Vehicle</option>
+              <option>Travel</option>
+              <option>Education</option>
+              <option>Wedding</option>
+              <option>Family</option>
+              <option>Tech</option>
+              <option>Health</option>
+              <option>Retirement</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <button class="add-btn" onclick="addGoal()">+ Add Goal</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-bar">
+      <div class="tip-icon">💡</div>
+      <p><strong>Automate it:</strong> Set up an automatic transfer to savings on payday. Treating savings like a fixed expense is the single most effective habit for reaching financial goals.</p>
+    </div>
+
+  </div>
+
+  <!-- PREMIUM FEATURES TAB -->
+  <div class="tab-section" id="tab-premium">
+
+    <div id="premium-tab-gate" style="display:none">
+      <div class="lock-gate">
+        <div class="lg-icon">🏆</div>
+        <h3>Premium Features <span class="premium-badge">PRO</span></h3>
+        <p>Unlock your Financial Health Score, personalized Debt Payoff Planner, and smart Budget Alerts.</p>
+        <button class="lock-gate-btn" onclick="showPaywall('premium')">Unlock with Pro — $4.99/mo</button>
+        <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--muted)">7-day free trial · Cancel anytime</div>
+      </div>
+    </div>
+
+    <div id="premium-tab-content">
+
+      <!-- HEALTH SCORE + ALERTS ROW -->
+      <div class="premium-grid">
+
+        <!-- FINANCIAL HEALTH SCORE -->
+        <div class="health-score-card">
+          <h2>🏆 Financial Health Score</h2>
+          <div class="score-gauge">
+            <svg viewBox="0 0 200 110" width="100%">
+              <path class="gauge-bg" d="M20,100 A80,80 0 0,1 180,100"/>
+              <path class="gauge-fill" id="gauge-fill" d="M20,100 A80,80 0 0,1 180,100" stroke="#f05555"
+                stroke-dasharray="251.2" stroke-dashoffset="251.2"/>
+            </svg>
+            <div style="position:absolute;bottom:0;width:100%;text-align:center;">
+              <span class="score-number" id="health-score-num">--</span>
+              <span class="score-label" id="health-score-label">Calculating...</span>
+            </div>
+          </div>
+          <div class="score-breakdown" id="score-breakdown"></div>
+          <button class="add-btn" style="margin-top:1rem;width:100%" onclick="calculateHealthScore()">Recalculate Score</button>
+        </div>
+
+        <!-- ALERTS -->
+        <div class="alerts-card">
+          <h2>📱 Budget Alerts & Reminders</h2>
+          <p>Get browser notifications for upcoming bills and budget warnings so you never miss a payment.</p>
+
+          <div class="alert-toggle-row">
+            <div class="atr-left">
+              <span class="atr-icon">📅</span>
+              <div class="atr-info">
+                <h4>Upcoming Bill Reminders</h4>
+                <p>3 days before each bill is due</p>
+              </div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="alert-bills" onchange="saveAlertPrefs()">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="alert-toggle-row">
+            <div class="atr-left">
+              <span class="atr-icon">⚠️</span>
+              <div class="atr-info">
+                <h4>Overspending Warnings</h4>
+                <p>When expenses exceed income</p>
+              </div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="alert-budget" onchange="saveAlertPrefs()">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="alert-toggle-row">
+            <div class="atr-left">
+              <span class="atr-icon">🎯</span>
+              <div class="atr-info">
+                <h4>Savings Goal Milestones</h4>
+                <p>When you hit 25%, 50%, 75%, 100%</p>
+              </div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="alert-goals" onchange="saveAlertPrefs()">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="alert-toggle-row">
+            <div class="atr-left">
+              <span class="atr-icon">💰</span>
+              <div class="atr-info">
+                <h4>Payday Reminders</h4>
+                <p>Reminder to log income on payday</p>
+              </div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="alert-payday" onchange="saveAlertPrefs()">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div id="notif-status" class="notif-status pending">Click below to enable browser notifications</div>
+          <button class="alert-test-btn" onclick="requestNotifications()">🔔 Enable Notifications</button>
+          <button class="alert-test-btn" style="margin-top:0.5rem" onclick="sendTestNotification()">Test Notification</button>
+        </div>
+
+      </div>
+
+      <!-- DEBT PAYOFF PLANNER -->
+      <div class="planner-card">
+        <h2>🎯 Personalized Debt Payoff Planner</h2>
+        <p>Enter your debts below and we'll build a personalized payoff plan using either the Avalanche (highest interest first) or Snowball (smallest balance first) method.</p>
+
+        <div class="method-toggle">
+          <button class="method-btn active" id="method-avalanche" onclick="setMethod('avalanche', this)">🔥 Avalanche (saves most money)</button>
+          <button class="method-btn" id="method-snowball" onclick="setMethod('snowball', this)">⛄ Snowball (fastest wins)</button>
+        </div>
+
+        <div class="planner-inputs">
+          <div class="form-group"><label>Extra Monthly Payment ($)</label><input type="number" id="extra-payment" value="200" placeholder="e.g. 200" oninput="runPayoffPlan()"></div>
+          <div class="form-group"><label>Annual Return on Savings (%)</label><input type="number" id="savings-rate" value="4.5" step="0.1" placeholder="e.g. 4.5" oninput="runPayoffPlan()"></div>
+        </div>
+
+        <!-- ADD DEBT FORM -->
+        <div style="background:var(--bg);border-radius:10px;padding:1rem;margin-bottom:1rem;border:1px solid var(--border)">
+          <div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:0.6rem;align-items:end;">
+            <div class="form-group"><label>Debt Name</label><input type="text" id="debt-name" placeholder="e.g. Credit Card"></div>
+            <div class="form-group"><label>Balance ($)</label><input type="number" id="debt-balance" placeholder="5000"></div>
+            <div class="form-group"><label>APR (%)</label><input type="number" id="debt-apr" placeholder="19.99" step="0.01"></div>
+            <button class="add-btn" style="margin-top:0" onclick="addDebt()">+</button>
+          </div>
+        </div>
+
+        <div id="debt-list" style="display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1rem;"></div>
+
+        <div id="plan-result" style="display:none">
+          <div class="plan-result">
+            <div class="plan-result-grid" id="plan-summary"></div>
+            <div class="payoff-timeline" id="payoff-timeline"></div>
+          </div>
+        </div>
+        <div id="plan-empty" style="text-align:center;color:var(--muted);font-size:0.85rem;padding:1.5rem">Add your debts above to generate your personalized payoff plan.</div>
+      </div>
+
+      <div class="tip-bar" style="margin-top:0">
+        <div class="tip-icon">🏆</div>
+        <p><strong>Your score updates automatically</strong> as you add transactions, bills, and savings goals. The higher your score the better your financial health — aim for <strong>80+</strong> to qualify for the best loan rates!</p>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<script>
+  // STATE
+  let transactions = [];
+  let currentType = 'income';
+  let currentFilter = 'all';
+
+  // RESOURCES DATA — affiliate-ready
+  const resources = [
+    // MORTGAGES
+    {
+      tag: 'mortgage', featured: true,
+      title: 'Better Mortgage', logo: '🏠',
+      badges: ['badge-featured|⭐ Featured', 'badge-low|Low Rates', 'badge-fast|100% Online'],
+      rates: [{ val:'6.49%', label:'30-yr Fixed' }, { val:'6.12%', label:'15-yr Fixed' }, { val:'5.89%', label:'5/1 ARM' }],
+      desc: 'Commission-free mortgage lender with an entirely online process. Pre-approval in as little as 3 minutes.',
+      cta: 'Check Your Rate', url: 'https://www.better.com', ctaStyle: '',
+      fine: 'Rates shown are representative APRs. Your rate depends on credit score, down payment & loan amount.',
+      commission: '💰 Earn $150–$300 per funded loan referral'
+    },
+    {
+      tag: 'mortgage',
+      title: 'Rocket Mortgage', logo: '🚀',
+      badges: ['badge-fast|Fast Approval', 'badge-nofe|No Hidden Fees'],
+      rates: [{ val:'6.62%', label:'30-yr Fixed' }, { val:'6.25%', label:'15-yr Fixed' }],
+      desc: 'America\'s largest mortgage lender. Easy online application, verified approval in minutes.',
+      cta: 'Get Pre-Approved', url: 'https://www.rocketmortgage.com', ctaStyle: '',
+      fine: 'Rates change daily. Rate shown is sample APR for illustrative purposes.',
+      commission: '💰 Earn $200–$400 per closed referral'
+    },
+    {
+      tag: 'mortgage',
+      title: 'LoanDepot', logo: '🏡',
+      badges: ['badge-low|Competitive Rates', 'badge-fast|Fast Close'],
+      rates: [{ val:'6.55%', label:'30-yr Fixed' }, { val:'6.18%', label:'15-yr Fixed' }],
+      desc: 'One of the nation\'s largest non-bank lenders. Offers FHA, VA, jumbo, and conventional loans.',
+      cta: 'Get a Quote', url: 'https://www.loandepot.com', ctaStyle: '',
+      fine: 'Advertised rates are for well-qualified borrowers. Verify current rates on their site.',
+      commission: '💰 Earn $150–$250 per lead'
+    },
+    // PERSONAL LOANS
+    {
+      tag: 'personal', featured: true,
+      title: 'SoFi Personal Loans', logo: '💳',
+      badges: ['badge-featured|⭐ Featured', 'badge-nofe|No Fees', 'badge-low|Low APR'],
+      rates: [{ val:'8.99%', label:'Starting APR' }, { val:'$5K–$100K', label:'Loan Range' }],
+      desc: 'No origination fees, no prepayment penalties. Borrow $5K–$100K with same-day funding available.',
+      cta: 'Check Your Rate', url: 'https://www.sofi.com/personal-loans/', ctaStyle: '',
+      fine: 'APR range: 8.99%–29.99%. Rate depends on creditworthiness. Soft credit check for pre-qualification.',
+      commission: '💰 Earn $100–$150 per funded loan'
+    },
+    {
+      tag: 'personal',
+      title: 'LightStream', logo: '⚡',
+      badges: ['badge-low|Lowest Rates', 'badge-nofe|No Fees'],
+      rates: [{ val:'7.49%', label:'Starting APR' }, { val:'$5K–$100K', label:'Loan Range' }],
+      desc: 'Truist\'s online lending division. Offers the lowest rates for excellent credit borrowers.',
+      cta: 'Apply Now', url: 'https://www.lightstream.com', ctaStyle: '',
+      fine: 'Rates start at 7.49% APR with AutoPay. Requires good to excellent credit.',
+      commission: '💰 Earn $80–$120 per funded loan'
+    },
+    {
+      tag: 'personal',
+      title: 'Upstart', logo: '🎓',
+      badges: ['badge-fast|AI-Powered Approval', 'badge-low|Fair Credit OK'],
+      rates: [{ val:'6.40%', label:'Starting APR' }, { val:'$1K–$50K', label:'Loan Range' }],
+      desc: 'Uses AI and education/employment data — not just credit score — to offer better rates to more people.',
+      cta: 'Check Rate', url: 'https://www.upstart.com', ctaStyle: '',
+      fine: 'Average APR 21.97%. Available to borrowers with limited credit history.',
+      commission: '💰 Earn $60–$100 per funded loan'
+    },
+    // AUTO LOANS
+    {
+      tag: 'auto', featured: true,
+      title: 'PenFed Credit Union', logo: '🚗',
+      badges: ['badge-featured|⭐ Featured', 'badge-low|Lowest Auto Rates'],
+      rates: [{ val:'4.74%', label:'New Auto APR' }, { val:'5.24%', label:'Used Auto APR' }],
+      desc: 'Pentagon Federal Credit Union offers some of the lowest auto loan rates nationwide. Open to everyone.',
+      cta: 'Apply for Auto Loan', url: 'https://www.penfed.org/auto-loans', ctaStyle: '',
+      fine: 'Rates as low as 4.74% APR for new autos with excellent credit. Membership required.',
+      commission: '💰 Earn $50–$100 per funded auto loan'
+    },
+    {
+      tag: 'auto',
+      title: 'LightStream Auto', logo: '🚙',
+      badges: ['badge-nofe|No Restrictions', 'badge-fast|Same-Day Funding'],
+      rates: [{ val:'6.49%', label:'Starting APR' }, { val:'$5K–$100K', label:'Loan Range' }],
+      desc: 'Finance any vehicle — new, used, or private party. No restrictions on age or mileage.',
+      cta: 'Get Auto Loan', url: 'https://www.lightstream.com/auto-loans', ctaStyle: '',
+      fine: 'Rate with AutoPay discount. Subject to credit approval.',
+      commission: '💰 Earn $75–$120 per funded loan'
+    },
+    {
+      tag: 'auto',
+      title: 'myAutoloan', logo: '🔑',
+      badges: ['badge-fast|4 Offers in Minutes', 'badge-low|Compare Rates'],
+      rates: [{ val:'5.29%', label:'Starting APR' }, { val:'Multiple', label:'Lenders' }],
+      desc: 'Get up to 4 competing loan offers from lenders in minutes. Best for comparison shopping.',
+      cta: 'Compare Offers', url: 'https://www.myautoloan.com', ctaStyle: '',
+      fine: 'Rates vary by lender, credit score, and vehicle. Soft pull for initial offers.',
+      commission: '💰 Earn $40–$80 per qualified lead'
+    },
+    // REFINANCE
+    {
+      tag: 'refi', featured: true,
+      title: 'Credible', logo: '🔄',
+      badges: ['badge-featured|⭐ Featured', 'badge-fast|Compare 10+ Lenders'],
+      rates: [{ val:'6.25%', label:'Refi from' }, { val:'No Impact', label:'Credit Check' }],
+      desc: 'Compare real pre-qualified refinance rates from 10+ lenders in 2 minutes. No hard credit pull.',
+      cta: 'Compare Refi Rates', url: 'https://www.credible.com/refinance-mortgage', ctaStyle: '',
+      fine: 'Rates shown are lowest available. Your rate depends on credit, LTV, and loan term.',
+      commission: '💰 Earn $150–$350 per closed refi'
+    },
+    {
+      tag: 'refi',
+      title: 'SoFi Student Loan Refi', logo: '🎓',
+      badges: ['badge-nofe|No Fees', 'badge-low|Low Rates'],
+      rates: [{ val:'4.99%', label:'Fixed from' }, { val:'4.74%', label:'Variable from' }],
+      desc: 'Refinance federal or private student loans. No origination fees, career coaching included.',
+      cta: 'Refinance Student Loans', url: 'https://www.sofi.com/refinance-student-loan/', ctaStyle: '',
+      fine: 'Refinancing federal loans removes federal protections. Consider carefully before refinancing.',
+      commission: '💰 Earn $100–$200 per funded refi'
+    },
+    // GRANTS
+    { tag: 'grants', tagLabel: 'Grant', title: 'Grants.gov', logo: '🎁', badges: ['badge-low|Free'], rates: [], desc: 'The official U.S. government site listing thousands of federal grant opportunities across all sectors.', cta: 'Browse Grants', url: 'https://www.grants.gov', ctaStyle: 'secondary', fine: '', commission: '' },
+    { tag: 'grants', tagLabel: 'Grant', title: 'CDFI Fund', logo: '🏘️', badges: ['badge-low|Community Focus'], rates: [], desc: 'Grants for low-income and underserved communities from the U.S. Treasury Department.', cta: 'Learn More', url: 'https://www.cdfifund.gov', ctaStyle: 'secondary', fine: '', commission: '' },
+    { tag: 'grants', tagLabel: 'Grant', title: 'SBA Grants', logo: '💼', badges: ['badge-low|Small Business'], rates: [], desc: 'Small Business Administration grant programs for qualifying businesses and entrepreneurs.', cta: 'Find Grants', url: 'https://www.sba.gov/funding-programs/grants', ctaStyle: 'secondary', fine: '', commission: '' },
+    // TOOLS
+    { tag: 'tools', title: 'Credit Karma', logo: '📊', badges: ['badge-nofe|Free Forever'], rates: [], desc: 'Free credit score monitoring, personalized recommendations, and financial insights.', cta: 'Check Score Free', url: 'https://www.creditkarma.com', ctaStyle: 'secondary', fine: '', commission: '💰 Earn $2–$10 per signup' },
+    { tag: 'tools', title: 'YNAB', logo: '📋', badges: ['badge-fast|Best Budgeting App'], rates: [], desc: 'Proactive budgeting software. Average user saves $600 in the first 2 months.', cta: 'Try Free 34 Days', url: 'https://www.youneedabudget.com', ctaStyle: 'secondary', fine: '', commission: '💰 Earn $10–$20 per subscription' },
+    // EDUCATION
+    { tag: 'education', title: 'Khan Academy Finance', logo: '📚', badges: ['badge-nofe|100% Free'], rates: [], desc: 'World-class finance and economics courses from basic budgeting to advanced investing.', cta: 'Start Learning', url: 'https://www.khanacademy.org/economics-finance-domain', ctaStyle: 'secondary', fine: '', commission: '' },
+    { tag: 'education', title: 'NerdWallet', logo: '🤓', badges: ['badge-fast|Expert Guides'], rates: [], desc: 'Expert personal finance advice, product comparisons, and guides for every financial decision.', cta: 'Read Guides', url: 'https://www.nerdwallet.com', ctaStyle: 'secondary', fine: '', commission: '💰 Earn via product referrals' },
+  ];
+
+  const rateBannerData = [
+    { type: '30-yr Mortgage', rate: '6.49%', note: 'via Better' },
+    { type: 'Personal Loan', rate: '7.49%', note: 'via LightStream' },
+    { type: 'Auto Loan', rate: '4.74%', note: 'via PenFed' },
+    { type: 'Student Refi', rate: '4.99%', note: 'via SoFi' },
+  ];
+
+  // ======================================================
+  // SUPABASE CONFIG — replace with your project credentials
+  // Get these from: https://supabase.com → Project Settings → API
+  // ======================================================
+  const SUPABASE_URL = 'https://lxwebkcqaqmyguawqipw.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx4d2Via2NxYXFteWd1YXdxaXB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyMDk2NDgsImV4cCI6MjA5NDc4NTY0OH0.Es1RXWv7orK97TYaQzLmpnMwQND-sth6XyRts3WRBcg';
+
+  const sbClient = (SUPABASE_URL !== 'YOUR_SUPABASE_URL')
+    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+    : null;
+
+  let currentUser = null;
+
+  // AUTH INIT — check if already logged in
+  async function initAuth() {
+    if (!sbClient) {
+      // Demo mode — skip auth, show app with notice
+      document.getElementById('auth-screen').style.display = 'none';
+      document.getElementById('setup-banner').style.display = 'flex';
+      setUserUI({ email: 'demo@fintrail.app', user_metadata: { full_name: 'Demo User' } });
+      return;
+    }
+    const { data: { session } } = await sbClient.auth.getSession();
+    if (session?.user) {
+      currentUser = session.user;
+      showApp(currentUser);
+    }
+    // Listen for auth changes
+    sbClient.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) { currentUser = session.user; showApp(currentUser); }
+      else { currentUser = null; document.getElementById('auth-screen').style.display = 'flex'; }
+    });
+  }
+
+  function showApp(user) {
+    document.getElementById('auth-screen').style.display = 'none';
+    setUserUI(user);
+    loadUserData();
+  }
+
+  function setUserUI(user) {
+    const name = user.user_metadata?.full_name || user.email.split('@')[0];
+    const email = user.email;
+    document.getElementById('ab-status').textContent = `${name} · Free Plan`;
+    document.getElementById('ab-status').title = email;
+  }
+
+  // SIGN IN
+  async function signIn() {
+    const email = document.getElementById('si-email').value.trim();
+    const password = document.getElementById('si-password').value;
+    if (!email || !password) { showAuthMsg('Please enter your email and password.', 'error'); return; }
+    setAuthLoading('si-btn', true);
+    if (!sbClient) { showAuthMsg('Configure Supabase credentials to enable real auth.', 'error'); setAuthLoading('si-btn', false); return; }
+    const { error } = await sbClient.auth.signInWithPassword({ email, password });
+    setAuthLoading('si-btn', false);
+    if (error) showAuthMsg(error.message, 'error');
+  }
+
+  // SIGN UP
+  async function signUp() {
+    const name = document.getElementById('su-name').value.trim();
+    const email = document.getElementById('su-email').value.trim();
+    const password = document.getElementById('su-password').value;
+    const confirm = document.getElementById('su-confirm').value;
+    if (!name || !email || !password) { showAuthMsg('Please fill in all fields.', 'error'); return; }
+    if (password.length < 8) { showAuthMsg('Password must be at least 8 characters.', 'error'); return; }
+    if (password !== confirm) { showAuthMsg('Passwords do not match.', 'error'); return; }
+    setAuthLoading('su-btn', true);
+    if (!sbClient) { showAuthMsg('Configure Supabase credentials to enable real auth.', 'error'); setAuthLoading('su-btn', false); return; }
+    const { error } = await sbClient.auth.signUp({
+      email, password,
+      options: { data: { full_name: name } }
+    });
+    setAuthLoading('su-btn', false);
+    if (error) showAuthMsg(error.message, 'error');
+    else showAuthMsg('✅ Account created! Check your email to confirm, then sign in.', 'success');
+  }
+
+  // GOOGLE SIGN IN
+  async function signInGoogle() {
+    if (!sbClient) { showAuthMsg('Configure Supabase credentials to enable Google auth.', 'error'); return; }
+    await sbClient.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: 'https://fintrail.app', queryParams: { prompt: 'select_account' } } });
+  }
+
+  // FORGOT PASSWORD
+  async function showForgotPassword() {
+    const email = document.getElementById('si-email').value.trim();
+    if (!email) { showAuthMsg('Enter your email above, then click Forgot Password.', 'error'); return; }
+    if (!sbClient) { showAuthMsg('Configure Supabase credentials first.', 'error'); return; }
+    const { error } = await sbClient.auth.resetPasswordForEmail(email);
+    if (error) showAuthMsg(error.message, 'error');
+    else showAuthMsg('✅ Password reset link sent to ' + email, 'success');
+  }
+
+  // SIGN OUT
+  async function signOut() {
+    if (sbClient) await sbClient.auth.signOut();
+    currentUser = null;
+    transactions = []; bills = []; goals = [];
+    document.getElementById('auth-screen').style.display = 'flex';
+  }
+
+  // AUTH UI HELPERS
+  function switchAuthTab(tab) {
+    document.getElementById('form-signin').style.display = tab === 'signin' ? 'flex' : 'none';
+    document.getElementById('form-signup').style.display = tab === 'signup' ? 'flex' : 'none';
+    document.getElementById('tab-signin').classList.toggle('active', tab === 'signin');
+    document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+    hideAuthMsg();
+  }
+  function showAuthMsg(msg, type) {
+    const el = document.getElementById('auth-msg');
+    el.textContent = msg; el.className = 'auth-msg ' + type; el.style.display = 'block';
+  }
+  function hideAuthMsg() { document.getElementById('auth-msg').style.display = 'none'; }
+  function setAuthLoading(btnId, loading) {
+    const btn = document.getElementById(btnId);
+    btn.disabled = loading;
+    btn.textContent = loading ? 'Please wait...' : (btnId === 'si-btn' ? 'Sign In' : 'Create Free Account');
+  }
+
+  // DATA PERSISTENCE — save & load from Supabase
+  async function saveUserData() {
+    if (!supabase || !currentUser) return;
+    const payload = { user_id: currentUser.id, transactions, bills, goals, is_pro: isPro, updated_at: new Date().toISOString() };
+    await sbClient.from('user_data').upsert(payload, { onConflict: 'user_id' });
+  }
+
+  async function loadUserData() {
+    if (!supabase || !currentUser) return;
+    const { data } = await sbClient.from('user_data').select('*').eq('user_id', currentUser.id).single();
+    if (data) {
+      transactions = data.transactions || [];
+      bills = data.bills || [];
+      goals = data.goals || [];
+      if (data.is_pro) { isPro = true; activatePro(); }
+    }
+    render(); renderBillList(); renderSchedule(); renderGoals();
+  }
+
+  // PREMIUM STATE
+  let isPro = false;
+
+  function showPaywall(source) {
+    document.getElementById('paywall-overlay').style.display = 'flex';
+  }
+  function closePaywall() {
+    document.getElementById('paywall-overlay').style.display = 'none';
+  }
+  function closePaywallOutside(e) {
+    if (e.target === document.getElementById('paywall-overlay')) closePaywall();
+  }
+
+  function activatePro() {
+    isPro = true;
+    closePaywall();
+    applyProState();
+    // Show confirmation
+    const bar = document.getElementById('account-bar');
+    bar.classList.add('premium');
+    document.getElementById('ab-status').textContent = '⭐ Pro Plan — all features unlocked';
+    document.getElementById('ab-plan-badge').textContent = '⭐ Pro';
+    document.getElementById('ab-plan-badge').classList.add('premium-plan');
+    document.getElementById('ab-action-btn').textContent = 'Manage Subscription';
+    document.getElementById('ab-action-btn').onclick = () => alert('Subscription management would connect to your payment provider (e.g. Stripe).');
+  }
+
+  function applyProState() {
+    document.getElementById('guide-gate').style.display = isPro ? 'none' : 'block';
+    document.getElementById('guide-content').style.display = isPro ? 'block' : 'none';
+    document.getElementById('ai-gate').style.display = isPro ? 'none' : 'block';
+    document.getElementById('ai-content').style.display = isPro ? 'block' : 'none';
+    document.getElementById('affiliate-gate').style.display = isPro ? 'none' : 'block';
+    document.getElementById('affiliate-content').style.display = isPro ? 'block' : 'none';
+    updatePremiumTab();
+    renderResources();
+    if (isPro) { renderRateBanner(); calcLoan(); }
+  }
+
+  // TAB SWITCHING
+  function guardedTab(tab, btn) {
+    if (!isPro) { showPaywall(tab); return; }
+    showTab(tab, btn);
+  }
+
+  // TAB SWITCHING
+  function showTab(tab, btn) {
+    document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('visible'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('visible');
+    btn.classList.add('active');
+  }
+
+  // TRANSACTION TYPE
+  function setType(type) {
+    currentType = type;
+    document.getElementById('btn-income').classList.toggle('active', type === 'income');
+    document.getElementById('btn-expense').classList.toggle('active', type === 'expense');
+  }
+
+  // ADD TRANSACTION
+  function addTransaction() {
+    const desc = document.getElementById('desc').value.trim();
+    const amount = parseFloat(document.getElementById('amount').value);
+    const category = document.getElementById('category').value;
+    if (!desc || isNaN(amount) || amount <= 0) { alert('Please enter a description and valid amount.'); return; }
+    transactions.push({ id: Date.now(), type: currentType, desc, amount, category });
+    document.getElementById('desc').value = '';
+    document.getElementById('amount').value = '';
+    render();
+    saveUserData();
+  }
+
+  // DELETE TRANSACTION
+  function deleteTransaction(id) {
+    transactions = transactions.filter(t => t.id !== id);
+    render(); saveUserData();
+  }
+
+  // RENDER BUDGET
+  function render() {
+    const income = transactions.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+    const expenses = transactions.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+    const balance = income - expenses;
+    document.getElementById('total-income').textContent = fmt(income);
+    document.getElementById('total-expenses').textContent = fmt(expenses);
+    const balEl = document.getElementById('net-balance');
+    balEl.textContent = fmt(balance);
+    balEl.style.color = balance < 0 ? 'var(--expense-color)' : 'var(--dark)';
+    const list = document.getElementById('transaction-list');
+    if (transactions.length === 0) {
+      list.innerHTML = '<div class="empty-state">No transactions yet.<br>Add one to get started!</div>';
+    } else {
+      list.innerHTML = [...transactions].reverse().map(t => `
+        <div class="transaction-item ${t.type}">
+          <div class="t-info">
+            <span class="t-name">${escHtml(t.desc)}</span>
+            <span class="t-cat">${t.category}</span>
+          </div>
+          <div class="t-right">
+            <span class="t-amount">${t.type === 'income' ? '+' : '−'}${fmt(t.amount)}</span>
+            <button class="del-btn" onclick="deleteTransaction(${t.id})">✕</button>
+          </div>
+        </div>`).join('');
+    }
+    renderChart();
+  }
+
+  function renderChart() {
+    const chart = document.getElementById('bar-chart');
+    const expenseTransactions = transactions.filter(t => t.type === 'expense');
+    if (expenseTransactions.length === 0) { chart.innerHTML = '<div class="empty-state">Add expenses to see your spending breakdown.</div>'; return; }
+    const byCategory = {};
+    expenseTransactions.forEach(t => { byCategory[t.category] = (byCategory[t.category] || 0) + t.amount; });
+    const max = Math.max(...Object.values(byCategory));
+    chart.innerHTML = Object.entries(byCategory).sort((a,b) => b[1]-a[1]).map(([cat, val]) => `
+      <div class="bar-row">
+        <div class="bar-label">${cat}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${(val/max)*100}%;background:var(--expense-color);opacity:${0.5+0.5*(val/max)}"></div></div>
+        <div class="bar-val" style="color:var(--expense-color)">${fmt(val)}</div>
+      </div>`).join('');
+  }
+
+  function fmt(n) {
+    return '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
+  function renderRateBanner() {
+    document.getElementById('rate-banner').innerHTML = rateBannerData.map(r => `
+      <div class="rate-chip">
+        <div class="rc-type">${r.type}</div>
+        <div class="rc-rate">${r.rate}</div>
+        <div class="rc-label">as low as · ${r.note}</div>
+      </div>`).join('');
+  }
+
+  function filterResources(tag, btn) {
+    currentFilter = tag;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderResources();
+  }
+
+  function renderResources() {
+    const grid = document.getElementById('resources-grid');
+    const affiliateTags = ['mortgage','personal','auto','refi'];
+    let filtered = currentFilter === 'all' ? resources : resources.filter(r => r.tag === currentFilter);
+    // Free users only see non-affiliate categories
+    if (!isPro) filtered = filtered.filter(r => !affiliateTags.includes(r.tag));
+    const sorted = [...filtered].sort((a,b) => (b.featured?1:0) - (a.featured?1:0));
+
+    grid.innerHTML = sorted.map(r => {
+      const badgesHtml = (r.badges||[]).map(b => {
+        const [cls, label] = b.split('|');
+        return `<span class="rc-badge ${cls}">${label}</span>`;
+      }).join('');
+
+      const ratesHtml = r.rates.length ? `
+        <div class="rc-rate-display">
+          ${r.rates.map((rt,i) => `
+            ${i>0 ? '<div class="rc-divider"></div>' : ''}
+            <div class="rc-rate-item">
+              <div class="rri-val">${rt.val}</div>
+              <div class="rri-label">${rt.label}</div>
+            </div>`).join('')}
+        </div>` : '';
+
+      return `
+      <div class="resource-card" style="${r.featured?'border-color:var(--accent2);box-shadow:0 2px 12px rgba(233,196,106,0.15)':''}">
+        <div class="rc-header">
+          <div style="display:flex;align-items:center;gap:0.5rem">
+            <span style="font-size:1.4rem">${r.logo}</span>
+            <h3 style="margin:0">${r.title}</h3>
+          </div>
+        </div>
+        <div class="rc-badges">${badgesHtml}</div>
+        ${ratesHtml}
+        <p>${r.desc}</p>
+        ${r.fine ? `<p class="rc-fine" style="margin-bottom:0.6rem">${r.fine}</p>` : ''}
+        <a class="rc-cta ${r.ctaStyle||''}" href="${r.url}" target="_blank" rel="noopener noreferrer">${r.cta} →</a>
+        ${r.commission ? `<div class="commission-note">${r.commission}</div>` : ''}
+      </div>`;
+    }).join('');
+  }
+
+  // GUIDE SWITCHING
+  function switchGuide(panel) {
+    document.querySelectorAll('.guide-panel').forEach(p => p.classList.remove('visible'));
+    document.querySelectorAll('.guide-intro-card').forEach(c => c.classList.remove('active'));
+    document.getElementById('panel-' + panel).classList.add('visible');
+    document.getElementById('gi-' + panel).classList.add('active');
+  }
+
+  // DTI CALCULATOR
+  function calcDTI() {
+    const income = parseFloat(document.getElementById('dti-income').value) || 0;
+    const rent = parseFloat(document.getElementById('dti-rent').value) || 0;
+    const car = parseFloat(document.getElementById('dti-car').value) || 0;
+    const cc = parseFloat(document.getElementById('dti-cc').value) || 0;
+    const student = parseFloat(document.getElementById('dti-student').value) || 0;
+    const other = parseFloat(document.getElementById('dti-other').value) || 0;
+    if (income <= 0) return;
+    const totalDebt = rent + car + cc + student + other;
+    const dti = (totalDebt / income) * 100;
+    const result = document.getElementById('dti-result');
+    result.style.display = 'block';
+    document.getElementById('dti-pct').textContent = dti.toFixed(1) + '%';
+    const bar = document.getElementById('dti-bar');
+    const pct = Math.min(dti, 100);
+    bar.style.width = pct + '%';
+    let color, verdict;
+    if (dti < 36) { color = 'var(--income-color)'; verdict = '✅ Healthy DTI — you\'re in great shape for most lenders.'; }
+    else if (dti < 50) { color = '#e6a817'; verdict = '⚠️ Manageable, but worth reducing. Focus on paying down debt.'; }
+    else { color = 'var(--expense-color)'; verdict = '🚨 High DTI — prioritize debt reduction before taking on new credit.'; }
+    bar.style.background = color;
+    document.getElementById('dti-pct').style.color = color;
+    document.getElementById('dti-verdict').textContent = verdict;
+    document.getElementById('dti-verdict').style.color = color;
+  }
+
+  // AI CHAT
+  let chatHistory = [];
+  let isTyping = false;
+
+  const SYSTEM_PROMPT = `You are Fintrail AI Advisor, a friendly and knowledgeable personal finance assistant embedded in the Fintrail app. Your role is to educate and guide users on personal finance topics including budgeting, credit scores, debt management, saving, investing, loans, and financial planning.
+
+Guidelines:
+- Be warm, clear, and encouraging — finance can feel overwhelming, so keep it approachable
+- Give practical, actionable advice with specific steps when possible
+- Use simple language; avoid jargon or explain it when you use it
+- Format responses with short paragraphs; use bullet points for lists of steps or options
+- Always remind users you're for educational purposes and suggest consulting a CFP for personalized advice on complex situations
+- Keep responses concise — aim for 3-5 short paragraphs max
+- Never recommend specific stocks, funds by ticker, or make specific investment predictions`;
+
+  function handleKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  }
+
+  function autoResize(el) {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+  }
+
+  function askSuggested(btn) {
+    document.getElementById('chat-input').value = btn.textContent;
+    sendMessage();
+  }
+
+  async function sendMessage() {
+    if (isTyping) return;
+    const input = document.getElementById('chat-input');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    input.style.height = 'auto';
+
+    appendMessage('user', text);
+    chatHistory.push({ role: 'user', content: text });
+
+    isTyping = true;
+    document.getElementById('send-btn').disabled = true;
+    const typingId = showTyping();
+
+    try {
+      const response = await fetch('/.netlify/functions/ai-advisor', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: chatHistory,
+          system: SYSTEM_PROMPT
+        })
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Unknown error');
+      const reply = data.reply || 'Sorry, I had trouble responding. Please try again.';
+      chatHistory.push({ role: 'assistant', content: reply });
+      removeTyping(typingId);
+      appendMessage('ai', reply);
+    } catch (err) {
+      removeTyping(typingId);
+      appendMessage('ai', 'Sorry, something went wrong. Please try again in a moment.');
+    }
+
+    isTyping = false;
+    document.getElementById('send-btn').disabled = false;
+  }
+
+  function appendMessage(role, text) {
+    const msgs = document.getElementById('chat-messages');
+    const div = document.createElement('div');
+    div.className = `msg ${role}`;
+    const avatar = role === 'ai' ? '💰' : '👤';
+    const formatted = text
+      .split('\n')
+      .filter(l => l.trim())
+      .map(l => {
+        if (l.startsWith('- ') || l.startsWith('• ')) return `<p style="padding-left:0.75rem;border-left:2px solid var(--border);margin:0.2rem 0">` + escHtml(l.slice(2)) + `</p>`;
+        return `<p>${escHtml(l)}</p>`;
+      }).join('');
+    div.innerHTML = `<div class="msg-avatar">${avatar}</div><div class="msg-bubble">${formatted}</div>`;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function showTyping() {
+    const msgs = document.getElementById('chat-messages');
+    const id = 'typing-' + Date.now();
+    const div = document.createElement('div');
+    div.className = 'msg ai'; div.id = id;
+    div.innerHTML = `<div class="msg-avatar">💰</div><div class="msg-bubble"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+    return id;
+  }
+
+  function removeTyping(id) {
+    const el = document.getElementById(id);
+    if (el) el.remove();
+  }
+
+  function escHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  // SAVINGS GOALS
+  let goals = [];
+  let selectedEmoji = '🎯';
+
+  function selectEmoji(el) {
+    document.querySelectorAll('.emoji-opt').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedEmoji = el.textContent;
+  }
+
+  function addGoal() {
+    const name = document.getElementById('g-name').value.trim();
+    const target = parseFloat(document.getElementById('g-target').value);
+    const saved = parseFloat(document.getElementById('g-saved').value) || 0;
+    const date = document.getElementById('g-date').value;
+    const category = document.getElementById('g-category').value;
+    if (!name || isNaN(target) || target <= 0) { alert('Please enter a goal name and target amount.'); return; }
+    goals.push({ id: Date.now(), name, icon: selectedEmoji, target, saved: Math.min(saved, target), date, category });
+    document.getElementById('g-name').value = '';
+    document.getElementById('g-target').value = '';
+    document.getElementById('g-saved').value = '';
+    document.getElementById('g-date').value = '';
+    renderGoals(); saveUserData();
+  }
+
+  function deleteGoal(id) {
+    goals = goals.filter(g => g.id !== id);
+    renderGoals();
+  }
+
+  function deposit(id) {
+    const input = document.getElementById('dep-' + id);
+    const amount = parseFloat(input.value);
+    if (isNaN(amount) || amount <= 0) return;
+    const goal = goals.find(g => g.id === id);
+    if (goal) { goal.saved = Math.min(goal.saved + amount, goal.target); input.value = ''; renderGoals(); }
+  }
+
+  function monthsUntil(dateStr) {
+    if (!dateStr) return null;
+    const target = new Date(dateStr);
+    const now = new Date();
+    const months = (target.getFullYear() - now.getFullYear()) * 12 + (target.getMonth() - now.getMonth());
+    return Math.max(months, 0);
+  }
+
+  function goalColor(pct) {
+    if (pct >= 100) return '#2d6a4f';
+    if (pct >= 60) return '#2196a3';
+    if (pct >= 30) return '#e6a817';
+    return '#c1440e';
+  }
+
+  function renderGoals() {
+    const grid = document.getElementById('goals-grid');
+    const empty = document.getElementById('goals-empty');
+
+    // Stats
+    const totalSaved = goals.reduce((s, g) => s + g.saved, 0);
+    const totalTarget = goals.reduce((s, g) => s + g.target, 0);
+    document.getElementById('gs-count').textContent = goals.length;
+    document.getElementById('gs-saved').textContent = '$' + totalSaved.toLocaleString('en-US', {maximumFractionDigits:0});
+    document.getElementById('gs-target').textContent = '$' + totalTarget.toLocaleString('en-US', {maximumFractionDigits:0});
+
+    if (goals.length === 0) { empty.style.display = 'block'; grid.innerHTML = ''; grid.appendChild(empty); return; }
+    empty.style.display = 'none';
+
+    grid.innerHTML = goals.map(g => {
+      const pct = Math.min((g.saved / g.target) * 100, 100);
+      const color = goalColor(pct);
+      const remaining = g.target - g.saved;
+      const months = monthsUntil(g.date);
+      const monthlyNeeded = (months && months > 0 && remaining > 0) ? (remaining / months) : null;
+      const complete = pct >= 100;
+      const dateLabel = g.date ? new Date(g.date).toLocaleDateString('en-US', {month:'short', year:'numeric'}) : 'No deadline';
+
+      return `
+      <div class="goal-card">
+        <div class="goal-card-header">
+          <div class="goal-card-title">
+            <span class="goal-icon">${g.icon}</span>
+            <div>
+              <div class="goal-name">${escHtml(g.name)}</div>
+              <div class="goal-category">${g.category}</div>
+            </div>
+          </div>
+          <div class="goal-actions">
+            <button class="goal-action-btn del" onclick="deleteGoal(${g.id})" title="Delete">✕</button>
+          </div>
+        </div>
+        <div class="goal-amounts">
+          <span class="goal-saved" style="color:${color}">$${g.saved.toLocaleString('en-US',{maximumFractionDigits:0})}</span>
+          <span class="goal-target">of $${g.target.toLocaleString('en-US',{maximumFractionDigits:0})}</span>
+        </div>
+        <div class="goal-progress-track">
+          <div class="goal-progress-fill" style="width:${pct}%;background:${color}"></div>
+        </div>
+        <div class="goal-meta">
+          <span class="goal-pct" style="color:${color}">${pct.toFixed(0)}% complete</span>
+          <span class="goal-deadline">📅 ${dateLabel}</span>
+        </div>
+        ${complete ? '<div class="goal-complete-badge">🎉 Goal Reached!</div>' : ''}
+        ${monthlyNeeded ? `<div class="goal-monthly">Save <strong>$${monthlyNeeded.toFixed(0)}/mo</strong> to reach your goal in <strong>${months} month${months !== 1 ? 's' : ''}</strong></div>` : ''}
+        ${!complete ? `
+        <div class="add-deposit-row">
+          <input class="deposit-input" id="dep-${g.id}" type="number" placeholder="Add savings..." min="0" onkeydown="if(event.key==='Enter')deposit(${g.id})">
+          <button class="deposit-btn" onclick="deposit(${g.id})">+ Add</button>
+        </div>` : ''}
+      </div>`;
+    }).join('');
+  }
+
+  // BILL SCHEDULE
+  let bills = [];
+  let paidChecks = {}; // key: billId-paydate, val: bool
+
+  function showBudgetSub(sub, btn) {
+    document.querySelectorAll('.budget-sub').forEach(s => s.classList.remove('visible'));
+    document.querySelectorAll('.sched-tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('bsub-' + sub).classList.add('visible');
+    btn.classList.add('active');
+  }
+
+  function addBill() {
+    const name = document.getElementById('bill-name').value.trim();
+    const amount = parseFloat(document.getElementById('bill-amount').value);
+    const day = parseInt(document.getElementById('bill-day').value);
+    const cat = document.getElementById('bill-cat').value;
+    if (!name || isNaN(amount) || amount <= 0) { alert('Please enter a bill name and amount.'); return; }
+    bills.push({ id: Date.now(), name, amount, day, cat });
+    document.getElementById('bill-name').value = '';
+    document.getElementById('bill-amount').value = '';
+    renderBillList(); renderSchedule(); saveUserData();
+  }
+
+  function deleteBill(id) {
+    bills = bills.filter(b => b.id !== id);
+    renderBillList();
+    renderSchedule();
+  }
+
+  function togglePaid(key, el) {
+    paidChecks[key] = !paidChecks[key];
+    el.classList.toggle('checked', paidChecks[key]);
+    const row = el.closest('.payday-bill-row');
+    row.classList.toggle('paid-row', paidChecks[key]);
+    // update header summary
+    renderSchedule();
+  }
+
+  function renderBillList() {
+    const list = document.getElementById('bill-list');
+    if (bills.length === 0) { list.innerHTML = '<div class="empty-state">No bills added yet.</div>'; return; }
+    list.innerHTML = bills.map(b => `
+      <div class="bill-item recurring">
+        <div class="bi-left">
+          <span class="bill-icon">${b.cat.split(' ')[0]}</span>
+          <div class="bi-info">
+            <div class="bi-name">${escHtml(b.name)}</div>
+            <div class="bi-meta">Due ${b.day}${['st','nd','rd'][((b.day)%10)-1]||'th'} · ${b.cat.split(' ').slice(1).join(' ')}</div>
+          </div>
+        </div>
+        <div class="bi-right">
+          <span class="bi-amount">$${b.amount.toFixed(2)}</span>
+          <button class="bi-del" onclick="deleteBill(${b.id})">✕</button>
+        </div>
+      </div>`).join('');
+  }
+
+  function getPaydays(frequency, startDate, months) {
+    const days = [];
+    const end = new Date(startDate);
+    end.setMonth(end.getMonth() + months);
+    let cur = new Date(startDate);
+
+    if (frequency === 'biweekly') {
+      // Start from nearest Friday or next payday
+      while (cur < end) {
+        days.push(new Date(cur));
+        cur.setDate(cur.getDate() + 14);
+      }
+    } else if (frequency === 'weekly') {
+      while (cur < end) {
+        days.push(new Date(cur));
+        cur.setDate(cur.getDate() + 7);
+      }
+    } else if (frequency === 'semimonthly') {
+      cur = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+      while (cur < end) {
+        const d1 = new Date(cur.getFullYear(), cur.getMonth(), 1);
+        const d2 = new Date(cur.getFullYear(), cur.getMonth(), 15);
+        if (d1 >= startDate && d1 < end) days.push(d1);
+        if (d2 >= startDate && d2 < end) days.push(d2);
+        cur.setMonth(cur.getMonth() + 1);
+      }
+    } else { // monthly
+      while (cur < end) {
+        days.push(new Date(cur));
+        cur.setMonth(cur.getMonth() + 1);
+      }
+    }
+    return days.sort((a, b) => a - b);
+  }
+
+  function billsDueThisPeriod(paydate, nextPaydate) {
+    // Bills due between paydate (inclusive) and nextPaydate (exclusive)
+    return bills.filter(b => {
+      const dueDate = new Date(paydate.getFullYear(), paydate.getMonth(), b.day);
+      // Handle end-of-month overflow
+      if (dueDate.getMonth() !== paydate.getMonth()) {
+        dueDate.setDate(0); // last day of month
+      }
+      return dueDate >= paydate && dueDate < (nextPaydate || new Date(9999,0,1));
+    });
+  }
+
+  function renderSchedule() {
+    const output = document.getElementById('schedule-output');
+    if (bills.length === 0) {
+      output.innerHTML = '<div class="sched-empty">Add bills and your pay frequency to generate your 6-month payment schedule.</div>';
+      return;
+    }
+    const frequency = document.getElementById('pay-frequency').value;
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const paydays = getPaydays(frequency, today, 6);
+
+    // Group paydays by month
+    const byMonth = {};
+    paydays.forEach((pd, i) => {
+      const key = pd.getFullYear() + '-' + pd.getMonth();
+      if (!byMonth[key]) byMonth[key] = [];
+      byMonth[key].push({ pd, next: paydays[i+1] || null, idx: i });
+    });
+
+    const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    let html = '';
+
+    Object.entries(byMonth).forEach(([key, entries]) => {
+      const [yr, mo] = key.split('-');
+      const monthBills = entries.flatMap(e => billsDueThisPeriod(e.pd, e.next));
+      const monthTotal = monthBills.reduce((s, b) => s + b.amount, 0);
+      const paidTotal = monthBills.filter(b => paidChecks[b.id + '-' + entries[0].pd.toISOString().slice(0,10)])
+        ? 0 : 0; // simplified
+
+      html += `<div class="month-block">
+        <div class="month-label">
+          ${monthNames[mo]} ${yr}
+          <span class="ml-badge">$${monthTotal.toFixed(0)} due</span>
+        </div>`;
+
+      entries.forEach(({ pd, next, idx }) => {
+        const dueBills = billsDueThisPeriod(pd, next);
+        const periodTotal = dueBills.reduce((s, b) => s + b.amount, 0);
+        const paidCount = dueBills.filter(b => paidChecks[b.id + '-' + pd.toISOString().slice(0,10)]).length;
+        const isOpen = idx === 0; // first payday open by default
+
+        const pdStr = pd.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'});
+        const pdKey = 'pd-' + pd.toISOString().slice(0,10);
+
+        html += `<div class="payday-block">
+          <div class="payday-block-header ${isOpen?'open':''}" onclick="togglePayBlock('${pdKey}', this)">
+            <div class="pd-date"><span class="pd-icon">💵</span> Payday — ${pdStr}</div>
+            <div style="display:flex;align-items:center;gap:0.75rem">
+              <div class="pd-summary">${dueBills.length} bill${dueBills.length!==1?'s':''} · $${periodTotal.toFixed(2)} · ${paidCount}/${dueBills.length} paid</div>
+              <div class="pd-toggle">▼</div>
+            </div>
+          </div>
+          <div class="payday-bills" id="${pdKey}" style="display:${isOpen?'flex':'none'}">`;
+
+        if (dueBills.length === 0) {
+          html += `<div style="font-size:0.82rem;color:var(--muted);padding:0.25rem 0">✅ No bills due this pay period — enjoy!</div>`;
+        } else {
+          dueBills.forEach(b => {
+            const checkKey = b.id + '-' + pd.toISOString().slice(0,10);
+            const isPaid = !!paidChecks[checkKey];
+            const dueDate = new Date(pd.getFullYear(), pd.getMonth(), b.day);
+            if (dueDate.getMonth() !== pd.getMonth()) dueDate.setDate(0);
+            const dueDateStr = dueDate.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+            html += `<div class="payday-bill-row ${isPaid?'paid-row':''}">
+              <div class="pbr-left">
+                <span>${b.cat.split(' ')[0]}</span>
+                <span>${escHtml(b.name)}</span>
+                <span class="pbr-due">due ${dueDateStr}</span>
+              </div>
+              <div class="pbr-right">
+                <span class="pbr-amount">$${b.amount.toFixed(2)}</span>
+                <div class="paid-check ${isPaid?'checked':''}" onclick="togglePaid('${checkKey}', this)" title="Mark paid">${isPaid?'✓':''}</div>
+              </div>
+            </div>`;
+          });
+        }
+
+        html += `</div></div>`; // close payday-bills + payday-block
+      });
+
+      html += `</div>`; // close month-block
+    });
+
+    output.innerHTML = html;
+  }
+
+  function togglePayBlock(id, header) {
+    const content = document.getElementById(id);
+    const isOpen = content.style.display !== 'none';
+    content.style.display = isOpen ? 'none' : 'flex';
+    header.classList.toggle('open', !isOpen);
+  }
+
+  function calcLoan() {
+    const P = parseFloat(document.getElementById('cmp-amount').value) || 0;
+    const annualRate = parseFloat(document.getElementById('cmp-rate').value) || 0;
+    const n = parseInt(document.getElementById('cmp-term').value) || 12;
+    const r = annualRate / 100 / 12;
+    const container = document.getElementById('compare-results');
+    if (!P || !annualRate) { container.innerHTML = ''; return; }
+    const monthly = r === 0 ? P/n : P * r * Math.pow(1+r,n) / (Math.pow(1+r,n) - 1);
+    const totalPaid = monthly * n;
+    const totalInterest = totalPaid - P;
+    container.innerHTML = `
+      <div class="compare-result-card"><div class="crr-label">Monthly Payment</div><div class="crr-val" style="color:var(--accent)">$${monthly.toFixed(2)}</div><div class="crr-sub">every month</div></div>
+      <div class="compare-result-card"><div class="crr-label">Total Interest</div><div class="crr-val" style="color:var(--expense-color)">$${totalInterest.toFixed(2)}</div><div class="crr-sub">cost of borrowing</div></div>
+      <div class="compare-result-card"><div class="crr-label">Total Paid</div><div class="crr-val">$${totalPaid.toFixed(2)}</div><div class="crr-sub">over ${n} months</div></div>
+      <div class="compare-result-card"><div class="crr-label">Principal</div><div class="crr-val">$${P.toLocaleString()}</div><div class="crr-sub">borrowed amount</div></div>
+    `;
+  }
+
+  // =============================================
+  // FINANCIAL HEALTH SCORE
+  // =============================================
+  function calculateHealthScore() {
+    const income = transactions.filter(t => t.type === 'income').reduce((s,t) => s+t.amount, 0);
+    const expenses = transactions.filter(t => t.type === 'expense').reduce((s,t) => s+t.amount, 0);
+    const balance = income - expenses;
+    const totalGoalTarget = goals.reduce((s,g) => s+g.target, 0);
+    const totalGoalSaved = goals.reduce((s,g) => s+g.saved, 0);
+    const totalDebt = planDebts.reduce((s,d) => s+d.balance, 0);
+
+    // Score components (each out of 25)
+    const budgetScore = income > 0 ? Math.min(25, Math.round((balance / income) * 100)) : 0;
+    const savingsScore = totalGoalTarget > 0 ? Math.min(25, Math.round((totalGoalSaved / totalGoalTarget) * 25)) : 0;
+    const debtScore = income > 0 ? Math.max(0, 25 - Math.round((totalDebt / (income * 12)) * 10)) : 25;
+    const billScore = bills.length > 0 ? 25 : 10;
+    const total = Math.min(100, Math.max(0, budgetScore + savingsScore + debtScore + billScore));
+
+    // Update gauge
+    const circumference = 251.2;
+    const offset = circumference - (total / 100) * circumference;
+    const gaugeFill = document.getElementById('gauge-fill');
+    gaugeFill.style.strokeDashoffset = offset;
+    gaugeFill.style.stroke = total >= 75 ? '#00b894' : total >= 50 ? '#f5a623' : '#f05555';
+
+    document.getElementById('health-score-num').textContent = total;
+    document.getElementById('health-score-num').style.color = total >= 75 ? '#00b894' : total >= 50 ? '#f5a623' : '#f05555';
+
+    let label = total >= 80 ? 'Excellent 🌟' : total >= 65 ? 'Good 👍' : total >= 50 ? 'Fair ⚡' : 'Needs Work 💪';
+    document.getElementById('health-score-label').textContent = label;
+
+    const breakdown = document.getElementById('score-breakdown');
+    const items = [
+      { label: '💰 Budget Balance', score: budgetScore, max: 25, color: '#00b894' },
+      { label: '🎯 Savings Progress', score: savingsScore, max: 25, color: '#f5a623' },
+      { label: '💳 Debt Load', score: debtScore, max: 25, color: '#f05555' },
+      { label: '📅 Bill Tracking', score: billScore, max: 25, color: '#818cf8' },
+    ];
+    breakdown.innerHTML = items.map(item => `
+      <div class="sb-row">
+        <div class="sb-row-left">${item.label}</div>
+        <div class="sb-bar-track"><div class="sb-bar-fill" style="width:${(item.score/item.max)*100}%;background:${item.color}"></div></div>
+        <div class="sb-score" style="color:${item.color}">${item.score}</div>
+      </div>`).join('');
+
+    // Check goal milestone alerts
+    if (alertPrefs.goals) checkGoalMilestones();
+    // Check budget alert
+    if (alertPrefs.budget && balance < 0) sendAlert('⚠️ Budget Warning', `You're $${Math.abs(balance).toFixed(2)} over budget this month!`);
+  }
+
+  // =============================================
+  // DEBT PAYOFF PLANNER
+  // =============================================
+  let planDebts = [];
+  let payoffMethod = 'avalanche';
+
+  function setMethod(method, btn) {
+    payoffMethod = method;
+    document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    runPayoffPlan();
+  }
+
+  function addDebt() {
+    const name = document.getElementById('debt-name').value.trim();
+    const balance = parseFloat(document.getElementById('debt-balance').value);
+    const apr = parseFloat(document.getElementById('debt-apr').value);
+    if (!name || isNaN(balance) || isNaN(apr)) { alert('Please fill in all debt fields.'); return; }
+    planDebts.push({ id: Date.now(), name, balance, apr });
+    document.getElementById('debt-name').value = '';
+    document.getElementById('debt-balance').value = '';
+    document.getElementById('debt-apr').value = '';
+    renderDebtList();
+    runPayoffPlan();
+  }
+
+  function removeDebt(id) {
+    planDebts = planDebts.filter(d => d.id !== id);
+    renderDebtList();
+    runPayoffPlan();
+  }
+
+  function renderDebtList() {
+    const list = document.getElementById('debt-list');
+    if (planDebts.length === 0) { list.innerHTML = ''; return; }
+    list.innerHTML = planDebts.map(d => `
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:0.6rem 0.85rem;background:var(--bg);border-radius:8px;border:1px solid var(--border);font-size:0.83rem;">
+        <span style="font-weight:600;color:var(--text)">${escHtml(d.name)}</span>
+        <span style="color:var(--text-soft)">$${d.balance.toLocaleString()} @ ${d.apr}% APR</span>
+        <button onclick="removeDebt(${d.id})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:0.85rem;">✕</button>
+      </div>`).join('');
+  }
+
+  function runPayoffPlan() {
+    if (planDebts.length === 0) {
+      document.getElementById('plan-result').style.display = 'none';
+      document.getElementById('plan-empty').style.display = 'block';
+      return;
+    }
+    const extra = parseFloat(document.getElementById('extra-payment').value) || 0;
+    let debts = planDebts.map(d => ({ ...d, remaining: d.balance, monthlyMin: Math.max(25, d.balance * 0.02) }));
+
+    // Sort by method
+    if (payoffMethod === 'avalanche') debts.sort((a,b) => b.apr - a.apr);
+    else debts.sort((a,b) => a.balance - b.balance);
+
+    let month = 0;
+    let totalInterest = 0;
+    const maxMonths = 360;
+    const debtMonths = {};
+    debts.forEach(d => debtMonths[d.id] = null);
+
+    while (debts.some(d => d.remaining > 0) && month < maxMonths) {
+      month++;
+      let extraLeft = extra;
+      debts.forEach((d, i) => {
+        if (d.remaining <= 0) return;
+        const interest = (d.apr / 100 / 12) * d.remaining;
+        totalInterest += interest;
+        d.remaining += interest;
+        let payment = d.monthlyMin;
+        if (i === 0) payment += extraLeft;
+        payment = Math.min(payment, d.remaining);
+        d.remaining -= payment;
+        if (d.remaining <= 0.01) { d.remaining = 0; if (!debtMonths[d.id]) debtMonths[d.id] = month; }
+      });
+      // Roll freed payments to next debt
+      debts.forEach((d, i) => {
+        if (d.remaining <= 0 && i < debts.length - 1) {
+          debts[i+1].monthlyMin += d.monthlyMin;
+        }
+      });
+    }
+
+    const totalPaid = planDebts.reduce((s,d) => s+d.balance, 0) + totalInterest;
+    document.getElementById('plan-result').style.display = 'block';
+    document.getElementById('plan-empty').style.display = 'none';
+    document.getElementById('plan-summary').innerHTML = `
+      <div class="pr-item"><div class="pr-val">${month}mo</div><div class="pr-label">Debt Free In</div></div>
+      <div class="pr-item"><div class="pr-val">$${totalInterest.toFixed(0)}</div><div class="pr-label">Total Interest</div></div>
+      <div class="pr-item"><div class="pr-val">$${totalPaid.toFixed(0)}</div><div class="pr-label">Total Paid</div></div>`;
+
+    const maxM = Math.max(...Object.values(debtMonths).filter(Boolean));
+    const colors = ['#f05555','#f5a623','#00b894','#818cf8','#06d6a0'];
+    document.getElementById('payoff-timeline').innerHTML = planDebts.map((d,i) => {
+      const m = debtMonths[d.id] || month;
+      const pct = Math.max(5, (m / maxM) * 100);
+      return `<div class="pt-row">
+        <div class="pt-name" title="${d.name}">${d.name}</div>
+        <div class="pt-bar-track"><div class="pt-bar-fill" style="width:${pct}%;background:${colors[i%colors.length]}">${m}mo</div></div>
+        <div class="pt-months">${m}mo</div>
+      </div>`;
+    }).join('');
+
+    calculateHealthScore();
+  }
+
+  // =============================================
+  // ALERTS & NOTIFICATIONS
+  // =============================================
+  let alertPrefs = { bills: false, budget: false, goals: false, payday: false };
+  let notifPermission = 'default';
+
+  function saveAlertPrefs() {
+    alertPrefs.bills = document.getElementById('alert-bills').checked;
+    alertPrefs.budget = document.getElementById('alert-budget').checked;
+    alertPrefs.goals = document.getElementById('alert-goals').checked;
+    alertPrefs.payday = document.getElementById('alert-payday').checked;
+  }
+
+  async function requestNotifications() {
+    if (!('Notification' in window)) {
+      updateNotifStatus('denied', '❌ Notifications not supported in this browser');
+      return;
+    }
+    const permission = await Notification.requestPermission();
+    notifPermission = permission;
+    if (permission === 'granted') {
+      updateNotifStatus('granted', '✅ Notifications enabled! You\'ll receive Fintrail alerts.');
+      sendAlert('🎉 Fintrail Alerts Active', 'You\'ll now receive bill reminders and budget alerts!');
+    } else {
+      updateNotifStatus('denied', '❌ Notifications blocked. Please enable them in browser settings.');
+    }
+  }
+
+  function sendTestNotification() {
+    if (notifPermission !== 'granted') {
+      updateNotifStatus('pending', '⚠️ Please enable notifications first');
+      return;
+    }
+    sendAlert('🧪 Test Alert', 'Fintrail notifications are working perfectly!');
+  }
+
+  function sendAlert(title, body) {
+    if (notifPermission === 'granted') {
+      new Notification(title, { body, icon: '💰' });
+    }
+  }
+
+  function updateNotifStatus(type, msg) {
+    const el = document.getElementById('notif-status');
+    el.className = 'notif-status ' + type;
+    el.textContent = msg;
+  }
+
+  function checkBillAlerts() {
+    if (!alertPrefs.bills || notifPermission !== 'granted') return;
+    const today = new Date();
+    const in3Days = new Date(); in3Days.setDate(today.getDate() + 3);
+    bills.forEach(b => {
+      const dueDate = new Date(today.getFullYear(), today.getMonth(), b.day);
+      if (dueDate >= today && dueDate <= in3Days) {
+        sendAlert('📅 Bill Due Soon', `${b.name} ($${b.amount}) is due in ${b.day - today.getDate()} days!`);
+      }
+    });
+  }
+
+  function checkGoalMilestones() {
+    if (notifPermission !== 'granted') return;
+    goals.forEach(g => {
+      const pct = (g.saved / g.target) * 100;
+      [25, 50, 75, 100].forEach(milestone => {
+        if (pct >= milestone) sendAlert('🎯 Goal Milestone!', `${g.name} is ${milestone}% funded! Keep going!`);
+      });
+    });
+  }
+
+  function updatePremiumTab() {
+    const gate = document.getElementById('premium-tab-gate');
+    const content = document.getElementById('premium-tab-content');
+    if (gate && content) {
+      gate.style.display = isPro ? 'none' : 'block';
+      content.style.display = isPro ? 'block' : 'none';
+      if (isPro) calculateHealthScore();
+    }
+  }
+
+  // INIT
+  initAuth();
+  applyProState();
+  render();
+  renderResources();
+  renderGoals();
+  calcLoan();
+  checkBillAlerts();
+</script>
+</body>
+</html>
