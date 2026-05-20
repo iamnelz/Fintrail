@@ -3059,16 +3059,55 @@ Guidelines:
     return days.sort((a, b) => a - b);
   }
 
-  function billsDueThisPeriod(paydate, nextPaydate) {
-    // Bills due between paydate (inclusive) and nextPaydate (exclusive)
-    return bills.filter(b => {
-      const dueDate = new Date(paydate.getFullYear(), paydate.getMonth(), b.day);
-      // Handle end-of-month overflow
-      if (dueDate.getMonth() !== paydate.getMonth()) {
-        dueDate.setDate(0); // last day of month
+  function billsDueThisPeriod(paydate, nextPaydate, frequency) {
+    const endDate = nextPaydate || new Date(9999,0,1);
+    const results = [];
+
+    bills.forEach(b => {
+      const splitKey = 'split-' + b.id;
+      const splitPref = paidChecks[splitKey] || 'full';
+      const divisor = splitPref === 'half' ? 2 : splitPref === 'quarter' ? 4 : 1;
+
+      for (let monthOffset = -1; monthOffset <= 1; monthOffset++) {
+        let dueDate = new Date(paydate.getFullYear(), paydate.getMonth() + monthOffset, b.day);
+        if (dueDate.getDate() !== b.day) dueDate = new Date(paydate.getFullYear(), paydate.getMonth() + monthOffset + 1, 0);
+
+        if (splitPref === 'full') {
+          if (dueDate >= paydate && dueDate < endDate) {
+            results.push({ ...b, dueDate, splitHalf: null, displayAmount: b.amount });
+            break;
+          }
+        } else {
+          // For split/quarter — show portion in every period leading up to due date
+          const periodsBack = divisor - 1;
+          let periodStart = new Date(paydate);
+          if (frequency === 'weekly') periodStart.setDate(periodStart.getDate() - (7 * periodsBack));
+          else if (frequency === 'biweekly') periodStart.setDate(periodStart.getDate() - (14 * periodsBack));
+
+          if (dueDate >= paydate && dueDate < endDate) {
+            const portion = divisor === 2 ? '2nd Half' : `${divisor}th Quarter`;
+            results.push({ ...b, dueDate, splitHalf: portion, displayAmount: b.amount / divisor });
+            break;
+          }
+          for (let p = 1; p < divisor; p++) {
+            let prevStart = new Date(paydate);
+            if (frequency === 'weekly') prevStart.setDate(prevStart.getDate() - (7 * p));
+            else if (frequency === 'biweekly') prevStart.setDate(prevStart.getDate() - (14 * p));
+            let prevEnd = new Date(prevStart);
+            if (frequency === 'weekly') prevEnd.setDate(prevEnd.getDate() + 7);
+            else if (frequency === 'biweekly') prevEnd.setDate(prevEnd.getDate() + 14);
+
+            if (dueDate >= prevStart && dueDate < prevEnd) {
+              const portion = divisor === 2 ? '1st Half' : `${p === 1 ? '1st' : p === 2 ? '2nd' : '3rd'} Quarter`;
+              results.push({ ...b, dueDate, splitHalf: portion, displayAmount: b.amount / divisor });
+              break;
+            }
+          }
+        }
       }
-      return dueDate >= paydate && dueDate < (nextPaydate || new Date(9999,0,1));
     });
+
+    return results;
   }
 
   function renderSchedule() {
@@ -3079,14 +3118,15 @@ Guidelines:
     }
     const frequency = document.getElementById('pay-frequency').value;
     const paydayInput = document.getElementById('next-payday').value;
+    const isWeekly = frequency === 'weekly';
+    const isBiweekly = frequency === 'biweekly';
+    const showSplit = frequency !== 'monthly' && frequency !== 'semimonthly';
 
-    // Use selected next payday or default to today
     let startDate = paydayInput ? new Date(paydayInput + 'T00:00:00') : new Date();
     startDate.setHours(0,0,0,0);
 
     const paydays = getPaydays(frequency, startDate, 6);
 
-    // Group paydays by month
     const byMonth = {};
     paydays.forEach((pd, i) => {
       const key = pd.getFullYear() + '-' + pd.getMonth();
@@ -3099,10 +3139,8 @@ Guidelines:
 
     Object.entries(byMonth).forEach(([key, entries]) => {
       const [yr, mo] = key.split('-');
-      const monthBills = entries.flatMap(e => billsDueThisPeriod(e.pd, e.next));
-      const monthTotal = monthBills.reduce((s, b) => s + b.amount, 0);
-      const paidTotal = monthBills.filter(b => paidChecks[b.id + '-' + entries[0].pd.toISOString().slice(0,10)])
-        ? 0 : 0; // simplified
+      const monthBills = entries.flatMap(e => billsDueThisPeriod(e.pd, e.next, frequency));
+      const monthTotal = monthBills.reduce((s, b) => s + b.displayAmount, 0);
 
       html += `<div class="month-block">
         <div class="month-label">
@@ -3111,13 +3149,12 @@ Guidelines:
         </div>`;
 
       entries.forEach(({ pd, next, idx }) => {
-        const dueBills = billsDueThisPeriod(pd, next);
-        const periodTotal = dueBills.reduce((s, b) => s + b.amount, 0);
+        const dueBills = billsDueThisPeriod(pd, next, frequency);
         const paidCount = dueBills.filter(b => paidChecks[b.id + '-' + pd.toISOString().slice(0,10)]).length;
-        const isOpen = idx === 0; // first payday open by default
-
+        const isOpen = idx === 0;
         const pdStr = pd.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'});
         const pdKey = 'pd-' + pd.toISOString().slice(0,10);
+        const periodTotal = dueBills.reduce((s, b) => s + b.displayAmount, 0);
 
         html += `<div class="payday-block">
           <div class="payday-block-header ${isOpen?'open':''}" onclick="togglePayBlock('${pdKey}', this)">
@@ -3134,31 +3171,60 @@ Guidelines:
         } else {
           dueBills.forEach(b => {
             const checkKey = b.id + '-' + pd.toISOString().slice(0,10);
+            const splitKey = 'split-' + b.id;
             const isPaid = !!paidChecks[checkKey];
-            const dueDate = new Date(pd.getFullYear(), pd.getMonth(), b.day);
-            if (dueDate.getMonth() !== pd.getMonth()) dueDate.setDate(0);
-            const dueDateStr = dueDate.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+            const splitPref = paidChecks[splitKey] || 'full';
+            const dueDateStr = b.dueDate ? b.dueDate.toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
+            const daysUntil = b.dueDate ? Math.ceil((b.dueDate - pd) / (1000*60*60*24)) : 0;
+            const urgency = daysUntil >= 0 && daysUntil <= 3 ? 'color:var(--expense-color);font-weight:700' : 'color:var(--muted)';
+
+            // Build split buttons based on frequency
+            let splitButtons = '';
+            if (showSplit) {
+              const fullAmt = b.splitHalf ? b.displayAmount * (isWeekly ? 4 : 2) : b.amount;
+              splitButtons = `<div style="display:flex;gap:0.3rem;flex-wrap:wrap;margin-top:0.2rem">
+                <button onclick="setSplitPref('${splitKey}','full')" style="font-size:0.68rem;padding:0.15rem 0.5rem;border-radius:4px;border:1px solid var(--border);background:${splitPref==='full'?'var(--accent)':'none'};color:${splitPref==='full'?'#fff':'var(--muted)'};cursor:pointer;font-family:inherit">
+                  Full $${fullAmt.toFixed(2)}
+                </button>
+                ${isBiweekly || isWeekly ? `<button onclick="setSplitPref('${splitKey}','half')" style="font-size:0.68rem;padding:0.15rem 0.5rem;border-radius:4px;border:1px solid var(--border);background:${splitPref==='half'?'var(--accent)':'none'};color:${splitPref==='half'?'#fff':'var(--muted)'};cursor:pointer;font-family:inherit">
+                  ½ $${(fullAmt/2).toFixed(2)}
+                </button>` : ''}
+                ${isWeekly ? `<button onclick="setSplitPref('${splitKey}','quarter')" style="font-size:0.68rem;padding:0.15rem 0.5rem;border-radius:4px;border:1px solid var(--border);background:${splitPref==='quarter'?'var(--accent)':'none'};color:${splitPref==='quarter'?'#fff':'var(--muted)'};cursor:pointer;font-family:inherit">
+                  ¼ $${(fullAmt/4).toFixed(2)}
+                </button>` : ''}
+              </div>`;
+            }
+
             html += `<div class="payday-bill-row ${isPaid?'paid-row':''}">
-              <div class="pbr-left">
-                <span>${b.cat.split(' ')[0]}</span>
-                <span>${escHtml(b.name)}</span>
-                <span class="pbr-due">due ${dueDateStr}</span>
+              <div class="pbr-left" style="flex-direction:column;align-items:flex-start;gap:0.2rem">
+                <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap">
+                  <span>${b.cat.split(' ')[0]}</span>
+                  <span style="font-weight:600;font-size:0.875rem">${escHtml(b.name)}</span>
+                  ${b.splitHalf ? `<span style="font-size:0.68rem;background:rgba(240,85,85,0.1);color:var(--accent);padding:0.1rem 0.4rem;border-radius:4px;font-weight:700">${b.splitHalf}</span>` : ''}
+                </div>
+                <span class="pbr-due" style="${urgency}">due ${dueDateStr}${daysUntil >= 0 && daysUntil <= 3 ? ' ⚠️' : ''}</span>
+                ${splitButtons}
               </div>
               <div class="pbr-right">
-                <span class="pbr-amount">$${b.amount.toFixed(2)}</span>
+                <span class="pbr-amount">$${b.displayAmount.toFixed(2)}</span>
                 <div class="paid-check ${isPaid?'checked':''}" onclick="togglePaid('${checkKey}', this)" title="Mark paid">${isPaid?'✓':''}</div>
               </div>
             </div>`;
           });
         }
 
-        html += `</div></div>`; // close payday-bills + payday-block
+        html += `</div></div>`;
       });
 
-      html += `</div>`; // close month-block
+      html += `</div>`;
     });
 
     output.innerHTML = html;
+  }
+
+  function setSplitPref(key, val) {
+    paidChecks[key] = val;
+    renderSchedule();
   }
 
   function togglePayBlock(id, header) {
