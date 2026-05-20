@@ -1,4 +1,4 @@
-// Fintrail Cancel Subscription Function
+// Fintrail Cancel Subscription - Stripe Customer Portal
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 exports.handler = async function(event) {
@@ -7,42 +7,27 @@ exports.handler = async function(event) {
   }
   try {
     const { email } = JSON.parse(event.body);
+    console.log('Portal request for:', email);
 
-    // Find customer by email
     const customers = await stripe.customers.list({ email: email, limit: 1 });
+    console.log('Customers found:', customers.data.length);
+
     if (customers.data.length === 0) {
       return { statusCode: 404, body: JSON.stringify({ error: 'No customer found' }) };
     }
 
-    const customer = customers.data[0];
-
-    // Get active subscriptions
-    const subscriptions = await stripe.subscriptions.list({
-      customer: customer.id,
-      status: 'active',
-      limit: 1
+    const session = await stripe.billingPortal.sessions.create({
+      customer: customers.data[0].id,
+      return_url: 'https://fintrail.app',
     });
-
-    if (subscriptions.data.length === 0) {
-      return { statusCode: 404, body: JSON.stringify({ error: 'No active subscription found' }) };
-    }
-
-    // Cancel at end of billing period (not immediately)
-    const subscription = await stripe.subscriptions.update(
-      subscriptions.data[0].id,
-      { cancel_at_period_end: true }
-    );
 
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message: 'Subscription will cancel at end of billing period',
-        cancel_at: new Date(subscription.cancel_at * 1000).toLocaleDateString()
-      })
+      body: JSON.stringify({ url: session.url })
     };
   } catch (err) {
-    console.log('Cancel error:', err.message);
+    console.log('Portal error:', err.message);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: err.message })
