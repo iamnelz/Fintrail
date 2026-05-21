@@ -2656,22 +2656,34 @@
           <button onclick="downloadDebtPlanPDF()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.45rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.35rem">📄 Save PDF</button>
         </div>
 
+        <!-- METHOD TOGGLE -->
         <div class="method-toggle">
-          <button class="method-btn active" id="method-avalanche" onclick="setMethod('avalanche', this)">🔥 Avalanche (saves most money)</button>
-          <button class="method-btn" id="method-snowball" onclick="setMethod('snowball', this)">⛄ Snowball (fastest wins)</button>
+          <button class="method-btn active" id="method-avalanche" onclick="setMethod('avalanche', this)">🔥 Avalanche — Save Most Money</button>
+          <button class="method-btn" id="method-snowball" onclick="setMethod('snowball', this)">⛄ Snowball — Quick Wins First</button>
         </div>
 
-        <div class="planner-inputs">
-          <div class="form-group"><label>Extra Monthly Payment ($)</label><input type="number" id="extra-payment" value="200" placeholder="e.g. 200" oninput="runPayoffPlan()"></div>
-          <div class="form-group"><label>Minimum Payment Override ($)</label><input type="number" id="min-payment" value="0" placeholder="Leave 0 for auto" oninput="runPayoffPlan()"></div>
+        <!-- METHOD EXPLANATION -->
+        <div id="method-explanation" style="background:var(--bg);border-radius:10px;padding:0.85rem 1rem;margin-bottom:1rem;border:1px solid var(--border);font-size:0.82rem;color:var(--text-soft);line-height:1.6">
+          <strong style="color:var(--text)">🔥 Avalanche Method:</strong> Pay minimums on all debts, then put ALL extra money toward the <strong>highest interest rate</strong> debt first. Mathematically saves the most money in interest.
+        </div>
+
+        <!-- EXTRA PAYMENT INPUT -->
+        <div class="planner-inputs" style="margin-bottom:1rem">
+          <div class="form-group">
+            <label>Extra Monthly Payment ($)</label>
+            <input type="number" id="extra-payment" value="200" min="0" placeholder="e.g. 200" oninput="runPayoffPlan()">
+            <div style="font-size:0.72rem;color:var(--muted);margin-top:0.3rem">💡 This extra amount gets focused on one debt at a time</div>
+          </div>
         </div>
 
         <!-- ADD DEBT FORM -->
         <div style="background:var(--bg);border-radius:10px;padding:1rem;margin-bottom:1rem;border:1px solid var(--border)">
-          <div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:0.6rem;align-items:end;">
-            <div class="form-group"><label>Debt Name</label><input type="text" id="debt-name" placeholder="e.g. Credit Card"></div>
-            <div class="form-group"><label>Balance ($)</label><input type="number" id="debt-balance" placeholder="5000"></div>
-            <div class="form-group"><label>APR (%)</label><input type="number" id="debt-apr" placeholder="19.99" step="0.01"></div>
+          <div style="font-size:0.82rem;font-weight:700;color:var(--text);margin-bottom:0.75rem">➕ Add a Debt</div>
+          <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:0.6rem;align-items:end;">
+            <div class="form-group"><label>Debt Name</label><input type="text" id="debt-name" placeholder="e.g. Visa Card"></div>
+            <div class="form-group"><label>Balance ($)</label><input type="number" id="debt-balance" placeholder="5000" min="0"></div>
+            <div class="form-group"><label>APR (%)</label><input type="number" id="debt-apr" placeholder="19.99" step="0.01" min="0"></div>
+            <div class="form-group"><label>Min Payment ($)</label><input type="number" id="debt-min" placeholder="Auto" min="0"></div>
             <button class="add-btn" style="margin-top:0" onclick="addDebt()">+</button>
           </div>
         </div>
@@ -2679,6 +2691,12 @@
         <div id="debt-list" style="display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1rem;"></div>
 
         <div id="plan-result" style="display:none">
+          <!-- PAYMENT ALLOCATION -->
+          <div style="background:var(--bg);border-radius:12px;padding:1.25rem;margin-bottom:1rem;border:1px solid var(--border)">
+            <div style="font-size:0.82rem;font-weight:700;color:var(--text);margin-bottom:0.75rem;text-transform:uppercase;letter-spacing:0.06em">📋 This Month's Payment Plan</div>
+            <div id="payment-allocation"></div>
+          </div>
+
           <div class="plan-result">
             <div class="plan-result-grid" id="plan-summary"></div>
             <div class="payoff-timeline" id="payoff-timeline"></div>
@@ -4335,6 +4353,12 @@ Guidelines:
     payoffMethod = method;
     document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
+    const explanation = document.getElementById('method-explanation');
+    if (method === 'avalanche') {
+      explanation.innerHTML = '<strong style="color:var(--text)">🔥 Avalanche Method:</strong> Pay minimums on all debts, then put ALL extra money toward the <strong>highest interest rate</strong> debt first. Mathematically saves the most money in interest.';
+    } else {
+      explanation.innerHTML = '<strong style="color:var(--text)">⛄ Snowball Method:</strong> Pay minimums on all debts, then put ALL extra money toward the <strong>smallest balance</strong> debt first. Gives you quick wins and motivation to keep going.';
+    }
     runPayoffPlan();
   }
 
@@ -4342,11 +4366,14 @@ Guidelines:
     const name = document.getElementById('debt-name').value.trim();
     const balance = parseFloat(document.getElementById('debt-balance').value);
     const apr = parseFloat(document.getElementById('debt-apr').value);
-    if (!name || isNaN(balance) || isNaN(apr)) { alert('Please fill in all debt fields.'); return; }
-    planDebts.push({ id: Date.now(), name, balance, apr });
+    const minInput = parseFloat(document.getElementById('debt-min').value);
+    if (!name || isNaN(balance) || isNaN(apr)) { alert('Please fill in debt name, balance and APR.'); return; }
+    const minPayment = !isNaN(minInput) && minInput > 0 ? minInput : Math.max(25, balance * 0.02);
+    planDebts.push({ id: Date.now(), name, balance, apr, minPayment });
     document.getElementById('debt-name').value = '';
     document.getElementById('debt-balance').value = '';
     document.getElementById('debt-apr').value = '';
+    document.getElementById('debt-min').value = '';
     renderDebtList();
     runPayoffPlan();
   }
@@ -4360,11 +4387,17 @@ Guidelines:
   function renderDebtList() {
     const list = document.getElementById('debt-list');
     if (planDebts.length === 0) { list.innerHTML = ''; return; }
-    list.innerHTML = planDebts.map(d => `
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:0.6rem 0.85rem;background:var(--bg);border-radius:8px;border:1px solid var(--border);font-size:0.83rem;">
-        <span style="font-weight:600;color:var(--text)">${escHtml(d.name)}</span>
-        <span style="color:var(--text-soft)">$${d.balance.toLocaleString()} @ ${d.apr}% APR</span>
-        <button onclick="removeDebt(${d.id})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:0.85rem;">✕</button>
+    const sorted = [...planDebts].sort((a,b) =>
+      payoffMethod === 'avalanche' ? b.apr - a.apr : a.balance - b.balance
+    );
+    list.innerHTML = sorted.map((d, i) => `
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:0.65rem 0.85rem;background:${i===0?'rgba(240,85,85,0.04)':'var(--bg)'};border-radius:8px;border:1.5px solid ${i===0?'var(--accent)':'var(--border)'};font-size:0.83rem;gap:0.5rem">
+        <div style="display:flex;align-items:center;gap:0.5rem;flex:1;flex-wrap:wrap">
+          ${i===0?`<span style="background:var(--accent);color:#fff;font-size:0.65rem;font-weight:800;padding:0.1rem 0.4rem;border-radius:8px">🎯 Focus</span>`:`<span style="background:var(--bg);border:1px solid var(--border);font-size:0.68rem;font-weight:800;padding:0.1rem 0.4rem;border-radius:6px;color:var(--muted)">#${i+1}</span>`}
+          <strong style="color:var(--text)">${escHtml(d.name)}</strong>
+          <span style="color:var(--muted);font-size:0.78rem">$${d.balance.toLocaleString()} · ${d.apr}% APR · Min $${d.minPayment.toFixed(2)}/mo</span>
+        </div>
+        <button onclick="removeDebt(${d.id})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:0.2rem 0.4rem;flex-shrink:0">✕</button>
       </div>`).join('');
   }
 
@@ -4375,38 +4408,83 @@ Guidelines:
       return;
     }
     const extra = parseFloat(document.getElementById('extra-payment').value) || 0;
-    const minOverride = parseFloat(document.getElementById('min-payment').value) || 0;
 
-    function simulate(extraPayment) {
-      let debts = planDebts.map(d => ({
+    // Sort debts by method
+    function getSortedDebts() {
+      const debts = planDebts.map(d => ({
         ...d,
         remaining: d.balance,
-        monthlyMin: minOverride > 0 ? minOverride : Math.max(25, d.balance * 0.02)
+        monthlyMin: d.minPayment || Math.max(25, d.balance * 0.02)
       }));
-      if (payoffMethod === 'avalanche') debts.sort((a,b) => b.apr - a.apr);
-      else debts.sort((a,b) => a.balance - b.balance);
+      if (payoffMethod === 'avalanche') return debts.sort((a,b) => b.apr - a.apr);
+      return debts.sort((a,b) => a.balance - b.balance);
+    }
 
+    // Show this month's payment allocation
+    const sortedDebts = getSortedDebts();
+    const focusDebt = sortedDebts.find(d => d.remaining > 0);
+    const totalMinPayments = sortedDebts.reduce((s,d) => s + d.monthlyMin, 0);
+
+    const allocationHTML = sortedDebts.map((d, i) => {
+      const isFocus = d.id === focusDebt?.id;
+      const thisPayment = isFocus ? d.monthlyMin + extra : d.monthlyMin;
+      const interestThisMonth = (d.apr / 100 / 12) * d.remaining;
+      const principalThisMonth = Math.max(0, thisPayment - interestThisMonth);
+      return `
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:0.75rem 0.85rem;background:${isFocus ? 'rgba(240,85,85,0.05)' : 'var(--surface)'};border:1.5px solid ${isFocus ? 'var(--accent)' : 'var(--border)'};border-radius:10px;margin-bottom:0.5rem">
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.2rem">
+              <span style="font-weight:700;font-size:0.875rem;color:var(--text)">${d.name}</span>
+              ${isFocus ? `<span style="background:var(--accent);color:#fff;font-size:0.65rem;font-weight:800;padding:0.1rem 0.45rem;border-radius:10px;text-transform:uppercase">🎯 Focus</span>` : ''}
+            </div>
+            <div style="font-size:0.75rem;color:var(--muted)">Balance: $${d.remaining.toLocaleString()} · APR: ${d.apr}% · Min: $${d.monthlyMin.toFixed(2)}</div>
+            ${isFocus ? `<div style="font-size:0.72rem;color:var(--accent);margin-top:0.2rem">Min $${d.monthlyMin.toFixed(2)} + Extra $${extra.toFixed(2)} = Total $${thisPayment.toFixed(2)}</div>` : ''}
+          </div>
+          <div style="text-align:right;margin-left:1rem">
+            <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:${isFocus ? 'var(--accent)' : 'var(--text)'}">$${thisPayment.toFixed(2)}</div>
+            <div style="font-size:0.7rem;color:var(--muted)">this month</div>
+          </div>
+        </div>`;
+    }).join('');
+
+    const totalPayment = totalMinPayments + extra;
+    document.getElementById('payment-allocation').innerHTML = allocationHTML + `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:0.65rem 0.85rem;background:var(--bg);border-radius:8px;border:1px solid var(--border);margin-top:0.25rem">
+        <span style="font-weight:700;font-size:0.85rem;color:var(--text)">Total Monthly Payment</span>
+        <span style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--text)">$${totalPayment.toFixed(2)}</span>
+      </div>`;
+
+    // Simulate payoff
+    function simulate(extraPayment) {
+      let debts = getSortedDebts();
       let month = 0;
       let totalInterest = 0;
-      const maxMonths = 360;
       const debtMonths = {};
       debts.forEach(d => debtMonths[d.id] = null);
 
-      while (debts.some(d => d.remaining > 0) && month < maxMonths) {
+      while (debts.some(d => d.remaining > 0) && month < 360) {
         month++;
+        let extraLeft = extraPayment;
         debts.forEach((d, i) => {
           if (d.remaining <= 0) return;
           const interest = (d.apr / 100 / 12) * d.remaining;
           totalInterest += interest;
           d.remaining += interest;
           let payment = d.monthlyMin;
-          if (i === 0) payment += extraPayment;
+          // Give extra to first active debt
+          if (extraLeft > 0 && d.remaining > 0) {
+            const activeIndex = debts.findIndex(x => x.remaining > 0);
+            if (i === activeIndex) { payment += extraLeft; extraLeft = 0; }
+          }
           payment = Math.min(payment, d.remaining);
           d.remaining -= payment;
-          if (d.remaining <= 0.01) { d.remaining = 0; if (!debtMonths[d.id]) debtMonths[d.id] = month; }
-        });
-        debts.forEach((d, i) => {
-          if (d.remaining <= 0 && i < debts.length - 1) debts[i+1].monthlyMin += d.monthlyMin;
+          if (d.remaining <= 0.01) {
+            d.remaining = 0;
+            if (!debtMonths[d.id]) debtMonths[d.id] = month;
+            // Roll freed minimum to next active debt
+            const nextActive = debts.find((x, j) => j > i && x.remaining > 0);
+            if (nextActive) nextActive.monthlyMin += d.monthlyMin;
+          }
         });
       }
       return { months: month, totalInterest, debtMonths };
@@ -4419,8 +4497,7 @@ Guidelines:
     const monthsSaved = minResult.months - extraResult.months;
 
     function fmtMonths(m) {
-      const yrs = Math.floor(m/12);
-      const mos = m % 12;
+      const yrs = Math.floor(m/12); const mos = m % 12;
       if (yrs === 0) return `${mos}mo`;
       if (mos === 0) return `${yrs}yr`;
       return `${yrs}yr ${mos}mo`;
@@ -4431,36 +4508,46 @@ Guidelines:
 
     document.getElementById('plan-summary').innerHTML = `
       <div class="plan-col">
-        <div class="plan-col-title">💳 Minimum Payments Only</div>
+        <div class="plan-col-title">💳 Minimums Only</div>
         <div class="plan-stat"><div class="plan-stat-val bad">${fmtMonths(minResult.months)}</div><div class="plan-stat-label">Time to debt free</div></div>
-        <div class="plan-stat"><div class="plan-stat-val bad">$${minResult.totalInterest.toFixed(0)}</div><div class="plan-stat-label">Total interest paid</div></div>
-        <div class="plan-stat"><div class="plan-stat-val">$${(totalDebt + minResult.totalInterest).toFixed(0)}</div><div class="plan-stat-label">Total amount paid</div></div>
+        <div class="plan-stat"><div class="plan-stat-val bad">$${Math.round(minResult.totalInterest).toLocaleString()}</div><div class="plan-stat-label">Total interest</div></div>
+        <div class="plan-stat"><div class="plan-stat-val">$${Math.round(totalDebt + minResult.totalInterest).toLocaleString()}</div><div class="plan-stat-label">Total paid</div></div>
       </div>
       <div class="plan-col highlight">
-        <div class="plan-col-title">🚀 With $${extra}/mo Extra</div>
+        <div class="plan-col-title">${payoffMethod === 'avalanche' ? '🔥 Avalanche' : '⛄ Snowball'} + $${extra}/mo</div>
         <div class="plan-stat"><div class="plan-stat-val good">${fmtMonths(extraResult.months)}</div><div class="plan-stat-label">Time to debt free</div></div>
-        <div class="plan-stat"><div class="plan-stat-val good">$${extraResult.totalInterest.toFixed(0)}</div><div class="plan-stat-label">Total interest paid</div></div>
-        <div class="plan-stat"><div class="plan-stat-val">$${(totalDebt + extraResult.totalInterest).toFixed(0)}</div><div class="plan-stat-label">Total amount paid</div></div>
+        <div class="plan-stat"><div class="plan-stat-val good">$${Math.round(extraResult.totalInterest).toLocaleString()}</div><div class="plan-stat-label">Total interest</div></div>
+        <div class="plan-stat"><div class="plan-stat-val">$${Math.round(totalDebt + extraResult.totalInterest).toLocaleString()}</div><div class="plan-stat-label">Total paid</div></div>
       </div>
       ${interestSaved > 0 ? `
       <div class="plan-savings-banner" style="grid-column:1/-1">
-        <div class="psb-val">💰 You save $${interestSaved.toFixed(0)} and get debt free ${monthsSaved} months sooner!</div>
-        <div class="psb-label">by paying an extra $${extra}/mo</div>
-      </div>` : ''}
-    `;
+        <div class="psb-val">💰 Save $${Math.round(interestSaved).toLocaleString()} and get debt free ${monthsSaved} months sooner!</div>
+        <div class="psb-label">using ${payoffMethod === 'avalanche' ? 'Avalanche' : 'Snowball'} with $${extra}/mo extra</div>
+      </div>` : ''}`;
 
     // Timeline
     const colors = ['#f05555','#f5a623','#00b894','#818cf8','#06d6a0'];
     const maxM = Math.max(...Object.values(extraResult.debtMonths).filter(Boolean), 1);
+    const methodLabel = payoffMethod === 'avalanche' ? '🔥 Avalanche' : '⛄ Snowball';
+    const sortedForTimeline = [...planDebts].sort((a,b) =>
+      payoffMethod === 'avalanche' ? b.apr - a.apr : a.balance - b.balance
+    );
     document.getElementById('payoff-timeline').innerHTML = `
-      <div style="font-size:0.78rem;font-weight:700;color:var(--muted);margin-bottom:0.4rem;text-transform:uppercase;letter-spacing:0.06em">Payoff Timeline (with extra payment)</div>
-      ${planDebts.map((d,i) => {
+      <div style="font-size:0.78rem;font-weight:700;color:var(--muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.06em">${methodLabel} Payoff Order</div>
+      ${sortedForTimeline.map((d, i) => {
         const m = extraResult.debtMonths[d.id] || extraResult.months;
         const pct = Math.max(5, (m / maxM) * 100);
-        return `<div class="pt-row">
-          <div class="pt-name" title="${d.name}">${d.name}</div>
+        const payoffDate = new Date(); payoffDate.setMonth(payoffDate.getMonth() + m);
+        const dateStr = payoffDate.toLocaleDateString('en-US', {month:'short', year:'numeric'});
+        return `<div class="pt-row" style="margin-bottom:0.4rem">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.25rem">
+            <span style="background:${colors[i%colors.length]};color:#fff;font-size:0.65rem;font-weight:800;padding:0.1rem 0.45rem;border-radius:10px">#${i+1}</span>
+            <span class="pt-name" style="font-weight:600">${d.name}</span>
+            <span style="font-size:0.72rem;color:var(--muted)">APR ${d.apr}%</span>
+            ${i === 0 ? `<span style="font-size:0.65rem;background:var(--accent);color:#fff;padding:0.1rem 0.4rem;border-radius:10px">Focus now</span>` : ''}
+          </div>
           <div class="pt-bar-track"><div class="pt-bar-fill" style="width:${pct}%;background:${colors[i%colors.length]}">${fmtMonths(m)}</div></div>
-          <div class="pt-months">${fmtMonths(m)}</div>
+          <div style="font-size:0.72rem;color:var(--muted);margin-top:0.15rem">Paid off by ${dateStr}</div>
         </div>`;
       }).join('')}`;
 
