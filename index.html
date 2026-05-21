@@ -2695,13 +2695,25 @@
   // SUPABASE CONFIG — replace with your project credentials
   // Get these from: https://supabase.com → Project Settings → API
   // ======================================================
-  const SUPABASE_URL = 'https://lxwebkcqaqmyguawqipw.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx4d2Via2NxYXFteWd1YXdxaXB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyMDk2NDgsImV4cCI6MjA5NDc4NTY0OH0.Es1RXWv7orK97TYaQzLmpnMwQND-sth6XyRts3WRBcg
-';
+  // Supabase credentials loaded from Netlify environment
+  let SUPABASE_URL = '';
+  let SUPABASE_ANON_KEY = '';
+  let sbClient = null;
 
-  const sbClient = (SUPABASE_URL !== 'YOUR_SUPABASE_URL')
-    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-    : null;
+  async function loadConfig() {
+    try {
+      const res = await fetch('/.netlify/functions/get-config');
+      const config = await res.json();
+      SUPABASE_URL = config.supabaseUrl || '';
+      SUPABASE_ANON_KEY = config.supabaseAnonKey || '';
+      if (SUPABASE_URL && SUPABASE_ANON_KEY) {
+        sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      }
+    } catch (err) {
+      console.log('Config load failed:', err.message);
+    }
+    initAuth();
+  }
 
   let currentUser = null;
 
@@ -4155,7 +4167,7 @@ Guidelines:
   }
 
   // INIT
-  initAuth();
+  loadConfig();
   applyProState();
   render();
   renderResources();
