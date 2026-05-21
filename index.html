@@ -3185,9 +3185,10 @@
 
   function setUserUI(user) {
     const name = user.user_metadata?.full_name || user.email.split('@')[0];
-    const email = user.email;
     document.getElementById('ab-status').textContent = `${name} · Free Plan`;
-    document.getElementById('ab-status').title = email;
+    document.getElementById('ab-status').title = user.email;
+    // If already pro, update immediately
+    if (isPro) setProUI();
   }
 
   // SIGN IN
@@ -3272,24 +3273,46 @@
     await sbClient.from('user_data').upsert(payload, { onConflict: 'user_id' });
   }
 
+  function setProUI() {
+    const bar = document.getElementById('account-bar');
+    const badge = document.getElementById('ab-plan-badge');
+    const statusEl = document.getElementById('ab-status');
+    const actionBtn = document.getElementById('ab-action-btn');
+    if (!bar) return;
+
+    if (isPro) {
+      bar.classList.add('premium');
+      badge.textContent = '⭐ Pro';
+      badge.classList.add('premium-plan');
+      statusEl.textContent = `⭐ Pro Plan · ${currentUser?.email || ''}`;
+      actionBtn.textContent = 'Manage Subscription';
+      actionBtn.onclick = cancelSubscription;
+    } else {
+      bar.classList.remove('premium');
+      badge.textContent = 'Free';
+      badge.classList.remove('premium-plan');
+      statusEl.textContent = `${currentUser?.user_metadata?.full_name || currentUser?.email?.split('@')[0] || 'User'} · Free Plan`;
+      actionBtn.textContent = 'Upgrade to Pro →';
+      actionBtn.onclick = () => showPaywall('bar');
+    }
+  }
+
   async function loadUserData() {
     if (!sbClient || !currentUser) return;
-    const { data } = await sbClient.from('user_data').select('*').eq('user_id', currentUser.id).single();
-    if (data) {
-      transactions = data.transactions || [];
-      bills = data.bills || [];
-      goals = data.goals || [];
-      if (data.is_pro && !isPro) {
-        isPro = true;
-        applyProState();
-        const bar = document.getElementById('account-bar');
-        bar.classList.add('premium');
-        document.getElementById('ab-status').textContent = `⭐ Pro Plan · ${currentUser.email}`;
-        document.getElementById('ab-plan-badge').textContent = '⭐ Pro';
-        document.getElementById('ab-plan-badge').classList.add('premium-plan');
-        document.getElementById('ab-action-btn').textContent = 'Manage Subscription';
-        document.getElementById('ab-action-btn').onclick = cancelSubscription;
+    try {
+      const { data } = await sbClient.from('user_data').select('*').eq('user_id', currentUser.id).single();
+      if (data) {
+        transactions = data.transactions || [];
+        bills = data.bills || [];
+        goals = data.goals || [];
+        if (data.is_pro) {
+          isPro = true;
+          applyProState();
+          setProUI();
+        }
       }
+    } catch (err) {
+      console.log('No existing user data:', err.message);
     }
     render(); renderBillList(); renderSchedule(); renderGoals();
   }
@@ -3332,26 +3355,17 @@
   function handleUpgradeReturn() {
     const params = new URLSearchParams(window.location.search);
     if (params.get('upgraded') === 'true') {
-      // Clear URL immediately to prevent loop
       window.history.replaceState({}, '', window.location.pathname);
-      // Wait for auth to load then activate pro
       const tryActivate = setInterval(() => {
         if (currentUser) {
           clearInterval(tryActivate);
           isPro = true;
           applyProState();
-          const bar = document.getElementById('account-bar');
-          bar.classList.add('premium');
-          document.getElementById('ab-status').textContent = '⭐ Pro Plan — all features unlocked';
-          document.getElementById('ab-plan-badge').textContent = '⭐ Pro';
-          document.getElementById('ab-plan-badge').classList.add('premium-plan');
-          document.getElementById('ab-action-btn').textContent = 'Manage Subscription';
-          document.getElementById('ab-action-btn').onclick = cancelSubscription;
+          setProUI();
           saveUserData();
           setTimeout(() => alert('🎉 Welcome to Fintrail Pro! All features are now unlocked.'), 500);
         }
       }, 300);
-      // Stop trying after 5 seconds
       setTimeout(() => clearInterval(tryActivate), 5000);
     }
     if (params.get('cancelled') === 'true') {
