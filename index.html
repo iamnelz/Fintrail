@@ -71,12 +71,18 @@
     transition: all 0.2s;
   }
   nav button:hover { color: var(--dark); background: var(--surface2); }
-  nav button.active { color: var(--accent); background: rgba(240,85,85,0.08); }
+  nav button.active {
+    color: var(--accent);
+    background: rgba(240,85,85,0.08);
+    border-bottom: 2px solid var(--accent);
+    border-radius: 8px 8px 0 0;
+    padding-bottom: calc(0.45rem - 2px);
+  }
 
   /* HERO */
   .hero {
     background: linear-gradient(160deg, #1a1a2e 0%, #2d1b4e 50%, #1a2a3e 100%);
-    padding: 4.5rem 2rem 3.5rem;
+    padding: 2.5rem 2rem 2rem;
     text-align: center;
     border-bottom: 1px solid var(--border);
     position: relative;
@@ -92,17 +98,17 @@
   }
   .hero h1 {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
     color: #ffffff;
-    line-height: 1.15;
+    line-height: 1.2;
     max-width: 640px;
-    margin: 0 auto 1rem;
+    margin: 0 auto 0.5rem;
   }
   .hero h1 em { color: var(--accent); font-style: italic; }
-  .hero p { color: rgba(255,255,255,0.7); font-size: 1rem; max-width: 460px; margin: 0 auto; line-height: 1.7; }
-  .hero-chips { display: flex; gap: 0.6rem; justify-content: center; margin-top: 1.5rem; flex-wrap: wrap; }
+  .hero p { color: rgba(255,255,255,0.7); font-size: 0.9rem; max-width: 460px; margin: 0 auto; line-height: 1.6; }
+  .hero-chips { display: flex; gap: 0.5rem; justify-content: center; margin-top: 1rem; flex-wrap: wrap; }
   .hero-chip {
-    font-size: 0.75rem; font-weight: 600; padding: 0.3rem 0.85rem;
+    font-size: 0.72rem; font-weight: 600; padding: 0.25rem 0.75rem;
     border-radius: 20px; border: 1px solid rgba(255,255,255,0.2);
     color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.08);
   }
@@ -1607,7 +1613,10 @@
 
     <!-- SPENDING CHART -->
     <div class="chart-section card" style="margin-top:1.5rem;" id="chart-section">
-      <h2>Spending by Category</h2>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+        <h2 style="margin-bottom:0">Spending by Category</h2>
+        <button onclick="downloadBudgetPDF()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.45rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.35rem">📄 Save PDF</button>
+      </div>
       <div class="bar-chart" id="bar-chart">
         <div class="empty-state">Add expenses to see your spending breakdown.</div>
       </div>
@@ -4167,6 +4176,67 @@ Guidelines:
     el.textContent = msg;
     el.className = 'profile-msg ' + type;
     setTimeout(() => { el.className = 'profile-msg'; }, 5000);
+  }
+
+  function downloadBudgetPDF() {
+    if (transactions.length === 0) { alert('Add some transactions first before saving your budget report.'); return; }
+
+    const income = transactions.filter(t => t.type === 'income').reduce((s,t) => s+t.amount, 0);
+    const expenses = transactions.filter(t => t.type === 'expense').reduce((s,t) => s+t.amount, 0);
+    const balance = income - expenses;
+    const savingsRate = income > 0 ? ((balance / income) * 100).toFixed(1) : 0;
+
+    // Group expenses by category
+    const byCategory = {};
+    transactions.filter(t => t.type === 'expense').forEach(t => {
+      byCategory[t.category] = (byCategory[t.category] || 0) + t.amount;
+    });
+
+    const html = `
+      <h1>📊 Budget Report</h1>
+      <p style="color:#888;margin-bottom:1.5rem">Generated for ${currentUser?.email || 'User'}</p>
+
+      <div class="summary-box">
+        <div class="summary-item"><div class="summary-val good">$${income.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div><div class="summary-label">Total Income</div></div>
+        <div class="summary-item"><div class="summary-val bad">$${expenses.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div><div class="summary-label">Total Expenses</div></div>
+        <div class="summary-item"><div class="summary-val" style="color:${balance >= 0 ? '#00b894' : '#f05555'}">$${Math.abs(balance).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div><div class="summary-label">${balance >= 0 ? 'Net Savings' : 'Over Budget'}</div></div>
+      </div>
+
+      <p style="background:#f0f9f6;border-left:3px solid #00b894;padding:0.6rem 1rem;border-radius:0 6px 6px 0;font-size:0.85rem;margin-bottom:1.5rem">
+        💰 Savings Rate: <strong>${savingsRate}%</strong> ${parseFloat(savingsRate) >= 20 ? '🎉 Great job! You\'re hitting the 20% savings goal.' : '— Aim for 20% to build financial security.'}
+      </p>
+
+      <h2>All Transactions</h2>
+      <table>
+        <tr><th>Description</th><th>Category</th><th>Type</th><th>Amount</th></tr>
+        ${[...transactions].reverse().map(t => `
+          <tr>
+            <td>${escHtml(t.desc)}</td>
+            <td>${t.category}</td>
+            <td>${t.type === 'income' ? '✅ Income' : '💸 Expense'}</td>
+            <td class="${t.type === 'income' ? 'good' : 'bad'}">${t.type === 'income' ? '+' : '-'}$${t.amount.toFixed(2)}</td>
+          </tr>`).join('')}
+      </table>
+
+      <h2>Spending by Category</h2>
+      <table>
+        <tr><th>Category</th><th>Amount</th><th>% of Expenses</th></tr>
+        ${Object.entries(byCategory).sort((a,b) => b[1]-a[1]).map(([cat, amt]) => `
+          <tr>
+            <td>${cat}</td>
+            <td class="bad">$${amt.toFixed(2)}</td>
+            <td>${expenses > 0 ? ((amt/expenses)*100).toFixed(1) : 0}%</td>
+          </tr>`).join('')}
+      </table>
+
+      <h2>50/30/20 Rule Analysis</h2>
+      <table>
+        <tr><th>Category</th><th>Recommended</th><th>Your Amount</th><th>Status</th></tr>
+        <tr><td>Needs (50%)</td><td>$${(income*0.5).toFixed(2)}</td><td>$${expenses.toFixed(2)}</td><td>${expenses <= income*0.5 ? '<span style="color:#00b894">✅ On track</span>' : '<span style="color:#f05555">⚠️ Over</span>'}</td></tr>
+        <tr><td>Savings (20%)</td><td>$${(income*0.2).toFixed(2)}</td><td>$${Math.max(0,balance).toFixed(2)}</td><td>${balance >= income*0.2 ? '<span style="color:#00b894">✅ On track</span>' : '<span style="color:#f05555">⚠️ Under</span>'}</td></tr>
+      </table>`;
+
+    generatePDF('Fintrail - Budget Report', html);
   }
 
   // PDF DOWNLOADS
