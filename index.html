@@ -3472,51 +3472,54 @@ Guidelines:
   function billsDueThisPeriod(paydate, nextPaydate, frequency) {
     const endDate = nextPaydate || new Date(9999,0,1);
     const results = [];
+    const isWeekly = frequency === 'weekly';
+    const isBiweekly = frequency === 'biweekly';
+    const periodDays = isWeekly ? 7 : isBiweekly ? 14 : 15;
 
     bills.forEach(b => {
       const splitKey = 'split-' + b.id;
       const splitPref = paidChecks[splitKey] || 'full';
-      const isWeekly = frequency === 'weekly';
-      const isBiweekly = frequency === 'biweekly';
+      const divisor = splitPref === 'quarter' ? 4 : splitPref === 'half' ? 2 : 1;
 
-      // Find the actual due date for this bill
+      // Find due date — check current and next 2 months
       let dueDate = null;
-      for (let monthOffset = -1; monthOffset <= 2; monthOffset++) {
+      for (let monthOffset = 0; monthOffset <= 2; monthOffset++) {
         let d = new Date(paydate.getFullYear(), paydate.getMonth() + monthOffset, b.day);
         if (d.getDate() !== b.day) d = new Date(paydate.getFullYear(), paydate.getMonth() + monthOffset + 1, 0);
-        if (d >= paydate && d < endDate) { dueDate = d; break; }
+        // Due date must be after today and within reasonable range
+        if (d >= new Date() || d >= paydate) { dueDate = d; break; }
       }
 
       if (!dueDate) return;
 
       if (splitPref === 'full') {
-        // Show bill on the payday period that contains or is before the due date
-        results.push({ ...b, dueDate, splitHalf: null, displayAmount: b.amount });
-      } else {
-        // Split — show a portion on EVERY payday until due date
-        const divisor = splitPref === 'quarter' ? 4 : 2;
-        const portionLabels = divisor === 2
-          ? ['1st Half', '2nd Half']
-          : ['1st Quarter', '2nd Quarter', '3rd Quarter', '4th Quarter'];
-
-        // Figure out which portion this payday is
-        // Count how many paydays back from due date this is
-        const periodDays = isWeekly ? 7 : isBiweekly ? 14 : 15;
-        let portionIndex = 0;
-        for (let i = divisor - 1; i >= 0; i--) {
-          const portionStart = new Date(dueDate);
-          portionStart.setDate(portionStart.getDate() - (periodDays * i));
-          const portionEnd = new Date(portionStart);
-          portionEnd.setDate(portionEnd.getDate() + periodDays);
-          if (paydate >= new Date(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate() - (periodDays * (divisor - 1 - portionIndex))) &&
-              paydate < endDate) {
-            portionIndex = divisor - 1 - i;
-            break;
-          }
+        // Full payment — show on the payday just before or on the due date
+        if (dueDate >= paydate && dueDate < endDate) {
+          results.push({ ...b, dueDate, splitHalf: null, displayAmount: b.amount });
         }
+      } else {
+        // Split — show on every payday leading up to and including the due date period
+        // Calculate the earliest payday this bill should appear on
+        const earliestStart = new Date(dueDate);
+        earliestStart.setDate(earliestStart.getDate() - (periodDays * (divisor - 1)));
 
-        const label = portionLabels[Math.min(portionIndex, divisor - 1)];
-        results.push({ ...b, dueDate, splitHalf: label, displayAmount: b.amount / divisor });
+        // Check if this payday falls within the split window
+        if (paydate >= earliestStart && paydate < endDate) {
+          // Figure out which portion number this is (1st, 2nd, 3rd, 4th)
+          let portionNum = 0;
+          let checkDate = new Date(earliestStart);
+          while (checkDate <= paydate) {
+            portionNum++;
+            checkDate.setDate(checkDate.getDate() + periodDays);
+          }
+          portionNum = Math.min(portionNum, divisor);
+
+          const portionLabels2 = ['1st', '2nd', '3rd', '4th'];
+          const typeLabel = divisor === 2 ? 'Half' : 'Quarter';
+          const label = `${portionLabels2[portionNum - 1]} ${typeLabel}`;
+
+          results.push({ ...b, dueDate, splitHalf: label, displayAmount: b.amount / divisor });
+        }
       }
     });
 
