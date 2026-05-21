@@ -1532,6 +1532,34 @@
   .activity-xp { font-size:0.78rem; font-weight:700; color:var(--accent2); flex-shrink:0; }
   .activity-time { font-size:0.7rem; color:var(--muted); flex-shrink:0; }
 
+  .reward-card {
+    background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.15);
+    border-radius:10px; padding:0.85rem 1rem; margin-top:1rem;
+    display:flex; align-items:center; gap:0.75rem;
+  }
+  .reward-card .rc-icon { font-size:1.4rem; flex-shrink:0; }
+  .reward-card .rc-content { flex:1; }
+  .reward-card .rc-value { font-family:'Playfair Display',serif; font-size:1.1rem; color:var(--accent2); font-weight:700; }
+  .reward-card .rc-desc { font-size:0.75rem; color:rgba(255,255,255,0.6); margin-top:0.15rem; }
+  .reward-card .rc-code { font-size:0.72rem; font-weight:800; background:rgba(255,255,255,0.1); padding:0.2rem 0.55rem; border-radius:4px; color:var(--accent2); letter-spacing:0.05em; cursor:pointer; border:none; font-family:'Sora',sans-serif; }
+  .reward-card .rc-code:hover { background:rgba(255,255,255,0.2); }
+  .reward-locked { background:rgba(255,255,255,0.04); border:1px dashed rgba(255,255,255,0.1); border-radius:10px; padding:0.75rem 1rem; margin-top:0.75rem; text-align:center; font-size:0.78rem; color:rgba(255,255,255,0.35); }
+  .status-badge-display {
+    display:inline-flex; align-items:center; gap:0.35rem;
+    background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
+    padding:0.25rem 0.75rem; border-radius:20px; font-size:0.78rem; font-weight:700;
+    color:rgba(255,255,255,0.8); margin-top:0.5rem;
+  }
+  .level-rewards-preview { margin-top:1rem; }
+  .lrp-title { font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:rgba(255,255,255,0.4); margin-bottom:0.5rem; }
+  .lrp-row { display:flex; align-items:center; gap:0.65rem; padding:0.4rem 0; border-bottom:1px solid rgba(255,255,255,0.06); font-size:0.78rem; }
+  .lrp-row:last-child { border-bottom:none; }
+  .lrp-badge { font-size:0.9rem; width:20px; text-align:center; flex-shrink:0; }
+  .lrp-name { color:rgba(255,255,255,0.5); flex:1; }
+  .lrp-reward { color:var(--accent2); font-weight:600; font-size:0.72rem; }
+  .lrp-row.current { background:rgba(255,255,255,0.04); border-radius:6px; padding:0.4rem 0.5rem; }
+  .lrp-row.current .lrp-name { color:#fff; }
+
   @media (max-width:860px) { .streaks-layout { grid-template-columns:1fr; } }
 
   @media (max-width: 700px) {
@@ -2941,8 +2969,10 @@
           </div>
           <div class="xp-label">
             <span id="xp-current">0 XP</span>
-            <span id="xp-next">500 XP to Silver</span>
+            <span id="xp-next">1,500 XP to Silver</span>
           </div>
+          <div id="level-reward" style="margin-top:0.75rem"></div>
+          <div id="rewards-roadmap" style="margin-top:1rem"></div>
         </div>
 
         <!-- STREAKS -->
@@ -3280,16 +3310,19 @@
     const actionBtn = document.getElementById('ab-action-btn');
     if (!bar) return;
 
+    const level = getCurrentLevel();
+    const statusTitle = level.statusTitle || '';
+
     if (isPro) {
       bar.classList.add('premium');
-      badge.textContent = '⭐ Pro';
+      badge.textContent = `${level.badge} ${level.name}`;
       badge.classList.add('premium-plan');
-      statusEl.textContent = `⭐ Pro Plan · ${currentUser?.email || ''}`;
+      statusEl.textContent = `⭐ Pro Plan${statusTitle ? ' · ' + statusTitle : ''} · ${currentUser?.email || ''}`;
       actionBtn.textContent = 'Manage Subscription';
       actionBtn.onclick = cancelSubscription;
     } else {
       bar.classList.remove('premium');
-      badge.textContent = 'Free';
+      badge.textContent = `${level.badge} ${level.name}`;
       badge.classList.remove('premium-plan');
       statusEl.textContent = `${currentUser?.user_metadata?.full_name || currentUser?.email?.split('@')[0] || 'User'} · Free Plan`;
       actionBtn.textContent = 'Upgrade to Pro →';
@@ -3315,6 +3348,7 @@
       console.log('No existing user data:', err.message);
     }
     render(); renderBillList(); renderSchedule(); renderGoals();
+    loadProfileUI(); // refresh profile after data loads
   }
 
   // PREMIUM STATE
@@ -4501,6 +4535,7 @@ Guidelines:
     const email = currentUser.email || '';
     const name = currentUser.user_metadata?.full_name || email.split('@')[0];
     const initial = name.charAt(0).toUpperCase();
+    const level = getCurrentLevel();
 
     document.getElementById('profile-avatar').textContent = initial;
     document.getElementById('profile-display-name').textContent = name;
@@ -4509,8 +4544,19 @@ Guidelines:
     document.getElementById('profile-email-input').value = email;
 
     const badge = document.getElementById('profile-plan-badge');
-    if (isPro) { badge.textContent = '⭐ Pro Plan'; badge.classList.add('pro'); }
-    else { badge.textContent = 'Free Plan'; badge.classList.remove('pro'); }
+    if (isPro) {
+      badge.textContent = `${level.badge} ${level.name} · Pro`;
+      badge.classList.add('pro');
+      badge.style.background = `linear-gradient(135deg, #b8860b, #e9c46a)`;
+      badge.style.color = '#1a1a0f';
+      badge.style.border = 'none';
+    } else {
+      badge.textContent = `${level.badge} ${level.name} · Free Plan`;
+      badge.classList.remove('pro');
+      badge.style.background = '';
+      badge.style.color = '';
+      badge.style.border = '';
+    }
   }
 
   async function updateAccount() {
@@ -5027,11 +5073,11 @@ Guidelines:
   // STREAKS & GAMIFICATION SYSTEM
   // =============================================
   const LEVELS = [
-    { name: 'Bronze', badge: '🥉', minXP: 0, maxXP: 500, subtitle: 'Just Getting Started' },
-    { name: 'Silver', badge: '🥈', minXP: 500, maxXP: 1500, subtitle: 'Building Momentum' },
-    { name: 'Gold', badge: '🥇', minXP: 1500, maxXP: 3500, subtitle: 'Finance Pro in Training' },
-    { name: 'Platinum', badge: '💎', minXP: 3500, maxXP: 7500, subtitle: 'Financial Champion' },
-    { name: 'Diamond', badge: '💠', minXP: 7500, maxXP: 99999, subtitle: 'Elite Financial Master' },
+    { name: 'Bronze', badge: '🥉', minXP: 0, maxXP: 1500, subtitle: 'Just Getting Started', statusTitle: null, reward: null, color: '#cd7f32' },
+    { name: 'Silver', badge: '🥈', minXP: 1500, maxXP: 3500, subtitle: 'Building Momentum', statusTitle: 'Silver Member', reward: { type: 'discount', value: '10% off', desc: '10% discount on your next month', code: 'SILVER10' }, color: '#aaa9ad' },
+    { name: 'Gold', badge: '🥇', minXP: 3500, maxXP: 7500, subtitle: 'Finance Pro in Training', statusTitle: 'Gold Member', reward: { type: 'free', value: '1 Free Month', desc: 'One free month of Fintrail Pro', code: 'GOLD1MO' }, color: '#e9c46a' },
+    { name: 'Platinum', badge: '💎', minXP: 7500, maxXP: 10500, subtitle: 'Financial Champion', statusTitle: '💎 Champion', reward: { type: 'free', value: '2 Free Months', desc: 'Two free months of Fintrail Pro', code: 'PLAT2MO' }, color: '#818cf8' },
+    { name: 'Diamond', badge: '💠', minXP: 10500, maxXP: 99999, subtitle: 'Elite Financial Master', statusTitle: '💠 Elite Member', reward: { type: 'lifetime', value: '$3.99/mo Forever', desc: 'Locked-in discounted rate for life', code: 'DIAMOND399' }, color: '#06d6a0' },
   ];
 
   const BADGES_DEF = [
@@ -5083,13 +5129,54 @@ Guidelines:
     localStorage.setItem('fintrail_game_' + (currentUser?.id || 'demo'), JSON.stringify(gameData));
   }
 
+  function copyRewardCode(code) {
+    navigator.clipboard.writeText(code).then(() => {
+      alert(`✅ Code "${code}" copied! Apply it in Stripe when managing your subscription.`);
+    }).catch(() => {
+      prompt('Copy your reward code:', code);
+    });
+  }
+
+  function checkLevelUp(prevXP, newXP) {
+    const prevLevel = LEVELS.findIndex((l, i) => {
+      const next = LEVELS[i+1];
+      return prevXP >= l.minXP && (!next || prevXP < next.minXP);
+    });
+    const newLevel = LEVELS.findIndex((l, i) => {
+      const next = LEVELS[i+1];
+      return newXP >= l.minXP && (!next || newXP < next.minXP);
+    });
+    if (newLevel > prevLevel && newLevel >= 0) {
+      const level = LEVELS[newLevel];
+      showLevelUpToast(level);
+    }
+  }
+
+  function showLevelUpToast(level) {
+    const toast = document.createElement('div');
+    toast.style.cssText = `position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:linear-gradient(135deg,#1a1a2e,#2d1b4e);color:#fff;padding:2rem 2.5rem;border-radius:20px;border:2px solid ${level.color};box-shadow:0 20px 60px rgba(0,0,0,0.5);z-index:9999;animation:slideIn 0.3s ease;text-align:center;min-width:280px`;
+    toast.innerHTML = `
+      <div style="font-size:3.5rem;margin-bottom:0.5rem">${level.badge}</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.5rem;color:#fff;margin-bottom:0.25rem">Level Up!</div>
+      <div style="font-size:1.1rem;font-weight:700;color:${level.color};margin-bottom:0.5rem">${level.name}</div>
+      ${level.statusTitle ? `<div style="font-size:0.82rem;color:rgba(255,255,255,0.7);margin-bottom:0.75rem">${level.statusTitle}</div>` : ''}
+      ${level.reward ? `<div style="background:rgba(255,255,255,0.08);border-radius:10px;padding:0.75rem;margin-bottom:1rem"><div style="font-size:0.72rem;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.08em">🎁 Reward Unlocked</div><div style="font-size:1.1rem;font-weight:700;color:var(--accent2);margin-top:0.25rem">${level.reward.value}</div><div style="font-size:0.75rem;color:rgba(255,255,255,0.6);margin-top:0.15rem">${level.reward.desc}</div></div>` : ''}
+      <button onclick="this.parentElement.remove()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.6rem 1.5rem;font-family:'Sora',sans-serif;font-size:0.875rem;font-weight:700;cursor:pointer">Awesome! 🎉</button>
+    `;
+    document.body.appendChild(toast);
+  }
+
+  // Override addXP to check for level ups
+  const _origAddXP = addXP;
   function addXP(amount, reason) {
-    gameData.totalXP = (gameData.totalXP || 0) + amount;
+    const prevXP = gameData.totalXP || 0;
+    gameData.totalXP = prevXP + amount;
     gameData.activityFeed = [
       { icon: '⚡', text: reason, xp: `+${amount} XP`, time: 'Just now' },
       ...(gameData.activityFeed || []).slice(0, 19)
     ];
     saveGameData();
+    checkLevelUp(prevXP, gameData.totalXP);
     renderStreaks();
     renderActivityFeed();
   }
@@ -5176,11 +5263,52 @@ Guidelines:
 
     document.getElementById('level-badge').textContent = level.badge;
     document.getElementById('level-name').textContent = level.name;
-    document.getElementById('level-subtitle').textContent = level.subtitle;
+    document.getElementById('level-subtitle').innerHTML = `
+      ${level.subtitle}
+      ${level.statusTitle ? `<div class="status-badge-display">${level.statusTitle}</div>` : ''}
+    `;
     document.getElementById('total-xp').textContent = xp.toLocaleString();
     document.getElementById('xp-bar').style.width = Math.min(100, progress) + '%';
     document.getElementById('xp-current').textContent = xp.toLocaleString() + ' XP';
-    document.getElementById('xp-next').textContent = nextLevel ? `${(nextLevel.minXP - xp).toLocaleString()} XP to ${nextLevel.name}` : '🏆 Max Level!';
+    document.getElementById('xp-next').textContent = nextLevel ? `${(nextLevel.minXP - xp).toLocaleString()} XP to ${nextLevel.name}` : '🏆 Max Level Reached!';
+
+    // Show current reward
+    const rewardContainer = document.getElementById('level-reward');
+    if (rewardContainer) {
+      if (level.reward) {
+        rewardContainer.innerHTML = `
+          <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.4);margin-bottom:0.4rem">🎁 Your Reward</div>
+          <div class="reward-card">
+            <div class="rc-icon">🎁</div>
+            <div class="rc-content">
+              <div class="rc-value">${level.reward.value}</div>
+              <div class="rc-desc">${level.reward.desc}</div>
+            </div>
+            <button class="rc-code" onclick="copyRewardCode('${level.reward.code}')" title="Click to copy">${level.reward.code}</button>
+          </div>`;
+      } else {
+        rewardContainer.innerHTML = `<div class="reward-locked">🔒 Reach Silver to unlock rewards</div>`;
+      }
+    }
+
+    // Show rewards roadmap
+    const roadmapContainer = document.getElementById('rewards-roadmap');
+    if (roadmapContainer) {
+      roadmapContainer.innerHTML = `
+        <div class="lrp-title">Rewards Roadmap</div>
+        ${LEVELS.map((l, i) => {
+          const isCurrentOrPast = i <= level.index;
+          const isCurrent = i === level.index;
+          return `<div class="lrp-row ${isCurrent ? 'current' : ''}">
+            <span class="lrp-badge">${l.badge}</span>
+            <span class="lrp-name">${l.name} ${isCurrent ? '← You are here' : ''}</span>
+            <span class="lrp-reward" style="color:${isCurrentOrPast ? 'var(--accent2)' : 'rgba(255,255,255,0.25)'}">
+              ${l.reward ? l.reward.value : '—'}
+            </span>
+          </div>`;
+        }).join('')}
+      `;
+    }
   }
 
   function renderStreaks() {
