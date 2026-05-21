@@ -1564,6 +1564,36 @@
 
   @media (max-width:860px) { .streaks-layout { grid-template-columns:1fr; } }
 
+  /* DEBT NEGOTIATION SCRIPTS */
+  .negotiate-layout { display:grid; grid-template-columns:320px 1fr; gap:1.5rem; align-items:start; }
+  .debt-type-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; margin-bottom:1.25rem; }
+  .debt-type-btn { padding:0.75rem; border-radius:10px; border:1.5px solid var(--border); background:var(--surface); cursor:pointer; text-align:center; transition:all 0.2s; font-family:'Sora',sans-serif; }
+  .debt-type-btn:hover { border-color:var(--accent); }
+  .debt-type-btn.active { border-color:var(--accent); background:rgba(240,85,85,0.06); }
+  .debt-type-btn .dtb-icon { font-size:1.5rem; margin-bottom:0.3rem; }
+  .debt-type-btn .dtb-label { font-size:0.8rem; font-weight:700; color:var(--text); }
+  .debt-type-btn .dtb-desc { font-size:0.7rem; color:var(--muted); margin-top:0.1rem; }
+  .script-output-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; overflow:hidden; }
+  .script-header { background:linear-gradient(135deg,#1a1a2e,#2d1b4e); padding:1.25rem 1.5rem; }
+  .script-header h3 { font-family:'Playfair Display',serif; color:#fff; font-size:1.05rem; margin-bottom:0.2rem; }
+  .script-header p { font-size:0.78rem; color:rgba(255,255,255,0.6); }
+  .script-body { padding:1.5rem; }
+  .script-tabs { display:flex; gap:0.5rem; margin-bottom:1.25rem; flex-wrap:wrap; }
+  .script-tab-btn { padding:0.4rem 0.85rem; border-radius:20px; border:1.5px solid var(--border); background:none; font-family:'Sora',sans-serif; font-size:0.78rem; font-weight:600; color:var(--muted); cursor:pointer; transition:all 0.2s; }
+  .script-tab-btn.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .script-box { background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:1.25rem; font-size:0.85rem; line-height:1.8; color:var(--text); white-space:pre-wrap; min-height:200px; }
+  .script-box.loading { color:var(--muted); font-style:italic; }
+  .script-actions { display:flex; gap:0.6rem; margin-top:0.75rem; flex-wrap:wrap; }
+  .script-copy-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:0.55rem 1.1rem; font-family:'Sora',sans-serif; font-size:0.82rem; font-weight:700; cursor:pointer; transition:all 0.2s; }
+  .script-copy-btn:hover { background:#d94444; }
+  .script-regen-btn { background:none; border:1.5px solid var(--border); color:var(--text-soft); border-radius:8px; padding:0.55rem 1.1rem; font-family:'Sora',sans-serif; font-size:0.82rem; font-weight:600; cursor:pointer; transition:all 0.2s; }
+  .script-regen-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .tips-list { display:flex; flex-direction:column; gap:0.5rem; margin-top:1rem; }
+  .tip-item { display:flex; align-items:flex-start; gap:0.65rem; padding:0.75rem; background:var(--bg); border-radius:8px; border:1px solid var(--border); font-size:0.82rem; }
+  .tip-item .ti-icon { font-size:1rem; flex-shrink:0; margin-top:0.1rem; }
+  .tip-item p { color:var(--text-soft); line-height:1.5; }
+  @media (max-width:860px) { .negotiate-layout { grid-template-columns:1fr; } }
+
   /* RECEIPT UPLOAD MODAL */
   .receipt-modal-overlay {
     position:fixed; inset:0; background:rgba(0,0,0,0.6);
@@ -1793,9 +1823,13 @@
           <span class="ndi-icon">🏆</span>
           <div class="ndi-info"><span class="ndi-label">Health Score & Alerts <span class="pro-pill">PRO</span></span><span class="ndi-desc">Financial health tracking</span></div>
         </button>
-        <button class="nav-dropdown-item" onclick="navTo('streaks', this)">
+        <button class="nav-dropdown-item" onclick="guardedNavTo('streaks', this)">
           <span class="ndi-icon">🔥</span>
           <div class="ndi-info"><span class="ndi-label">Streaks & Milestones</span><span class="ndi-desc">XP, levels & achievements</span></div>
+        </button>
+        <button class="nav-dropdown-item" onclick="guardedNavTo('negotiate', this)">
+          <span class="ndi-icon">💬</span>
+          <div class="ndi-info"><span class="ndi-label">Debt Negotiation Scripts <span class="pro-pill">PRO</span></span><span class="ndi-desc">AI scripts to lower your debt</span></div>
         </button>
       </div>
     </div>
@@ -1825,6 +1859,7 @@
   <button onclick="mobileGuardedTab('ai')">💬 AI Advisor <span class="pro-pill">PRO</span></button>
   <button onclick="mobileGuardedTab('premium')">🏆 Health Score & Alerts <span class="pro-pill">PRO</span></button>
   <button onclick="mobileTab('streaks')">🔥 Streaks & Milestones</button>
+  <button onclick="mobileGuardedTab('negotiate')">💬 Debt Negotiation Scripts <span class="pro-pill">PRO</span></button>
   <div style="border-top:1px solid var(--border);margin:0.5rem 0"></div>
   <button class="upgrade-btn-nav" onclick="showPaywall('nav');closeMobileNav()">⭐ Go Pro</button>
   <button onclick="mobileTab('profile')">👤 Profile & Security</button>
@@ -3123,6 +3158,130 @@
     </div>
   </div>
 
+  <!-- DEBT NEGOTIATION SCRIPTS TAB -->
+  <div class="tab-section" id="tab-negotiate">
+    <div id="negotiate-gate" style="display:none">
+      <div class="lock-gate">
+        <div class="lg-icon">💬</div>
+        <h3>Debt Negotiation Scripts <span class="premium-badge">PRO</span></h3>
+        <p>Get AI-generated scripts to negotiate lower interest rates, settle collections, reduce medical bills, and more — personalized to your exact situation.</p>
+        <button class="lock-gate-btn" onclick="showPaywall('negotiate')">Unlock with Pro — $4.99/mo</button>
+        <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--muted)">7-day free trial · Cancel anytime</div>
+      </div>
+    </div>
+
+    <div id="negotiate-content">
+      <div class="negotiate-layout">
+
+        <!-- LEFT: INPUTS -->
+        <div>
+          <div class="card" style="margin-bottom:1.5rem">
+            <h2 style="margin-bottom:0.5rem">💬 Debt Negotiation Scripts</h2>
+            <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:1.25rem;line-height:1.6">Select your debt type and fill in your details. Claude will generate a personalized script you can use to call your creditor and negotiate better terms.</p>
+
+            <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:0.6rem">Select Debt Type</div>
+            <div class="debt-type-grid" id="debt-type-grid">
+              <button class="debt-type-btn active" onclick="selectDebtType('credit', this)">
+                <div class="dtb-icon">💳</div>
+                <div class="dtb-label">Credit Card</div>
+                <div class="dtb-desc">Lower rate or waive fees</div>
+              </button>
+              <button class="debt-type-btn" onclick="selectDebtType('medical', this)">
+                <div class="dtb-icon">🏥</div>
+                <div class="dtb-label">Medical Bill</div>
+                <div class="dtb-desc">Reduce or payment plan</div>
+              </button>
+              <button class="debt-type-btn" onclick="selectDebtType('student', this)">
+                <div class="dtb-icon">🎓</div>
+                <div class="dtb-label">Student Loan</div>
+                <div class="dtb-desc">Deferment or lower rate</div>
+              </button>
+              <button class="debt-type-btn" onclick="selectDebtType('collections', this)">
+                <div class="dtb-icon">📋</div>
+                <div class="dtb-label">Collections</div>
+                <div class="dtb-desc">Settle for less</div>
+              </button>
+            </div>
+
+            <div id="negotiate-form">
+              <div class="form-group">
+                <label>Creditor / Company Name</label>
+                <input type="text" class="profile-input" id="neg-creditor" placeholder="e.g. Chase, Bank of America">
+              </div>
+              <div class="form-group">
+                <label>Current Balance ($)</label>
+                <input type="number" class="profile-input" id="neg-balance" placeholder="e.g. 5000" min="0">
+              </div>
+              <div class="form-group">
+                <label>Current Interest Rate (%) <span style="font-weight:400;color:var(--muted)">(if applicable)</span></label>
+                <input type="number" class="profile-input" id="neg-rate" placeholder="e.g. 24.99" step="0.01" min="0">
+              </div>
+              <div class="form-group">
+                <label>Your Goal</label>
+                <select class="profile-input" id="neg-goal">
+                  <option value="lower_rate">Lower interest rate</option>
+                  <option value="waive_fees">Waive late fees</option>
+                  <option value="payment_plan">Set up payment plan</option>
+                  <option value="settle">Settle for less than owed</option>
+                  <option value="hardship">Hardship program</option>
+                  <option value="remove_collections">Remove from collections</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Your Situation <span style="font-weight:400;color:var(--muted)">(optional — helps personalize the script)</span></label>
+                <textarea class="profile-input" id="neg-situation" rows="3" placeholder="e.g. I've been a customer for 5 years, recently lost my job, always paid on time until recently..." style="resize:vertical"></textarea>
+              </div>
+              <button class="profile-save-btn" style="width:100%;margin-top:0.5rem" onclick="generateNegotiationScript()" id="neg-generate-btn">
+                ✨ Generate My Script
+              </button>
+            </div>
+          </div>
+
+          <!-- TIPS -->
+          <div class="card">
+            <h2 style="margin-bottom:0.75rem">💡 Negotiation Tips</h2>
+            <div class="tips-list">
+              <div class="tip-item"><span class="ti-icon">📞</span><p><strong>Call don't write.</strong> Phone calls are more effective than letters — you can respond in real time and build rapport.</p></div>
+              <div class="tip-item"><span class="ti-icon">⏰</span><p><strong>Best time to call:</strong> Tuesday–Thursday, 10am–2pm. Avoid Mondays and Fridays.</p></div>
+              <div class="tip-item"><span class="ti-icon">📝</span><p><strong>Take notes.</strong> Write down the date, time, rep name, and what was agreed. Ask for confirmation in writing.</p></div>
+              <div class="tip-item"><span class="ti-icon">🎯</span><p><strong>Know your number.</strong> Decide the maximum you're willing to pay before you call — don't reveal it first.</p></div>
+              <div class="tip-item"><span class="ti-icon">💪</span><p><strong>Be polite but firm.</strong> Creditors deal with negotiations daily — stay calm, professional, and persistent.</p></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: SCRIPT OUTPUT -->
+        <div class="script-output-card">
+          <div class="script-header">
+            <h3 id="script-title">💳 Credit Card Negotiation Script</h3>
+            <p id="script-subtitle">Personalized script to lower your interest rate</p>
+          </div>
+          <div class="script-body">
+            <div class="script-tabs" id="script-tabs">
+              <button class="script-tab-btn active" onclick="switchScriptTab('opening', this)">📞 Opening</button>
+              <button class="script-tab-btn" onclick="switchScriptTab('main', this)">💬 Main Ask</button>
+              <button class="script-tab-btn" onclick="switchScriptTab('objection', this)">🛡️ Objections</button>
+              <button class="script-tab-btn" onclick="switchScriptTab('closing', this)">✅ Closing</button>
+            </div>
+
+            <div class="script-box" id="script-box">Click "Generate My Script" to get your personalized negotiation script. Fill in your details on the left for the best results.</div>
+
+            <div class="script-actions">
+              <button class="script-copy-btn" onclick="copyScript()" id="copy-script-btn">📋 Copy Script</button>
+              <button class="script-regen-btn" onclick="generateNegotiationScript()" id="regen-btn">🔄 Regenerate</button>
+            </div>
+
+            <div class="tip-bar" style="margin-top:1rem">
+              <div class="tip-icon">⚠️</div>
+              <p><strong>Remember:</strong> This script is a guide — adapt it naturally to the conversation. The AI can't guarantee results but these scripts are based on proven negotiation techniques.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
 </main>
 
 <!-- APP FOOTER -->
@@ -3568,6 +3727,7 @@
     document.getElementById('affiliate-content').style.display = isPro ? 'block' : 'none';
     updatePremiumTab();
     updateCreditSimTab();
+    updateNegotiateTab();
     renderResources();
     if (isPro) { renderRateBanner(); calcLoan(); }
   }
@@ -5706,6 +5866,170 @@ Guidelines:
     renderStreaks();
     renderBadges();
     renderActivityFeed();
+  }
+
+  // DEBT NEGOTIATION SCRIPTS
+  let currentDebtType = 'credit';
+  let negotiationScripts = {};
+  let currentScriptTab = 'opening';
+
+  const debtTypeConfig = {
+    credit: { title: '💳 Credit Card Negotiation Script', subtitle: 'Personalized script to lower your interest rate or waive fees' },
+    medical: { title: '🏥 Medical Bill Negotiation Script', subtitle: 'Script to reduce your medical bill or set up a payment plan' },
+    student: { title: '🎓 Student Loan Negotiation Script', subtitle: 'Script to request deferment, forbearance, or lower rates' },
+    collections: { title: '📋 Collections Settlement Script', subtitle: 'Script to settle your debt for less than what is owed' },
+  };
+
+  function selectDebtType(type, btn) {
+    currentDebtType = type;
+    document.querySelectorAll('.debt-type-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const config = debtTypeConfig[type];
+    document.getElementById('script-title').textContent = config.title;
+    document.getElementById('script-subtitle').textContent = config.subtitle;
+    // Update goal options based on type
+    const goalSelect = document.getElementById('neg-goal');
+    const goalOptions = {
+      credit: ['lower_rate|Lower interest rate', 'waive_fees|Waive late fees', 'hardship|Hardship program', 'payment_plan|Set up payment plan'],
+      medical: ['payment_plan|Set up payment plan', 'settle|Reduce bill amount', 'hardship|Financial hardship discount', 'waive_fees|Waive interest/fees'],
+      student: ['payment_plan|Income-based repayment', 'hardship|Deferment or forbearance', 'lower_rate|Interest rate reduction', 'settle|Loan modification'],
+      collections: ['settle|Settle for less than owed', 'remove_collections|Pay for delete agreement', 'payment_plan|Set up payment plan', 'hardship|Hardship settlement'],
+    };
+    goalSelect.innerHTML = goalOptions[type].map(o => {
+      const [val, label] = o.split('|');
+      return `<option value="${val}">${label}</option>`;
+    }).join('');
+  }
+
+  function switchScriptTab(tab, btn) {
+    currentScriptTab = tab;
+    document.querySelectorAll('.script-tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    if (negotiationScripts[tab]) {
+      document.getElementById('script-box').textContent = negotiationScripts[tab];
+      document.getElementById('script-box').classList.remove('loading');
+    } else {
+      document.getElementById('script-box').textContent = 'Generate your script first to see this section.';
+    }
+  }
+
+  async function generateNegotiationScript() {
+    const creditor = document.getElementById('neg-creditor').value.trim();
+    const balance = document.getElementById('neg-balance').value;
+    const rate = document.getElementById('neg-rate').value;
+    const goal = document.getElementById('neg-goal').value;
+    const situation = document.getElementById('neg-situation').value.trim();
+
+    if (!creditor) { alert('Please enter the creditor name.'); return; }
+
+    const btn = document.getElementById('neg-generate-btn');
+    btn.disabled = true; btn.textContent = '✨ Generating...';
+
+    const scriptBox = document.getElementById('script-box');
+    scriptBox.textContent = '⏳ Claude is writing your personalized negotiation script...';
+    scriptBox.classList.add('loading');
+    negotiationScripts = {};
+
+    const goalLabels = {
+      lower_rate: 'lower the interest rate',
+      waive_fees: 'waive late fees',
+      payment_plan: 'set up a payment plan',
+      settle: 'settle the debt for less than owed',
+      hardship: 'enroll in a hardship program',
+      remove_collections: 'do a pay-for-delete agreement',
+    };
+
+    const typeLabels = { credit: 'credit card', medical: 'medical bill', student: 'student loan', collections: 'collections account' };
+
+    const prompt = `You are a debt negotiation expert. Generate a complete phone call script for someone trying to negotiate their ${typeLabels[currentDebtType]} with ${creditor}.
+
+Details:
+- Debt type: ${typeLabels[currentDebtType]}
+- Creditor: ${creditor}
+- Balance: ${balance ? '$' + balance : 'not specified'}
+- Current interest rate: ${rate ? rate + '%' : 'not specified'}
+- Goal: ${goalLabels[goal]}
+- Their situation: ${situation || 'not provided'}
+
+Generate FOUR separate script sections. Format your response EXACTLY like this with these exact headers:
+
+[OPENING]
+(script for the opening of the call - introducing yourself, verifying account, building rapport)
+
+[MAIN ASK]
+(script for making the actual request - be specific, confident, and persuasive)
+
+[OBJECTIONS]
+(script for handling 2-3 common objections they might face)
+
+[CLOSING]
+(script for closing the call - confirming agreement, next steps, getting it in writing)
+
+Make each section realistic, conversational, and specific to their situation. Use [YOUR NAME], [ACCOUNT NUMBER], [AMOUNT] as placeholders where needed. Keep a professional but warm tone.`;
+
+    try {
+      const response = await fetch('/.netlify/functions/ai-advisor', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [{ role: 'user', content: prompt }],
+          system: 'You are a debt negotiation expert who writes realistic, effective phone scripts. Always format responses with the exact section headers requested.'
+        })
+      });
+      const data = await response.json();
+      const fullScript = data.reply || '';
+
+      // Parse sections
+      const sections = { opening: '', main: '', objection: '', closing: '' };
+      const openingMatch = fullScript.match(/\[OPENING\]([\s\S]*?)(?=\[MAIN ASK\]|$)/i);
+      const mainMatch = fullScript.match(/\[MAIN ASK\]([\s\S]*?)(?=\[OBJECTIONS\]|$)/i);
+      const objectionMatch = fullScript.match(/\[OBJECTIONS\]([\s\S]*?)(?=\[CLOSING\]|$)/i);
+      const closingMatch = fullScript.match(/\[CLOSING\]([\s\S]*?)$/i);
+
+      if (openingMatch) sections.opening = openingMatch[1].trim();
+      if (mainMatch) sections.main = mainMatch[1].trim();
+      if (objectionMatch) sections.objection = objectionMatch[1].trim();
+      if (closingMatch) sections.closing = closingMatch[1].trim();
+
+      // Fallback if parsing fails
+      if (!sections.opening) sections.opening = fullScript;
+
+      negotiationScripts = sections;
+
+      // Show current tab
+      const currentContent = sections[currentScriptTab] || sections.opening;
+      scriptBox.textContent = currentContent;
+      scriptBox.classList.remove('loading');
+
+      awardXPForAction('aiChat');
+
+    } catch (err) {
+      scriptBox.textContent = 'Something went wrong generating your script. Please try again.';
+      scriptBox.classList.remove('loading');
+    }
+
+    btn.disabled = false; btn.textContent = '✨ Generate My Script';
+  }
+
+  function copyScript() {
+    const text = document.getElementById('script-box').textContent;
+    if (text.includes('Click "Generate') || text.includes('Generate your script')) {
+      alert('Generate your script first!'); return;
+    }
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copy-script-btn');
+      btn.textContent = '✅ Copied!';
+      setTimeout(() => btn.textContent = '📋 Copy Script', 2000);
+    });
+  }
+
+  function updateNegotiateTab() {
+    const gate = document.getElementById('negotiate-gate');
+    const content = document.getElementById('negotiate-content');
+    if (gate && content) {
+      gate.style.display = isPro ? 'none' : 'block';
+      content.style.display = isPro ? 'block' : 'none';
+    }
   }
 
   // INIT
