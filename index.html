@@ -1465,6 +1465,75 @@
   .nav-dropdown-divider { height: 1px; background: var(--border); margin: 0.3rem 0.5rem; }
   .nav-dropdown-section { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); padding: 0.4rem 0.75rem 0.2rem; }
 
+  /* STREAKS & GAMIFICATION */
+  .streaks-layout { display:grid; grid-template-columns:300px 1fr; gap:1.5rem; align-items:start; }
+
+  /* LEVEL CARD */
+  .level-card {
+    background:linear-gradient(135deg,#1a1a2e,#2d1b4e);
+    border-radius:16px; padding:1.75rem; text-align:center; color:#fff; margin-bottom:1.5rem;
+    position:relative; overflow:hidden;
+  }
+  .level-card::before {
+    content:''; position:absolute; top:-50px; right:-50px; width:180px; height:180px;
+    background:radial-gradient(circle, rgba(240,85,85,0.2) 0%, transparent 70%);
+  }
+  .level-badge { font-size:3.5rem; margin-bottom:0.5rem; position:relative; }
+  .level-name { font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700; color:#fff; }
+  .level-subtitle { font-size:0.78rem; color:rgba(255,255,255,0.6); margin-top:0.2rem; }
+  .xp-bar-track { height:10px; background:rgba(255,255,255,0.15); border-radius:5px; margin:1rem 0 0.4rem; overflow:hidden; }
+  .xp-bar-fill { height:100%; border-radius:5px; background:linear-gradient(90deg,var(--accent),var(--accent2)); transition:width 0.8s ease; }
+  .xp-label { display:flex; justify-content:space-between; font-size:0.72rem; color:rgba(255,255,255,0.5); }
+  .total-xp { font-family:'Playfair Display',serif; font-size:1.8rem; color:var(--accent2); margin-top:0.75rem; }
+  .total-xp-label { font-size:0.72rem; color:rgba(255,255,255,0.5); text-transform:uppercase; letter-spacing:0.08em; }
+
+  /* STREAKS */
+  .streak-cards { display:grid; grid-template-columns:1fr; gap:0.6rem; }
+  .streak-card {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0.85rem 1rem; background:var(--surface); border:1px solid var(--border);
+    border-radius:10px; transition:border-color 0.2s;
+  }
+  .streak-card.active { border-color:var(--accent); background:rgba(240,85,85,0.03); }
+  .sc-left { display:flex; align-items:center; gap:0.65rem; }
+  .sc-icon { font-size:1.4rem; }
+  .sc-info h4 { font-size:0.875rem; font-weight:600; color:var(--text); }
+  .sc-info p { font-size:0.72rem; color:var(--muted); margin-top:0.1rem; }
+  .streak-count { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:700; color:var(--accent); line-height:1; }
+  .streak-unit { font-size:0.68rem; color:var(--muted); text-align:center; }
+
+  /* BADGES */
+  .badges-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:0.75rem; }
+  .badge-item {
+    background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    padding:1rem; text-align:center; transition:all 0.2s; position:relative;
+  }
+  .badge-item.earned { border-color:var(--accent2); background:rgba(255,209,102,0.05); }
+  .badge-item.locked { opacity:0.45; filter:grayscale(1); }
+  .badge-emoji { font-size:2rem; margin-bottom:0.4rem; }
+  .badge-name { font-size:0.78rem; font-weight:700; color:var(--text); margin-bottom:0.2rem; }
+  .badge-desc { font-size:0.68rem; color:var(--muted); line-height:1.4; }
+  .badge-xp { font-size:0.68rem; font-weight:700; color:var(--accent2); margin-top:0.3rem; }
+  .badge-earned-stamp {
+    position:absolute; top:6px; right:6px; background:var(--accent2);
+    color:#1a1a0f; font-size:0.6rem; font-weight:800; padding:0.1rem 0.35rem;
+    border-radius:10px; text-transform:uppercase; letter-spacing:0.05em;
+  }
+
+  /* RECENT ACTIVITY */
+  .activity-feed { display:flex; flex-direction:column; gap:0.5rem; }
+  .activity-item {
+    display:flex; align-items:center; gap:0.75rem; padding:0.65rem 0.85rem;
+    background:var(--bg); border-radius:8px; border:1px solid var(--border);
+    animation:slideIn 0.2s ease;
+  }
+  .activity-icon { font-size:1.1rem; flex-shrink:0; }
+  .activity-text { font-size:0.82rem; color:var(--text-soft); flex:1; }
+  .activity-xp { font-size:0.78rem; font-weight:700; color:var(--accent2); flex-shrink:0; }
+  .activity-time { font-size:0.7rem; color:var(--muted); flex-shrink:0; }
+
+  @media (max-width:860px) { .streaks-layout { grid-template-columns:1fr; } }
+
   @media (max-width: 700px) {
     .two-col { grid-template-columns: 1fr; }
     .summary-grid { grid-template-columns: 1fr; }
@@ -1636,6 +1705,10 @@
           <span class="ndi-icon">🏆</span>
           <div class="ndi-info"><span class="ndi-label">Health Score & Alerts <span class="pro-pill">PRO</span></span><span class="ndi-desc">Financial health tracking</span></div>
         </button>
+        <button class="nav-dropdown-item" onclick="navTo('streaks', this)">
+          <span class="ndi-icon">🔥</span>
+          <div class="ndi-info"><span class="ndi-label">Streaks & Milestones</span><span class="ndi-desc">XP, levels & achievements</span></div>
+        </button>
       </div>
     </div>
 
@@ -1663,6 +1736,7 @@
   <div style="font-size:0.68rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);padding:0.6rem 1rem 0.2rem">Insights</div>
   <button onclick="mobileGuardedTab('ai')">💬 AI Advisor <span class="pro-pill">PRO</span></button>
   <button onclick="mobileGuardedTab('premium')">🏆 Health Score & Alerts <span class="pro-pill">PRO</span></button>
+  <button onclick="mobileTab('streaks')">🔥 Streaks & Milestones</button>
   <div style="border-top:1px solid var(--border);margin:0.5rem 0"></div>
   <button class="upgrade-btn-nav" onclick="showPaywall('nav');closeMobileNav()">⭐ Go Pro</button>
   <button onclick="mobileTab('profile')">👤 Profile & Security</button>
@@ -2849,6 +2923,60 @@
     </div>
   </div>
 
+  <!-- STREAKS & MILESTONES TAB -->
+  <div class="tab-section" id="tab-streaks">
+    <div class="streaks-layout">
+
+      <!-- LEFT: LEVEL + STREAKS -->
+      <div>
+        <!-- LEVEL CARD -->
+        <div class="level-card">
+          <div class="level-badge" id="level-badge">🥉</div>
+          <div class="level-name" id="level-name">Bronze</div>
+          <div class="level-subtitle" id="level-subtitle">Level 1 · Just Getting Started</div>
+          <div class="total-xp" id="total-xp">0</div>
+          <div class="total-xp-label">Total XP Earned</div>
+          <div class="xp-bar-track" style="margin-top:0.75rem">
+            <div class="xp-bar-fill" id="xp-bar" style="width:0%"></div>
+          </div>
+          <div class="xp-label">
+            <span id="xp-current">0 XP</span>
+            <span id="xp-next">500 XP to Silver</span>
+          </div>
+        </div>
+
+        <!-- STREAKS -->
+        <div class="card">
+          <h2 style="margin-bottom:1rem">🔥 Active Streaks</h2>
+          <div class="streak-cards" id="streak-cards"></div>
+          <div class="tip-bar" style="margin-top:1rem">
+            <div class="tip-icon">💡</div>
+            <p><strong>Keep it going!</strong> Streaks reset if you miss a day. Log in and update your budget daily to maintain your streak and earn bonus XP.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: BADGES + ACTIVITY -->
+      <div>
+        <div class="card" style="margin-bottom:1.5rem">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+            <h2 style="margin-bottom:0">🏆 Achievements</h2>
+            <span id="badges-count" style="font-size:0.78rem;color:var(--muted)">0 earned</span>
+          </div>
+          <div class="badges-grid" id="badges-grid"></div>
+        </div>
+
+        <div class="card">
+          <h2 style="margin-bottom:1rem">⚡ Recent Activity</h2>
+          <div class="activity-feed" id="activity-feed">
+            <div class="empty-state">No activity yet — start using Fintrail to earn XP!</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
 </main>
 
 <script>
@@ -3052,6 +3180,7 @@
     setUserUI(user);
     loadUserData();
     loadProfileUI();
+    setTimeout(loadGameData, 500);
   }
 
   function setUserUI(user) {
@@ -3262,7 +3391,6 @@
   }
 
   function navTo(tab, btn) {
-    // Handle budget sub-tabs
     if (tab === 'budget-schedule') {
       showTab('budget', document.getElementById('nav-budget'));
       showBudgetSub('schedule', document.querySelector('.sched-tab-btn:nth-child(2)'));
@@ -3272,10 +3400,13 @@
     document.querySelectorAll('.nav-group-btn, .nav-dropdown-item').forEach(b => b.classList.remove('active'));
     document.getElementById('tab-' + tab).classList.add('visible');
     if (btn) btn.classList.add('active');
-    // Highlight parent group button
     const group = btn?.closest('.nav-group')?.querySelector('.nav-group-btn');
     if (group) group.classList.add('active');
     closeMobileNav();
+    // Award XP for tool usage
+    if (tab === 'invest') awardXPForAction('investCalc');
+    if (tab === 'creditsim') awardXPForAction('creditSim');
+    if (tab === 'streaks') renderStreaksTab();
   }
 
   function guardedNavTo(tab, btn) {
@@ -3350,6 +3481,7 @@
     document.getElementById('amount').value = '';
     render();
     saveUserData();
+    awardXPForAction('transaction');
   }
 
   // DELETE TRANSACTION
@@ -3627,6 +3759,7 @@ Guidelines:
     document.getElementById('g-saved').value = '';
     document.getElementById('g-date').value = '';
     renderGoals(); saveUserData();
+    awardXPForAction('goal');
   }
 
   function deleteGoal(id) {
@@ -3745,6 +3878,7 @@ Guidelines:
     document.getElementById('bill-amount').value = '';
     document.getElementById('bill-per-paycheck').value = '';
     renderBillList(); renderSchedule(); saveUserData();
+    awardXPForAction('bill');
   }
 
   function deleteBill(id) {
@@ -4875,6 +5009,230 @@ Guidelines:
     }
   }
 
+  // =============================================
+  // STREAKS & GAMIFICATION SYSTEM
+  // =============================================
+  const LEVELS = [
+    { name: 'Bronze', badge: '🥉', minXP: 0, maxXP: 500, subtitle: 'Just Getting Started' },
+    { name: 'Silver', badge: '🥈', minXP: 500, maxXP: 1500, subtitle: 'Building Momentum' },
+    { name: 'Gold', badge: '🥇', minXP: 1500, maxXP: 3500, subtitle: 'Finance Pro in Training' },
+    { name: 'Platinum', badge: '💎', minXP: 3500, maxXP: 7500, subtitle: 'Financial Champion' },
+    { name: 'Diamond', badge: '💠', minXP: 7500, maxXP: 99999, subtitle: 'Elite Financial Master' },
+  ];
+
+  const BADGES_DEF = [
+    { id: 'first_login', emoji: '👋', name: 'Welcome!', desc: 'Log in for the first time', xp: 50, condition: () => true },
+    { id: 'first_transaction', emoji: '💸', name: 'First Entry', desc: 'Log your first transaction', xp: 100, condition: () => transactions.length >= 1 },
+    { id: 'ten_transactions', emoji: '📝', name: 'Record Keeper', desc: 'Log 10 transactions', xp: 200, condition: () => transactions.length >= 10 },
+    { id: 'first_goal', emoji: '🎯', name: 'Goal Setter', desc: 'Create your first savings goal', xp: 100, condition: () => goals.length >= 1 },
+    { id: 'goal_complete', emoji: '🎉', name: 'Goal Crusher', desc: 'Complete a savings goal', xp: 500, condition: () => goals.some(g => g.saved >= g.target) },
+    { id: 'first_bill', emoji: '📅', name: 'Bill Tracker', desc: 'Add your first bill', xp: 100, condition: () => bills.length >= 1 },
+    { id: 'five_bills', emoji: '🗒️', name: 'Organized', desc: 'Track 5 or more bills', xp: 200, condition: () => bills.length >= 5 },
+    { id: 'budget_surplus', emoji: '💰', name: 'In the Black', desc: 'Have positive budget balance', xp: 150, condition: () => { const i=transactions.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0); const e=transactions.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0); return i > e && i > 0; } },
+    { id: 'streak_7', emoji: '🔥', name: 'Week Warrior', desc: 'Maintain a 7-day login streak', xp: 300, condition: () => (gameData.loginStreak || 0) >= 7 },
+    { id: 'streak_30', emoji: '⚡', name: 'Monthly Master', desc: 'Maintain a 30-day login streak', xp: 750, condition: () => (gameData.loginStreak || 0) >= 30 },
+    { id: 'pro_member', emoji: '⭐', name: 'Pro Member', desc: 'Upgrade to Fintrail Pro', xp: 500, condition: () => isPro },
+    { id: 'debt_planner', emoji: '💳', name: 'Debt Destroyer', desc: 'Create a debt payoff plan', xp: 200, condition: () => planDebts.length >= 1 },
+    { id: 'invest_calc', emoji: '📈', name: 'Future Thinker', desc: 'Use the investment calculator', xp: 100, condition: () => (gameData.usedInvestCalc || false) },
+    { id: 'credit_sim', emoji: '📊', name: 'Score Hacker', desc: 'Use the credit score simulator', xp: 150, condition: () => (gameData.usedCreditSim || false) },
+    { id: 'ai_chat', emoji: '🤖', name: 'AI Powered', desc: 'Ask the AI advisor a question', xp: 100, condition: () => (gameData.askedAI || false) },
+    { id: 'three_goals', emoji: '🏹', name: 'Ambitious', desc: 'Create 3 or more savings goals', xp: 250, condition: () => goals.length >= 3 },
+    { id: 'savings_1000', emoji: '💵', name: 'Four Figures', desc: 'Save $1,000 across all goals', xp: 400, condition: () => goals.reduce((s,g)=>s+g.saved,0) >= 1000 },
+    { id: 'savings_10000', emoji: '🤑', name: 'Five Figures', desc: 'Save $10,000 across all goals', xp: 1000, condition: () => goals.reduce((s,g)=>s+g.saved,0) >= 10000 },
+    { id: 'fifty_transactions', emoji: '📒', name: 'Power Tracker', desc: 'Log 50 transactions', xp: 500, condition: () => transactions.length >= 50 },
+    { id: 'profile_complete', emoji: '✅', name: 'All Set Up', desc: 'Complete your profile', xp: 100, condition: () => !!(currentUser?.user_metadata?.full_name) },
+  ];
+
+  let gameData = {
+    loginStreak: 0,
+    lastLogin: null,
+    budgetStreak: 0,
+    lastBudgetUpdate: null,
+    billStreak: 0,
+    earnedBadges: [],
+    totalXP: 0,
+    activityFeed: [],
+    usedInvestCalc: false,
+    usedCreditSim: false,
+    askedAI: false,
+  };
+
+  function loadGameData() {
+    const saved = localStorage.getItem('fintrail_game_' + (currentUser?.id || 'demo'));
+    if (saved) { try { gameData = { ...gameData, ...JSON.parse(saved) }; } catch(e) {} }
+    checkLoginStreak();
+    renderStreaks();
+    checkAndAwardBadges();
+  }
+
+  function saveGameData() {
+    localStorage.setItem('fintrail_game_' + (currentUser?.id || 'demo'), JSON.stringify(gameData));
+  }
+
+  function addXP(amount, reason) {
+    gameData.totalXP = (gameData.totalXP || 0) + amount;
+    gameData.activityFeed = [
+      { icon: '⚡', text: reason, xp: `+${amount} XP`, time: 'Just now' },
+      ...(gameData.activityFeed || []).slice(0, 19)
+    ];
+    saveGameData();
+    renderStreaks();
+    renderActivityFeed();
+  }
+
+  function checkLoginStreak() {
+    const today = new Date().toDateString();
+    const last = gameData.lastLogin;
+    if (!last) {
+      gameData.loginStreak = 1;
+      gameData.lastLogin = today;
+      addXP(50, '🎉 First login! Welcome to Fintrail');
+    } else if (last !== today) {
+      const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+      if (last === yesterday.toDateString()) {
+        gameData.loginStreak = (gameData.loginStreak || 0) + 1;
+        const xp = Math.min(50 + gameData.loginStreak * 5, 150);
+        addXP(xp, `🔥 Day ${gameData.loginStreak} login streak!`);
+      } else {
+        gameData.loginStreak = 1;
+        addXP(25, '👋 Welcome back!');
+      }
+      gameData.lastLogin = today;
+    }
+    saveGameData();
+  }
+
+  function awardXPForAction(action) {
+    const xpMap = {
+      transaction: { xp: 20, msg: '💸 Logged a transaction' },
+      bill: { xp: 30, msg: '📅 Added a bill' },
+      goal: { xp: 40, msg: '🎯 Created a savings goal' },
+      goalDeposit: { xp: 15, msg: '💰 Added to savings goal' },
+      investCalc: { xp: 25, msg: '📈 Used investment calculator' },
+      creditSim: { xp: 35, msg: '📊 Used credit score simulator' },
+      aiChat: { xp: 30, msg: '🤖 Asked the AI advisor' },
+      pdfDownload: { xp: 20, msg: '📄 Downloaded a PDF report' },
+    };
+    const data = xpMap[action];
+    if (data) { addXP(data.xp, data.msg); }
+    if (action === 'investCalc') { gameData.usedInvestCalc = true; saveGameData(); }
+    if (action === 'creditSim') { gameData.usedCreditSim = true; saveGameData(); }
+    if (action === 'aiChat') { gameData.askedAI = true; saveGameData(); }
+    checkAndAwardBadges();
+  }
+
+  function checkAndAwardBadges() {
+    let newBadges = false;
+    BADGES_DEF.forEach(badge => {
+      if (!gameData.earnedBadges.includes(badge.id) && badge.condition()) {
+        gameData.earnedBadges.push(badge.id);
+        addXP(badge.xp, `${badge.emoji} Badge unlocked: ${badge.name}!`);
+        newBadges = true;
+        // Show toast notification
+        showBadgeToast(badge);
+      }
+    });
+    if (newBadges) saveGameData();
+    renderBadges();
+    renderLevelCard();
+  }
+
+  function showBadgeToast(badge) {
+    const toast = document.createElement('div');
+    toast.style.cssText = `position:fixed;bottom:2rem;right:2rem;background:linear-gradient(135deg,#1a1a2e,#2d1b4e);color:#fff;padding:1rem 1.25rem;border-radius:12px;border:1px solid rgba(255,209,102,0.3);box-shadow:0 8px 30px rgba(0,0,0,0.3);z-index:9999;animation:slideIn 0.3s ease;display:flex;align-items:center;gap:0.75rem;max-width:280px`;
+    toast.innerHTML = `<span style="font-size:1.75rem">${badge.emoji}</span><div><div style="font-weight:700;font-size:0.875rem;color:#fff">Badge Unlocked!</div><div style="font-size:0.78rem;color:rgba(255,255,255,0.7);margin-top:0.1rem">${badge.name} · +${badge.xp} XP</div></div>`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.style.opacity = '0', 3000);
+    setTimeout(() => toast.remove(), 3500);
+  }
+
+  function getCurrentLevel() {
+    const xp = gameData.totalXP || 0;
+    for (let i = LEVELS.length - 1; i >= 0; i--) {
+      if (xp >= LEVELS[i].minXP) return { ...LEVELS[i], index: i };
+    }
+    return { ...LEVELS[0], index: 0 };
+  }
+
+  function renderLevelCard() {
+    const level = getCurrentLevel();
+    const xp = gameData.totalXP || 0;
+    const nextLevel = LEVELS[level.index + 1];
+    const progress = nextLevel ? ((xp - level.minXP) / (nextLevel.minXP - level.minXP)) * 100 : 100;
+
+    document.getElementById('level-badge').textContent = level.badge;
+    document.getElementById('level-name').textContent = level.name;
+    document.getElementById('level-subtitle').textContent = level.subtitle;
+    document.getElementById('total-xp').textContent = xp.toLocaleString();
+    document.getElementById('xp-bar').style.width = Math.min(100, progress) + '%';
+    document.getElementById('xp-current').textContent = xp.toLocaleString() + ' XP';
+    document.getElementById('xp-next').textContent = nextLevel ? `${(nextLevel.minXP - xp).toLocaleString()} XP to ${nextLevel.name}` : '🏆 Max Level!';
+  }
+
+  function renderStreaks() {
+    const streaks = [
+      { icon: '🔥', label: 'Login Streak', desc: 'Log in daily', count: gameData.loginStreak || 0, unit: 'days' },
+      { icon: '📝', label: 'Budget Streak', desc: 'Log transactions regularly', count: transactions.length > 0 ? Math.min(gameData.loginStreak || 0, 7) : 0, unit: 'days' },
+      { icon: '📅', label: 'Bills Tracked', desc: 'Bills added to schedule', count: bills.length, unit: 'bills' },
+      { icon: '🎯', label: 'Goals Active', desc: 'Savings goals in progress', count: goals.filter(g => g.saved < g.target).length, unit: 'goals' },
+    ];
+
+    document.getElementById('streak-cards').innerHTML = streaks.map(s => `
+      <div class="streak-card ${s.count > 0 ? 'active' : ''}">
+        <div class="sc-left">
+          <span class="sc-icon">${s.icon}</span>
+          <div class="sc-info">
+            <h4>${s.label}</h4>
+            <p>${s.desc}</p>
+          </div>
+        </div>
+        <div style="text-align:center">
+          <div class="streak-count" style="color:${s.count > 0 ? 'var(--accent)' : 'var(--muted)'}">${s.count}</div>
+          <div class="streak-unit">${s.unit}</div>
+        </div>
+      </div>`).join('');
+  }
+
+  function renderBadges() {
+    const earned = gameData.earnedBadges || [];
+    const earnedCount = earned.length;
+    document.getElementById('badges-count').textContent = `${earnedCount}/${BADGES_DEF.length} earned`;
+
+    document.getElementById('badges-grid').innerHTML = BADGES_DEF.map(b => {
+      const isEarned = earned.includes(b.id);
+      return `<div class="badge-item ${isEarned ? 'earned' : 'locked'}" title="${b.desc}">
+        ${isEarned ? '<div class="badge-earned-stamp">✓ Earned</div>' : ''}
+        <div class="badge-emoji">${b.emoji}</div>
+        <div class="badge-name">${b.name}</div>
+        <div class="badge-desc">${b.desc}</div>
+        <div class="badge-xp">+${b.xp} XP</div>
+      </div>`;
+    }).join('');
+  }
+
+  function renderActivityFeed() {
+    const feed = gameData.activityFeed || [];
+    const container = document.getElementById('activity-feed');
+    if (!container) return;
+    if (feed.length === 0) {
+      container.innerHTML = '<div class="empty-state">No activity yet — start using Fintrail to earn XP!</div>';
+      return;
+    }
+    container.innerHTML = feed.slice(0, 10).map(a => `
+      <div class="activity-item">
+        <span class="activity-icon">${a.icon}</span>
+        <span class="activity-text">${a.text}</span>
+        <span class="activity-xp">${a.xp}</span>
+      </div>`).join('');
+  }
+
+  function renderStreaksTab() {
+    renderLevelCard();
+    renderStreaks();
+    renderBadges();
+    renderActivityFeed();
+  }
+
   // INIT
   loadConfig();
   applyProState();
@@ -4885,7 +5243,6 @@ Guidelines:
   checkBillAlerts();
   handleUpgradeReturn();
   calcInvestment();
-  // Set default next payday to today
   const todayStr = new Date().toISOString().split('T')[0];
   document.getElementById('next-payday').value = todayStr;
 </script>
