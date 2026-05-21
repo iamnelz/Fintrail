@@ -1562,6 +1562,60 @@
 
   @media (max-width:860px) { .streaks-layout { grid-template-columns:1fr; } }
 
+  /* RECEIPT UPLOAD MODAL */
+  .receipt-modal-overlay {
+    position:fixed; inset:0; background:rgba(0,0,0,0.6);
+    z-index:2000; display:flex; align-items:center; justify-content:center;
+    backdrop-filter:blur(4px); animation:fadeIn 0.2s ease;
+  }
+  .receipt-modal {
+    background:var(--surface); border:1px solid var(--border); border-radius:16px;
+    width:100%; max-width:440px; margin:1.5rem; overflow:hidden;
+    box-shadow:0 20px 60px rgba(0,0,0,0.3); animation:slideUp 0.25s ease;
+  }
+  .receipt-modal-header {
+    background:linear-gradient(135deg,#1a1a2e,#2d1b4e);
+    padding:1.25rem 1.5rem; display:flex; align-items:center; justify-content:space-between;
+  }
+  .receipt-modal-header h3 { font-family:'Playfair Display',serif; color:#fff; font-size:1.05rem; }
+  .receipt-modal-close { background:rgba(255,255,255,0.1); border:none; color:#fff; width:26px; height:26px; border-radius:50%; cursor:pointer; font-size:0.85rem; display:flex; align-items:center; justify-content:center; }
+  .receipt-modal-body { padding:1.5rem; }
+  .receipt-modal-body p { font-size:0.85rem; color:var(--text-soft); margin-bottom:1.25rem; line-height:1.6; }
+  .upload-zone {
+    border:2px dashed var(--border); border-radius:10px; padding:2rem;
+    text-align:center; cursor:pointer; transition:all 0.2s; margin-bottom:1rem;
+  }
+  .upload-zone:hover { border-color:var(--accent); background:rgba(240,85,85,0.03); }
+  .upload-zone.has-file { border-color:var(--income-color); background:rgba(0,184,148,0.05); }
+  .upload-zone .uz-icon { font-size:2rem; margin-bottom:0.5rem; }
+  .upload-zone .uz-text { font-size:0.85rem; color:var(--muted); }
+  .upload-zone .uz-file { font-size:0.82rem; font-weight:600; color:var(--income-color); margin-top:0.25rem; }
+  .pending-xp-badge {
+    display:inline-flex; align-items:center; gap:0.35rem;
+    background:rgba(245,166,35,0.12); color:var(--accent2);
+    font-size:0.75rem; font-weight:700; padding:0.25rem 0.65rem;
+    border-radius:20px; margin-bottom:1rem;
+  }
+  .receipt-modal-actions { display:flex; gap:0.75rem; margin-top:1rem; }
+  .receipt-submit-btn {
+    flex:1; background:var(--accent); color:#fff; border:none; border-radius:8px;
+    padding:0.75rem; font-family:'Sora',sans-serif; font-size:0.875rem; font-weight:700;
+    cursor:pointer; transition:all 0.2s;
+  }
+  .receipt-submit-btn:hover { background:#d94444; }
+  .receipt-submit-btn:disabled { background:var(--border); color:var(--muted); cursor:not-allowed; }
+  .receipt-skip-btn {
+    background:none; border:1.5px solid var(--border); color:var(--muted);
+    border-radius:8px; padding:0.75rem 1rem; font-family:'Sora',sans-serif;
+    font-size:0.82rem; cursor:pointer; transition:all 0.2s;
+  }
+  .receipt-skip-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .pending-item {
+    display:flex; align-items:center; gap:0.6rem; padding:0.5rem 0.75rem;
+    background:rgba(245,166,35,0.08); border:1px solid rgba(245,166,35,0.2);
+    border-radius:8px; font-size:0.78rem; color:var(--accent2);
+  }
+
   @media (max-width: 700px) {
     .two-col { grid-template-columns: 1fr; }
     .summary-grid { grid-template-columns: 1fr; }
@@ -1770,6 +1824,34 @@
   <button onclick="mobileTab('profile')">👤 Profile & Security</button>
 </div>
 <div class="mobile-overlay" id="mobile-overlay" onclick="closeMobileNav()"></div>
+
+<!-- RECEIPT UPLOAD MODAL -->
+<div id="receipt-modal" style="display:none" class="receipt-modal-overlay" onclick="closeReceiptModal(event)">
+  <div class="receipt-modal">
+    <div class="receipt-modal-header">
+      <h3 id="receipt-modal-title">📄 Upload Payment Proof</h3>
+      <button class="receipt-modal-close" onclick="closeReceiptModal()">✕</button>
+    </div>
+    <div class="receipt-modal-body">
+      <p id="receipt-modal-desc">Upload a screenshot or photo of your payment confirmation to verify and earn XP. Your XP will be credited after a 48-hour review period.</p>
+
+      <div class="pending-xp-badge">⏳ XP awarded after 48hr verification</div>
+
+      <div class="upload-zone" id="upload-zone" onclick="document.getElementById('receipt-file').click()">
+        <div class="uz-icon">📸</div>
+        <div class="uz-text">Click to upload receipt or screenshot</div>
+        <div class="uz-text" style="font-size:0.72rem;margin-top:0.25rem">PNG, JPG, PDF accepted</div>
+        <div class="uz-file" id="uz-file-name" style="display:none"></div>
+      </div>
+      <input type="file" id="receipt-file" accept="image/*,.pdf" style="display:none" onchange="handleReceiptFile(this)">
+
+      <div class="receipt-modal-actions">
+        <button class="receipt-submit-btn" id="receipt-submit-btn" onclick="submitReceipt()" disabled>Submit for Verification</button>
+        <button class="receipt-skip-btn" onclick="skipReceipt()">Skip (no XP)</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ACCOUNT BAR -->
 <div class="account-bar" id="account-bar">
@@ -3820,7 +3902,14 @@ Guidelines:
     const amount = parseFloat(input.value);
     if (isNaN(amount) || amount <= 0) return;
     const goal = goals.find(g => g.id === id);
-    if (goal) { goal.saved = Math.min(goal.saved + amount, goal.target); input.value = ''; renderGoals(); }
+    if (goal) {
+      goal.saved = Math.min(goal.saved + amount, goal.target);
+      input.value = '';
+      renderGoals();
+      saveUserData();
+      // Require receipt for XP
+      showReceiptModal('goal', id, null, amount, goal.name);
+    }
   }
 
   function monthsUntil(dateStr) {
@@ -3936,12 +4025,19 @@ Guidelines:
   }
 
   function togglePaid(key, el) {
-    paidChecks[key] = !paidChecks[key];
-    el.classList.toggle('checked', paidChecks[key]);
-    const row = el.closest('.payday-bill-row');
-    row.classList.toggle('paid-row', paidChecks[key]);
-    // update header summary
-    renderSchedule();
+    const wasPaid = !!paidChecks[key];
+    if (!wasPaid) {
+      // Marking as paid — require receipt
+      showReceiptModal('bill', key, el);
+    } else {
+      // Unmarking as paid
+      paidChecks[key] = false;
+      el.classList.remove('checked');
+      el.textContent = '';
+      const row = el.closest('.payday-bill-row');
+      row.classList.remove('paid-row');
+      renderSchedule();
+    }
   }
 
   function renderBillList() {
@@ -5069,6 +5165,110 @@ Guidelines:
     }
   }
 
+  // RECEIPT VERIFICATION SYSTEM
+  let receiptContext = null;
+
+  function showReceiptModal(type, key, el, amount, name) {
+    receiptContext = { type, key, el, amount, name };
+    const modal = document.getElementById('receipt-modal');
+    const title = document.getElementById('receipt-modal-title');
+    const desc = document.getElementById('receipt-modal-desc');
+    const submitBtn = document.getElementById('receipt-submit-btn');
+    const fileInput = document.getElementById('receipt-file');
+    const uzFileName = document.getElementById('uz-file-name');
+    const uploadZone = document.getElementById('upload-zone');
+    fileInput.value = '';
+    uzFileName.style.display = 'none';
+    uploadZone.classList.remove('has-file');
+    submitBtn.disabled = true;
+    if (type === 'bill') {
+      title.textContent = '📄 Verify Bill Payment';
+      desc.textContent = 'Upload a screenshot or photo of your payment confirmation. Your XP will be credited after 48 hours.';
+    } else {
+      title.textContent = '💰 Verify Savings Deposit';
+      desc.textContent = `Upload proof of your $${amount?.toFixed(2)} deposit to "${name}". Your XP will be credited after 48 hours.`;
+    }
+    modal.style.display = 'flex';
+  }
+
+  function closeReceiptModal(e) {
+    if (e && e.target !== document.getElementById('receipt-modal')) return;
+    document.getElementById('receipt-modal').style.display = 'none';
+    receiptContext = null;
+  }
+
+  function handleReceiptFile(input) {
+    const file = input.files[0];
+    if (!file) return;
+    document.getElementById('uz-file-name').textContent = `✅ ${file.name}`;
+    document.getElementById('uz-file-name').style.display = 'block';
+    document.getElementById('upload-zone').classList.add('has-file');
+    document.getElementById('receipt-submit-btn').disabled = false;
+  }
+
+  function submitReceipt() {
+    if (!receiptContext) return;
+    const { type, key, el } = receiptContext;
+    if (type === 'bill' && key && el) {
+      paidChecks[key] = true;
+      el.classList.add('checked');
+      el.textContent = '✓';
+      const row = el.closest('.payday-bill-row');
+      if (row) row.classList.add('paid-row');
+      renderSchedule();
+    }
+    const xpAmount = type === 'bill' ? 50 : 75;
+    const releaseTime = Date.now() + (48 * 60 * 60 * 1000);
+    if (!gameData.pendingXP) gameData.pendingXP = [];
+    gameData.pendingXP.push({
+      key: `pending_${type}_${Date.now()}`,
+      xp: xpAmount,
+      msg: type === 'bill' ? '📄 Bill payment verified!' : '💰 Savings deposit verified!',
+      releaseTime
+    });
+    gameData.activityFeed = [
+      { icon: '⏳', text: `${type === 'bill' ? 'Bill payment' : 'Savings deposit'} receipt submitted — pending verification`, xp: `+${xpAmount} XP (48hr)`, time: 'Just now' },
+      ...(gameData.activityFeed || []).slice(0, 19)
+    ];
+    saveGameData();
+    renderActivityFeed();
+    document.getElementById('receipt-modal').style.display = 'none';
+    receiptContext = null;
+    showXPToast(`⏳ Receipt submitted! +${xpAmount} XP in 48 hours`);
+    checkPendingXP();
+  }
+
+  function skipReceipt() {
+    if (receiptContext?.type === 'bill' && receiptContext.key && receiptContext.el) {
+      paidChecks[receiptContext.key] = true;
+      receiptContext.el.classList.add('checked');
+      receiptContext.el.textContent = '✓';
+      const row = receiptContext.el.closest('.payday-bill-row');
+      if (row) row.classList.add('paid-row');
+      renderSchedule();
+    }
+    document.getElementById('receipt-modal').style.display = 'none';
+    receiptContext = null;
+  }
+
+  function checkPendingXP() {
+    if (!gameData.pendingXP?.length) return;
+    const now = Date.now();
+    const ready = gameData.pendingXP.filter(p => now >= p.releaseTime);
+    const stillPending = gameData.pendingXP.filter(p => now < p.releaseTime);
+    ready.forEach(p => { addXP(p.xp, p.msg); checkAndAwardBadges(); });
+    if (ready.length > 0) { gameData.pendingXP = stillPending; saveGameData(); }
+  }
+
+  function showXPToast(msg) {
+    const toast = document.createElement('div');
+    toast.style.cssText = `position:fixed;bottom:2rem;right:2rem;background:#1a1a2e;color:#fff;padding:1rem 1.25rem;border-radius:12px;border:1px solid rgba(245,166,35,0.3);box-shadow:0 8px 30px rgba(0,0,0,0.3);z-index:9999;animation:slideIn 0.3s ease;font-size:0.875rem;font-weight:600;max-width:300px`;
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => { toast.style.opacity='0'; toast.style.transition='opacity 0.5s'; }, 3000);
+    setTimeout(() => toast.remove(), 3500);
+  }
+
   // =============================================
   // STREAKS & GAMIFICATION SYSTEM
   // =============================================
@@ -5121,6 +5321,7 @@ Guidelines:
     const saved = localStorage.getItem('fintrail_game_' + (currentUser?.id || 'demo'));
     if (saved) { try { gameData = { ...gameData, ...JSON.parse(saved) }; } catch(e) {} }
     checkLoginStreak();
+    checkPendingXP(); // release any XP that's been waiting 48hrs
     renderStreaks();
     checkAndAwardBadges();
   }
