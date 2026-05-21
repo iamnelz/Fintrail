@@ -3476,7 +3476,6 @@ Guidelines:
   }
 
   function billsDueThisPeriod(paydate, nextPaydate, frequency) {
-    const endDate = nextPaydate || new Date(9999,0,1);
     const results = [];
     const periodDays = frequency === 'weekly' ? 7 : frequency === 'biweekly' ? 14 : 15;
 
@@ -3485,9 +3484,9 @@ Guidelines:
       const splitPref = paidChecks[splitKey] || 'full';
       const divisor = splitPref === 'quarter' ? 4 : splitPref === 'half' ? 2 : 1;
 
-      // Find the next due date on or after paydate
+      // Find the closest upcoming due date from this paydate
       let dueDate = null;
-      for (let mo = -1; mo <= 3; mo++) {
+      for (let mo = 0; mo <= 2; mo++) {
         let d = new Date(paydate.getFullYear(), paydate.getMonth() + mo, b.day);
         if (d.getDate() !== b.day) d = new Date(paydate.getFullYear(), paydate.getMonth() + mo + 1, 0);
         if (d >= paydate) { dueDate = d; break; }
@@ -3495,29 +3494,31 @@ Guidelines:
       if (!dueDate) return;
 
       if (divisor === 1) {
-        // Full payment — show only on the payday period where due date falls
-        if (dueDate >= paydate && dueDate < endDate) {
+        // FULL — show only on the payday whose period contains the due date
+        const periodEnd = nextPaydate || new Date(9999, 0, 1);
+        if (dueDate >= paydate && dueDate < periodEnd) {
           results.push({ ...b, dueDate, splitHalf: null, displayAmount: b.amount });
         }
       } else {
-        // Split — find the window start (divisor-1 periods before due date)
-        const windowStart = new Date(dueDate);
-        windowStart.setDate(windowStart.getDate() - (periodDays * (divisor - 1)));
-
-        // This payday must be within the split window
-        if (paydate >= windowStart && dueDate >= paydate) {
-          // Which portion is this? Count periods from windowStart to paydate
-          let portion = 1;
-          let cursor = new Date(windowStart);
-          while (cursor < paydate) {
-            cursor.setDate(cursor.getDate() + periodDays);
-            portion++;
+        // SPLIT — calculate the actual paydays leading up to due date
+        // Start from (divisor-1) periods before due date and work forward
+        const splitPaydays = [];
+        let cursor = new Date(dueDate);
+        // Go back (divisor-1) periods from due date to find first split payday
+        cursor.setDate(cursor.getDate() - (periodDays * (divisor - 1)));
+        for (let i = 0; i < divisor; i++) {
+          splitPaydays.push(new Date(cursor));
+          cursor.setDate(cursor.getDate() + periodDays);
+        }
+        // Check if current paydate matches any of those split paydays (within 3 day tolerance)
+        for (let i = 0; i < splitPaydays.length; i++) {
+          const diff = Math.abs(paydate - splitPaydays[i]) / (1000 * 60 * 60 * 24);
+          if (diff <= 3) {
+            const labels = ['1st','2nd','3rd','4th'];
+            const type = divisor === 2 ? 'Half' : 'Quarter';
+            results.push({ ...b, dueDate, splitHalf: `${labels[i]} ${type}`, displayAmount: b.amount / divisor });
+            break;
           }
-          portion = Math.min(portion, divisor);
-          const labels2 = ['1st','2nd','3rd','4th'];
-          const type = divisor === 2 ? 'Half' : 'Quarter';
-          const label = `${labels2[portion-1]} ${type}`;
-          results.push({ ...b, dueDate, splitHalf: label, displayAmount: b.amount / divisor });
         }
       }
     });
