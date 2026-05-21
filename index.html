@@ -324,6 +324,7 @@
   .tag-tools { background: rgba(255,209,102,0.12); color: var(--accent2); }
   .tag-education { background: rgba(240,85,85,0.12); color: var(--accent); }
   .tag-government { background: rgba(255,77,109,0.12); color: var(--danger); }
+  .tag-credit { background: rgba(99,102,241,0.15); color: #818cf8; }
   .resource-card h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--text); }
   .resource-card p { font-size: 0.83rem; color: var(--text-soft); line-height: 1.55; margin-bottom: 1rem; }
   .rc-link {
@@ -1349,6 +1350,82 @@
 
   @media (max-width:860px) { .profile-layout { grid-template-columns:1fr; } }
 
+  /* CREDIT SCORE SIMULATOR */
+  .creditsim-layout { display:grid; grid-template-columns:340px 1fr; gap:1.5rem; align-items:start; }
+  .score-input-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:1.5rem; }
+  .score-input-card h2 { font-family:'Playfair Display',serif; font-size:1.1rem; margin-bottom:1.25rem; color:var(--text); }
+
+  .big-score-display {
+    text-align:center; padding:1.5rem;
+    background:linear-gradient(135deg,#1a1a2e,#2d1b4e);
+    border-radius:12px; margin-bottom:1.25rem; position:relative; overflow:hidden;
+  }
+  .bsd-label { font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:rgba(255,255,255,0.5); margin-bottom:0.35rem; }
+  .bsd-score { font-family:'Playfair Display',serif; font-size:3.5rem; font-weight:700; line-height:1; }
+  .bsd-rating { font-size:0.85rem; font-weight:600; margin-top:0.35rem; }
+  .bsd-change { font-size:0.78rem; margin-top:0.5rem; font-weight:600; }
+  .bsd-change.positive { color:#00b894; }
+  .bsd-change.negative { color:#f05555; }
+  .bsd-change.neutral { color:rgba(255,255,255,0.5); }
+
+  .score-range-input { width:100%; margin:0.5rem 0; accent-color:var(--accent); }
+  .score-range-labels { display:flex; justify-content:space-between; font-size:0.72rem; color:var(--muted); }
+
+  .action-cards { display:flex; flex-direction:column; gap:0.6rem; margin-top:1rem; }
+  .action-card {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0.85rem 1rem; background:var(--bg); border-radius:10px;
+    border:1.5px solid var(--border); cursor:pointer; transition:all 0.2s;
+    user-select:none;
+  }
+  .action-card:hover { border-color:var(--accent); }
+  .action-card.selected.positive { border-color:#00b894; background:rgba(0,184,148,0.05); }
+  .action-card.selected.negative { border-color:#f05555; background:rgba(240,85,85,0.05); }
+  .ac-left { display:flex; align-items:center; gap:0.65rem; }
+  .ac-icon { font-size:1.1rem; }
+  .ac-info h4 { font-size:0.875rem; font-weight:600; color:var(--text); }
+  .ac-info p { font-size:0.75rem; color:var(--muted); margin-top:0.1rem; }
+  .ac-impact {
+    font-size:0.82rem; font-weight:800; padding:0.2rem 0.6rem;
+    border-radius:6px; flex-shrink:0;
+  }
+  .ac-impact.positive { background:rgba(0,184,148,0.12); color:#00b894; }
+  .ac-impact.negative { background:rgba(240,85,85,0.1); color:#f05555; }
+
+  .sim-results-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:1.5rem; }
+  .sim-results-card h2 { font-family:'Playfair Display',serif; font-size:1.1rem; margin-bottom:1.25rem; color:var(--text); }
+
+  .score-meter {
+    background:linear-gradient(90deg, #f05555 0%, #f5a623 30%, #e9c46a 50%, #00b894 75%, #06d6a0 100%);
+    height:12px; border-radius:6px; position:relative; margin:1rem 0 0.5rem;
+  }
+  .score-needle {
+    position:absolute; top:-4px; width:4px; height:20px;
+    background:#1a1a2e; border-radius:2px; transform:translateX(-50%);
+    transition:left 0.8s ease; box-shadow:0 0 0 2px #fff;
+  }
+  .score-needle.simulated { background:var(--accent); box-shadow:0 0 0 2px var(--accent); opacity:0.8; }
+  .score-meter-labels { display:flex; justify-content:space-between; font-size:0.68rem; color:var(--muted); margin-bottom:1.25rem; }
+
+  .timeline-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0.75rem; margin-bottom:1.25rem; }
+  .tl-card { background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:0.85rem; text-align:center; }
+  .tl-score { font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--text); }
+  .tl-time { font-size:0.72rem; color:var(--muted); margin-top:0.2rem; }
+  .tl-label { font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.3rem; color:var(--muted); }
+
+  .action-plan { display:flex; flex-direction:column; gap:0.6rem; }
+  .ap-item {
+    display:flex; align-items:flex-start; gap:0.75rem;
+    padding:0.85rem 1rem; background:var(--bg); border-radius:10px;
+    border-left:3px solid var(--accent);
+  }
+  .ap-rank { background:var(--accent); color:#fff; font-size:0.72rem; font-weight:800; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .ap-content h4 { font-size:0.875rem; font-weight:600; color:var(--text); margin-bottom:0.15rem; }
+  .ap-content p { font-size:0.78rem; color:var(--text-soft); line-height:1.5; }
+  .ap-impact-badge { display:inline-block; font-size:0.68rem; font-weight:700; padding:0.15rem 0.45rem; border-radius:4px; margin-top:0.3rem; background:rgba(0,184,148,0.1); color:#00b894; }
+
+  @media (max-width:860px) { .creditsim-layout { grid-template-columns:1fr; } }
+
   @media (max-width: 700px) {
     .two-col { grid-template-columns: 1fr; }
     .summary-grid { grid-template-columns: 1fr; }
@@ -1458,6 +1535,7 @@
     <button onclick="showTab('savings', this)">🎯 <span>Goals</span></button>
     <button onclick="showTab('invest', this)">📈 <span>Invest</span></button>
     <button onclick="guardedTab('premium', this)">🏆 <span>Premium</span><span class="pro-pill">PRO</span></button>
+    <button onclick="guardedTab('creditsim', this)">📊 <span>Score Sim</span><span class="pro-pill">PRO</span></button>
     <button class="upgrade-btn-nav" onclick="showPaywall('nav')">⭐ <span>Go Pro</span></button>
     <button onclick="showTab('profile', this)" style="font-size:1.1rem;padding:0.45rem 0.65rem">👤</button>
   </nav>
@@ -1475,6 +1553,7 @@
   <button onclick="mobileTab('savings')">🎯 Goals</button>
   <button onclick="mobileTab('invest')">📈 Invest</button>
   <button onclick="mobileGuardedTab('premium')">🏆 Premium <span class="pro-pill">PRO</span></button>
+  <button onclick="mobileGuardedTab('creditsim')">📊 Score Sim <span class="pro-pill">PRO</span></button>
   <button class="upgrade-btn-nav" onclick="showPaywall('nav');closeMobileNav()">⭐ Go Pro</button>
   <button onclick="mobileTab('profile')">👤 Profile & Security</button>
 </div>
@@ -1759,6 +1838,7 @@
         <button class="filter-btn" onclick="filterResources('grants', this)">🎁 Grants</button>
         <button class="filter-btn" onclick="filterResources('tools', this)">🛠 Tools</button>
         <button class="filter-btn" onclick="filterResources('education', this)">📚 Education</button>
+        <button class="filter-btn" onclick="filterResources('credit', this)">📊 Credit Scores</button>
       </div>
     </div>
 
@@ -2567,6 +2647,95 @@
     </div>
   </div>
 
+  <!-- CREDIT SCORE SIMULATOR TAB -->
+  <div class="tab-section" id="tab-creditsim">
+
+    <div id="creditsim-gate" style="display:none">
+      <div class="lock-gate">
+        <div class="lg-icon">📊</div>
+        <h3>Credit Score Simulator <span class="premium-badge">PRO</span></h3>
+        <p>See exactly how financial actions — paying off debt, opening accounts, missing payments — will impact your credit score before you make them.</p>
+        <button class="lock-gate-btn" onclick="showPaywall('creditsim')">Unlock with Pro — $4.99/mo</button>
+        <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--muted)">7-day free trial · Cancel anytime</div>
+      </div>
+    </div>
+
+    <div id="creditsim-content">
+      <div class="creditsim-layout">
+
+        <!-- LEFT: SCORE INPUT + ACTIONS -->
+        <div>
+          <div class="score-input-card" style="margin-bottom:1.5rem">
+            <h2>Your Current Score</h2>
+            <div class="big-score-display">
+              <div class="bsd-label">Current Score</div>
+              <div class="bsd-score" id="sim-current-score" style="color:#e9c46a">680</div>
+              <div class="bsd-rating" id="sim-current-rating" style="color:rgba(255,255,255,0.7)">Fair</div>
+            </div>
+            <div class="form-group">
+              <label>Enter Your Credit Score</label>
+              <input type="range" class="score-range-input" id="base-score" min="300" max="850" value="680" oninput="updateSimulator()">
+              <div class="score-range-labels"><span>300 Poor</span><span id="base-score-display" style="font-weight:700;color:var(--accent)">680</span><span>850 Exceptional</span></div>
+            </div>
+            <div class="form-group" style="margin-top:0.75rem">
+              <label>Or type your score</label>
+              <input type="number" class="profile-input" id="base-score-num" value="680" min="300" max="850" oninput="syncScoreSlider()">
+            </div>
+          </div>
+
+          <div class="score-input-card">
+            <h2>Simulate Actions</h2>
+            <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:1rem;line-height:1.6">Select actions you're considering to see their estimated impact on your score:</p>
+            <div class="action-cards" id="action-cards"></div>
+          </div>
+        </div>
+
+        <!-- RIGHT: RESULTS -->
+        <div class="sim-results-card">
+          <h2>Simulated Score Impact</h2>
+
+          <!-- SCORE METER -->
+          <div style="margin-bottom:0.5rem;display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:0.78rem;color:var(--muted)">Score Range</span>
+            <div style="display:flex;align-items:center;gap:1rem;font-size:0.78rem">
+              <span style="display:flex;align-items:center;gap:0.3rem"><span style="width:12px;height:4px;background:#1a1a2e;display:inline-block;border-radius:2px"></span> Current</span>
+              <span style="display:flex;align-items:center;gap:0.3rem"><span style="width:12px;height:4px;background:var(--accent);display:inline-block;border-radius:2px"></span> Simulated</span>
+            </div>
+          </div>
+          <div class="score-meter" id="score-meter">
+            <div class="score-needle" id="needle-current"></div>
+            <div class="score-needle simulated" id="needle-simulated"></div>
+          </div>
+          <div class="score-meter-labels"><span>300</span><span>580</span><span>670</span><span>740</span><span>800</span><span>850</span></div>
+
+          <!-- SCORE COMPARISON -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem">
+            <div style="background:var(--bg);border-radius:10px;padding:1rem;text-align:center;border:1px solid var(--border)">
+              <div style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem">Current Score</div>
+              <div class="bsd-score" id="result-current" style="font-size:2rem;color:var(--text)">680</div>
+              <div id="result-current-rating" style="font-size:0.78rem;color:var(--muted);margin-top:0.2rem">Fair</div>
+            </div>
+            <div style="background:var(--bg);border-radius:10px;padding:1rem;text-align:center;border:2px solid var(--accent)">
+              <div style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem">Simulated Score</div>
+              <div class="bsd-score" id="result-simulated" style="font-size:2rem">680</div>
+              <div id="result-change" style="font-size:0.78rem;margin-top:0.2rem;font-weight:700">No change</div>
+            </div>
+          </div>
+
+          <!-- TIMELINE -->
+          <h2 style="font-size:1rem;margin-bottom:0.75rem">Time to Reach Milestones</h2>
+          <div class="timeline-grid" id="score-timeline"></div>
+
+          <!-- ACTION PLAN -->
+          <h2 style="font-size:1rem;margin-bottom:0.75rem">🎯 Personalized Action Plan</h2>
+          <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:0.75rem">Ranked by impact on your score:</p>
+          <div class="action-plan" id="action-plan"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
 </main>
 
 <script>
@@ -2701,6 +2870,14 @@
     // EDUCATION
     { tag: 'education', title: 'Khan Academy Finance', logo: '📚', badges: ['badge-nofe|100% Free'], rates: [], desc: 'World-class finance and economics courses from basic budgeting to advanced investing.', cta: 'Start Learning', url: 'https://www.khanacademy.org/economics-finance-domain', ctaStyle: 'secondary', fine: '', commission: '' },
     { tag: 'education', title: 'NerdWallet', logo: '🤓', badges: ['badge-fast|Expert Guides'], rates: [], desc: 'Expert personal finance advice, product comparisons, and guides for every financial decision.', cta: 'Read Guides', url: 'https://www.nerdwallet.com', ctaStyle: 'secondary', fine: '', commission: '💰 Earn via product referrals' },
+
+    // CREDIT SCORES
+    { tag: 'credit', featured: true, title: 'Experian', logo: '📊', badges: ['badge-featured|⭐ Official Bureau', 'badge-nofe|Free Score'], rates: [], desc: 'One of the three major credit bureaus. Get your official Experian credit report and FICO score for free. Includes score monitoring and alerts.', cta: 'Get Free Score', url: 'https://www.experian.com/consumer-products/free-credit-report.html', ctaStyle: '', fine: 'Free basic score available. Premium monitoring plans available separately.', commission: '💰 Earn per signup referral' },
+    { tag: 'credit', title: 'Equifax', logo: '📋', badges: ['badge-nofe|Official Bureau'], rates: [], desc: 'One of the three major credit bureaus. Access your Equifax credit report and monitor for changes that could indicate identity theft.', cta: 'Check Your Report', url: 'https://www.equifax.com/personal/products/credit/free-credit-report/', ctaStyle: 'secondary', fine: 'Free annual report available at AnnualCreditReport.com.', commission: '' },
+    { tag: 'credit', title: 'TransUnion', logo: '🔐', badges: ['badge-nofe|Official Bureau'], rates: [], desc: 'The third major credit bureau. View your TransUnion credit report, monitor your score, and get alerts for suspicious activity.', cta: 'View Report', url: 'https://www.transunion.com/free-credit-report', ctaStyle: 'secondary', fine: 'Free report available. Paid monitoring plans available.', commission: '' },
+    { tag: 'credit', title: 'AnnualCreditReport.com', logo: '🏛️', badges: ['badge-nofe|100% Free', 'badge-featured|Official Gov Site'], rates: [], desc: 'The only federally authorized source for free credit reports from all three bureaus — Equifax, Experian, and TransUnion. You are entitled by law to one free report per bureau per year.', cta: 'Get Free Reports', url: 'https://www.annualcreditreport.com', ctaStyle: '', fine: 'This is the official government-mandated free credit report site.', commission: '' },
+    { tag: 'credit', title: 'Credit Karma', logo: '💚', badges: ['badge-nofe|Always Free', 'badge-fast|Instant Score'], rates: [], desc: 'Free credit scores and reports from TransUnion and Equifax. Updated weekly with personalized recommendations for credit cards and loans.', cta: 'Check for Free', url: 'https://www.creditkarma.com', ctaStyle: 'secondary', fine: 'Shows TransUnion and Equifax scores. Does not include Experian.', commission: '💰 Earn per product referral' },
+    { tag: 'credit', title: 'myFICO', logo: '🎯', badges: ['badge-fast|All 3 Bureaus'], rates: [], desc: 'Get your official FICO scores from all three bureaus — the exact scores most lenders use. Includes score simulators and monitoring alerts.', cta: 'See All 3 Scores', url: 'https://www.myfico.com', ctaStyle: 'secondary', fine: 'Paid service. Prices start around $19.95/mo for all three bureau scores.', commission: '💰 Earn per subscription referral' },
   ];
 
   const rateBannerData = [
@@ -2966,6 +3143,7 @@
     document.getElementById('affiliate-gate').style.display = isPro ? 'none' : 'block';
     document.getElementById('affiliate-content').style.display = isPro ? 'block' : 'none';
     updatePremiumTab();
+    updateCreditSimTab();
     renderResources();
     if (isPro) { renderRateBanner(); calcLoan(); }
   }
@@ -4411,6 +4589,145 @@ Guidelines:
       </p>`;
 
     generatePDF('Fintrail - Debt Payoff Plan', html);
+  }
+
+  // CREDIT SCORE SIMULATOR
+  const creditActions = [
+    { id: 'payoff_cc', icon: '💳', label: 'Pay Off Credit Card Balance', desc: 'Reduce utilization to 0%', impact: +45, type: 'positive', detail: 'Credit utilization is 30% of your score — paying off balances has the fastest impact.' },
+    { id: 'reduce_util', icon: '📉', label: 'Reduce Utilization to 30%', desc: 'Pay down balances across cards', impact: +25, type: 'positive', detail: 'Keeping utilization under 30% is a key scoring factor.' },
+    { id: 'on_time_6mo', icon: '✅', label: '6 Months On-Time Payments', desc: 'Pay every bill on time', impact: +30, type: 'positive', detail: 'Payment history is 35% of your score — the most important factor.' },
+    { id: 'on_time_12mo', icon: '🏆', label: '12 Months On-Time Payments', desc: 'A full year of perfect payments', impact: +55, type: 'positive', detail: 'A year of on-time payments can dramatically rebuild damaged credit.' },
+    { id: 'new_card', icon: '🆕', label: 'Open New Credit Card', desc: 'Hard inquiry + new account', impact: -10, type: 'negative', detail: 'New accounts lower your average age and create a hard inquiry.' },
+    { id: 'close_old', icon: '✂️', label: 'Close Old Credit Card', desc: 'Reduces available credit & history', impact: -20, type: 'negative', detail: 'Closing cards reduces available credit and can shorten credit history.' },
+    { id: 'miss_payment', icon: '⚠️', label: 'Miss a Payment (30 days)', desc: 'Late payment reported', impact: -60, type: 'negative', detail: 'A single missed payment can drop your score significantly and stays for 7 years.' },
+    { id: 'collections', icon: '🔴', label: 'Account Goes to Collections', desc: 'Unpaid debt sold to collector', impact: -100, type: 'negative', detail: 'Collections devastate your score and stay on your report for 7 years.' },
+    { id: 'dispute_error', icon: '🔍', label: 'Dispute & Remove Error', desc: 'Remove inaccurate negative item', impact: +40, type: 'positive', detail: '1 in 5 reports have errors. Successfully disputing one can add major points.' },
+    { id: 'become_auth', icon: '👥', label: 'Become Authorized User', desc: 'Added to good account', impact: +20, type: 'positive', detail: 'Piggybacking on a trusted person\'s good credit can boost your score quickly.' },
+    { id: 'new_loan', icon: '🏦', label: 'Take Out New Loan', desc: 'Auto, personal, or student loan', impact: -8, type: 'negative', detail: 'Adds a hard inquiry and new account, temporarily lowering your score.' },
+    { id: 'pay_collection', icon: '💰', label: 'Pay Off Collection Account', desc: 'Settle outstanding collection', impact: +15, type: 'positive', detail: 'Paying collections helps, though the account may still show on your report.' },
+  ];
+
+  let selectedActions = new Set();
+
+  function getScoreRating(score) {
+    if (score >= 800) return { label: 'Exceptional', color: '#06d6a0' };
+    if (score >= 740) return { label: 'Very Good', color: '#00b894' };
+    if (score >= 670) return { label: 'Good', color: '#e9c46a' };
+    if (score >= 580) return { label: 'Fair', color: '#f5a623' };
+    return { label: 'Poor', color: '#f05555' };
+  }
+
+  function renderActionCards() {
+    const container = document.getElementById('action-cards');
+    container.innerHTML = creditActions.map(a => `
+      <div class="action-card ${selectedActions.has(a.id) ? 'selected ' + a.type : ''}" onclick="toggleAction('${a.id}')">
+        <div class="ac-left">
+          <span class="ac-icon">${a.icon}</span>
+          <div class="ac-info">
+            <h4>${a.label}</h4>
+            <p>${a.desc}</p>
+          </div>
+        </div>
+        <span class="ac-impact ${a.type}">${a.impact > 0 ? '+' : ''}${a.impact}</span>
+      </div>`).join('');
+  }
+
+  function toggleAction(id) {
+    if (selectedActions.has(id)) selectedActions.delete(id);
+    else selectedActions.add(id);
+    renderActionCards();
+    updateSimulator();
+  }
+
+  function syncScoreSlider() {
+    const val = Math.min(850, Math.max(300, parseInt(document.getElementById('base-score-num').value) || 680));
+    document.getElementById('base-score').value = val;
+    updateSimulator();
+  }
+
+  function updateSimulator() {
+    const base = parseInt(document.getElementById('base-score').value);
+    document.getElementById('base-score-num').value = base;
+    document.getElementById('base-score-display').textContent = base;
+
+    // Calculate total impact from selected actions
+    let totalImpact = 0;
+    selectedActions.forEach(id => {
+      const action = creditActions.find(a => a.id === id);
+      if (action) totalImpact += action.impact;
+    });
+
+    const simulated = Math.min(850, Math.max(300, base + totalImpact));
+    const change = simulated - base;
+
+    // Update current score display
+    const baseRating = getScoreRating(base);
+    document.getElementById('sim-current-score').textContent = base;
+    document.getElementById('sim-current-score').style.color = baseRating.color;
+    document.getElementById('sim-current-rating').textContent = baseRating.label;
+
+    // Update result displays
+    const simRating = getScoreRating(simulated);
+    document.getElementById('result-current').textContent = base;
+    document.getElementById('result-simulated').textContent = simulated;
+    document.getElementById('result-simulated').style.color = simRating.color;
+    document.getElementById('result-current-rating').textContent = baseRating.label;
+
+    const changeEl = document.getElementById('result-change');
+    if (change > 0) { changeEl.textContent = `▲ +${change} points`; changeEl.style.color = '#00b894'; }
+    else if (change < 0) { changeEl.textContent = `▼ ${change} points`; changeEl.style.color = '#f05555'; }
+    else { changeEl.textContent = 'No change'; changeEl.style.color = 'var(--muted)'; }
+
+    // Update needles on meter
+    const toPercent = s => ((s - 300) / 550) * 100;
+    document.getElementById('needle-current').style.left = toPercent(base) + '%';
+    document.getElementById('needle-simulated').style.left = toPercent(simulated) + '%';
+
+    // Timeline — how long to reach milestones
+    const milestones = [
+      { score: 700, label: 'Good Credit' },
+      { score: 750, label: 'Very Good' },
+      { score: 800, label: 'Exceptional' }
+    ];
+    const startScore = Math.max(base, simulated);
+    document.getElementById('score-timeline').innerHTML = milestones.map(m => {
+      if (startScore >= m.score) {
+        return `<div class="tl-card"><div class="tl-label">${m.label}</div><div class="tl-score" style="color:#00b894">✅</div><div class="tl-time">Already achieved!</div></div>`;
+      }
+      const gap = m.score - startScore;
+      // Estimate months based on consistent on-time payments (+5/mo average improvement)
+      const months = Math.ceil(gap / 5);
+      const yrs = Math.floor(months/12);
+      const mos = months % 12;
+      const timeStr = yrs > 0 ? `~${yrs}yr ${mos>0?mos+'mo':''}` : `~${mos} months`;
+      return `<div class="tl-card"><div class="tl-label">${m.label}</div><div class="tl-score">${m.score}</div><div class="tl-time">${timeStr}</div></div>`;
+    }).join('');
+
+    // Action plan — top recommendations not already selected
+    const notSelected = creditActions
+      .filter(a => !selectedActions.has(a.id) && a.type === 'positive')
+      .sort((a,b) => b.impact - a.impact)
+      .slice(0, 5);
+
+    document.getElementById('action-plan').innerHTML = notSelected.map((a, i) => `
+      <div class="ap-item">
+        <div class="ap-rank">${i+1}</div>
+        <div class="ap-content">
+          <h4>${a.icon} ${a.label}</h4>
+          <p>${a.detail}</p>
+          <span class="ap-impact-badge">+${a.impact} estimated points</span>
+        </div>
+      </div>`).join('');
+  }
+
+  function updateCreditSimTab() {
+    const gate = document.getElementById('creditsim-gate');
+    const content = document.getElementById('creditsim-content');
+    if (gate && content) {
+      gate.style.display = isPro ? 'none' : 'block';
+      content.style.display = isPro ? 'block' : 'none';
+      if (isPro) { renderActionCards(); updateSimulator(); }
+    }
   }
 
   // INIT
