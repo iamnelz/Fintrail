@@ -1426,6 +1426,45 @@
 
   @media (max-width:860px) { .creditsim-layout { grid-template-columns:1fr; } }
 
+  /* DROPDOWN NAV */
+  .nav-group { position: relative; }
+  .nav-group-btn {
+    background: none; border: none; color: var(--text-soft);
+    font-family: 'Sora', sans-serif; font-size: 0.8rem; font-weight: 600;
+    padding: 0.5rem 0.85rem; border-radius: 8px; cursor: pointer;
+    display: flex; align-items: center; gap: 0.35rem; transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .nav-group-btn:hover { color: var(--dark); background: var(--surface2); }
+  .nav-group-btn.active { color: var(--accent); background: rgba(240,85,85,0.08); border-bottom: 2px solid var(--accent); border-radius: 8px 8px 0 0; }
+  .nav-group-btn .nav-arrow { font-size: 0.6rem; transition: transform 0.2s; }
+  .nav-group:hover .nav-arrow { transform: rotate(180deg); }
+
+  .nav-dropdown {
+    position: absolute; top: calc(100% + 4px); left: 0;
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 12px; padding: 0.5rem;
+    min-width: 220px; box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    display: none; z-index: 200; animation: dropIn 0.15s ease;
+  }
+  @keyframes dropIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+  .nav-group:hover .nav-dropdown { display: block; }
+  .nav-dropdown-item {
+    display: flex; align-items: center; gap: 0.65rem;
+    padding: 0.6rem 0.75rem; border-radius: 8px; cursor: pointer;
+    transition: background 0.15s; border: none; background: none;
+    width: 100%; text-align: left; font-family: 'Sora', sans-serif;
+    font-size: 0.85rem; color: var(--text-soft);
+  }
+  .nav-dropdown-item:hover { background: var(--surface2); color: var(--dark); }
+  .nav-dropdown-item.active { background: rgba(240,85,85,0.08); color: var(--accent); }
+  .ndi-icon { font-size: 1rem; flex-shrink: 0; width: 22px; text-align: center; }
+  .ndi-info { display: flex; flex-direction: column; }
+  .ndi-label { font-weight: 600; font-size: 0.83rem; }
+  .ndi-desc { font-size: 0.72rem; color: var(--muted); margin-top: 0.1rem; }
+  .nav-dropdown-divider { height: 1px; background: var(--border); margin: 0.3rem 0.5rem; }
+  .nav-dropdown-section { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); padding: 0.4rem 0.75rem 0.2rem; }
+
   @media (max-width: 700px) {
     .two-col { grid-template-columns: 1fr; }
     .summary-grid { grid-template-columns: 1fr; }
@@ -1528,16 +1567,80 @@
 <header>
   <div class="logo">Fin<span>trail</span></div>
   <nav>
-    <button class="active" onclick="showTab('budget', this)">📊 <span>Budget</span></button>
-    <button onclick="showTab('resources', this)">🔍 <span>Resources</span></button>
-    <button onclick="guardedTab('guide', this)">📘 <span>Guide</span><span class="pro-pill">PRO</span></button>
-    <button onclick="guardedTab('ai', this)">💬 <span>AI Advisor</span><span class="pro-pill">PRO</span></button>
-    <button onclick="showTab('savings', this)">🎯 <span>Goals</span></button>
-    <button onclick="showTab('invest', this)">📈 <span>Invest</span></button>
-    <button onclick="guardedTab('premium', this)">🏆 <span>Premium</span><span class="pro-pill">PRO</span></button>
-    <button onclick="guardedTab('creditsim', this)">📊 <span>Score Sim</span><span class="pro-pill">PRO</span></button>
-    <button class="upgrade-btn-nav" onclick="showPaywall('nav')">⭐ <span>Go Pro</span></button>
-    <button onclick="showTab('profile', this)" style="font-size:1.1rem;padding:0.45rem 0.65rem">👤</button>
+    <!-- BUDGET GROUP -->
+    <div class="nav-group">
+      <button class="nav-group-btn" id="nav-budget">📊 Budget <span class="nav-arrow">▾</span></button>
+      <div class="nav-dropdown">
+        <div class="nav-dropdown-section">Budget</div>
+        <button class="nav-dropdown-item" onclick="navTo('budget', this)">
+          <span class="ndi-icon">📊</span>
+          <div class="ndi-info"><span class="ndi-label">Budget Tracker</span><span class="ndi-desc">Track income & expenses</span></div>
+        </button>
+        <button class="nav-dropdown-item" onclick="navTo('budget-schedule', this)">
+          <span class="ndi-icon">📅</span>
+          <div class="ndi-info"><span class="ndi-label">Bill Schedule</span><span class="ndi-desc">6-month payment planner</span></div>
+        </button>
+      </div>
+    </div>
+
+    <!-- PLANNING GROUP -->
+    <div class="nav-group">
+      <button class="nav-group-btn" id="nav-planning">🎯 Planning <span class="nav-arrow">▾</span></button>
+      <div class="nav-dropdown">
+        <div class="nav-dropdown-section">Planning</div>
+        <button class="nav-dropdown-item" onclick="navTo('savings', this)">
+          <span class="ndi-icon">🎯</span>
+          <div class="ndi-info"><span class="ndi-label">Savings Goals</span><span class="ndi-desc">Track your goals</span></div>
+        </button>
+        <button class="nav-dropdown-item" onclick="navTo('invest', this)">
+          <span class="ndi-icon">📈</span>
+          <div class="ndi-info"><span class="ndi-label">Investment Calculator</span><span class="ndi-desc">Compound interest planner</span></div>
+        </button>
+        <button class="nav-dropdown-item" onclick="guardedNavTo('premium', this)">
+          <span class="ndi-icon">💳</span>
+          <div class="ndi-info"><span class="ndi-label">Debt Payoff Planner <span class="pro-pill">PRO</span></span><span class="ndi-desc">Avalanche & snowball method</span></div>
+        </button>
+      </div>
+    </div>
+
+    <!-- TOOLS GROUP -->
+    <div class="nav-group">
+      <button class="nav-group-btn" id="nav-tools">🛠 Tools <span class="nav-arrow">▾</span></button>
+      <div class="nav-dropdown">
+        <div class="nav-dropdown-section">Tools</div>
+        <button class="nav-dropdown-item" onclick="navTo('resources', this)">
+          <span class="ndi-icon">🔍</span>
+          <div class="ndi-info"><span class="ndi-label">Resources</span><span class="ndi-desc">Loans, grants & lenders</span></div>
+        </button>
+        <button class="nav-dropdown-item" onclick="guardedNavTo('guide', this)">
+          <span class="ndi-icon">📘</span>
+          <div class="ndi-info"><span class="ndi-label">Credit & DTI Guide <span class="pro-pill">PRO</span></span><span class="ndi-desc">Improve your credit score</span></div>
+        </button>
+        <button class="nav-dropdown-item" onclick="guardedNavTo('creditsim', this)">
+          <span class="ndi-icon">📊</span>
+          <div class="ndi-info"><span class="ndi-label">Credit Score Simulator <span class="pro-pill">PRO</span></span><span class="ndi-desc">Simulate score changes</span></div>
+        </button>
+      </div>
+    </div>
+
+    <!-- INSIGHTS GROUP -->
+    <div class="nav-group">
+      <button class="nav-group-btn" id="nav-insights">💡 Insights <span class="nav-arrow">▾</span></button>
+      <div class="nav-dropdown">
+        <div class="nav-dropdown-section">Insights</div>
+        <button class="nav-dropdown-item" onclick="guardedNavTo('ai', this)">
+          <span class="ndi-icon">💬</span>
+          <div class="ndi-info"><span class="ndi-label">AI Advisor <span class="pro-pill">PRO</span></span><span class="ndi-desc">Ask any finance question</span></div>
+        </button>
+        <button class="nav-dropdown-item" onclick="guardedNavTo('premium', this)">
+          <span class="ndi-icon">🏆</span>
+          <div class="ndi-info"><span class="ndi-label">Health Score & Alerts <span class="pro-pill">PRO</span></span><span class="ndi-desc">Financial health tracking</span></div>
+        </button>
+      </div>
+    </div>
+
+    <button class="upgrade-btn-nav" onclick="showPaywall('nav')">⭐ Go Pro</button>
+    <button onclick="navTo('profile', this)" style="background:none;border:none;font-size:1.1rem;cursor:pointer;padding:0.45rem 0.65rem;border-radius:8px;color:var(--text-soft)" title="Profile">👤</button>
   </nav>
   <button class="hamburger" id="hamburger" onclick="toggleMobileNav()">
     <span></span><span></span><span></span>
@@ -1546,14 +1649,21 @@
 
 <!-- MOBILE NAV -->
 <div class="mobile-nav" id="mobile-nav">
-  <button onclick="mobileTab('budget')">📊 Budget</button>
+  <div style="font-size:0.68rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);padding:0.4rem 1rem 0.2rem">Budget</div>
+  <button onclick="mobileTab('budget')">📊 Budget Tracker</button>
+  <button onclick="mobileTabSchedule()">📅 Bill Schedule</button>
+  <div style="font-size:0.68rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);padding:0.6rem 1rem 0.2rem">Planning</div>
+  <button onclick="mobileTab('savings')">🎯 Savings Goals</button>
+  <button onclick="mobileTab('invest')">📈 Investment Calculator</button>
+  <button onclick="mobileGuardedTab('premium')">💳 Debt Payoff Planner <span class="pro-pill">PRO</span></button>
+  <div style="font-size:0.68rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);padding:0.6rem 1rem 0.2rem">Tools</div>
   <button onclick="mobileTab('resources')">🔍 Resources</button>
-  <button onclick="mobileGuardedTab('guide')">📘 Guide <span class="pro-pill">PRO</span></button>
+  <button onclick="mobileGuardedTab('guide')">📘 Credit & DTI Guide <span class="pro-pill">PRO</span></button>
+  <button onclick="mobileGuardedTab('creditsim')">📊 Credit Score Simulator <span class="pro-pill">PRO</span></button>
+  <div style="font-size:0.68rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);padding:0.6rem 1rem 0.2rem">Insights</div>
   <button onclick="mobileGuardedTab('ai')">💬 AI Advisor <span class="pro-pill">PRO</span></button>
-  <button onclick="mobileTab('savings')">🎯 Goals</button>
-  <button onclick="mobileTab('invest')">📈 Invest</button>
-  <button onclick="mobileGuardedTab('premium')">🏆 Premium <span class="pro-pill">PRO</span></button>
-  <button onclick="mobileGuardedTab('creditsim')">📊 Score Sim <span class="pro-pill">PRO</span></button>
+  <button onclick="mobileGuardedTab('premium')">🏆 Health Score & Alerts <span class="pro-pill">PRO</span></button>
+  <div style="border-top:1px solid var(--border);margin:0.5rem 0"></div>
   <button class="upgrade-btn-nav" onclick="showPaywall('nav');closeMobileNav()">⭐ Go Pro</button>
   <button onclick="mobileTab('profile')">👤 Profile & Security</button>
 </div>
@@ -3149,6 +3259,34 @@
     updateCreditSimTab();
     renderResources();
     if (isPro) { renderRateBanner(); calcLoan(); }
+  }
+
+  function navTo(tab, btn) {
+    // Handle budget sub-tabs
+    if (tab === 'budget-schedule') {
+      showTab('budget', document.getElementById('nav-budget'));
+      showBudgetSub('schedule', document.querySelector('.sched-tab-btn:nth-child(2)'));
+      closeMobileNav(); return;
+    }
+    document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('visible'));
+    document.querySelectorAll('.nav-group-btn, .nav-dropdown-item').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('visible');
+    if (btn) btn.classList.add('active');
+    // Highlight parent group button
+    const group = btn?.closest('.nav-group')?.querySelector('.nav-group-btn');
+    if (group) group.classList.add('active');
+    closeMobileNav();
+  }
+
+  function guardedNavTo(tab, btn) {
+    if (!isPro) { showPaywall(tab); closeMobileNav(); return; }
+    navTo(tab, btn);
+  }
+
+  function mobileTabSchedule() {
+    showTab('budget', document.getElementById('nav-budget'));
+    setTimeout(() => showBudgetSub('schedule', document.querySelector('.sched-tab-btn:nth-child(2)')), 100);
+    closeMobileNav();
   }
 
   // MOBILE NAV
