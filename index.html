@@ -2322,11 +2322,10 @@
           </div>
           <div class="form-group">
             <label>Annual Interest Rate (%)</label>
-            <input type="range" id="inv-rate" class="range-slider" min="1" max="15" value="7" step="0.5" oninput="updateRateDisplay(); calcInvestment()">
-            <div class="range-display">
-              <span>1%</span>
-              <span id="inv-rate-display" style="font-weight:700;color:var(--accent)">7%</span>
-              <span>15%</span>
+            <div style="display:flex;align-items:center;gap:0.75rem">
+              <input type="range" id="inv-rate" class="range-slider" min="1" max="15" value="7" step="0.1" oninput="syncRateInput(); calcInvestment()" style="flex:1">
+              <input type="number" id="inv-rate-num" value="7" min="1" max="15" step="0.1" oninput="syncRateSlider(); calcInvestment()" style="width:70px;padding:0.45rem 0.5rem;background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;font-family:'Sora',sans-serif;font-size:0.875rem;color:var(--text);outline:none;text-align:center">
+              <span style="font-size:0.85rem;color:var(--muted)">%</span>
             </div>
           </div>
           <div class="form-group">
@@ -3477,44 +3476,47 @@ Guidelines:
     bills.forEach(b => {
       const splitKey = 'split-' + b.id;
       const splitPref = paidChecks[splitKey] || 'full';
-      const divisor = splitPref === 'half' ? 2 : splitPref === 'quarter' ? 4 : 1;
+      const isWeekly = frequency === 'weekly';
+      const isBiweekly = frequency === 'biweekly';
 
-      for (let monthOffset = -1; monthOffset <= 1; monthOffset++) {
-        let dueDate = new Date(paydate.getFullYear(), paydate.getMonth() + monthOffset, b.day);
-        if (dueDate.getDate() !== b.day) dueDate = new Date(paydate.getFullYear(), paydate.getMonth() + monthOffset + 1, 0);
+      // Find the actual due date for this bill
+      let dueDate = null;
+      for (let monthOffset = -1; monthOffset <= 2; monthOffset++) {
+        let d = new Date(paydate.getFullYear(), paydate.getMonth() + monthOffset, b.day);
+        if (d.getDate() !== b.day) d = new Date(paydate.getFullYear(), paydate.getMonth() + monthOffset + 1, 0);
+        if (d >= paydate && d < endDate) { dueDate = d; break; }
+      }
 
-        if (splitPref === 'full') {
-          if (dueDate >= paydate && dueDate < endDate) {
-            results.push({ ...b, dueDate, splitHalf: null, displayAmount: b.amount });
+      if (!dueDate) return;
+
+      if (splitPref === 'full') {
+        // Show bill on the payday period that contains or is before the due date
+        results.push({ ...b, dueDate, splitHalf: null, displayAmount: b.amount });
+      } else {
+        // Split — show a portion on EVERY payday until due date
+        const divisor = splitPref === 'quarter' ? 4 : 2;
+        const portionLabels = divisor === 2
+          ? ['1st Half', '2nd Half']
+          : ['1st Quarter', '2nd Quarter', '3rd Quarter', '4th Quarter'];
+
+        // Figure out which portion this payday is
+        // Count how many paydays back from due date this is
+        const periodDays = isWeekly ? 7 : isBiweekly ? 14 : 15;
+        let portionIndex = 0;
+        for (let i = divisor - 1; i >= 0; i--) {
+          const portionStart = new Date(dueDate);
+          portionStart.setDate(portionStart.getDate() - (periodDays * i));
+          const portionEnd = new Date(portionStart);
+          portionEnd.setDate(portionEnd.getDate() + periodDays);
+          if (paydate >= new Date(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate() - (periodDays * (divisor - 1 - portionIndex))) &&
+              paydate < endDate) {
+            portionIndex = divisor - 1 - i;
             break;
-          }
-        } else {
-          // For split/quarter — show portion in every period leading up to due date
-          const periodsBack = divisor - 1;
-          let periodStart = new Date(paydate);
-          if (frequency === 'weekly') periodStart.setDate(periodStart.getDate() - (7 * periodsBack));
-          else if (frequency === 'biweekly') periodStart.setDate(periodStart.getDate() - (14 * periodsBack));
-
-          if (dueDate >= paydate && dueDate < endDate) {
-            const portion = divisor === 2 ? '2nd Half' : `${divisor}th Quarter`;
-            results.push({ ...b, dueDate, splitHalf: portion, displayAmount: b.amount / divisor });
-            break;
-          }
-          for (let p = 1; p < divisor; p++) {
-            let prevStart = new Date(paydate);
-            if (frequency === 'weekly') prevStart.setDate(prevStart.getDate() - (7 * p));
-            else if (frequency === 'biweekly') prevStart.setDate(prevStart.getDate() - (14 * p));
-            let prevEnd = new Date(prevStart);
-            if (frequency === 'weekly') prevEnd.setDate(prevEnd.getDate() + 7);
-            else if (frequency === 'biweekly') prevEnd.setDate(prevEnd.getDate() + 14);
-
-            if (dueDate >= prevStart && dueDate < prevEnd) {
-              const portion = divisor === 2 ? '1st Half' : `${p === 1 ? '1st' : p === 2 ? '2nd' : '3rd'} Quarter`;
-              results.push({ ...b, dueDate, splitHalf: portion, displayAmount: b.amount / divisor });
-              break;
-            }
           }
         }
+
+        const label = portionLabels[Math.min(portionIndex, divisor - 1)];
+        results.push({ ...b, dueDate, splitHalf: label, displayAmount: b.amount / divisor });
       }
     });
 
@@ -3590,21 +3592,7 @@ Guidelines:
             const urgency = daysUntil >= 0 && daysUntil <= 3 ? 'color:var(--expense-color);font-weight:700' : 'color:var(--muted)';
 
             // Build split buttons based on frequency
-            let splitButtons = '';
-            if (showSplit) {
-              const fullAmt = b.splitHalf ? b.displayAmount * (isWeekly ? 4 : 2) : b.amount;
-              splitButtons = `<div style="display:flex;gap:0.3rem;flex-wrap:wrap;margin-top:0.2rem">
-                <button onclick="setSplitPref('${splitKey}','full')" style="font-size:0.68rem;padding:0.15rem 0.5rem;border-radius:4px;border:1px solid var(--border);background:${splitPref==='full'?'var(--accent)':'none'};color:${splitPref==='full'?'#fff':'var(--muted)'};cursor:pointer;font-family:inherit">
-                  Full $${fullAmt.toFixed(2)}
-                </button>
-                ${isBiweekly || isWeekly ? `<button onclick="setSplitPref('${splitKey}','half')" style="font-size:0.68rem;padding:0.15rem 0.5rem;border-radius:4px;border:1px solid var(--border);background:${splitPref==='half'?'var(--accent)':'none'};color:${splitPref==='half'?'#fff':'var(--muted)'};cursor:pointer;font-family:inherit">
-                  ½ $${(fullAmt/2).toFixed(2)}
-                </button>` : ''}
-                ${isWeekly ? `<button onclick="setSplitPref('${splitKey}','quarter')" style="font-size:0.68rem;padding:0.15rem 0.5rem;border-radius:4px;border:1px solid var(--border);background:${splitPref==='quarter'?'var(--accent)':'none'};color:${splitPref==='quarter'?'#fff':'var(--muted)'};cursor:pointer;font-family:inherit">
-                  ¼ $${(fullAmt/4).toFixed(2)}
-                </button>` : ''}
-              </div>`;
-            }
+            const splitButtons = getSplitButtons(b, splitKey, splitPref, isWeekly, isBiweekly, showSplit);
 
             html += `<div class="payday-bill-row ${isPaid?'paid-row':''}">
               <div class="pbr-left" style="flex-direction:column;align-items:flex-start;gap:0.2rem">
@@ -3636,6 +3624,22 @@ Guidelines:
   function setSplitPref(key, val) {
     paidChecks[key] = val;
     renderSchedule();
+  }
+
+  function getSplitButtons(b, splitKey, splitPref, isWeekly, isBiweekly, showSplit) {
+    if (!showSplit) return '';
+    const fullAmt = b.amount;
+    return `<div style="display:flex;gap:0.3rem;flex-wrap:wrap;margin-top:0.25rem">
+      <button onclick="setSplitPref('${splitKey}','full')" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:4px;border:1px solid var(--border);background:${splitPref==='full'?'var(--accent)':'none'};color:${splitPref==='full'?'#fff':'var(--muted)'};cursor:pointer;font-family:inherit;font-weight:600">
+        Full $${fullAmt.toFixed(2)}
+      </button>
+      ${(isBiweekly || isWeekly) ? `<button onclick="setSplitPref('${splitKey}','half')" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:4px;border:1px solid var(--border);background:${splitPref==='half'?'var(--accent)':'none'};color:${splitPref==='half'?'#fff':'var(--muted)'};cursor:pointer;font-family:inherit;font-weight:600">
+        ½ $${(fullAmt/2).toFixed(2)}
+      </button>` : ''}
+      ${isWeekly ? `<button onclick="setSplitPref('${splitKey}','quarter')" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:4px;border:1px solid var(--border);background:${splitPref==='quarter'?'var(--accent)':'none'};color:${splitPref==='quarter'?'#fff':'var(--muted)'};cursor:pointer;font-family:inherit;font-weight:600">
+        ¼ $${(fullAmt/4).toFixed(2)}
+      </button>` : ''}
+    </div>`;
   }
 
   function togglePayBlock(id, header) {
@@ -3937,9 +3941,14 @@ Guidelines:
   }
 
   // INVESTMENT CALCULATOR
-  function updateRateDisplay() {
-    document.getElementById('inv-rate-display').textContent = document.getElementById('inv-rate').value + '%';
+  function syncRateInput() {
+    document.getElementById('inv-rate-num').value = document.getElementById('inv-rate').value;
   }
+  function syncRateSlider() {
+    const val = parseFloat(document.getElementById('inv-rate-num').value) || 7;
+    document.getElementById('inv-rate').value = Math.min(15, Math.max(1, val));
+  }
+  function updateRateDisplay() { syncRateInput(); }
   function updateYearsDisplay() {
     const y = document.getElementById('inv-years').value;
     document.getElementById('inv-years-display').textContent = y + ' year' + (y > 1 ? 's' : '');
@@ -3948,7 +3957,7 @@ Guidelines:
   function calcInvestment() {
     const principal = parseFloat(document.getElementById('inv-principal').value) || 0;
     const monthly = parseFloat(document.getElementById('inv-monthly').value) || 0;
-    const rate = parseFloat(document.getElementById('inv-rate').value) / 100;
+    const rate = (parseFloat(document.getElementById('inv-rate-num').value) || parseFloat(document.getElementById('inv-rate').value) || 7) / 100;
     const years = parseInt(document.getElementById('inv-years').value);
     const n = parseInt(document.getElementById('inv-freq').value);
 
