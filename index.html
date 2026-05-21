@@ -2679,7 +2679,7 @@
             </div>
             <div class="form-group" style="margin-top:0.75rem">
               <label>Or type your score</label>
-              <input type="number" class="profile-input" id="base-score-num" value="680" min="300" max="850" oninput="syncScoreSlider()">
+              <input type="number" class="profile-input" id="base-score-num" value="680" min="300" max="850" oninput="syncScoreSlider()" onchange="syncScoreSlider()" style="font-size:1.1rem;font-weight:700;text-align:center">
             </div>
           </div>
 
@@ -4640,7 +4640,10 @@ Guidelines:
   }
 
   function syncScoreSlider() {
-    const val = Math.min(850, Math.max(300, parseInt(document.getElementById('base-score-num').value) || 680));
+    const input = document.getElementById('base-score-num');
+    let val = parseInt(input.value);
+    if (isNaN(val)) return; // don't update while still typing
+    val = Math.min(850, Math.max(300, val));
     document.getElementById('base-score').value = val;
     updateSimulator();
   }
