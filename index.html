@@ -4011,10 +4011,10 @@ Guidelines:
   let twoFAEnabled = false;
 
   function switchProfilePanel(panel, btn) {
-    document.querySelectorAll('.profile-panel').forEach(p => p.classList.remove('visible'));
+    document.querySelectorAll('#tab-profile .profile-panel').forEach(p => p.classList.remove('visible'));
     document.querySelectorAll('.profile-menu-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('panel-' + panel).classList.add('visible');
-    btn.classList.add('active');
+    if (btn) btn.classList.add('active');
   }
 
   function loadProfileUI() {
