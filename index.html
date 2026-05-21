@@ -3893,7 +3893,9 @@ Guidelines:
   }
 
   function deleteGoal(id) {
+    if (!confirm('Delete this savings goal?')) return;
     goals = goals.filter(g => g.id !== id);
+    saveUserData();
     renderGoals();
   }
 
@@ -3938,9 +3940,14 @@ Guidelines:
     document.getElementById('gs-saved').textContent = '$' + totalSaved.toLocaleString('en-US', {maximumFractionDigits:0});
     document.getElementById('gs-target').textContent = '$' + totalTarget.toLocaleString('en-US', {maximumFractionDigits:0});
 
-    if (goals.length === 0) { empty.style.display = 'block'; grid.innerHTML = ''; grid.appendChild(empty); return; }
-    empty.style.display = 'none';
+    if (goals.length === 0) {
+      grid.innerHTML = '';
+      empty.style.display = 'block';
+      grid.appendChild(empty);
+      return;
+    }
 
+    empty.style.display = 'none';
     grid.innerHTML = goals.map(g => {
       const pct = Math.min((g.saved / g.target) * 100, 100);
       const color = goalColor(pct);
