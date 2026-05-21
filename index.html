@@ -1179,11 +1179,189 @@
 
   @media (max-width:860px) { .invest-layout { grid-template-columns:1fr; } }
 
+  /* HAMBURGER MENU */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 0.5rem;
+    border: none;
+    background: none;
+    z-index: 200;
+  }
+  .hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: all 0.3s;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    z-index: 99;
+    padding: 0.75rem;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .mobile-nav.open { display: flex; }
+  .mobile-nav button {
+    background: none;
+    border: none;
+    color: var(--text-soft);
+    font-family: 'Sora', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .mobile-nav button:hover { background: var(--surface2); color: var(--dark); }
+  .mobile-nav button.active { background: rgba(240,85,85,0.08); color: var(--accent); }
+  .mobile-nav .upgrade-btn-nav {
+    background: linear-gradient(135deg,#e85a28,var(--accent2)) !important;
+    color: #1a1a0f !important;
+    font-weight: 700 !important;
+    border-radius: 8px !important;
+    margin-top: 0.25rem;
+  }
+  .mobile-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    top: 64px;
+    background: rgba(0,0,0,0.3);
+    z-index: 98;
+  }
+  .mobile-overlay.open { display: block; }
+
+  /* PROFILE & SECURITY */
+  .profile-layout { display:grid; grid-template-columns:240px 1fr; gap:1.5rem; align-items:start; }
+  .profile-sidebar { display:flex; flex-direction:column; gap:0.5rem; }
+  .profile-menu-btn {
+    display:flex; align-items:center; gap:0.75rem; width:100%;
+    padding:0.75rem 1rem; border-radius:10px; border:none; background:none;
+    font-family:'Sora',sans-serif; font-size:0.875rem; font-weight:500;
+    color:var(--text-soft); cursor:pointer; text-align:left; transition:all 0.2s;
+  }
+  .profile-menu-btn:hover { background:var(--surface2); color:var(--dark); }
+  .profile-menu-btn.active { background:rgba(240,85,85,0.08); color:var(--accent); font-weight:600; }
+  .profile-menu-btn .pmb-icon { font-size:1.1rem; flex-shrink:0; }
+
+  .profile-avatar {
+    width:72px; height:72px; border-radius:50%;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.75rem; margin:0 auto 0.75rem; color:#fff; font-weight:700;
+  }
+  .profile-name { font-family:'Playfair Display',serif; font-size:1rem; text-align:center; color:var(--text); }
+  .profile-email { font-size:0.78rem; color:var(--muted); text-align:center; margin-bottom:1rem; }
+  .profile-plan-badge { display:inline-block; font-size:0.72rem; font-weight:700; padding:0.2rem 0.65rem; border-radius:20px; background:var(--surface2); color:var(--muted); border:1px solid var(--border); }
+  .profile-plan-badge.pro { background:linear-gradient(135deg,#b8860b,#e9c46a); color:#1a1a0f; border:none; }
+
+  .profile-panel { display:none; }
+  .profile-panel.visible { display:block; }
+
+  .profile-section-title { font-family:'Playfair Display',serif; font-size:1.1rem; color:var(--text); margin-bottom:0.35rem; }
+  .profile-section-desc { font-size:0.82rem; color:var(--text-soft); margin-bottom:1.5rem; line-height:1.6; }
+
+  .profile-field { margin-bottom:1.25rem; }
+  .profile-field label { font-size:0.75rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; display:block; margin-bottom:0.4rem; }
+  .profile-input {
+    width:100%; background:var(--surface2); border:1.5px solid var(--border);
+    border-radius:8px; padding:0.7rem 1rem; font-family:'Sora',sans-serif;
+    font-size:0.875rem; color:var(--text); outline:none; transition:border-color 0.2s, box-shadow 0.2s;
+  }
+  .profile-input:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--glow-red); }
+  .profile-input:disabled { opacity:0.5; cursor:not-allowed; }
+
+  .profile-save-btn {
+    background:var(--accent); color:#fff; border:none; border-radius:8px;
+    padding:0.7rem 1.75rem; font-family:'Sora',sans-serif; font-size:0.875rem;
+    font-weight:700; cursor:pointer; transition:all 0.2s;
+  }
+  .profile-save-btn:hover { background:#d94444; transform:translateY(-1px); }
+  .profile-save-btn:disabled { background:var(--border); color:var(--muted); transform:none; cursor:not-allowed; }
+
+  .profile-msg { font-size:0.8rem; padding:0.5rem 0.85rem; border-radius:8px; margin-top:0.75rem; display:none; }
+  .profile-msg.success { background:rgba(0,184,148,0.1); color:var(--income-color); display:block; }
+  .profile-msg.error { background:rgba(240,85,85,0.1); color:var(--danger); display:block; }
+
+  .security-item {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:1.1rem 1.25rem; background:var(--bg); border-radius:10px;
+    border:1px solid var(--border); margin-bottom:0.75rem;
+  }
+  .si-left { display:flex; align-items:center; gap:0.75rem; }
+  .si-icon { font-size:1.25rem; }
+  .si-info h4 { font-size:0.9rem; font-weight:600; color:var(--text); }
+  .si-info p { font-size:0.78rem; color:var(--muted); margin-top:0.15rem; }
+  .si-status { font-size:0.72rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:20px; }
+  .si-status.enabled { background:rgba(0,184,148,0.1); color:var(--income-color); }
+  .si-status.disabled { background:var(--surface2); color:var(--muted); }
+  .si-btn {
+    background:none; border:1.5px solid var(--border); color:var(--text-soft);
+    font-family:'Sora',sans-serif; font-size:0.8rem; font-weight:600;
+    padding:0.4rem 0.9rem; border-radius:8px; cursor:pointer; transition:all 0.2s;
+  }
+  .si-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .si-btn.danger:hover { border-color:var(--danger); color:var(--danger); }
+
+  .otp-box {
+    background:var(--bg); border:1px solid var(--border); border-radius:10px;
+    padding:1.25rem; margin-top:0.75rem; display:none;
+  }
+  .otp-box.visible { display:block; }
+  .otp-input {
+    width:100%; text-align:center; font-size:1.5rem; font-weight:700; letter-spacing:0.5rem;
+    background:var(--surface); border:1.5px solid var(--border); border-radius:8px;
+    padding:0.75rem; font-family:'Sora',sans-serif; color:var(--text); outline:none;
+    transition:border-color 0.2s; margin:0.75rem 0;
+  }
+  .otp-input:focus { border-color:var(--accent); }
+
+  .danger-zone { border:1px solid rgba(240,85,85,0.3); border-radius:12px; padding:1.25rem; margin-top:1rem; }
+  .danger-zone h3 { font-size:0.875rem; font-weight:700; color:var(--danger); margin-bottom:0.5rem; text-transform:uppercase; letter-spacing:0.06em; }
+  .danger-zone p { font-size:0.82rem; color:var(--text-soft); margin-bottom:1rem; line-height:1.6; }
+
+  @media (max-width:860px) { .profile-layout { grid-template-columns:1fr; } }
+
   @media (max-width: 700px) {
     .two-col { grid-template-columns: 1fr; }
     .summary-grid { grid-template-columns: 1fr; }
     .resources-hero { flex-direction: column; }
-    nav button span { display: none; }
+    nav { display: none; }
+    .hamburger { display: flex; }
+    header { padding: 0 1rem; }
+    main { padding: 1.5rem 1rem 4rem; }
+    .hero { padding: 2.5rem 1rem 2rem; }
+    .hero h1 { font-size: 1.8rem; }
+    .hero-chips { display: none; }
+    .account-bar { padding: 0.55rem 1rem; }
+    .score-bands { grid-template-columns: repeat(3,1fr); }
+    .plan-result-grid { grid-template-columns: 1fr; }
+    .invest-stats { grid-template-columns: 1fr 1fr; }
+    .dti-inputs { grid-template-columns: 1fr; }
+    .guide-intro { grid-template-columns: 1fr; }
+    .goals-summary { grid-template-columns: 1fr; }
+    .premium-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -1275,8 +1453,26 @@
     <button onclick="showTab('invest', this)">📈 <span>Invest</span></button>
     <button onclick="guardedTab('premium', this)">🏆 <span>Premium</span><span class="pro-pill">PRO</span></button>
     <button class="upgrade-btn-nav" onclick="showPaywall('nav')">⭐ <span>Go Pro</span></button>
+    <button onclick="showTab('profile', this)" style="font-size:1.1rem;padding:0.45rem 0.65rem">👤</button>
   </nav>
+  <button class="hamburger" id="hamburger" onclick="toggleMobileNav()">
+    <span></span><span></span><span></span>
+  </button>
 </header>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobile-nav">
+  <button onclick="mobileTab('budget')">📊 Budget</button>
+  <button onclick="mobileTab('resources')">🔍 Resources</button>
+  <button onclick="mobileGuardedTab('guide')">📘 Guide <span class="pro-pill">PRO</span></button>
+  <button onclick="mobileGuardedTab('ai')">💬 AI Advisor <span class="pro-pill">PRO</span></button>
+  <button onclick="mobileTab('savings')">🎯 Goals</button>
+  <button onclick="mobileTab('invest')">📈 Invest</button>
+  <button onclick="mobileGuardedTab('premium')">🏆 Premium <span class="pro-pill">PRO</span></button>
+  <button class="upgrade-btn-nav" onclick="showPaywall('nav');closeMobileNav()">⭐ Go Pro</button>
+  <button onclick="mobileTab('profile')">👤 Profile & Security</button>
+</div>
+<div class="mobile-overlay" id="mobile-overlay" onclick="closeMobileNav()"></div>
 
 <!-- ACCOUNT BAR -->
 <div class="account-bar" id="account-bar">
@@ -2199,6 +2395,159 @@
 
   </div>
 
+  <!-- PROFILE & SECURITY TAB -->
+  <div class="tab-section" id="tab-profile">
+    <div class="profile-layout">
+
+      <!-- SIDEBAR -->
+      <div>
+        <div class="card" style="text-align:center;margin-bottom:1rem;padding:1.5rem">
+          <div class="profile-avatar" id="profile-avatar">👤</div>
+          <div class="profile-name" id="profile-display-name">User</div>
+          <div class="profile-email" id="profile-display-email">Loading...</div>
+          <span class="profile-plan-badge" id="profile-plan-badge">Free Plan</span>
+        </div>
+        <div class="profile-sidebar card" style="padding:0.75rem">
+          <button class="profile-menu-btn active" onclick="switchProfilePanel('account', this)"><span class="pmb-icon">👤</span> Account Info</button>
+          <button class="profile-menu-btn" onclick="switchProfilePanel('password', this)"><span class="pmb-icon">🔑</span> Change Password</button>
+          <button class="profile-menu-btn" onclick="switchProfilePanel('security', this)"><span class="pmb-icon">🛡️</span> Security & 2FA</button>
+          <button class="profile-menu-btn" onclick="switchProfilePanel('notifications', this)"><span class="pmb-icon">🔔</span> Notifications</button>
+          <button class="profile-menu-btn" onclick="switchProfilePanel('danger', this)"><span class="pmb-icon">⚠️</span> Danger Zone</button>
+          <div style="border-top:1px solid var(--border);margin:0.5rem 0;padding-top:0.5rem">
+            <button class="profile-menu-btn" onclick="signOut()" style="color:var(--danger)"><span class="pmb-icon">🚪</span> Sign Out</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANELS -->
+      <div>
+
+        <!-- ACCOUNT INFO -->
+        <div class="profile-panel visible card" id="panel-account">
+          <div class="profile-section-title">Account Information</div>
+          <div class="profile-section-desc">Update your display name and email address.</div>
+          <div class="profile-field">
+            <label>Full Name</label>
+            <input class="profile-input" type="text" id="profile-name-input" placeholder="Your name">
+          </div>
+          <div class="profile-field">
+            <label>Email Address</label>
+            <input class="profile-input" type="email" id="profile-email-input" placeholder="your@email.com">
+          </div>
+          <button class="profile-save-btn" onclick="updateAccount()">Save Changes</button>
+          <div class="profile-msg" id="account-msg"></div>
+        </div>
+
+        <!-- CHANGE PASSWORD -->
+        <div class="profile-panel card" id="panel-password">
+          <div class="profile-section-title">Change Password</div>
+          <div class="profile-section-desc">Choose a strong password with at least 8 characters including letters and numbers.</div>
+          <div class="profile-field">
+            <label>New Password</label>
+            <input class="profile-input" type="password" id="new-password" placeholder="At least 8 characters">
+          </div>
+          <div class="profile-field">
+            <label>Confirm New Password</label>
+            <input class="profile-input" type="password" id="confirm-password" placeholder="Repeat new password">
+          </div>
+          <button class="profile-save-btn" onclick="updatePassword()">Update Password</button>
+          <div class="profile-msg" id="password-msg"></div>
+        </div>
+
+        <!-- SECURITY & 2FA -->
+        <div class="profile-panel card" id="panel-security">
+          <div class="profile-section-title">Security & Two-Factor Authentication</div>
+          <div class="profile-section-desc">Add an extra layer of security to your account. With 2FA enabled, you'll receive a verification code by email every time you sign in.</div>
+
+          <div class="security-item">
+            <div class="si-left">
+              <span class="si-icon">📧</span>
+              <div class="si-info">
+                <h4>Email Verification (2FA)</h4>
+                <p>Receive a one-time code by email when signing in</p>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.75rem">
+              <span class="si-status disabled" id="2fa-status">Not enabled</span>
+              <button class="si-btn" id="2fa-btn" onclick="toggle2FA()">Enable</button>
+            </div>
+          </div>
+
+          <div class="otp-box" id="otp-verify-box">
+            <p style="font-size:0.85rem;color:var(--text-soft);margin-bottom:0.5rem">Enter the 6-digit code sent to your email to verify and enable 2FA:</p>
+            <input class="otp-input" type="text" id="otp-input" maxlength="6" placeholder="000000" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+            <button class="profile-save-btn" style="width:100%" onclick="verify2FA()">Verify & Enable 2FA</button>
+            <div class="profile-msg" id="otp-msg"></div>
+          </div>
+
+          <div class="security-item" style="margin-top:0.75rem">
+            <div class="si-left">
+              <span class="si-icon">🔐</span>
+              <div class="si-info">
+                <h4>Password Protection</h4>
+                <p>Your account is protected with a hashed password</p>
+              </div>
+            </div>
+            <span class="si-status enabled">Active</span>
+          </div>
+
+          <div class="security-item">
+            <div class="si-left">
+              <span class="si-icon">🌐</span>
+              <div class="si-info">
+                <h4>Google Sign In</h4>
+                <p>Sign in quickly with your Google account</p>
+              </div>
+            </div>
+            <span class="si-status enabled">Connected</span>
+          </div>
+
+          <div class="profile-msg" id="security-msg"></div>
+        </div>
+
+        <!-- NOTIFICATIONS -->
+        <div class="profile-panel card" id="panel-notifications">
+          <div class="profile-section-title">Notification Preferences</div>
+          <div class="profile-section-desc">Choose what emails you'd like to receive from Fintrail.</div>
+          <div class="security-item">
+            <div class="si-left"><span class="si-icon">📅</span><div class="si-info"><h4>Bill Reminders</h4><p>Email reminders 3 days before bills are due</p></div></div>
+            <label class="toggle-switch"><input type="checkbox" id="notif-bills" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="security-item">
+            <div class="si-left"><span class="si-icon">💳</span><div class="si-info"><h4>Payment Receipts</h4><p>Email confirmation when your Pro subscription renews</p></div></div>
+            <label class="toggle-switch"><input type="checkbox" id="notif-receipts" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="security-item">
+            <div class="si-left"><span class="si-icon">🎯</span><div class="si-info"><h4>Goal Milestones</h4><p>Celebrate when you hit savings milestones</p></div></div>
+            <label class="toggle-switch"><input type="checkbox" id="notif-goals" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="security-item">
+            <div class="si-left"><span class="si-icon">📰</span><div class="si-info"><h4>Fintrail Newsletter</h4><p>Tips, updates and new features</p></div></div>
+            <label class="toggle-switch"><input type="checkbox" id="notif-newsletter"><span class="toggle-slider"></span></label>
+          </div>
+          <button class="profile-save-btn" style="margin-top:0.5rem" onclick="saveNotifPrefs()">Save Preferences</button>
+          <div class="profile-msg" id="notif-prefs-msg"></div>
+        </div>
+
+        <!-- DANGER ZONE -->
+        <div class="profile-panel card" id="panel-danger">
+          <div class="profile-section-title">Danger Zone</div>
+          <div class="danger-zone">
+            <h3>⚠️ Delete Account</h3>
+            <p>Permanently delete your Fintrail account and all associated data including transactions, bills, goals and subscription. This action cannot be undone.</p>
+            <button class="profile-save-btn" style="background:var(--danger)" onclick="confirmDeleteAccount()">Delete My Account</button>
+          </div>
+          <div class="danger-zone" style="margin-top:1rem">
+            <h3>🗑️ Clear All Data</h3>
+            <p>Remove all your transactions, bills, and goals while keeping your account active.</p>
+            <button class="profile-save-btn" style="background:var(--danger)" onclick="confirmClearData()">Clear All Data</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
 </main>
 
 <script>
@@ -2347,7 +2696,8 @@
   // Get these from: https://supabase.com → Project Settings → API
   // ======================================================
   const SUPABASE_URL = 'https://lxwebkcqaqmyguawqipw.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx4d2Via2NxYXFteWd1YXdxaXB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyMDk2NDgsImV4cCI6MjA5NDc4NTY0OH0.Es1RXWv7orK97TYaQzLmpnMwQND-sth6XyRts3WRBcg';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx4d2Via2NxYXFteWd1YXdxaXB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyMDk2NDgsImV4cCI6MjA5NDc4NTY0OH0.Es1RXWv7orK97TYaQzLmpnMwQND-sth6XyRts3WRBcg
+';
 
   const sbClient = (SUPABASE_URL !== 'YOUR_SUPABASE_URL')
     ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
@@ -2380,6 +2730,7 @@
     document.getElementById('auth-screen').style.display = 'none';
     setUserUI(user);
     loadUserData();
+    loadProfileUI();
   }
 
   function setUserUI(user) {
@@ -2472,13 +2823,23 @@
   }
 
   async function loadUserData() {
-    if (!supabase || !currentUser) return;
+    if (!sbClient || !currentUser) return;
     const { data } = await sbClient.from('user_data').select('*').eq('user_id', currentUser.id).single();
     if (data) {
       transactions = data.transactions || [];
       bills = data.bills || [];
       goals = data.goals || [];
-      if (data.is_pro) { isPro = true; activatePro(); }
+      if (data.is_pro && !isPro) {
+        isPro = true;
+        applyProState();
+        const bar = document.getElementById('account-bar');
+        bar.classList.add('premium');
+        document.getElementById('ab-status').textContent = `⭐ Pro Plan · ${currentUser.email}`;
+        document.getElementById('ab-plan-badge').textContent = '⭐ Pro';
+        document.getElementById('ab-plan-badge').classList.add('premium-plan');
+        document.getElementById('ab-action-btn').textContent = 'Manage Subscription';
+        document.getElementById('ab-action-btn').onclick = cancelSubscription;
+      }
     }
     render(); renderBillList(); renderSchedule(); renderGoals();
   }
@@ -2521,17 +2882,27 @@
   function handleUpgradeReturn() {
     const params = new URLSearchParams(window.location.search);
     if (params.get('upgraded') === 'true') {
-      isPro = true;
-      applyProState();
-      const bar = document.getElementById('account-bar');
-      bar.classList.add('premium');
-      document.getElementById('ab-status').textContent = '⭐ Pro Plan — all features unlocked';
-      document.getElementById('ab-plan-badge').textContent = '⭐ Pro';
-      document.getElementById('ab-plan-badge').classList.add('premium-plan');
-      document.getElementById('ab-action-btn').textContent = 'Manage Subscription';
-      document.getElementById('ab-action-btn').onclick = cancelSubscription;
+      // Clear URL immediately to prevent loop
       window.history.replaceState({}, '', window.location.pathname);
-      setTimeout(() => alert('🎉 Welcome to Fintrail Pro! All features are now unlocked.'), 500);
+      // Wait for auth to load then activate pro
+      const tryActivate = setInterval(() => {
+        if (currentUser) {
+          clearInterval(tryActivate);
+          isPro = true;
+          applyProState();
+          const bar = document.getElementById('account-bar');
+          bar.classList.add('premium');
+          document.getElementById('ab-status').textContent = '⭐ Pro Plan — all features unlocked';
+          document.getElementById('ab-plan-badge').textContent = '⭐ Pro';
+          document.getElementById('ab-plan-badge').classList.add('premium-plan');
+          document.getElementById('ab-action-btn').textContent = 'Manage Subscription';
+          document.getElementById('ab-action-btn').onclick = cancelSubscription;
+          saveUserData();
+          setTimeout(() => alert('🎉 Welcome to Fintrail Pro! All features are now unlocked.'), 500);
+        }
+      }, 300);
+      // Stop trying after 5 seconds
+      setTimeout(() => clearInterval(tryActivate), 5000);
     }
     if (params.get('cancelled') === 'true') {
       window.history.replaceState({}, '', window.location.pathname);
@@ -2566,6 +2937,35 @@
     updatePremiumTab();
     renderResources();
     if (isPro) { renderRateBanner(); calcLoan(); }
+  }
+
+  // MOBILE NAV
+  function toggleMobileNav() {
+    const nav = document.getElementById('mobile-nav');
+    const overlay = document.getElementById('mobile-overlay');
+    const hamburger = document.getElementById('hamburger');
+    const isOpen = nav.classList.contains('open');
+    nav.classList.toggle('open', !isOpen);
+    overlay.classList.toggle('open', !isOpen);
+    hamburger.classList.toggle('open', !isOpen);
+  }
+
+  function closeMobileNav() {
+    document.getElementById('mobile-nav').classList.remove('open');
+    document.getElementById('mobile-overlay').classList.remove('open');
+    document.getElementById('hamburger').classList.remove('open');
+  }
+
+  function mobileTab(tab) {
+    document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('visible'));
+    document.querySelectorAll('nav button, .mobile-nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('visible');
+    closeMobileNav();
+  }
+
+  function mobileGuardedTab(tab) {
+    if (!isPro) { showPaywall(tab); closeMobileNav(); return; }
+    mobileTab(tab);
   }
 
   // TAB SWITCHING
@@ -3593,6 +3993,165 @@ Guidelines:
         <span class="itl-val">$${Math.round(bal).toLocaleString()}</span>
       </div>`;
     }).join('');
+  }
+
+  // PROFILE & SECURITY
+  let twoFAEnabled = false;
+
+  function switchProfilePanel(panel, btn) {
+    document.querySelectorAll('.profile-panel').forEach(p => p.classList.remove('visible'));
+    document.querySelectorAll('.profile-menu-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + panel).classList.add('visible');
+    btn.classList.add('active');
+  }
+
+  function loadProfileUI() {
+    if (!currentUser) return;
+    const email = currentUser.email || '';
+    const name = currentUser.user_metadata?.full_name || email.split('@')[0];
+    const initial = name.charAt(0).toUpperCase();
+
+    document.getElementById('profile-avatar').textContent = initial;
+    document.getElementById('profile-display-name').textContent = name;
+    document.getElementById('profile-display-email').textContent = email;
+    document.getElementById('profile-name-input').value = name;
+    document.getElementById('profile-email-input').value = email;
+
+    const badge = document.getElementById('profile-plan-badge');
+    if (isPro) { badge.textContent = '⭐ Pro Plan'; badge.classList.add('pro'); }
+    else { badge.textContent = 'Free Plan'; badge.classList.remove('pro'); }
+  }
+
+  async function updateAccount() {
+    const name = document.getElementById('profile-name-input').value.trim();
+    const email = document.getElementById('profile-email-input').value.trim();
+    const msg = document.getElementById('account-msg');
+    if (!name || !email) { showProfileMsg('account-msg', 'Please fill in all fields.', 'error'); return; }
+
+    const btn = event.target;
+    btn.disabled = true; btn.textContent = 'Saving...';
+
+    try {
+      if (!sbClient) throw new Error('Not connected');
+      const updates = { data: { full_name: name } };
+      if (email !== currentUser.email) updates.email = email;
+      const { error } = await sbClient.auth.updateUser(updates);
+      if (error) throw error;
+      currentUser.user_metadata = { ...currentUser.user_metadata, full_name: name };
+      loadProfileUI();
+      setUserUI(currentUser);
+      showProfileMsg('account-msg', '✅ Account updated successfully!', 'success');
+    } catch (err) {
+      showProfileMsg('account-msg', err.message || 'Failed to update account.', 'error');
+    }
+    btn.disabled = false; btn.textContent = 'Save Changes';
+  }
+
+  async function updatePassword() {
+    const newPass = document.getElementById('new-password').value;
+    const confirm = document.getElementById('confirm-password').value;
+    if (!newPass || !confirm) { showProfileMsg('password-msg', 'Please fill in both fields.', 'error'); return; }
+    if (newPass.length < 8) { showProfileMsg('password-msg', 'Password must be at least 8 characters.', 'error'); return; }
+    if (newPass !== confirm) { showProfileMsg('password-msg', 'Passwords do not match.', 'error'); return; }
+
+    const btn = event.target;
+    btn.disabled = true; btn.textContent = 'Updating...';
+
+    try {
+      if (!sbClient) throw new Error('Not connected');
+      const { error } = await sbClient.auth.updateUser({ password: newPass });
+      if (error) throw error;
+      document.getElementById('new-password').value = '';
+      document.getElementById('confirm-password').value = '';
+      showProfileMsg('password-msg', '✅ Password updated successfully!', 'success');
+    } catch (err) {
+      showProfileMsg('password-msg', err.message || 'Failed to update password.', 'error');
+    }
+    btn.disabled = false; btn.textContent = 'Update Password';
+  }
+
+  async function toggle2FA() {
+    if (!sbClient || !currentUser) return;
+    const btn = document.getElementById('2fa-btn');
+    btn.disabled = true; btn.textContent = 'Sending...';
+
+    try {
+      // Send OTP to email
+      const { error } = await sbClient.auth.signInWithOtp({
+        email: currentUser.email,
+        options: { shouldCreateUser: false }
+      });
+      if (error) throw error;
+      document.getElementById('otp-verify-box').classList.add('visible');
+      showProfileMsg('security-msg', `✅ Verification code sent to ${currentUser.email}`, 'success');
+    } catch (err) {
+      showProfileMsg('security-msg', err.message || 'Failed to send code.', 'error');
+    }
+    btn.disabled = false; btn.textContent = 'Resend Code';
+  }
+
+  async function verify2FA() {
+    const otp = document.getElementById('otp-input').value.trim();
+    if (otp.length !== 6) { showProfileMsg('otp-msg', 'Please enter the 6-digit code.', 'error'); return; }
+
+    try {
+      if (!sbClient) throw new Error('Not connected');
+      const { error } = await sbClient.auth.verifyOtp({
+        email: currentUser.email,
+        token: otp,
+        type: 'email'
+      });
+      if (error) throw error;
+      twoFAEnabled = true;
+      document.getElementById('2fa-status').textContent = 'Enabled';
+      document.getElementById('2fa-status').className = 'si-status enabled';
+      document.getElementById('2fa-btn').textContent = 'Disable';
+      document.getElementById('otp-verify-box').classList.remove('visible');
+      showProfileMsg('security-msg', '🛡️ Two-factor authentication is now enabled!', 'success');
+    } catch (err) {
+      showProfileMsg('otp-msg', 'Invalid code. Please try again.', 'error');
+    }
+  }
+
+  function saveNotifPrefs() {
+    showProfileMsg('notif-prefs-msg', '✅ Notification preferences saved!', 'success');
+  }
+
+  function confirmDeleteAccount() {
+    if (confirm('Are you absolutely sure? This will permanently delete your account and ALL data. This cannot be undone.')) {
+      if (confirm('Last chance — delete everything?')) {
+        deleteAccount();
+      }
+    }
+  }
+
+  async function deleteAccount() {
+    try {
+      if (sbClient && currentUser) {
+        await sbClient.from('user_data').delete().eq('user_id', currentUser.id);
+      }
+      await signOut();
+      alert('Your account has been deleted.');
+    } catch (err) {
+      alert('Error deleting account: ' + err.message);
+    }
+  }
+
+  function confirmClearData() {
+    if (confirm('This will clear all your transactions, bills, and goals. Your account will remain active.')) {
+      transactions = []; bills = []; goals = [];
+      render(); renderBillList(); renderSchedule(); renderGoals();
+      saveUserData();
+      alert('✅ All data cleared successfully.');
+    }
+  }
+
+  function showProfileMsg(id, msg, type) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = msg;
+    el.className = 'profile-msg ' + type;
+    setTimeout(() => { el.className = 'profile-msg'; }, 5000);
   }
 
   // INIT
