@@ -1002,16 +1002,18 @@
   .account-bar {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
-    padding: 0.55rem 2rem; display: flex; align-items: center;
-    justify-content: space-between; font-size: 0.8rem;
+    padding: 0.45rem 1.5rem; display: flex; align-items: center;
+    justify-content: space-between; font-size: 0.78rem; gap: 0.5rem;
   }
   .account-bar.premium { background: linear-gradient(135deg, rgba(240,85,85,0.08), rgba(255,209,102,0.05)); }
-  .ab-left { color: var(--text-soft); display: flex; align-items: center; gap: 0.5rem; }
-  .ab-right { display: flex; align-items: center; gap: 0.75rem; }
-  .ab-plan { font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.65rem; border-radius: 20px; background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+  .ab-left { color: var(--text-soft); display: flex; align-items: center; gap: 0.4rem; min-width:0; overflow:hidden; flex:1; }
+  .ab-left span { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:260px; font-size:0.75rem; }
+  .ab-right { display: flex; align-items: center; gap: 0.4rem; flex-shrink:0; }
+  .ab-plan { font-size: 0.68rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 20px; background: var(--surface2); color: var(--muted); border: 1px solid var(--border); white-space:nowrap; }
   .ab-plan.premium-plan { background: linear-gradient(135deg, #b8860b, #e9c46a); color: #1a1a0f; border: none; }
-  .ab-manage { background: none; border: 1px solid var(--border); color: var(--muted); font-family: 'Sora', sans-serif; font-size: 0.72rem; padding: 0.25rem 0.75rem; border-radius: 6px; cursor: pointer; transition: all 0.15s; }
+  .ab-manage { background: none; border: 1px solid var(--border); color: var(--muted); font-family: 'Sora', sans-serif; font-size: 0.7rem; padding: 0.2rem 0.55rem; border-radius: 6px; cursor: pointer; transition: all 0.15s; white-space:nowrap; }
   .ab-manage:hover { color: var(--text); border-color: var(--accent); }
+  .ab-signout-mobile { display:none; }
 
   /* AUTH SCREEN */
   #auth-screen {
@@ -1627,7 +1629,11 @@
     .hero { padding: 2.5rem 1rem 2rem; }
     .hero h1 { font-size: 1.8rem; }
     .hero-chips { display: none; }
-    .account-bar { padding: 0.55rem 1rem; }
+    .account-bar { padding: 0.4rem 1rem; }
+    .ab-left span { max-width: 130px; font-size:0.7rem; }
+    .ab-signout-mobile { display:none !important; }
+    .ab-manage { font-size:0.68rem; padding:0.18rem 0.45rem; }
+    #ab-action-btn { display: none; }
     .score-bands { grid-template-columns: repeat(3,1fr); }
     .plan-result-grid { grid-template-columns: 1fr; }
     .invest-stats { grid-template-columns: 1fr 1fr; }
@@ -1701,7 +1707,7 @@
           Continue with Google
         </button>
         <div class="auth-footer">
-          By signing up you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+          By signing up you agree to our <a href="/terms.html" target="_blank">Terms of Service</a> and <a href="/privacy.html" target="_blank">Privacy Policy</a>.
         </div>
       </div>
 
@@ -1859,7 +1865,7 @@
   <div class="ab-right">
     <span class="ab-plan" id="ab-plan-badge">Free</span>
     <button class="ab-manage" id="ab-action-btn" onclick="showPaywall('bar')">Upgrade to Pro →</button>
-    <button class="ab-manage" onclick="signOut()" style="margin-left:0.25rem">Sign Out</button>
+    <button class="ab-manage ab-signout-mobile" onclick="signOut()">Sign Out</button>
   </div>
 </div>
 
@@ -3274,7 +3280,15 @@
       SUPABASE_URL = config.supabaseUrl || '';
       SUPABASE_ANON_KEY = config.supabaseAnonKey || '';
       if (SUPABASE_URL && SUPABASE_ANON_KEY) {
-        sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Use sessionStorage fallback for private browsing mode
+        const storage = {
+          getItem: (key) => { try { return localStorage.getItem(key); } catch(e) { return sessionStorage.getItem(key); } },
+          setItem: (key, val) => { try { localStorage.setItem(key, val); } catch(e) { try { sessionStorage.setItem(key, val); } catch(e2) {} } },
+          removeItem: (key) => { try { localStorage.removeItem(key); } catch(e) { try { sessionStorage.removeItem(key); } catch(e2) {} } }
+        };
+        sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+          auth: { storage, persistSession: true, autoRefreshToken: true }
+        });
       }
     } catch (err) {
       console.log('Config load failed:', err.message);
@@ -5411,8 +5425,12 @@ Guidelines:
     askedAI: false,
   };
 
+  // Safe storage helper — works in private browsing mode
+  function safeGet(key) { try { return localStorage.getItem(key); } catch(e) { try { return sessionStorage.getItem(key); } catch(e2) { return null; } } }
+  function safeSet(key, val) { try { localStorage.setItem(key, val); } catch(e) { try { sessionStorage.setItem(key, val); } catch(e2) {} } }
+
   function loadGameData() {
-    const saved = localStorage.getItem('fintrail_game_' + (currentUser?.id || 'demo'));
+    const saved = safeGet('fintrail_game_' + (currentUser?.id || 'demo'));
     if (saved) { try { gameData = { ...gameData, ...JSON.parse(saved) }; } catch(e) {} }
     checkLoginStreak();
     checkPendingXP(); // release any XP that's been waiting 48hrs
@@ -5421,7 +5439,7 @@ Guidelines:
   }
 
   function saveGameData() {
-    localStorage.setItem('fintrail_game_' + (currentUser?.id || 'demo'), JSON.stringify(gameData));
+    safeSet('fintrail_game_' + (currentUser?.id || 'demo'), JSON.stringify(gameData));
   }
 
   function copyRewardCode(code) {
