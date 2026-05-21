@@ -1632,8 +1632,13 @@
               <input type="text" id="bill-name" placeholder="e.g. Rent, Netflix, Car Payment">
             </div>
             <div class="form-group">
-              <label>Amount ($)</label>
-              <input type="number" id="bill-amount" placeholder="0.00" min="0" step="0.01">
+              <label>Total Monthly Amount ($)</label>
+              <input type="number" id="bill-amount" placeholder="0.00" min="0" step="0.01" oninput="autoFillPaycheck()">
+            </div>
+            <div class="form-group">
+              <label>Amount Per Paycheck ($)</label>
+              <input type="number" id="bill-per-paycheck" placeholder="How much you pay each paycheck" min="0" step="0.01">
+              <div style="font-size:0.72rem;color:var(--muted);margin-top:0.3rem">💡 Enter less than the full amount to split across paychecks</div>
             </div>
             <div class="form-group">
               <label>Due Day of Month</label>
@@ -3394,15 +3399,23 @@ Guidelines:
     btn.classList.add('active');
   }
 
+  function autoFillPaycheck() {
+    const amount = parseFloat(document.getElementById('bill-amount').value) || 0;
+    const perPaycheck = document.getElementById('bill-per-paycheck');
+    if (!perPaycheck.value) perPaycheck.value = amount.toFixed(2);
+  }
+
   function addBill() {
     const name = document.getElementById('bill-name').value.trim();
     const amount = parseFloat(document.getElementById('bill-amount').value);
+    const perPaycheck = parseFloat(document.getElementById('bill-per-paycheck').value) || amount;
     const day = parseInt(document.getElementById('bill-day').value);
     const cat = document.getElementById('bill-cat').value;
     if (!name || isNaN(amount) || amount <= 0) { alert('Please enter a bill name and amount.'); return; }
-    bills.push({ id: Date.now(), name, amount, day, cat });
+    bills.push({ id: Date.now(), name, amount, perPaycheck, day, cat });
     document.getElementById('bill-name').value = '';
     document.getElementById('bill-amount').value = '';
+    document.getElementById('bill-per-paycheck').value = '';
     renderBillList(); renderSchedule(); saveUserData();
   }
 
@@ -3424,20 +3437,23 @@ Guidelines:
   function renderBillList() {
     const list = document.getElementById('bill-list');
     if (bills.length === 0) { list.innerHTML = '<div class="empty-state">No bills added yet.</div>'; return; }
-    list.innerHTML = bills.map(b => `
-      <div class="bill-item recurring">
+    list.innerHTML = bills.map(b => {
+      const perPaycheck = b.perPaycheck || b.amount;
+      const isSplit = perPaycheck < b.amount;
+      return `<div class="bill-item recurring">
         <div class="bi-left">
           <span class="bill-icon">${b.cat.split(' ')[0]}</span>
           <div class="bi-info">
             <div class="bi-name">${escHtml(b.name)}</div>
-            <div class="bi-meta">Due ${b.day}${['st','nd','rd'][((b.day)%10)-1]||'th'} · ${b.cat.split(' ').slice(1).join(' ')}</div>
+            <div class="bi-meta">Due ${b.day}${['st','nd','rd'][((b.day)%10)-1]||'th'} · ${b.cat.split(' ').slice(1).join(' ')}${isSplit ? ` · <span style="color:var(--accent)">$${perPaycheck.toFixed(2)}/paycheck</span>` : ''}</div>
           </div>
         </div>
         <div class="bi-right">
           <span class="bi-amount">$${b.amount.toFixed(2)}</span>
           <button class="bi-del" onclick="deleteBill(${b.id})">✕</button>
         </div>
-      </div>`).join('');
+      </div>`;
+    }).join('');
   }
 
   function getPaydays(frequency, startDate, months) {
@@ -3477,14 +3493,13 @@ Guidelines:
 
   function billsDueThisPeriod(paydate, nextPaydate, frequency) {
     const results = [];
-    const periodDays = frequency === 'weekly' ? 7 : frequency === 'biweekly' ? 14 : 15;
+    const periodEnd = nextPaydate || new Date(9999, 0, 1);
 
     bills.forEach(b => {
-      const splitKey = 'split-' + b.id;
-      const splitPref = paidChecks[splitKey] || 'full';
-      const divisor = splitPref === 'quarter' ? 4 : splitPref === 'half' ? 2 : 1;
+      const perPaycheck = b.perPaycheck || b.amount;
+      const isSplit = perPaycheck < b.amount;
 
-      // Find the closest upcoming due date from this paydate
+      // Find the next due date from this paydate
       let dueDate = null;
       for (let mo = 0; mo <= 2; mo++) {
         let d = new Date(paydate.getFullYear(), paydate.getMonth() + mo, b.day);
@@ -3493,33 +3508,15 @@ Guidelines:
       }
       if (!dueDate) return;
 
-      if (divisor === 1) {
-        // FULL — show only on the payday whose period contains the due date
-        const periodEnd = nextPaydate || new Date(9999, 0, 1);
+      if (!isSplit) {
+        // Full amount — show once on the payday period that contains the due date
         if (dueDate >= paydate && dueDate < periodEnd) {
-          results.push({ ...b, dueDate, splitHalf: null, displayAmount: b.amount });
+          results.push({ ...b, dueDate, splitLabel: null, displayAmount: b.amount });
         }
       } else {
-        // SPLIT — calculate the actual paydays leading up to due date
-        // Start from (divisor-1) periods before due date and work forward
-        const splitPaydays = [];
-        let cursor = new Date(dueDate);
-        // Go back (divisor-1) periods from due date to find first split payday
-        cursor.setDate(cursor.getDate() - (periodDays * (divisor - 1)));
-        for (let i = 0; i < divisor; i++) {
-          splitPaydays.push(new Date(cursor));
-          cursor.setDate(cursor.getDate() + periodDays);
-        }
-        // Check if current paydate matches any of those split paydays (within 3 day tolerance)
-        for (let i = 0; i < splitPaydays.length; i++) {
-          const diff = Math.abs(paydate - splitPaydays[i]) / (1000 * 60 * 60 * 24);
-          if (diff <= 3) {
-            const labels = ['1st','2nd','3rd','4th'];
-            const type = divisor === 2 ? 'Half' : 'Quarter';
-            results.push({ ...b, dueDate, splitHalf: `${labels[i]} ${type}`, displayAmount: b.amount / divisor });
-            break;
-          }
-        }
+        // Split — show on EVERY payday with the per-paycheck amount
+        // until the cumulative paid reaches the full amount by due date
+        results.push({ ...b, dueDate, splitLabel: `$${perPaycheck.toFixed(2)}/paycheck`, displayAmount: perPaycheck });
       }
     });
 
@@ -3587,25 +3584,19 @@ Guidelines:
         } else {
           dueBills.forEach(b => {
             const checkKey = b.id + '-' + pd.toISOString().slice(0,10);
-            const splitKey = 'split-' + b.id;
             const isPaid = !!paidChecks[checkKey];
-            const splitPref = paidChecks[splitKey] || 'full';
             const dueDateStr = b.dueDate ? b.dueDate.toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
             const daysUntil = b.dueDate ? Math.ceil((b.dueDate - pd) / (1000*60*60*24)) : 0;
             const urgency = daysUntil >= 0 && daysUntil <= 3 ? 'color:var(--expense-color);font-weight:700' : 'color:var(--muted)';
-
-            // Build split buttons based on frequency
-            const splitButtons = getSplitButtons(b, splitKey, splitPref, isWeekly, isBiweekly, showSplit);
 
             html += `<div class="payday-bill-row ${isPaid?'paid-row':''}">
               <div class="pbr-left" style="flex-direction:column;align-items:flex-start;gap:0.2rem">
                 <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap">
                   <span>${b.cat.split(' ')[0]}</span>
                   <span style="font-weight:600;font-size:0.875rem">${escHtml(b.name)}</span>
-                  ${b.splitHalf ? `<span style="font-size:0.68rem;background:rgba(240,85,85,0.1);color:var(--accent);padding:0.1rem 0.4rem;border-radius:4px;font-weight:700">${b.splitHalf}</span>` : ''}
+                  ${b.splitLabel ? `<span style="font-size:0.68rem;background:rgba(240,85,85,0.1);color:var(--accent);padding:0.15rem 0.5rem;border-radius:4px;font-weight:700">Split ${b.splitLabel}</span>` : ''}
                 </div>
                 <span class="pbr-due" style="${urgency}">due ${dueDateStr}${daysUntil >= 0 && daysUntil <= 3 ? ' ⚠️' : ''}</span>
-                ${splitButtons}
               </div>
               <div class="pbr-right">
                 <span class="pbr-amount">$${b.displayAmount.toFixed(2)}</span>
@@ -4257,7 +4248,7 @@ Guidelines:
             <td><strong>${b.name}</strong></td>
             <td>${b.cat.split(' ').slice(1).join(' ')}</td>
             <td>${b.dueDate ? b.dueDate.toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '-'}</td>
-            <td>${b.splitHalf || 'Full'}</td>
+            <td>${b.splitLabel || 'Full'}</td>
             <td class="bad">$${b.displayAmount.toFixed(2)}</td>
             <td>${pd.toLocaleDateString('en-US',{month:'short',day:'numeric'})}</td>
           </tr>`;
