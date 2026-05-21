@@ -1712,6 +1712,9 @@
                 <label>Next Payday</label>
                 <input type="date" class="payday-select" id="next-payday" onchange="renderSchedule()" style="font-size:0.85rem;">
               </div>
+              <button onclick="downloadBillSchedulePDF()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.45rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.35rem">
+                📄 Save PDF
+              </button>
             </div>
           </div>
           <div id="schedule-output">
@@ -2261,6 +2264,9 @@
       <div class="planner-card">
         <h2>🎯 Personalized Debt Payoff Planner</h2>
         <p>Enter your debts below and we'll build a personalized payoff plan using either the Avalanche (highest interest first) or Snowball (smallest balance first) method.</p>
+        <div style="display:flex;justify-content:flex-end;margin-bottom:0.75rem;margin-top:0.5rem">
+          <button onclick="downloadDebtPlanPDF()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.45rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.35rem">📄 Save PDF</button>
+        </div>
 
         <div class="method-toggle">
           <button class="method-btn active" id="method-avalanche" onclick="setMethod('avalanche', this)">🔥 Avalanche (saves most money)</button>
@@ -3472,52 +3478,45 @@ Guidelines:
   function billsDueThisPeriod(paydate, nextPaydate, frequency) {
     const endDate = nextPaydate || new Date(9999,0,1);
     const results = [];
-    const isWeekly = frequency === 'weekly';
-    const isBiweekly = frequency === 'biweekly';
-    const periodDays = isWeekly ? 7 : isBiweekly ? 14 : 15;
+    const periodDays = frequency === 'weekly' ? 7 : frequency === 'biweekly' ? 14 : 15;
 
     bills.forEach(b => {
       const splitKey = 'split-' + b.id;
       const splitPref = paidChecks[splitKey] || 'full';
       const divisor = splitPref === 'quarter' ? 4 : splitPref === 'half' ? 2 : 1;
 
-      // Find due date — check current and next 2 months
+      // Find the next due date on or after paydate
       let dueDate = null;
-      for (let monthOffset = 0; monthOffset <= 2; monthOffset++) {
-        let d = new Date(paydate.getFullYear(), paydate.getMonth() + monthOffset, b.day);
-        if (d.getDate() !== b.day) d = new Date(paydate.getFullYear(), paydate.getMonth() + monthOffset + 1, 0);
-        // Due date must be after today and within reasonable range
-        if (d >= new Date() || d >= paydate) { dueDate = d; break; }
+      for (let mo = -1; mo <= 3; mo++) {
+        let d = new Date(paydate.getFullYear(), paydate.getMonth() + mo, b.day);
+        if (d.getDate() !== b.day) d = new Date(paydate.getFullYear(), paydate.getMonth() + mo + 1, 0);
+        if (d >= paydate) { dueDate = d; break; }
       }
-
       if (!dueDate) return;
 
-      if (splitPref === 'full') {
-        // Full payment — show on the payday just before or on the due date
+      if (divisor === 1) {
+        // Full payment — show only on the payday period where due date falls
         if (dueDate >= paydate && dueDate < endDate) {
           results.push({ ...b, dueDate, splitHalf: null, displayAmount: b.amount });
         }
       } else {
-        // Split — show on every payday leading up to and including the due date period
-        // Calculate the earliest payday this bill should appear on
-        const earliestStart = new Date(dueDate);
-        earliestStart.setDate(earliestStart.getDate() - (periodDays * (divisor - 1)));
+        // Split — find the window start (divisor-1 periods before due date)
+        const windowStart = new Date(dueDate);
+        windowStart.setDate(windowStart.getDate() - (periodDays * (divisor - 1)));
 
-        // Check if this payday falls within the split window
-        if (paydate >= earliestStart && paydate < endDate) {
-          // Figure out which portion number this is (1st, 2nd, 3rd, 4th)
-          let portionNum = 0;
-          let checkDate = new Date(earliestStart);
-          while (checkDate <= paydate) {
-            portionNum++;
-            checkDate.setDate(checkDate.getDate() + periodDays);
+        // This payday must be within the split window
+        if (paydate >= windowStart && dueDate >= paydate) {
+          // Which portion is this? Count periods from windowStart to paydate
+          let portion = 1;
+          let cursor = new Date(windowStart);
+          while (cursor < paydate) {
+            cursor.setDate(cursor.getDate() + periodDays);
+            portion++;
           }
-          portionNum = Math.min(portionNum, divisor);
-
-          const portionLabels2 = ['1st', '2nd', '3rd', '4th'];
-          const typeLabel = divisor === 2 ? 'Half' : 'Quarter';
-          const label = `${portionLabels2[portionNum - 1]} ${typeLabel}`;
-
+          portion = Math.min(portion, divisor);
+          const labels2 = ['1st','2nd','3rd','4th'];
+          const type = divisor === 2 ? 'Half' : 'Quarter';
+          const label = `${labels2[portion-1]} ${type}`;
           results.push({ ...b, dueDate, splitHalf: label, displayAmount: b.amount / divisor });
         }
       }
@@ -4176,6 +4175,180 @@ Guidelines:
     el.textContent = msg;
     el.className = 'profile-msg ' + type;
     setTimeout(() => { el.className = 'profile-msg'; }, 5000);
+  }
+
+  // PDF DOWNLOADS
+  function generatePDF(title, htmlContent) {
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>${title}</title>
+        <style>
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { font-family: 'Helvetica Neue', Arial, sans-serif; color: #1a1a2e; padding: 2rem; font-size: 13px; line-height: 1.6; }
+          .pdf-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 1rem; border-bottom: 2px solid #f05555; margin-bottom: 1.5rem; }
+          .pdf-logo { font-size: 1.5rem; font-weight: 800; color: #f05555; }
+          .pdf-logo span { color: #1a1a2e; }
+          .pdf-date { font-size: 0.75rem; color: #888; }
+          h1 { font-size: 1.25rem; color: #1a1a2e; margin-bottom: 0.5rem; }
+          h2 { font-size: 1rem; color: #1a1a2e; margin: 1.25rem 0 0.5rem; border-bottom: 1px solid #eee; padding-bottom: 0.25rem; }
+          table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+          th { background: #1a1a2e; color: #fff; padding: 0.5rem 0.75rem; text-align: left; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; }
+          td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #f0f0f0; font-size: 0.85rem; }
+          tr:nth-child(even) td { background: #f9f9f9; }
+          .good { color: #00b894; font-weight: 700; }
+          .bad { color: #f05555; font-weight: 700; }
+          .highlight { background: #fff8e6 !important; }
+          .summary-box { background: #f9f9f9; border: 1px solid #eee; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; }
+          .summary-item { text-align: center; }
+          .summary-val { font-size: 1.25rem; font-weight: 800; color: #f05555; }
+          .summary-label { font-size: 0.72rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.2rem; }
+          .footer { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #eee; font-size: 0.72rem; color: #aaa; text-align: center; }
+          @media print { body { padding: 1rem; } }
+        </style>
+      </head>
+      <body>
+        <div class="pdf-header">
+          <div class="pdf-logo">Fin<span>trail</span></div>
+          <div class="pdf-date">Generated ${new Date().toLocaleDateString('en-US', {weekday:'long', year:'numeric', month:'long', day:'numeric'})}</div>
+        </div>
+        ${htmlContent}
+        <div class="footer">Generated by Fintrail · fintrail.app · For personal use only · Not financial advice</div>
+      </body>
+      </html>
+    `);
+    printWindow.document.close();
+    setTimeout(() => { printWindow.print(); }, 500);
+  }
+
+  function downloadBillSchedulePDF() {
+    if (bills.length === 0) { alert('Add some bills first before saving your schedule.'); return; }
+    const frequency = document.getElementById('pay-frequency').value;
+    const paydayInput = document.getElementById('next-payday').value;
+    let startDate = paydayInput ? new Date(paydayInput + 'T00:00:00') : new Date();
+    startDate.setHours(0,0,0,0);
+    const paydays = getPaydays(frequency, startDate, 6);
+    const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const freqLabels = { biweekly: 'Bi-weekly', semimonthly: 'Semi-monthly', monthly: 'Monthly', weekly: 'Weekly' };
+
+    const byMonth = {};
+    paydays.forEach((pd, i) => {
+      const key = pd.getFullYear() + '-' + pd.getMonth();
+      if (!byMonth[key]) byMonth[key] = [];
+      byMonth[key].push({ pd, next: paydays[i+1] || null });
+    });
+
+    let html = `<h1>📅 6-Month Bill Payment Schedule</h1>
+      <p style="color:#888;margin-bottom:1.5rem">Pay frequency: <strong>${freqLabels[frequency]}</strong> · Starting: <strong>${startDate.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</strong></p>`;
+
+    Object.entries(byMonth).forEach(([key, entries]) => {
+      const [yr, mo] = key.split('-');
+      const monthBills = entries.flatMap(e => billsDueThisPeriod(e.pd, e.next, frequency));
+      const monthTotal = monthBills.reduce((s,b) => s + b.displayAmount, 0);
+      html += `<h2>${monthNames[mo]} ${yr} — $${monthTotal.toFixed(2)} total due</h2>
+        <table><tr><th>Bill</th><th>Category</th><th>Due Date</th><th>Portion</th><th>Amount</th><th>Payday</th></tr>`;
+      entries.forEach(({ pd, next }) => {
+        const dueBills = billsDueThisPeriod(pd, next, frequency);
+        dueBills.forEach(b => {
+          html += `<tr>
+            <td><strong>${b.name}</strong></td>
+            <td>${b.cat.split(' ').slice(1).join(' ')}</td>
+            <td>${b.dueDate ? b.dueDate.toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '-'}</td>
+            <td>${b.splitHalf || 'Full'}</td>
+            <td class="bad">$${b.displayAmount.toFixed(2)}</td>
+            <td>${pd.toLocaleDateString('en-US',{month:'short',day:'numeric'})}</td>
+          </tr>`;
+        });
+      });
+      html += `</table>`;
+    });
+
+    generatePDF('Fintrail - Bill Schedule', html);
+  }
+
+  function downloadDebtPlanPDF() {
+    if (planDebts.length === 0) { alert('Add some debts first before saving your plan.'); return; }
+    const extra = parseFloat(document.getElementById('extra-payment').value) || 0;
+
+    function simulate(extraPayment) {
+      let debts = planDebts.map(d => ({ ...d, remaining: d.balance, monthlyMin: Math.max(25, d.balance * 0.02) }));
+      if (payoffMethod === 'avalanche') debts.sort((a,b) => b.apr - a.apr);
+      else debts.sort((a,b) => a.balance - b.balance);
+      let month = 0; let totalInterest = 0;
+      const debtMonths = {}; debts.forEach(d => debtMonths[d.id] = null);
+      while (debts.some(d => d.remaining > 0) && month < 360) {
+        month++;
+        debts.forEach((d,i) => {
+          if (d.remaining <= 0) return;
+          const interest = (d.apr/100/12)*d.remaining; totalInterest += interest; d.remaining += interest;
+          let payment = d.monthlyMin; if (i===0) payment += extraPayment;
+          payment = Math.min(payment, d.remaining); d.remaining -= payment;
+          if (d.remaining <= 0.01) { d.remaining=0; if (!debtMonths[d.id]) debtMonths[d.id]=month; }
+        });
+        debts.forEach((d,i) => { if (d.remaining<=0&&i<debts.length-1) debts[i+1].monthlyMin+=d.monthlyMin; });
+      }
+      return { months: month, totalInterest, debtMonths };
+    }
+
+    const minResult = simulate(0);
+    const extraResult = simulate(extra);
+    const totalDebt = planDebts.reduce((s,d) => s+d.balance, 0);
+    const interestSaved = minResult.totalInterest - extraResult.totalInterest;
+    const monthsSaved = minResult.months - extraResult.months;
+
+    function fmtM(m) { const y=Math.floor(m/12),mo=m%12; return y>0?(mo>0?`${y}yr ${mo}mo`:`${y}yr`):`${mo}mo`; }
+
+    let html = `<h1>🎯 Debt Payoff Plan</h1>
+      <p style="color:#888;margin-bottom:1.25rem">Strategy: <strong>${payoffMethod === 'avalanche' ? '🔥 Avalanche (highest interest first)' : '⛄ Snowball (smallest balance first)'}</strong> · Extra payment: <strong>$${extra}/mo</strong></p>
+
+      <div class="summary-box">
+        <div class="summary-item"><div class="summary-val">${fmtM(extraResult.months)}</div><div class="summary-label">Debt Free In</div></div>
+        <div class="summary-item"><div class="summary-val">$${Math.round(interestSaved).toLocaleString()}</div><div class="summary-label">Interest Saved</div></div>
+        <div class="summary-item"><div class="summary-val">${monthsSaved}mo</div><div class="summary-label">Months Saved</div></div>
+      </div>
+
+      <h2>Your Debts</h2>
+      <table>
+        <tr><th>Debt Name</th><th>Balance</th><th>APR</th><th>Min Payment</th><th>Payoff Date</th><th>With Extra</th></tr>
+        ${planDebts.map(d => {
+          const minMonths = minResult.debtMonths[d.id] || minResult.months;
+          const extraMonths = extraResult.debtMonths[d.id] || extraResult.months;
+          const payoffDate = new Date(); payoffDate.setMonth(payoffDate.getMonth() + extraMonths);
+          return `<tr>
+            <td><strong>${d.name}</strong></td>
+            <td class="bad">$${d.balance.toLocaleString()}</td>
+            <td>${d.apr}%</td>
+            <td>$${Math.max(25, d.balance*0.02).toFixed(2)}</td>
+            <td>${fmtM(minMonths)}</td>
+            <td class="good">${fmtM(extraMonths)}</td>
+          </tr>`;
+        }).join('')}
+      </table>
+
+      <h2>Minimum Payments vs Extra Payments</h2>
+      <table>
+        <tr><th>Scenario</th><th>Time to Debt Free</th><th>Total Interest</th><th>Total Paid</th></tr>
+        <tr class="highlight">
+          <td>💳 Minimum Payments Only</td>
+          <td class="bad">${fmtM(minResult.months)}</td>
+          <td class="bad">$${Math.round(minResult.totalInterest).toLocaleString()}</td>
+          <td>$${Math.round(totalDebt + minResult.totalInterest).toLocaleString()}</td>
+        </tr>
+        <tr>
+          <td>🚀 With $${extra}/mo Extra</td>
+          <td class="good">${fmtM(extraResult.months)}</td>
+          <td class="good">$${Math.round(extraResult.totalInterest).toLocaleString()}</td>
+          <td>$${Math.round(totalDebt + extraResult.totalInterest).toLocaleString()}</td>
+        </tr>
+      </table>
+
+      <p style="background:#e8f5f0;border-left:3px solid #00b894;padding:0.75rem 1rem;border-radius:0 6px 6px 0;font-size:0.85rem;margin-top:1rem">
+        💡 By paying an extra <strong>$${extra}/mo</strong> you save <strong>$${Math.round(interestSaved).toLocaleString()}</strong> in interest and become debt free <strong>${monthsSaved} months sooner!</strong>
+      </p>`;
+
+    generatePDF('Fintrail - Debt Payoff Plan', html);
   }
 
   // INIT
