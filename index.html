@@ -4844,7 +4844,7 @@ Guidelines:
 
   function deleteGoal(id) {
     if (!confirm('Delete this savings goal?')) return;
-    goals = goals.filter(g => g.id !== id);
+    goals = goals.filter(g => String(g.id) !== String(id));
     saveUserData();
     renderGoals();
   }
@@ -4853,7 +4853,7 @@ Guidelines:
     const input = document.getElementById('dep-' + id);
     const amount = parseFloat(input.value);
     if (isNaN(amount) || amount <= 0) return;
-    const goal = goals.find(g => g.id === id);
+    const goal = goals.find(g => String(g.id) === String(id));
     if (goal) {
       goal.saved = Math.min(goal.saved + amount, goal.target);
       input.value = '';
