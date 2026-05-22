@@ -1735,8 +1735,11 @@
 <div id="auth-screen">
   <div class="auth-card">
     <div class="auth-top">
-      <div class="auth-logo">Fin<span>trail Pro</span></div>
-      <p>Budget Smarter, Live Better.</p>
+      <div style="display:flex;align-items:center;justify-content:center;gap:0.75rem;margin-bottom:0.5rem">
+        <div style="width:44px;height:44px;border-radius:50%;background:#f05555;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:#fff">FP</div>
+        <div class="auth-logo">Fin<span>trail</span> <span style="font-size:0.7rem;font-weight:700;letter-spacing:0.15em;color:rgba(255,255,255,0.5);vertical-align:middle">PRO</span></div>
+      </div>
+      <p data-en="Budget Smarter, Live Better." data-es="Presupuesta Mejor, Vive Mejor.">Budget Smarter, Live Better.</p>
     </div>
     <div class="auth-body">
       <div class="auth-tabs">
@@ -1807,7 +1810,10 @@
 </div>
 
 <header>
-  <div class="logo">Fin<span>trail Pro</span><span style="font-size:0.55rem;font-weight:400;color:var(--muted);margin-left:0.5rem;letter-spacing:0.02em;display:none" class="logo-tagline">Budget Smarter, Live Better</span></div>
+  <div class="logo" style="display:flex;align-items:center;gap:0.6rem">
+    <div style="width:32px;height:32px;border-radius:50%;background:#f05555;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:0.85rem;font-weight:700;color:#fff;flex-shrink:0">FP</div>
+    <span>Fin<span style="color:var(--accent)">trail</span> <span style="font-size:0.65rem;font-weight:700;letter-spacing:0.15em;color:var(--muted);vertical-align:middle">PRO</span></span>
+  </div>
   <nav>
     <!-- BUDGET GROUP -->
     <div class="nav-group">
@@ -1891,6 +1897,7 @@
 
     <button class="upgrade-btn-nav" onclick="showPaywall('nav')">⭐ Go Pro</button>
     <button onclick="navTo('profile', this)" style="background:none;border:none;font-size:1.1rem;cursor:pointer;padding:0.45rem 0.65rem;border-radius:8px;color:var(--text-soft)" title="Profile">👤</button>
+    <button id="lang-toggle" onclick="toggleLanguage()" style="background:none;border:1.5px solid var(--border);color:var(--text-soft);font-family:'Sora',sans-serif;font-size:0.72rem;font-weight:700;padding:0.3rem 0.65rem;border-radius:20px;cursor:pointer;transition:all 0.2s;letter-spacing:0.05em">EN</button>
   </nav>
   <button class="hamburger" id="hamburger" onclick="toggleMobileNav()">
     <span></span><span></span><span></span>
@@ -1915,10 +1922,10 @@
   <button onclick="mobileGuardedTab('premium')">🏆 Health Score & Alerts <span class="pro-pill">PRO</span></button>
   <button onclick="mobileTab('streaks')">🔥 Streaks & Milestones</button>
   <button onclick="mobileGuardedTab('negotiate')">💬 Debt Negotiation Scripts <span class="pro-pill">PRO</span></button>
-  <button onclick="mobileGuardedTab('negotiate')">💬 Debt Negotiation Scripts <span class="pro-pill">PRO</span></button>
   <div style="border-top:1px solid var(--border);margin:0.5rem 0"></div>
   <button class="upgrade-btn-nav" onclick="showPaywall('nav');closeMobileNav()">⭐ Go Pro</button>
-  <button onclick="mobileTab('profile')">👤 Profile & Security</button>
+  <button onclick="mobileTab('profile')">👤 <span data-en="Profile & Security" data-es="Perfil y Seguridad">Profile & Security</span></button>
+  <button onclick="toggleLanguage();closeMobileNav()" style="color:var(--text-soft)">🌐 <span id="mobile-lang-label">Switch to Español</span></button>
 </div>
 <div class="mobile-overlay" id="mobile-overlay" onclick="closeMobileNav()"></div>
 
@@ -1994,8 +2001,8 @@
 </div>
 
 <div class="hero">
-  <h1>Budget Smarter, <em>Live Better.</em></h1>
-  <p>Fintrail Pro gives you the AI-powered tools to track spending, eliminate debt, and build lasting financial health — all in one place.</p>
+  <h1 data-en="Budget Smarter, <em>Live Better.</em>" data-es="Presupuesta Mejor, <em>Vive Mejor.</em>">Budget Smarter, <em>Live Better.</em></h1>
+  <p data-en="Fintrail Pro gives you the AI-powered tools to track spending, eliminate debt, and build lasting financial health — all in one place." data-es="Fintrail Pro te da las herramientas con IA para controlar tus gastos, eliminar deudas y construir una salud financiera duradera — todo en un solo lugar.">Fintrail Pro gives you the AI-powered tools to track spending, eliminate debt, and build lasting financial health — all in one place.</p>
   <div class="hero-chips">
     <span class="hero-chip">📊 Budget Tracker</span>
     <span class="hero-chip">🎯 Savings Goals</span>
@@ -6400,8 +6407,188 @@ Make each section realistic, conversational, and specific to their situation. Us
     }
   }
 
+  // LANGUAGE SYSTEM
+  let currentLang = 'en';
+
+  const translations = {
+    en: {
+      // NAV
+      'nav-budget': '📊 Budget',
+      'nav-planning': '🎯 Planning',
+      'nav-tools': '🛠 Tools',
+      'nav-insights': '💡 Insights',
+      'go-pro-btn': '⭐ Go Pro',
+      // ACCOUNT BAR
+      'free-plan': 'Free Plan',
+      'upgrade-btn': 'Upgrade to Pro →',
+      'manage-sub': 'Manage Subscription',
+      'sign-out': 'Sign Out',
+      // AUTH
+      'sign-in-tab': 'Sign In',
+      'create-account-tab': 'Create Account',
+      'email-label': 'Email',
+      'password-label': 'Password',
+      'sign-in-btn': 'Sign In',
+      'create-btn': 'Create Account',
+      'google-btn': 'Continue with Google',
+      'name-label': 'Full Name',
+      // HERO
+      'hero-h1': 'Budget Smarter, <em>Live Better.</em>',
+      'hero-p': 'Fintrail Pro gives you the AI-powered tools to track spending, eliminate debt, and build lasting financial health — all in one place.',
+      // BUDGET
+      'add-transaction': '+ Add Transaction',
+      'income-btn': 'Income',
+      'expense-btn': 'Expense',
+      'description-label': 'Description',
+      'amount-label': 'Amount ($)',
+      'category-label': 'Category',
+      'total-income': 'TOTAL INCOME',
+      'total-expenses': 'TOTAL EXPENSES',
+      'net-balance': 'NET BALANCE',
+      // BILLS
+      'add-bill-title': 'Add Recurring Bill',
+      'bill-name-label': 'Bill Name',
+      'bill-amount-label': 'Total Monthly Amount ($)',
+      'bill-per-paycheck': 'Amount Per Paycheck ($)',
+      'due-day-label': 'Due Day of Month',
+      'your-bills': 'Your Bills',
+      'pay-frequency': 'PAY FREQUENCY',
+      'next-payday': 'NEXT PAYDAY',
+      'save-pdf': '📄 Save PDF',
+      // GOALS
+      'add-goal': 'Add New Goal',
+      'goal-name': 'GOAL NAME',
+      'target-amount': 'TARGET AMOUNT ($)',
+      'saved-so-far': 'SAVED SO FAR ($)',
+      'target-date': 'TARGET DATE',
+      // GENERAL
+      'save-changes': 'Save Changes',
+      'cancel': 'Cancel',
+      'delete': 'Delete',
+      'loading': 'Loading...',
+    },
+    es: {
+      // NAV
+      'nav-budget': '📊 Presupuesto',
+      'nav-planning': '🎯 Planificación',
+      'nav-tools': '🛠 Herramientas',
+      'nav-insights': '💡 Análisis',
+      'go-pro-btn': '⭐ Hazte Pro',
+      // ACCOUNT BAR
+      'free-plan': 'Plan Gratuito',
+      'upgrade-btn': 'Actualizar a Pro →',
+      'manage-sub': 'Gestionar Suscripción',
+      'sign-out': 'Cerrar Sesión',
+      // AUTH
+      'sign-in-tab': 'Iniciar Sesión',
+      'create-account-tab': 'Crear Cuenta',
+      'email-label': 'Correo electrónico',
+      'password-label': 'Contraseña',
+      'sign-in-btn': 'Iniciar Sesión',
+      'create-btn': 'Crear Cuenta',
+      'google-btn': 'Continuar con Google',
+      'name-label': 'Nombre completo',
+      // HERO
+      'hero-h1': 'Presupuesta Mejor, <em>Vive Mejor.</em>',
+      'hero-p': 'Fintrail Pro te da las herramientas con IA para controlar tus gastos, eliminar deudas y construir una salud financiera duradera — todo en un solo lugar.',
+      // BUDGET
+      'add-transaction': '+ Agregar Transacción',
+      'income-btn': 'Ingreso',
+      'expense-btn': 'Gasto',
+      'description-label': 'Descripción',
+      'amount-label': 'Monto ($)',
+      'category-label': 'Categoría',
+      'total-income': 'INGRESOS TOTALES',
+      'total-expenses': 'GASTOS TOTALES',
+      'net-balance': 'SALDO NETO',
+      // BILLS
+      'add-bill-title': 'Agregar Factura Recurrente',
+      'bill-name-label': 'Nombre de la Factura',
+      'bill-amount-label': 'Monto Mensual Total ($)',
+      'bill-per-paycheck': 'Monto Por Pago ($)',
+      'due-day-label': 'Día de Vencimiento',
+      'your-bills': 'Tus Facturas',
+      'pay-frequency': 'FRECUENCIA DE PAGO',
+      'next-payday': 'PRÓXIMO DÍA DE PAGO',
+      'save-pdf': '📄 Guardar PDF',
+      // GOALS
+      'add-goal': 'Agregar Nueva Meta',
+      'goal-name': 'NOMBRE DE LA META',
+      'target-amount': 'MONTO OBJETIVO ($)',
+      'saved-so-far': 'AHORRADO HASTA AHORA ($)',
+      'target-date': 'FECHA OBJETIVO',
+      // GENERAL
+      'save-changes': 'Guardar Cambios',
+      'cancel': 'Cancelar',
+      'delete': 'Eliminar',
+      'loading': 'Cargando...',
+    }
+  };
+
+  function toggleLanguage() {
+    currentLang = currentLang === 'en' ? 'es' : 'en';
+    applyLanguage();
+  }
+
+  function applyLanguage() {
+    const isEs = currentLang === 'es';
+    const t = translations[currentLang];
+
+    // Update toggle button
+    const langToggle = document.getElementById('lang-toggle');
+    if (langToggle) langToggle.textContent = isEs ? 'ES' : 'EN';
+
+    // Update mobile lang label
+    const mobileLang = document.getElementById('mobile-lang-label');
+    if (mobileLang) mobileLang.textContent = isEs ? 'Switch to English' : 'Switch to Español';
+
+    // Update all data-en / data-es elements
+    document.querySelectorAll('[data-en]').forEach(el => {
+      el.textContent = el.getAttribute(`data-${currentLang}`) || el.getAttribute('data-en');
+    });
+
+    // Update nav group buttons
+    const navBtns = {
+      'nav-budget': document.getElementById('nav-budget'),
+      'nav-planning': document.getElementById('nav-planning'),
+      'nav-tools': document.getElementById('nav-tools'),
+      'nav-insights': document.getElementById('nav-insights'),
+    };
+    Object.entries(navBtns).forEach(([key, btn]) => {
+      if (btn && t[key]) btn.innerHTML = `${t[key]} <span class="nav-arrow">▾</span>`;
+    });
+
+    // Update hero
+    const heroH1 = document.querySelector('.hero h1');
+    if (heroH1) heroH1.innerHTML = t['hero-h1'];
+    const heroP = document.querySelector('.hero p');
+    if (heroP) heroP.textContent = t['hero-p'];
+
+    // Update auth tabs
+    const signInTab = document.getElementById('tab-signin');
+    if (signInTab) signInTab.textContent = t['sign-in-tab'];
+    const signUpTab = document.getElementById('tab-signup');
+    if (signUpTab) signUpTab.textContent = t['create-account-tab'];
+
+    // Update page title
+    document.title = isEs
+      ? 'Fintrail Pro — Presupuesta Mejor, Vive Mejor'
+      : 'Fintrail Pro — Budget Smarter, Live Better';
+
+    // Save preference
+    try { localStorage.setItem('fintrail_lang', currentLang); } catch(e) {}
+  }
+
+  function loadLanguagePreference() {
+    try {
+      const saved = localStorage.getItem('fintrail_lang');
+      if (saved) { currentLang = saved; applyLanguage(); }
+    } catch(e) {}
+  }
+
   // INIT
   loadConfig();
+  loadLanguagePreference();
   applyProState();
   render();
   renderResources();
