@@ -190,7 +190,7 @@
     border-radius: 8px;
     padding: 0.65rem 0.9rem;
     font-family: 'Sora', sans-serif;
-    font-size: 0.875rem;
+    font-size: 16px; /* 16px min required by iOS Safari to trigger keyboard */
     color: var(--text);
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
@@ -3182,6 +3182,19 @@
             <label>Email Address</label>
             <input class="profile-input" type="email" id="profile-email-input" placeholder="your@email.com">
           </div>
+          <div class="profile-field">
+            <label>Profile Color</label>
+            <div id="avatar-color-swatches" style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.25rem">
+              <button onclick="setAvatarColor('#f05555',this)" style="width:30px;height:30px;border-radius:50%;background:#f05555;border:3px solid transparent;cursor:pointer;transition:border-color 0.2s" title="Red"></button>
+              <button onclick="setAvatarColor('#818cf8',this)" style="width:30px;height:30px;border-radius:50%;background:#818cf8;border:3px solid transparent;cursor:pointer;transition:border-color 0.2s" title="Purple"></button>
+              <button onclick="setAvatarColor('#06d6a0',this)" style="width:30px;height:30px;border-radius:50%;background:#06d6a0;border:3px solid transparent;cursor:pointer;transition:border-color 0.2s" title="Teal"></button>
+              <button onclick="setAvatarColor('#f5a623',this)" style="width:30px;height:30px;border-radius:50%;background:#f5a623;border:3px solid transparent;cursor:pointer;transition:border-color 0.2s" title="Orange"></button>
+              <button onclick="setAvatarColor('#e84393',this)" style="width:30px;height:30px;border-radius:50%;background:#e84393;border:3px solid transparent;cursor:pointer;transition:border-color 0.2s" title="Pink"></button>
+              <button onclick="setAvatarColor('#00b894',this)" style="width:30px;height:30px;border-radius:50%;background:#00b894;border:3px solid transparent;cursor:pointer;transition:border-color 0.2s" title="Green"></button>
+              <button onclick="setAvatarColor('#0984e3',this)" style="width:30px;height:30px;border-radius:50%;background:#0984e3;border:3px solid transparent;cursor:pointer;transition:border-color 0.2s" title="Blue"></button>
+              <button onclick="setAvatarColor('#6c5ce7',this)" style="width:30px;height:30px;border-radius:50%;background:#6c5ce7;border:3px solid transparent;cursor:pointer;transition:border-color 0.2s" title="Violet"></button>
+            </div>
+          </div>
           <button class="profile-save-btn" onclick="updateAccount()">Save Changes</button>
           <div class="profile-msg" id="account-msg"></div>
         </div>
@@ -3807,6 +3820,25 @@
   </div>
 
 </main>
+
+<!-- DEBT EDIT MODAL -->
+<div id="edit-debt-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1001;align-items:center;justify-content:center;backdrop-filter:blur(4px)">
+  <div style="background:var(--surface);border-radius:16px;padding:1.5rem;width:100%;max-width:380px;margin:1.5rem;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem">
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--text)">✏️ Edit Debt</h3>
+      <button onclick="closeDebtModal()" style="background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--muted)">✕</button>
+    </div>
+    <input type="hidden" id="edit-debt-id">
+    <div class="form-group" style="margin-bottom:0.75rem"><label>Debt Name</label><input class="profile-input" style="font-size:16px;width:100%" type="text" id="edit-debt-name" placeholder="e.g. Chase Visa"></div>
+    <div class="form-group" style="margin-bottom:0.75rem"><label>Current Balance ($)</label><input class="profile-input" style="font-size:16px;width:100%" type="number" id="edit-debt-balance" placeholder="0.00" min="0" step="0.01"></div>
+    <div class="form-group" style="margin-bottom:0.75rem"><label>APR (%)</label><input class="profile-input" style="font-size:16px;width:100%" type="number" id="edit-debt-apr" placeholder="e.g. 19.99" min="0" step="0.01"></div>
+    <div class="form-group" style="margin-bottom:1.25rem"><label>Minimum Payment ($)</label><input class="profile-input" style="font-size:16px;width:100%" type="number" id="edit-debt-min" placeholder="e.g. 35.00" min="0" step="0.01"></div>
+    <div style="display:flex;gap:0.75rem">
+      <button onclick="saveDebtEdit()" style="flex:1;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:0.75rem;font-family:'Sora',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer">Save Changes</button>
+      <button onclick="closeDebtModal()" style="background:none;border:1.5px solid var(--border);color:var(--muted);border-radius:10px;padding:0.75rem 1rem;font-family:'Sora',sans-serif;font-size:0.9rem;cursor:pointer">Cancel</button>
+    </div>
+  </div>
+</div>
 
 <!-- CALENDAR ADD EVENT MODAL (outside main so it overlays properly) -->
 <div id="cal-event-modal" class="cal-event-modal" style="display:none">
@@ -5185,8 +5217,41 @@ Guidelines:
           <strong style="color:var(--text)">${escHtml(d.name)}</strong>
           <span style="color:var(--muted);font-size:0.78rem">$${d.balance.toLocaleString()} · ${d.apr}% APR · Min $${d.minPayment.toFixed(2)}/mo</span>
         </div>
-        <button onclick="removeDebt(${d.id})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:0.2rem 0.4rem;flex-shrink:0">✕</button>
+        <div style="display:flex;gap:0.25rem;flex-shrink:0">
+          <button onclick="editDebt(${d.id})" style="background:none;border:1px solid var(--border);color:var(--text-soft);cursor:pointer;font-size:0.7rem;font-weight:600;padding:0.2rem 0.55rem;border-radius:6px">Edit</button>
+          <button onclick="removeDebt(${d.id})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:0.2rem 0.4rem">✕</button>
+        </div>
       </div>`).join('');
+  }
+
+  function editDebt(id) {
+    const d = planDebts.find(x => x.id === id);
+    if (!d) return;
+    // Populate the edit modal
+    document.getElementById('edit-debt-id').value = id;
+    document.getElementById('edit-debt-name').value = d.name;
+    document.getElementById('edit-debt-balance').value = d.balance;
+    document.getElementById('edit-debt-apr').value = d.apr;
+    document.getElementById('edit-debt-min').value = d.minPayment;
+    document.getElementById('edit-debt-modal').style.display = 'flex';
+  }
+
+  function saveDebtEdit() {
+    const id = parseInt(document.getElementById('edit-debt-id').value);
+    const name = document.getElementById('edit-debt-name').value.trim();
+    const balance = parseFloat(document.getElementById('edit-debt-balance').value);
+    const apr = parseFloat(document.getElementById('edit-debt-apr').value);
+    const minPayment = parseFloat(document.getElementById('edit-debt-min').value) || Math.max(25, balance * 0.02);
+    if (!name || isNaN(balance) || isNaN(apr)) { alert('Please fill in name, balance, and APR.'); return; }
+    planDebts = planDebts.map(d => d.id === id ? { ...d, name, balance, apr, minPayment } : d);
+    document.getElementById('edit-debt-modal').style.display = 'none';
+    renderDebtList();
+    runPayoffPlan();
+    saveUserData();
+  }
+
+  function closeDebtModal() {
+    document.getElementById('edit-debt-modal').style.display = 'none';
   }
 
   function runPayoffPlan() {
@@ -5508,12 +5573,41 @@ Guidelines:
     if (btn) btn.classList.add('active');
   }
 
+  let avatarColor = safeGet('fintrail_avatar_color_' + (currentUser?.id || 'demo')) || '#f05555';
+
+  function applyAvatarColor(color) {
+    const gradient = `linear-gradient(135deg, ${color}, ${color}cc)`;
+    const av = document.getElementById('profile-avatar');
+    const mav = document.getElementById('mobile-avatar');
+    const mpb = document.getElementById('mobile-profile-btn');
+    if (av) av.style.background = gradient;
+    if (mav) mav.style.background = gradient;
+    if (mpb) mpb.style.background = gradient;
+    // Highlight selected swatch
+    document.querySelectorAll('#avatar-color-swatches button').forEach(btn => {
+      btn.style.borderColor = (btn.title && color.toLowerCase() === getComputedStyle(btn).backgroundColor) ? '#1a1a2e' : 'transparent';
+      const btnColor = btn.getAttribute('onclick')?.match(/'(#[^']+)'/)?.[1];
+      btn.style.borderColor = btnColor === color ? '#1a1a2e' : 'transparent';
+    });
+  }
+
+  function setAvatarColor(color, btn) {
+    avatarColor = color;
+    safeSet('fintrail_avatar_color_' + (currentUser?.id || 'demo'), color);
+    applyAvatarColor(color);
+    // Also persist in Supabase user_metadata
+    if (sbClient) sbClient.auth.updateUser({ data: { avatar_color: color } });
+  }
+
   function loadProfileUI() {
     if (!currentUser) return;
     const email = currentUser.email || '';
     const name = currentUser.user_metadata?.full_name || email.split('@')[0];
     const initial = name.charAt(0).toUpperCase();
     const level = getCurrentLevel();
+    // Restore saved color
+    avatarColor = currentUser.user_metadata?.avatar_color || safeGet('fintrail_avatar_color_' + (currentUser?.id || 'demo')) || '#f05555';
+    applyAvatarColor(avatarColor);
 
     document.getElementById('profile-avatar').textContent = initial;
     document.getElementById('profile-display-name').textContent = name;
