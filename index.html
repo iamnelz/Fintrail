@@ -2029,7 +2029,7 @@
       <!-- SIGN UP FORM -->
       <div id="form-signup" class="auth-form" style="display:none">
         <div class="auth-input-group">
-          <label>Full Name</label>
+          <label data-en="Full Name" data-es="Nombre Completo">Full Name</label>
           <input class="auth-input" type="text" id="su-name" placeholder="Jane Smith" autocomplete="name">
         </div>
         <div class="auth-input-group">
@@ -2374,15 +2374,15 @@
             </div>
           </div>
           <div class="form-group">
-            <label id="label-desc">Description</label>
+            <label id="label-desc" data-en="Description" data-es="Descripción">Description</label>
             <input type="text" id="desc" placeholder="e.g. Salary, Rent, Groceries">
           </div>
           <div class="form-group">
-            <label id="label-amount">Amount ($)</label>
+            <label id="label-amount" data-en="Amount ($)" data-es="Monto ($)">Amount ($)</label>
             <input type="number" id="amount" placeholder="0.00" min="0" step="0.01">
           </div>
           <div class="form-group">
-            <label id="label-category">Category</label>
+            <label id="label-category" data-en="Category" data-es="Categoría">Category</label>
             <select id="category">
               <option value="Salary" data-en="Salary" data-es="Salario">Salary</option>
               <option value="Freelance" data-en="Freelance" data-es="Freelance">Freelance</option>
@@ -2402,7 +2402,7 @@
 
       <!-- TRANSACTIONS -->
       <div class="card">
-        <h2 id="label-transactions">Transactions</h2>
+        <h2 id="label-transactions" data-en="Transactions" data-es="Transacciones">Transactions</h2>
         <div class="transaction-list" id="transaction-list">
           <div class="empty-state">No transactions yet.<br>Add one to get started!</div>
         </div>
@@ -2432,23 +2432,23 @@
 
         <!-- ADD BILL FORM -->
         <div class="card">
-          <h2>Add Recurring Bill</h2>
+          <h2 data-en="Add Recurring Bill" data-es="Agregar Factura Recurrente">Add Recurring Bill</h2>
           <div class="form-row">
             <div class="form-group">
-              <label>Bill Name</label>
+              <label data-en="Bill Name" data-es="Nombre de la Factura">Bill Name</label>
               <input type="text" id="bill-name" placeholder="e.g. Rent, Netflix, Car Payment">
             </div>
             <div class="form-group">
-              <label>Total Monthly Amount ($)</label>
+              <label data-en="Total Monthly Amount ($)" data-es="Monto Mensual Total ($)">Total Monthly Amount ($)</label>
               <input type="number" id="bill-amount" placeholder="0.00" min="0" step="0.01" oninput="autoFillPaycheck()">
             </div>
             <div class="form-group">
-              <label>Amount Per Paycheck ($)</label>
+              <label data-en="Amount Per Paycheck ($)" data-es="Monto Por Pago ($)">Amount Per Paycheck ($)</label>
               <input type="number" id="bill-per-paycheck" placeholder="How much you pay each paycheck" min="0" step="0.01">
               <div style="font-size:0.72rem;color:var(--muted);margin-top:0.3rem">💡 Enter less than the full amount to split across paychecks</div>
             </div>
             <div class="form-group">
-              <label>Due Day of Month</label>
+              <label data-en="Due Day of Month" data-es="Día de Vencimiento">Due Day of Month</label>
               <select id="bill-day">
                 <option value="1">1st of each month</option>
                 <option value="2">2nd of each month</option>
@@ -2566,8 +2566,8 @@
       <h2>🧮 Loan Payment Calculator</h2>
       <p>Estimate your monthly payment before you apply. Adjust the numbers to compare scenarios.</p>
       <div class="compare-inputs">
-        <div class="form-group"><label>Loan Amount ($)</label><input type="number" id="cmp-amount" value="25000" oninput="calcLoan()"></div>
-        <div class="form-group"><label>Interest Rate (% APR)</label><input type="number" id="cmp-rate" value="6.99" step="0.01" oninput="calcLoan()"></div>
+        <div class="form-group"><label data-en="Loan Amount ($)" data-es="Monto del Préstamo ($)">Loan Amount ($)</label><input type="number" id="cmp-amount" value="25000" oninput="calcLoan()"></div>
+        <div class="form-group"><label data-en="Interest Rate (% APR)" data-es="Tasa de Interés (% APR)">Interest Rate (% APR)</label><input type="number" id="cmp-rate" value="6.99" step="0.01" oninput="calcLoan()"></div>
         <div class="form-group"><label>Loan Term</label>
           <select id="cmp-term" onchange="calcLoan()">
             <option value="12">1 year</option>
@@ -2906,10 +2906,10 @@
 
       <!-- ADD GOAL FORM -->
       <div class="card new-goal-form">
-        <h2>Add New Goal</h2>
+        <h2 data-en="Add New Goal" data-es="Agregar Nueva Meta">Add New Goal</h2>
         <div class="form-row">
           <div class="form-group">
-            <label>Goal Name</label>
+            <label data-en="Goal Name" data-es="Nombre de la Meta">Goal Name</label>
             <input type="text" id="g-name" placeholder="e.g. Emergency Fund, Vacation">
           </div>
           <div class="form-group">
@@ -2930,15 +2930,15 @@
             </div>
           </div>
           <div class="form-group">
-            <label>Target Amount ($)</label>
+            <label data-en="Target Amount ($)" data-es="Monto Objetivo ($)">Target Amount ($)</label>
             <input type="number" id="g-target" placeholder="e.g. 5000" min="1">
           </div>
           <div class="form-group">
-            <label>Already Saved ($)</label>
+            <label data-en="Already Saved ($)" data-es="Ya Ahorrado ($)">Already Saved ($)</label>
             <input type="number" id="g-saved" placeholder="0" min="0">
           </div>
           <div class="form-group">
-            <label>Target Date (optional)</label>
+            <label data-en="Target Date (optional)" data-es="Fecha Objetivo (opcional)">Target Date (optional)</label>
             <input type="date" id="g-date">
           </div>
           <div class="form-group">
@@ -3095,7 +3095,7 @@
         <!-- EXTRA PAYMENT INPUT -->
         <div class="planner-inputs" style="margin-bottom:1rem">
           <div class="form-group">
-            <label>Extra Monthly Payment ($)</label>
+            <label data-en="Extra Monthly Payment ($)" data-es="Pago Mensual Extra ($)">Extra Monthly Payment ($)</label>
             <input type="number" id="extra-payment" value="200" min="0" placeholder="e.g. 200" oninput="runPayoffPlan()">
             <div style="font-size:0.72rem;color:var(--muted);margin-top:0.3rem">💡 This extra amount gets focused on one debt at a time</div>
           </div>
@@ -3105,10 +3105,10 @@
         <div style="background:var(--bg);border-radius:10px;padding:1rem;margin-bottom:1rem;border:1px solid var(--border)">
           <div style="font-size:0.82rem;font-weight:700;color:var(--text);margin-bottom:0.75rem">➕ Add a Debt</div>
           <div class="debt-add-grid">
-            <div class="form-group"><label>Debt Name</label><input type="text" id="debt-name" placeholder="e.g. Visa Card"></div>
-            <div class="form-group"><label>Balance ($)</label><input type="number" id="debt-balance" placeholder="5000" min="0"></div>
-            <div class="form-group"><label>APR (%)</label><input type="number" id="debt-apr" placeholder="19.99" step="0.01" min="0"></div>
-            <div class="form-group"><label>Min Payment ($)</label><input type="number" id="debt-min" placeholder="Auto" min="0"></div>
+            <div class="form-group"><label data-en="Debt Name" data-es="Nombre de la Deuda">Debt Name</label><input type="text" id="debt-name" placeholder="e.g. Visa Card"></div>
+            <div class="form-group"><label data-en="Balance ($)" data-es="Saldo ($)">Balance ($)</label><input type="number" id="debt-balance" placeholder="5000" min="0"></div>
+            <div class="form-group"><label data-en="APR (%)" data-es="TNA (%)">APR (%)</label><input type="number" id="debt-apr" placeholder="19.99" step="0.01" min="0"></div>
+            <div class="form-group"><label data-en="Min Payment ($)" data-es="Pago Mínimo ($)">Min Payment ($)</label><input type="number" id="debt-min" placeholder="Auto" min="0"></div>
             <button class="add-btn" style="margin-top:0" onclick="addDebt()">+</button>
           </div>
         </div>
@@ -3145,20 +3145,20 @@
 
       <!-- INPUTS -->
       <div class="card">
-        <h2>📈 Compound Interest Calculator</h2>
+        <h2 data-en="📈 Compound Interest Calculator" data-es="📈 Calculadora de Interés Compuesto">📈 Compound Interest Calculator</h2>
         <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:1.25rem;line-height:1.6;">See how your money grows over time with the power of compound interest — the earlier you start, the more you earn.</p>
 
         <div class="form-row">
           <div class="form-group">
-            <label>Initial Investment ($)</label>
+            <label data-en="Initial Investment ($)" data-es="Inversión Inicial ($)">Initial Investment ($)</label>
             <input type="number" id="inv-principal" value="1000" min="0" oninput="calcInvestment()">
           </div>
           <div class="form-group">
-            <label>Monthly Contribution ($)</label>
+            <label data-en="Monthly Contribution ($)" data-es="Contribución Mensual ($)">Monthly Contribution ($)</label>
             <input type="number" id="inv-monthly" value="200" min="0" oninput="calcInvestment()">
           </div>
           <div class="form-group">
-            <label>Annual Interest Rate (%)</label>
+            <label data-en="Annual Interest Rate (%)" data-es="Tasa de Interés Anual (%)">Annual Interest Rate (%)</label>
             <div style="display:flex;align-items:center;gap:0.75rem">
               <input type="range" id="inv-rate" class="range-slider" min="1" max="15" value="7" step="0.1" oninput="syncRateInput(); calcInvestment()" style="flex:1">
               <input type="number" id="inv-rate-num" value="7" min="1" max="15" step="0.1" oninput="syncRateSlider(); calcInvestment()" style="width:70px;padding:0.45rem 0.5rem;background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;font-family:'Sora',sans-serif;font-size:0.875rem;color:var(--text);outline:none;text-align:center">
@@ -3166,7 +3166,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label>Time Period (Years)</label>
+            <label data-en="Time Period (Years)" data-es="Período de Tiempo (Años)">Time Period (Years)</label>
             <input type="range" id="inv-years" class="range-slider" min="1" max="40" value="20" step="1" oninput="updateYearsDisplay(); calcInvestment()">
             <div class="range-display">
               <span>1yr</span>
@@ -3175,7 +3175,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label>Compound Frequency</label>
+            <label data-en="Compound Frequency" data-es="Frecuencia de Capitalización">Compound Frequency</label>
             <select id="inv-freq" onchange="calcInvestment()">
               <option value="12">Monthly</option>
               <option value="4">Quarterly</option>
@@ -3261,7 +3261,7 @@
         <!-- ASSETS -->
         <div class="card">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
-            <h2 style="margin:0;font-size:1rem">💚 Assets</h2>
+            <h2 style="margin:0;font-size:1rem" data-en="💚 Assets" data-es="💚 Activos">💚 Assets</h2>
             <button onclick="addNWItem('asset')" style="background:var(--income-color);color:#fff;border:none;border-radius:8px;padding:0.35rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer">+ Add</button>
           </div>
           <div id="nw-asset-list" style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.75rem"></div>
@@ -3284,7 +3284,7 @@
         <!-- LIABILITIES -->
         <div class="card">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
-            <h2 style="margin:0;font-size:1rem">❤️ Liabilities</h2>
+            <h2 style="margin:0;font-size:1rem" data-en="❤️ Liabilities" data-es="❤️ Pasivos">❤️ Liabilities</h2>
             <button onclick="addNWItem('liability')" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.35rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer">+ Add</button>
           </div>
           <div id="nw-liability-list" style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.75rem"></div>
@@ -3308,7 +3308,7 @@
 
         <!-- CHART -->
         <div class="card">
-          <h2 style="font-size:1rem;margin-bottom:0.25rem">📊 Net Worth Over Time</h2>
+          <h2 style="font-size:1rem;margin-bottom:0.25rem" data-en="📊 Net Worth Over Time" data-es="📊 Patrimonio Neto en el Tiempo">📊 Net Worth Over Time</h2>
           <p style="font-size:0.78rem;color:var(--text-soft);margin-bottom:1rem">A monthly snapshot is saved each time you visit this tab.</p>
           <div id="nw-chart-wrap" style="position:relative;height:200px;width:100%">
             <canvas id="nw-chart" style="width:100%;height:100%"></canvas>
@@ -3374,18 +3374,18 @@
 
         <!-- ACCOUNT INFO -->
         <div class="profile-panel visible card" id="panel-account">
-          <div class="profile-section-title">Account Information</div>
+          <div class="profile-section-title" data-en="Account Information" data-es="Información de la Cuenta">Account Information</div>
           <div class="profile-section-desc">Update your display name and email address.</div>
           <div class="profile-field">
             <label>Full Name</label>
             <input class="profile-input" type="text" id="profile-name-input" placeholder="Your name">
           </div>
           <div class="profile-field">
-            <label>Email Address</label>
+            <label data-en="Email Address" data-es="Correo Electrónico">Email Address</label>
             <input class="profile-input" type="email" id="profile-email-input" placeholder="your@email.com">
           </div>
           <div class="profile-field">
-            <label>Profile Color</label>
+            <label data-en="Profile Color" data-es="Color de Perfil">Profile Color</label>
             <div id="avatar-color-swatches" style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.25rem">
               <button onclick="setAvatarColor('#f05555',this)" style="width:30px;height:30px;border-radius:50%;background:#f05555;border:3px solid transparent;cursor:pointer;transition:border-color 0.2s" title="Red"></button>
               <button onclick="setAvatarColor('#818cf8',this)" style="width:30px;height:30px;border-radius:50%;background:#818cf8;border:3px solid transparent;cursor:pointer;transition:border-color 0.2s" title="Purple"></button>
@@ -3403,14 +3403,14 @@
 
         <!-- CHANGE PASSWORD -->
         <div class="profile-panel card" id="panel-password">
-          <div class="profile-section-title">Change Password</div>
+          <div class="profile-section-title" data-en="Change Password" data-es="Cambiar Contraseña">Change Password</div>
           <div class="profile-section-desc">Choose a strong password with at least 8 characters including letters and numbers.</div>
           <div class="profile-field">
-            <label>New Password</label>
+            <label data-en="New Password" data-es="Nueva Contraseña">New Password</label>
             <input class="profile-input" type="password" id="new-password" placeholder="At least 8 characters">
           </div>
           <div class="profile-field">
-            <label>Confirm New Password</label>
+            <label data-en="Confirm New Password" data-es="Confirmar Contraseña">Confirm New Password</label>
             <input class="profile-input" type="password" id="confirm-password" placeholder="Repeat new password">
           </div>
           <button class="profile-save-btn" onclick="updatePassword()">Update Password</button>
@@ -3670,128 +3670,6 @@
   </div>
 
   <!-- DEBT NEGOTIATION SCRIPTS TAB -->
-  <div class="tab-section" id="tab-negotiate">
-    <div id="negotiate-gate" style="display:none">
-      <div class="lock-gate">
-        <div class="lg-icon">💬</div>
-        <h3>Debt Negotiation Scripts <span class="premium-badge">PRO</span></h3>
-        <p>Get AI-generated scripts to negotiate lower interest rates, settle collections, reduce medical bills, and more — personalized to your exact situation.</p>
-        <button class="lock-gate-btn" onclick="showPaywall('negotiate')">Unlock with Pro — $4.99/mo</button>
-        <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--muted)">7-day free trial · Cancel anytime</div>
-      </div>
-    </div>
-
-    <div id="negotiate-content">
-      <div class="negotiate-layout">
-
-        <!-- LEFT: INPUTS -->
-        <div>
-          <div class="card" style="margin-bottom:1.5rem">
-            <h2 style="margin-bottom:0.5rem">💬 Debt Negotiation Scripts</h2>
-            <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:1.25rem;line-height:1.6">Select your debt type and fill in your details. Claude will generate a personalized script you can use to call your creditor and negotiate better terms.</p>
-
-            <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:0.6rem">Select Debt Type</div>
-            <div class="debt-type-grid" id="debt-type-grid">
-              <button class="debt-type-btn active" onclick="selectDebtType('credit', this)">
-                <div class="dtb-icon">💳</div>
-                <div class="dtb-label">Credit Card</div>
-                <div class="dtb-desc">Lower rate or waive fees</div>
-              </button>
-              <button class="debt-type-btn" onclick="selectDebtType('medical', this)">
-                <div class="dtb-icon">🏥</div>
-                <div class="dtb-label">Medical Bill</div>
-                <div class="dtb-desc">Reduce or payment plan</div>
-              </button>
-              <button class="debt-type-btn" onclick="selectDebtType('student', this)">
-                <div class="dtb-icon">🎓</div>
-                <div class="dtb-label">Student Loan</div>
-                <div class="dtb-desc">Deferment or lower rate</div>
-              </button>
-              <button class="debt-type-btn" onclick="selectDebtType('collections', this)">
-                <div class="dtb-icon">📋</div>
-                <div class="dtb-label">Collections</div>
-                <div class="dtb-desc">Settle for less</div>
-              </button>
-            </div>
-
-            <div id="negotiate-form">
-              <div class="form-group">
-                <label>Creditor / Company Name</label>
-                <input type="text" class="profile-input" id="neg-creditor" placeholder="e.g. Chase, Bank of America">
-              </div>
-              <div class="form-group">
-                <label>Current Balance ($)</label>
-                <input type="number" class="profile-input" id="neg-balance" placeholder="e.g. 5000" min="0">
-              </div>
-              <div class="form-group">
-                <label>Current Interest Rate (%) <span style="font-weight:400;color:var(--muted)">(if applicable)</span></label>
-                <input type="number" class="profile-input" id="neg-rate" placeholder="e.g. 24.99" step="0.01" min="0">
-              </div>
-              <div class="form-group">
-                <label>Your Goal</label>
-                <select class="profile-input" id="neg-goal">
-                  <option value="lower_rate">Lower interest rate</option>
-                  <option value="waive_fees">Waive late fees</option>
-                  <option value="payment_plan">Set up payment plan</option>
-                  <option value="settle">Settle for less than owed</option>
-                  <option value="hardship">Hardship program</option>
-                  <option value="remove_collections">Remove from collections</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Your Situation <span style="font-weight:400;color:var(--muted)">(optional — helps personalize the script)</span></label>
-                <textarea class="profile-input" id="neg-situation" rows="3" placeholder="e.g. I've been a customer for 5 years, recently lost my job, always paid on time until recently..." style="resize:vertical"></textarea>
-              </div>
-              <button class="profile-save-btn" style="width:100%;margin-top:0.5rem" onclick="generateNegotiationScript()" id="neg-generate-btn-sidebar">
-                ✨ Generate My Script
-              </button>
-            </div>
-          </div>
-
-          <!-- TIPS -->
-          <div class="card">
-            <h2 style="margin-bottom:0.75rem">💡 Negotiation Tips</h2>
-            <div class="tips-list">
-              <div class="tip-item"><span class="ti-icon">📞</span><p><strong>Call don't write.</strong> Phone calls are more effective than letters — you can respond in real time and build rapport.</p></div>
-              <div class="tip-item"><span class="ti-icon">⏰</span><p><strong>Best time to call:</strong> Tuesday–Thursday, 10am–2pm. Avoid Mondays and Fridays.</p></div>
-              <div class="tip-item"><span class="ti-icon">📝</span><p><strong>Take notes.</strong> Write down the date, time, rep name, and what was agreed. Ask for confirmation in writing.</p></div>
-              <div class="tip-item"><span class="ti-icon">🎯</span><p><strong>Know your number.</strong> Decide the maximum you're willing to pay before you call — don't reveal it first.</p></div>
-              <div class="tip-item"><span class="ti-icon">💪</span><p><strong>Be polite but firm.</strong> Creditors deal with negotiations daily — stay calm, professional, and persistent.</p></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- RIGHT: SCRIPT OUTPUT -->
-        <div class="script-output-card">
-          <div class="script-header">
-            <h3 id="script-title">💳 Credit Card Negotiation Script</h3>
-            <p id="script-subtitle">Personalized script to lower your interest rate</p>
-          </div>
-          <div class="script-body">
-            <div class="script-tabs" id="script-tabs">
-              <button class="script-tab-btn active" onclick="switchScriptTab('opening', this)">📞 Opening</button>
-              <button class="script-tab-btn" onclick="switchScriptTab('main', this)">💬 Main Ask</button>
-              <button class="script-tab-btn" onclick="switchScriptTab('objection', this)">🛡️ Objections</button>
-              <button class="script-tab-btn" onclick="switchScriptTab('closing', this)">✅ Closing</button>
-            </div>
-
-            <div class="script-box" id="script-box">Click "Generate My Script" to get your personalized negotiation script. Fill in your details on the left for the best results.</div>
-
-            <div class="script-actions">
-              <button class="script-copy-btn" onclick="copyScript()" id="copy-script-btn">📋 Copy Script</button>
-              <button class="script-regen-btn" onclick="generateNegotiationScript()" id="regen-btn">🔄 Regenerate</button>
-            </div>
-
-            <div class="tip-bar" style="margin-top:1rem">
-              <div class="tip-icon">⚠️</div>
-              <p><strong>Remember:</strong> This script is a guide — adapt it naturally to the conversation. The AI can't guarantee results but these scripts are based on proven negotiation techniques.</p>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
 
   <!-- DEBT NEGOTIATION SCRIPTS TAB -->
   <div class="tab-section" id="tab-negotiate">
@@ -3843,15 +3721,15 @@
 
           <!-- DEBT DETAILS -->
           <div class="form-group">
-            <label>Creditor / Company Name</label>
+            <label data-en="Creditor / Company Name" data-es="Acreedor / Empresa">Creditor / Company Name</label>
             <input class="profile-input" type="text" id="neg-creditor" placeholder="e.g. Chase, Capital One, Medical Center">
           </div>
           <div class="form-group">
-            <label>Current Balance ($)</label>
+            <label data-en="Current Balance ($)" data-es="Saldo Actual ($)">Current Balance ($)</label>
             <input class="profile-input" type="number" id="neg-balance" placeholder="e.g. 5000">
           </div>
           <div class="form-group">
-            <label>Current Interest Rate (%) <span style="color:var(--muted);font-weight:400">(if applicable)</span></label>
+            <label data-en="Current Interest Rate (%)" data-es="Tasa de Interés Actual (%)">Current Interest Rate (%) <span style="color:var(--muted);font-weight:400">(if applicable)</span></label>
             <input class="profile-input" type="number" id="neg-rate" placeholder="e.g. 24.99" step="0.01">
           </div>
           <div class="form-group">
