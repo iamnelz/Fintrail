@@ -2495,7 +2495,7 @@
                 <option>📦 Other</option>
               </select>
             </div>
-            <button class="add-btn" onclick="addBill()">+ Add Bill</button>
+            <button class="add-btn" onclick="addBill()" data-en="+ Add Bill" data-es="+ Agregar Factura">+ Add Bill</button>
           </div>
 
           <div style="margin-top:1.25rem;">
@@ -2509,10 +2509,10 @@
         <!-- 6-MONTH SCHEDULE -->
         <div class="card">
           <div class="schedule-header">
-            <h2>📅 6-Month Schedule</h2>
+            <h2 data-en="📅 6-Month Schedule" data-es="📅 Horario de 6 Meses">📅 6-Month Schedule</h2>
             <div style="display:flex;flex-wrap:wrap;gap:0.75rem;align-items:center;">
               <div class="payday-row">
-                <label>Pay Frequency</label>
+                <label data-en="Pay Frequency" data-es="Frecuencia de Pago">Pay Frequency</label>
                 <select class="payday-select" id="pay-frequency" onchange="renderSchedule()">
                   <option value="biweekly">Bi-weekly</option>
                   <option value="semimonthly">Semi-monthly (1st & 15th)</option>
@@ -2521,16 +2521,16 @@
                 </select>
               </div>
               <div class="payday-row">
-                <label>Next Payday</label>
+                <label data-en="Next Payday" data-es="Próximo Día de Pago">Next Payday</label>
                 <input type="date" class="payday-select" id="next-payday" onchange="renderSchedule()" style="font-size:0.85rem;">
               </div>
               <button onclick="downloadBillSchedulePDF()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.45rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.35rem">
-                📄 Save PDF
+                📄 <span data-en="Save PDF" data-es="Guardar PDF">Save PDF</span>
               </button>
             </div>
           </div>
           <div id="schedule-output">
-            <div class="sched-empty">Add bills and your pay frequency to generate your 6-month payment schedule.</div>
+            <div class="sched-empty" data-en="Add bills and your pay frequency to generate your 6-month payment schedule." data-es="Agrega facturas y tu frecuencia de pago para generar tu horario de 6 meses.">Add bills and your pay frequency to generate your 6-month payment schedule.</div>
           </div>
         </div>
 
@@ -5100,7 +5100,9 @@ Guidelines:
       byMonth[key].push({ pd, next: paydays[i+1] || null, idx: i });
     });
 
-    const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const monthNames = currentLang === 'es'
+      ? ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
+      : ['January','February','March','April','May','June','July','August','September','October','November','December'];
     let html = '';
 
     Object.entries(byMonth).forEach(([key, entries]) => {
@@ -5118,13 +5120,13 @@ Guidelines:
         const dueBills = billsDueThisPeriod(pd, next, frequency);
         const paidCount = dueBills.filter(b => paidChecks[b.id + '-' + pd.toISOString().slice(0,10)]).length;
         const isOpen = idx === 0;
-        const pdStr = pd.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'});
+        const pdStr = pd.toLocaleDateString(currentLang === 'es' ? 'es-ES' : 'en-US', {weekday:'short', month:'short', day:'numeric'});
         const pdKey = 'pd-' + pd.toISOString().slice(0,10);
         const periodTotal = dueBills.reduce((s, b) => s + b.displayAmount, 0);
 
         html += `<div class="payday-block">
           <div class="payday-block-header ${isOpen?'open':''}" onclick="togglePayBlock('${pdKey}', this)">
-            <div class="pd-date"><span class="pd-icon">💵</span> Payday — ${pdStr}</div>
+            <div class="pd-date"><span class="pd-icon">💵</span> ${currentLang === 'es' ? 'Día de Pago — ' : 'Payday — '}${pdStr}</div>
             <div style="display:flex;align-items:center;gap:0.75rem">
               <div class="pd-summary">${dueBills.length} bill${dueBills.length!==1?'s':''} · $${periodTotal.toFixed(2)} · ${paidCount}/${dueBills.length} paid</div>
               <div class="pd-toggle">▼</div>
@@ -5149,7 +5151,7 @@ Guidelines:
                   <span style="font-weight:600;font-size:0.875rem">${escHtml(b.name)}</span>
                   ${b.splitLabel ? `<span style="font-size:0.68rem;background:rgba(240,85,85,0.1);color:var(--accent);padding:0.15rem 0.5rem;border-radius:4px;font-weight:700">Split ${b.splitLabel}</span>` : ''}
                 </div>
-                <span class="pbr-due" style="${urgency}">due ${dueDateStr}${daysUntil >= 0 && daysUntil <= 3 ? ' ⚠️' : ''}</span>
+                <span class="pbr-due" style="${urgency}">${currentLang === 'es' ? 'vence' : 'due'} ${dueDateStr}${daysUntil >= 0 && daysUntil <= 3 ? ' ⚠️' : ''}</span>
               </div>
               <div class="pbr-right">
                 <span class="pbr-amount">$${b.displayAmount.toFixed(2)}</span>
@@ -5981,7 +5983,9 @@ Guidelines:
     let startDate = paydayInput ? new Date(paydayInput + 'T00:00:00') : new Date();
     startDate.setHours(0,0,0,0);
     const paydays = getPaydays(frequency, startDate, 6);
-    const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const monthNames = currentLang === 'es'
+      ? ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
+      : ['January','February','March','April','May','June','July','August','September','October','November','December'];
     const freqLabels = { biweekly: 'Bi-weekly', semimonthly: 'Semi-monthly', monthly: 'Monthly', weekly: 'Weekly' };
 
     const byMonth = {};
@@ -6278,39 +6282,37 @@ Guidelines:
     document.getElementById('script-loading-state').style.display = 'block';
     document.getElementById('script-result').style.display = 'none';
 
-    const prompt = `You are an expert debt negotiation coach. Generate a detailed, realistic phone script for someone negotiating with their creditor.
+    const prompt = `Generate a debt negotiation phone script for this situation:
 
-SITUATION:
-- Creditor: ${creditor}
-- Goal: Negotiate a ${typeLabels[selectedScriptType]}
-- Current balance: ${balance ? '$' + balance : 'not specified'}
-- Current interest rate: ${rate ? rate + '%' : 'not specified'}
-- Hardship reason: ${hardship || 'not specified'}
-- Years as customer: ${years || 'not specified'}
-- Additional context: ${context || 'none'}
+Creditor: ${creditor}
+Goal: ${typeLabels[selectedScriptType]}
+Balance: ${balance ? '$' + balance : 'not specified'}
+Interest Rate: ${rate ? rate + '%' : 'not specified'}
+Hardship: ${hardship || 'not specified'}
+Years as customer: ${years || 'not specified'}
+Extra context: ${context || 'none'}
 
-Generate a script with these EXACT sections, each clearly labeled:
+Return ONLY these 6 sections using exactly these markers on their own lines:
 
-[BEFORE_CALL]
-List 4-5 things to prepare before making the call (documents to have ready, what to know, best time to call, etc.)
+===BEFORE_CALL===
+(4-5 bullet points of what to prepare before calling)
 
-[OPENING]
-Write the exact opening words to say when the agent answers. Should be warm, professional, state the purpose clearly.
+===OPENING===
+(The exact words to say when the agent answers, 3-5 sentences)
 
-[MAIN_ASK]
-Write the main negotiation pitch. Should be specific, mention the hardship/reason, reference loyalty if applicable, make a specific ask.
+===MAIN_ASK===
+(The main negotiation pitch, specific goal, clear ask, 4-6 sentences)
 
-[REBUTTAL]
-Write what to say if they initially say no or push back. Include escalation to supervisor if needed.
+===REBUTTAL===
+(What to say if they say no or push back, how to escalate, 4-6 sentences)
 
-[CLOSING]
-Write how to close the call whether successful or not. Include what to confirm and get in writing.
+===CLOSING===
+(How to close the call, what to confirm and get in writing, 3-5 sentences)
 
-[TIPS]
-List 4-5 specific pro tips for this exact type of negotiation.
+===TIPS===
+(4-5 specific pro tips for this type of negotiation)
 
-Make the script conversational, natural, and realistic. Use [YOUR NAME], [ACCOUNT NUMBER], [SPECIFIC AMOUNT] as placeholders where needed.`;
-
+Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. Be conversational and realistic.`
     try {
       const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
@@ -6320,20 +6322,42 @@ Make the script conversational, natural, and realistic. Use [YOUR NAME], [ACCOUN
       const data = await response.json();
       const text = data.content?.map(b => b.text || '').join('') || '';
 
-      // Parse sections
+      // Parse sections using === markers
       function extractSection(label, nextLabel) {
-        const start = text.indexOf(`[${label}]`);
+        const marker = '===' + label + '===';
+        const nextMarker = nextLabel ? '===' + nextLabel + '===' : null;
+        const start = text.indexOf(marker);
         if (start === -1) return '';
-        const end = nextLabel ? text.indexOf(`[${nextLabel}]`) : text.length;
-        return text.slice(start + label.length + 2, end === -1 ? text.length : end).trim();
+        const contentStart = start + marker.length;
+        const end = nextMarker ? text.indexOf(nextMarker, contentStart) : text.length;
+        return text.slice(contentStart, end === -1 ? text.length : end).trim();
       }
 
-      const before = extractSection('BEFORE_CALL', 'OPENING');
-      const opening = extractSection('OPENING', 'MAIN_ASK');
-      const main = extractSection('MAIN_ASK', 'REBUTTAL');
-      const rebuttal = extractSection('REBUTTAL', 'CLOSING');
-      const closing = extractSection('CLOSING', 'TIPS');
-      const tips = extractSection('TIPS', null);
+      const before   = extractSection('BEFORE_CALL', 'OPENING');
+      const opening  = extractSection('OPENING',     'MAIN_ASK');
+      const main     = extractSection('MAIN_ASK',    'REBUTTAL');
+      const rebuttal = extractSection('REBUTTAL',    'CLOSING');
+      const closing  = extractSection('CLOSING',     'TIPS');
+      const tips     = extractSection('TIPS',        null);
+
+      // Fallback: if sections are all empty, show raw text in opening
+      const allEmpty = !before && !opening && !main && !rebuttal && !closing && !tips;
+      if (allEmpty) {
+        document.getElementById('script-opening').textContent = text;
+        document.getElementById('script-main').textContent = '';
+        document.getElementById('script-rebuttal').textContent = '';
+        document.getElementById('script-closing').textContent = '';
+        document.getElementById('script-before').innerHTML = '';
+        document.getElementById('script-tips-list').innerHTML = '';
+        document.getElementById('script-loading-state').style.display = 'none';
+        document.getElementById('script-result').style.display = 'block';
+        document.getElementById('script-output-title').textContent = '📄 Your Negotiation Script';
+        document.getElementById('script-output-subtitle').textContent = 'Personalized for ' + creditor;
+        awardXPForAction('negotiationScript');
+        if (btn) { btn.disabled = false; btn.textContent = '✨ Generate My Script'; }
+        if (btnSidebar) { btnSidebar.disabled = false; btnSidebar.textContent = '✨ Generate My Script'; }
+        return;
+      }
 
       // Render before call tips
       const beforeLines = before.split('\n').filter(l => l.trim());
@@ -7523,7 +7547,9 @@ Make the script conversational, natural, and realistic. Use [YOUR NAME], [ACCOUN
   function renderCalendar() {
     const year = calCurrentDate.getFullYear();
     const month = calCurrentDate.getMonth();
-    const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const monthNames = currentLang === 'es'
+      ? ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
+      : ['January','February','March','April','May','June','July','August','September','October','November','December'];
     document.getElementById('cal-month-label').textContent = `${monthNames[month]} ${year}`;
 
     if (calView === 'month') renderMonthView(year, month);
@@ -7755,4 +7781,39 @@ Make the script conversational, natural, and realistic. Use [YOUR NAME], [ACCOUN
   document.getElementById('next-payday').value = todayStr;
 </script>
 </body>
-</html>
+</html>      // Parse sections using === markers — robust against Claude formatting variations
+      function extractSection(label, nextLabel) {
+        const marker = '===' + label + '===';
+        const nextMarker = nextLabel ? '===' + nextLabel + '===' : null;
+        const start = text.indexOf(marker);
+        if (start === -1) return '';
+        const contentStart = start + marker.length;
+        const end = nextMarker ? text.indexOf(nextMarker, contentStart) : text.length;
+        return text.slice(contentStart, end === -1 ? text.length : end).trim();
+      }
+
+      const before   = extractSection('BEFORE_CALL', 'OPENING');
+      const opening  = extractSection('OPENING',     'MAIN_ASK');
+      const main     = extractSection('MAIN_ASK',    'REBUTTAL');
+      const rebuttal = extractSection('REBUTTAL',    'CLOSING');
+      const closing  = extractSection('CLOSING',     'TIPS');
+      const tips     = extractSection('TIPS',        null);
+
+      // Fallback: if all sections empty, show full raw text in opening so user still gets the script
+      if (!before && !opening && !main && !rebuttal && !closing && !tips) {
+        document.getElementById('script-opening').textContent = text;
+        document.getElementById('script-main').textContent = '';
+        document.getElementById('script-rebuttal').textContent = '';
+        document.getElementById('script-closing').textContent = '';
+        document.getElementById('script-before').innerHTML = '<div class="script-tip"><span class="script-tip-icon">📋</span><span>Full script shown in Opening section below</span></div>';
+        document.getElementById('script-tips-list').innerHTML = '';
+        document.getElementById('script-output-title').textContent = '📄 Your Negotiation Script';
+        document.getElementById('script-output-subtitle').textContent = 'Personalized for ' + creditor;
+        document.getElementById('script-loading-state').style.display = 'none';
+        document.getElementById('script-result').style.display = 'block';
+        awardXPForAction('negotiationScript');
+        if (btn) { btn.disabled = false; btn.textContent = '✨ Generate My Script'; }
+        if (btnSidebar) { btnSidebar.disabled = false; btnSidebar.textContent = '✨ Generate My Script'; }
+        return;
+      }
+
