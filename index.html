@@ -3751,6 +3751,8 @@
     loadUserData();
     loadProfileUI();
     setTimeout(loadGameData, 500);
+    // Apply saved language now that user is logged in
+    if (currentLang !== 'en') setTimeout(applyLanguage, 300);
   }
 
   function setUserUI(user) {
@@ -6680,7 +6682,7 @@ Make each section realistic, conversational, and specific to their situation. Us
     document.title = isEs ? 'Fintrail Pro — Presupuesta Mejor, Vive Mejor' : 'Fintrail Pro — Budget Smarter, Live Better';
 
     // Re-render dynamic content in new language
-    if (typeof render === 'function') render();
+    if (typeof render === 'function' && currentUser) render();
 
     // Save preference
     try { localStorage.setItem('fintrail_lang', currentLang); } catch(e) {}
@@ -6689,7 +6691,16 @@ Make each section realistic, conversational, and specific to their situation. Us
   function loadLanguagePreference() {
     try {
       const saved = localStorage.getItem('fintrail_lang');
-      if (saved) { currentLang = saved; applyLanguage(); }
+      if (saved && saved !== 'en') {
+        currentLang = saved;
+        // Only apply UI translations, don't trigger render yet
+        const isEs = true;
+        const langToggle = document.getElementById('lang-toggle');
+        if (langToggle) { langToggle.textContent = 'ES'; langToggle.style.background = 'rgba(240,85,85,0.1)'; langToggle.style.color = 'var(--accent)'; langToggle.style.borderColor = 'var(--accent)'; }
+        const mobileLang = document.getElementById('mobile-lang-label');
+        if (mobileLang) mobileLang.textContent = 'Switch to English';
+        document.title = 'Fintrail Pro — Presupuesta Mejor, Vive Mejor';
+      }
     } catch(e) {}
   }
 
