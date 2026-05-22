@@ -6306,115 +6306,7 @@ Make the script conversational, natural, and realistic. Use [YOUR NAME], [ACCOUN
     }
   }
 
-  async function generateNegotiationScript() {
-    const creditor = document.getElementById('neg-creditor').value.trim();
-    const balance = document.getElementById('neg-balance').value;
-    const rate = document.getElementById('neg-rate').value;
-    const goal = document.getElementById('neg-goal').value;
-    const situation = document.getElementById('neg-situation').value.trim();
 
-    if (!creditor) { alert('Please enter the creditor name.'); return; }
-
-    const btn = document.getElementById('neg-generate-btn');
-    btn.disabled = true; btn.textContent = '✨ Generating...';
-
-    const scriptBox = document.getElementById('script-box');
-    scriptBox.textContent = '⏳ Claude is writing your personalized negotiation script...';
-    scriptBox.classList.add('loading');
-    negotiationScripts = {};
-
-    const goalLabels = {
-      lower_rate: 'lower the interest rate',
-      waive_fees: 'waive late fees',
-      payment_plan: 'set up a payment plan',
-      settle: 'settle the debt for less than owed',
-      hardship: 'enroll in a hardship program',
-      remove_collections: 'do a pay-for-delete agreement',
-    };
-
-    const typeLabels = { credit: 'credit card', medical: 'medical bill', student: 'student loan', collections: 'collections account' };
-
-    const prompt = `You are a debt negotiation expert. Generate a complete phone call script for someone trying to negotiate their ${typeLabels[currentDebtType]} with ${creditor}.
-
-Details:
-- Debt type: ${typeLabels[currentDebtType]}
-- Creditor: ${creditor}
-- Balance: ${balance ? '$' + balance : 'not specified'}
-- Current interest rate: ${rate ? rate + '%' : 'not specified'}
-- Goal: ${goalLabels[goal]}
-- Their situation: ${situation || 'not provided'}
-
-Generate FOUR separate script sections. Format your response EXACTLY like this with these exact headers:
-
-[OPENING]
-(script for the opening of the call - introducing yourself, verifying account, building rapport)
-
-[MAIN ASK]
-(script for making the actual request - be specific, confident, and persuasive)
-
-[OBJECTIONS]
-(script for handling 2-3 common objections they might face)
-
-[CLOSING]
-(script for closing the call - confirming agreement, next steps, getting it in writing)
-
-Make each section realistic, conversational, and specific to their situation. Use [YOUR NAME], [ACCOUNT NUMBER], [AMOUNT] as placeholders where needed. Keep a professional but warm tone.`;
-
-    try {
-      const response = await fetch('/.netlify/functions/ai-advisor', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: [{ role: 'user', content: prompt }],
-          system: 'You are a debt negotiation expert who writes realistic, effective phone scripts. Always format responses with the exact section headers requested.'
-        })
-      });
-      const data = await response.json();
-      const fullScript = data.reply || '';
-
-      // Parse sections
-      const sections = { opening: '', main: '', objection: '', closing: '' };
-      const openingMatch = fullScript.match(/\[OPENING\]([\s\S]*?)(?=\[MAIN ASK\]|$)/i);
-      const mainMatch = fullScript.match(/\[MAIN ASK\]([\s\S]*?)(?=\[OBJECTIONS\]|$)/i);
-      const objectionMatch = fullScript.match(/\[OBJECTIONS\]([\s\S]*?)(?=\[CLOSING\]|$)/i);
-      const closingMatch = fullScript.match(/\[CLOSING\]([\s\S]*?)$/i);
-
-      if (openingMatch) sections.opening = openingMatch[1].trim();
-      if (mainMatch) sections.main = mainMatch[1].trim();
-      if (objectionMatch) sections.objection = objectionMatch[1].trim();
-      if (closingMatch) sections.closing = closingMatch[1].trim();
-
-      // Fallback if parsing fails
-      if (!sections.opening) sections.opening = fullScript;
-
-      negotiationScripts = sections;
-
-      // Show current tab
-      const currentContent = sections[currentScriptTab] || sections.opening;
-      scriptBox.textContent = currentContent;
-      scriptBox.classList.remove('loading');
-
-      awardXPForAction('aiChat');
-
-    } catch (err) {
-      scriptBox.textContent = 'Something went wrong generating your script. Please try again.';
-      scriptBox.classList.remove('loading');
-    }
-
-    btn.disabled = false; btn.textContent = '✨ Generate My Script';
-  }
-
-  function copyScript() {
-    const text = document.getElementById('script-box').textContent;
-    if (text.includes('Click "Generate') || text.includes('Generate your script')) {
-      alert('Generate your script first!'); return;
-    }
-    navigator.clipboard.writeText(text).then(() => {
-      const btn = document.getElementById('copy-script-btn');
-      btn.textContent = '✅ Copied!';
-      setTimeout(() => btn.textContent = '📋 Copy Script', 2000);
-    });
-  }
 
   function updateNegotiateTab() {
     const gate = document.getElementById('negotiate-gate');
@@ -6620,8 +6512,6 @@ Make each section realistic, conversational, and specific to their situation. Us
     if (expenseBtn) expenseBtn.textContent = isEs ? '− Gasto' : '− Expense';
 
     // Add transaction button
-    const addTxBtn = document.getElementById('btn-add-transaction');
-    if (addTxBtn) addTxBtn.textContent = isEs ? '+ Agregar' : '+ Add Transaction';
 
     // Bill schedule labels
     const billLabels = {
