@@ -4468,6 +4468,8 @@
     if (tab === 'creditsim') awardXPForAction('creditSim');
     if (tab === 'streaks') renderStreaksTab();
     if (tab === 'calendar') { loadCalendarEvents(); renderCalendar(); }
+    if (tab === 'networth') { setTimeout(initNetWorth, 50); }
+    if (currentLang !== 'en') setTimeout(applyLanguage, 30);
   }
 
   function guardedNavTo(tab, btn) {
@@ -4501,9 +4503,12 @@
   function mobileTab(tab) {
     document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('visible'));
     document.querySelectorAll('nav button, .mobile-nav button').forEach(b => b.classList.remove('active'));
-    if (tab === 'networth') { setTimeout(initNetWorth, 50); }
     document.getElementById('tab-' + tab).classList.add('visible');
     closeMobileNav();
+    if (tab === 'networth') setTimeout(initNetWorth, 50);
+    if (tab === 'streaks') renderStreaksTab();
+    if (tab === 'calendar') { loadCalendarEvents(); renderCalendar(); }
+    if (currentLang !== 'en') setTimeout(applyLanguage, 30);
   }
 
   function mobileGuardedTab(tab) {
@@ -6541,9 +6546,9 @@ Make the script conversational, natural, and realistic. Use [YOUR NAME], [ACCOUN
   function loadNWData() {
     try {
       const uid = currentUser?.id || 'demo';
-      const a = safeGet('fintrail_nw_assets_' + uid);
-      const l = safeGet('fintrail_nw_liabilities_' + uid);
-      const h = safeGet('fintrail_nw_history_' + uid);
+      const a = safeGet('fintrail_nw_assets_' + uid)      || safeGet('fintrail_nw_assets_local');
+      const l = safeGet('fintrail_nw_liabilities_' + uid) || safeGet('fintrail_nw_liabilities_local');
+      const h = safeGet('fintrail_nw_history_' + uid)     || safeGet('fintrail_nw_history_local');
       if (a) nwAssets      = JSON.parse(a);
       if (l) nwLiabilities = JSON.parse(l);
       if (h) nwHistory     = JSON.parse(h);
@@ -6566,9 +6571,13 @@ Make the script conversational, natural, and realistic. Use [YOUR NAME], [ACCOUN
 
   function saveNWData() {
     const uid = currentUser?.id || 'demo';
-    safeSet('fintrail_nw_assets_' + uid, JSON.stringify(nwAssets));
+    // Save to both uid key and a persistent local key so data survives logout
+    safeSet('fintrail_nw_assets_' + uid,      JSON.stringify(nwAssets));
     safeSet('fintrail_nw_liabilities_' + uid, JSON.stringify(nwLiabilities));
-    safeSet('fintrail_nw_history_' + uid, JSON.stringify(nwHistory));
+    safeSet('fintrail_nw_history_' + uid,     JSON.stringify(nwHistory));
+    safeSet('fintrail_nw_assets_local',        JSON.stringify(nwAssets));
+    safeSet('fintrail_nw_liabilities_local',   JSON.stringify(nwLiabilities));
+    safeSet('fintrail_nw_history_local',       JSON.stringify(nwHistory));
     // Supabase sync
     if (sbClient && currentUser) {
       sbClient.from('user_data').upsert({
@@ -6835,10 +6844,17 @@ Make the script conversational, natural, and realistic. Use [YOUR NAME], [ACCOUN
     nwHistory = []; saveNWData(); renderNWHistory(); renderNWChart();
   }
 
+  let nwLoaded = false;
   function initNetWorth() {
-    loadNWData();
+    if (!nwLoaded) {
+      loadNWData();
+      nwLoaded = true;
+    }
     calcNW();
-    window.addEventListener('resize', () => { if (document.getElementById('tab-networth')?.style.display !== 'none') renderNWChart(); });
+    if (!initNetWorth._resizeBound) {
+      window.addEventListener('resize', () => { if (document.querySelector('#tab-networth.visible')) renderNWChart(); });
+      initNetWorth._resizeBound = true;
+    }
   }
   // ─────────────────────────────────────────────────────────────────────────────
   function safeGet(key) { try { return localStorage.getItem(key); } catch(e) { try { return sessionStorage.getItem(key); } catch(e2) { return null; } } }
