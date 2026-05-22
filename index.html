@@ -4203,9 +4203,16 @@
 
   // DATA PERSISTENCE — save & load from Supabase
   async function saveUserData() {
-    if (!supabase || !currentUser) return;
-    const payload = { user_id: currentUser.id, transactions, bills, goals, plan_debts: planDebts, is_pro: isPro, updated_at: new Date().toISOString() };
-    await sbClient.from('user_data').upsert(payload, { onConflict: 'user_id' });
+    // Always save planDebts to localStorage as a reliable local fallback
+    safeSet('fintrail_debts_' + (currentUser?.id || 'demo'), JSON.stringify(planDebts));
+
+    if (!sbClient || !currentUser) return;
+    try {
+      const payload = { user_id: currentUser.id, transactions, bills, goals, plan_debts: planDebts, is_pro: isPro, updated_at: new Date().toISOString() };
+      await sbClient.from('user_data').upsert(payload, { onConflict: 'user_id' });
+    } catch(err) {
+      console.log('saveUserData error:', err.message);
+    }
   }
 
   function setProUI() {
@@ -4250,7 +4257,11 @@
         transactions = data.transactions || [];
         bills = data.bills || [];
         goals = data.goals || [];
-        if (data.plan_debts?.length) { planDebts = data.plan_debts; }
+        if (data.plan_debts?.length) {
+          planDebts = data.plan_debts;
+          // Keep localStorage in sync
+          safeSet('fintrail_debts_' + currentUser.id, JSON.stringify(planDebts));
+        }
         if (data.is_pro) {
           isPro = true;
           applyProState();
@@ -4260,8 +4271,13 @@
     } catch (err) {
       console.log('No existing user data:', err.message);
     }
+    // Fallback: load planDebts from localStorage if Supabase plan_debts column not yet created
+    if (!planDebts.length) {
+      try { const loc = safeGet('fintrail_debts_' + currentUser.id); if (loc) planDebts = JSON.parse(loc); } catch(e) {}
+    }
     render(); renderBillList(); renderSchedule(); renderGoals();
-    loadProfileUI(); // refresh profile after data loads
+    if (planDebts.length) { renderDebtList(); runPayoffPlan(); }
+    loadProfileUI();
   }
 
   // PREMIUM STATE
