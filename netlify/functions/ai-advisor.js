@@ -1,69 +1,102 @@
 // netlify/functions/ai-advisor.js
-// Place this file at: netlify/functions/ai-advisor.js in your project root
+// Place at: netlify/functions/ai-advisor.js
 // Set ANTHROPIC_API_KEY in Netlify → Site Settings → Environment Variables
 
+const https = require('https');
+
+function httpsPost(options, body) {
+  return new Promise((resolve, reject) => {
+    const req = https.request(options, (res) => {
+      let data = '';
+      res.on('data', chunk => { data += chunk; });
+      res.on('end', () => {
+        try { resolve({ status: res.statusCode, body: JSON.parse(data) }); }
+        catch (e) { reject(new Error('Invalid JSON response: ' + data.slice(0, 200))); }
+      });
+    });
+    req.on('error', reject);
+    req.write(body);
+    req.end();
+  });
+}
+
 exports.handler = async (event) => {
-  // Only allow POST
+  const headers = {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  };
+
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers, body: '' };
+  }
+
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: JSON.stringify({ error: 'Method not allowed' }) };
+    return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'ANTHROPIC_API_KEY not configured in Netlify environment variables' })
-    };
+    console.error('ANTHROPIC_API_KEY not set');
+    return { statusCode: 500, headers, body: JSON.stringify({ error: 'API key not configured' }) };
   }
 
   let body;
   try {
     body = JSON.parse(event.body);
-  } catch {
-    return { statusCode: 400, body: JSON.stringify({ error: 'Invalid JSON body' }) };
+  } catch (e) {
+    return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid JSON body' }) };
   }
 
   const { messages, system } = body;
   if (!messages || !Array.isArray(messages)) {
-    return { statusCode: 400, body: JSON.stringify({ error: 'messages array required' }) };
+    return { statusCode: 400, headers, body: JSON.stringify({ error: 'messages array required' }) };
   }
 
+  const requestBody = JSON.stringify({
+    model: 'claude-sonnet-4-5-20251001',
+    max_tokens: 1500,
+    system: system || 'You are a helpful financial advisor.',
+    messages
+  });
+
+  const options = {
+    hostname: 'api.anthropic.com',
+    path: '/v1/messages',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Content-Length': Buffer.byteLength(requestBody),
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01'
+    }
+  };
+
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1500,
-        system: system || 'You are a helpful financial advisor.',
-        messages
-      })
-    });
+    const result = await httpsPost(options, requestBody);
+    console.log('Anthropic status:', result.status);
 
-    const data = await response.json();
-
-    if (!response.ok) {
+    if (result.status !== 200) {
+      console.error('Anthropic error:', JSON.stringify(result.body));
       return {
-        statusCode: response.status,
-        body: JSON.stringify({ error: data.error?.message || 'Anthropic API error' })
+        statusCode: result.status,
+        headers,
+        body: JSON.stringify({ error: result.body?.error?.message || 'Anthropic API error' })
       };
     }
 
-    const reply = data.content?.map(b => b.text || '').join('') || '';
-
+    const reply = (result.body.content || []).map(b => b.text || '').join('');
     return {
       statusCode: 200,
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify({ reply })
     };
 
   } catch (err) {
+    console.error('Function error:', err.message);
     return {
       statusCode: 500,
+      headers,
       body: JSON.stringify({ error: err.message || 'Internal server error' })
     };
   }
