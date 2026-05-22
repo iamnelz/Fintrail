@@ -3858,10 +3858,10 @@
       </div>
       <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap">
         <div class="cal-view-toggle">
-          <button class="cal-view-btn active" id="cal-view-month" onclick="setCalView('month')">Month</button>
-          <button class="cal-view-btn" id="cal-view-week" onclick="setCalView('week')">Week</button>
+          <button class="cal-view-btn active" id="cal-view-month" onclick="setCalView('month')" data-en="Month" data-es="Mes">Month</button>
+          <button class="cal-view-btn" id="cal-view-week" onclick="setCalView('week')" data-en="Week" data-es="Semana">Week</button>
         </div>
-        <button class="cal-add-btn" onclick="showAddEventModal()">+ Add Event</button>
+        <button class="cal-add-btn" onclick="showAddEventModal()" data-en="+ Add Event" data-es="+ Agregar Evento">+ Add Event</button>
       </div>
     </div>
 
@@ -4256,6 +4256,7 @@
 
   // SIGN OUT
   async function signOut() {
+    nwLoaded = false; // Reset so next login reloads NW data
     if (sbClient) await sbClient.auth.signOut();
     currentUser = null;
     transactions = []; bills = []; goals = [];
@@ -4283,8 +4284,12 @@
 
   // DATA PERSISTENCE — save & load from Supabase
   async function saveUserData() {
-    // Always save planDebts to localStorage as a reliable local fallback
-    safeSet('fintrail_debts_' + (currentUser?.id || 'demo'), JSON.stringify(planDebts));
+    // Always save to localStorage as a reliable local fallback
+    const _uid2 = currentUser?.id || 'demo';
+    safeSet('fintrail_debts_' + _uid2,  JSON.stringify(planDebts));
+    safeSet('fintrail_goals_' + _uid2,  JSON.stringify(goals));
+    safeSet('fintrail_bills_' + _uid2,  JSON.stringify(bills));
+    safeSet('fintrail_txns_' + _uid2,   JSON.stringify(transactions));
 
     if (!sbClient || !currentUser) return;
     try {
@@ -4353,9 +4358,14 @@
     } catch (err) {
       console.log('No existing user data:', err.message);
     }
-    // Fallback: load planDebts from localStorage if Supabase plan_debts column not yet created
+    // localStorage is the source of truth for goals/bills (always written on every save)
+    // This ensures deletions persist even if Supabase is slow or column missing
+    const _fuid = currentUser?.id || 'demo';
+    try { const lg = safeGet('fintrail_goals_' + _fuid); if (lg) goals = JSON.parse(lg); } catch(e) {}
+    try { const lb = safeGet('fintrail_bills_' + _fuid); if (lb) bills = JSON.parse(lb); } catch(e) {}
+    try { const lt = safeGet('fintrail_txns_' + _fuid); if (lt) transactions = JSON.parse(lt); } catch(e) {}
     if (!planDebts.length) {
-      try { const loc = safeGet('fintrail_debts_' + currentUser.id); if (loc) planDebts = JSON.parse(loc); } catch(e) {}
+      try { const loc = safeGet('fintrail_debts_' + _fuid); if (loc) planDebts = JSON.parse(loc); } catch(e) {}
     }
     render(); renderBillList(); renderSchedule(); renderGoals();
     if (planDebts.length) { renderDebtList(); runPayoffPlan(); }
@@ -4823,7 +4833,7 @@ Guidelines:
     const date = document.getElementById('g-date').value;
     const category = document.getElementById('g-category').value;
     if (!name || isNaN(target) || target <= 0) { alert('Please enter a goal name and target amount.'); return; }
-    goals.push({ id: Date.now(), name, icon: selectedEmoji, target, saved: Math.min(saved, target), date, category });
+    goals.push({ id: String(Date.now()), name, icon: selectedEmoji, target, saved: Math.min(saved, target), date, category });
     document.getElementById('g-name').value = '';
     document.getElementById('g-target').value = '';
     document.getElementById('g-saved').value = '';
@@ -4908,7 +4918,7 @@ Guidelines:
             </div>
           </div>
           <div class="goal-actions">
-            <button class="goal-action-btn del" onclick="deleteGoal(${g.id})" title="Delete">✕</button>
+            <button class="goal-action-btn del" onclick="deleteGoal('${g.id}')" title="Delete">✕</button>
           </div>
         </div>
         <div class="goal-amounts">
@@ -4927,7 +4937,7 @@ Guidelines:
         ${!complete ? `
         <div class="add-deposit-row">
           <input class="deposit-input" id="dep-${g.id}" type="number" placeholder="Add savings..." min="0" onkeydown="if(event.key==='Enter')deposit(${g.id})">
-          <button class="deposit-btn" onclick="deposit(${g.id})">+ Add</button>
+          <button class="deposit-btn" onclick="deposit('${g.id}')">+ Add</button>
         </div>` : ''}
       </div>`;
     }).join('');
@@ -6564,19 +6574,22 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       if (l) nwLiabilities = JSON.parse(l);
       if (h) nwHistory     = JSON.parse(h);
     } catch(e) {}
-    // Auto-pull debts from Debt Planner
-    if (planDebts && planDebts.length) {
-      planDebts.forEach(d => {
-        const exists = nwLiabilities.find(l => l.name === d.name + ' (debt)');
-        if (!exists) nwLiabilities.push({ id: String(Date.now()) + '_' + Math.floor(Math.random()*10000), name: d.name + ' (debt)', value: d.balance });
-      });
-    }
-    // Auto-pull savings goals
-    if (goals && goals.length) {
-      goals.forEach(g => {
-        const exists = nwAssets.find(a => a.name === g.name + ' (savings)');
-        if (!exists && g.saved > 0) nwAssets.push({ id: String(Date.now()) + '_' + Math.floor(Math.random()*10000), name: g.name + ' (savings)', value: g.saved });
-      });
+    // Auto-pull ONLY on first visit (when both arrays are empty — brand new user)
+    // This respects manual edits/deletions on subsequent visits
+    const isFirstVisit = nwAssets.length === 0 && nwLiabilities.length === 0;
+    if (isFirstVisit) {
+      if (planDebts && planDebts.length) {
+        planDebts.forEach(d => {
+          nwLiabilities.push({ id: String(Date.now()) + '_' + Math.floor(Math.random()*10000), name: d.name + ' (debt)', value: d.balance });
+        });
+      }
+      if (goals && goals.length) {
+        goals.forEach(g => {
+          if (g.saved > 0) nwAssets.push({ id: String(Date.now()) + '_' + Math.floor(Math.random()*10000), name: g.name + ' (savings)', value: g.saved });
+        });
+      }
+      // Save the auto-pulled data so it's there next visit
+      if (isFirstVisit && (nwAssets.length || nwLiabilities.length)) saveNWData();
     }
   }
 
@@ -6638,7 +6651,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const lList = document.getElementById('nw-liability-list');
     if (!aList || !lList) return;
 
-    aList.innerHTML = nwAssets.length === 0 ? '<div style="font-size:0.8rem;color:var(--muted);text-align:center;padding:0.5rem">No assets yet</div>' :
+    aList.innerHTML = nwAssets.length === 0 ? `<div style="font-size:0.8rem;color:var(--muted);text-align:center;padding:0.5rem">${currentLang==='es'?'Aún no hay activos':'No assets yet'}</div>` :
       nwAssets.map(a => `
         <div class="nw-item">
           <span class="nw-item-name">${escHtml(a.name)}</span>
@@ -6647,7 +6660,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
           <button class="nw-item-del" onclick="deleteNWItem('asset','${a.id}')">✕</button>
         </div>`).join('');
 
-    lList.innerHTML = nwLiabilities.length === 0 ? '<div style="font-size:0.8rem;color:var(--muted);text-align:center;padding:0.5rem">No liabilities yet</div>' :
+    lList.innerHTML = nwLiabilities.length === 0 ? `<div style="font-size:0.8rem;color:var(--muted);text-align:center;padding:0.5rem">${currentLang==='es'?'Aún no hay pasivos':'No liabilities yet'}</div>` :
       nwLiabilities.map(l => `
         <div class="nw-item">
           <span class="nw-item-name">${escHtml(l.name)}</span>
@@ -6824,6 +6837,12 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     else nwLiabilities.push(item);
     if (nameEl)  nameEl.value  = '';
     if (valueEl) valueEl.value = '';
+    // Save to both uid-specific and generic local key immediately
+    const _uid = currentUser?.id || 'demo';
+    safeSet('fintrail_nw_assets_' + _uid,      JSON.stringify(nwAssets));
+    safeSet('fintrail_nw_liabilities_' + _uid, JSON.stringify(nwLiabilities));
+    safeSet('fintrail_nw_assets_local',         JSON.stringify(nwAssets));
+    safeSet('fintrail_nw_liabilities_local',    JSON.stringify(nwLiabilities));
     saveNWData(); calcNW();
   }
 
