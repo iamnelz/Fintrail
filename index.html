@@ -3771,25 +3771,6 @@
     </div>
 
     <!-- ADD EVENT MODAL -->
-    <div id="cal-event-modal" style="display:none" class="receipt-modal-overlay" onclick="closeAddEventModal(event)">
-      <div class="receipt-modal">
-        <div class="receipt-modal-header">
-          <h3>📅 Add Custom Event</h3>
-          <button class="receipt-modal-close" onclick="closeAddEventModal()">✕</button>
-        </div>
-        <div class="receipt-modal-body">
-          <div class="form-group"><label>Event Name</label><input class="profile-input" type="text" id="cal-event-name" placeholder="e.g. Tax Payment, Insurance Renewal"></div>
-          <div class="form-group"><label>Date</label><input class="profile-input" type="date" id="cal-event-date"></div>
-          <div class="form-group"><label>Amount ($) <span style="color:var(--muted);font-weight:400">(optional)</span></label><input class="profile-input" type="number" id="cal-event-amount" placeholder="0.00"></div>
-          <div class="form-group"><label>Note <span style="color:var(--muted);font-weight:400">(optional)</span></label><input class="profile-input" type="text" id="cal-event-note" placeholder="Any notes..."></div>
-          <div class="receipt-modal-actions">
-            <button class="receipt-submit-btn" onclick="addCalendarEvent()">Add to Calendar</button>
-            <button class="receipt-skip-btn" onclick="closeAddEventModal()">Cancel</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
   </div>
 
   <!-- FINANCIAL CALENDAR TAB -->
@@ -4040,14 +4021,33 @@
       SUPABASE_URL = config.supabaseUrl || '';
       SUPABASE_ANON_KEY = config.supabaseAnonKey || '';
       if (SUPABASE_URL && SUPABASE_ANON_KEY) {
-        // Use sessionStorage fallback for private browsing mode
+        // In-memory fallback for iOS Safari private mode
+        const memStore = {};
         const storage = {
-          getItem: (key) => { try { return localStorage.getItem(key); } catch(e) { return sessionStorage.getItem(key); } },
-          setItem: (key, val) => { try { localStorage.setItem(key, val); } catch(e) { try { sessionStorage.setItem(key, val); } catch(e2) {} } },
-          removeItem: (key) => { try { localStorage.removeItem(key); } catch(e) { try { sessionStorage.removeItem(key); } catch(e2) {} } }
+          getItem: (key) => {
+            try { const v = localStorage.getItem(key); if (v !== null) return v; } catch(e) {}
+            try { const v = sessionStorage.getItem(key); if (v !== null) return v; } catch(e) {}
+            return memStore[key] || null;
+          },
+          setItem: (key, val) => {
+            try { localStorage.setItem(key, val); return; } catch(e) {}
+            try { sessionStorage.setItem(key, val); return; } catch(e) {}
+            memStore[key] = val;
+          },
+          removeItem: (key) => {
+            try { localStorage.removeItem(key); } catch(e) {}
+            try { sessionStorage.removeItem(key); } catch(e) {}
+            delete memStore[key];
+          }
         };
         sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-          auth: { storage, persistSession: true, autoRefreshToken: true }
+          auth: {
+            storage,
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: true,
+            flowType: 'implicit'
+          }
         });
       }
     } catch (err) {
