@@ -2422,7 +2422,7 @@
 
     <div class="tip-bar">
       <div class="tip-icon">💡</div>
-      <p><strong>Pro tip:</strong> The 50/30/20 rule — spend 50% on needs, 30% on wants, and save 20%. Use this tracker to see how close you are!</p>
+      <p data-en="Pro tip: The 50/30/20 rule — spend 50% on needs, 30% on wants, and save 20%." data-es="Consejo Pro: La regla 50/30/20 — gasta 50% en necesidades, 30% en deseos y ahorra 20%."><strong>Pro tip:</strong> The 50/30/20 rule — spend 50% on needs, 30% on wants, and save 20%. Use this tracker to see how close you are!</p>
     </div>
     </div><!-- end bsub-tracker -->
 
@@ -2513,7 +2513,7 @@
             <div style="display:flex;flex-wrap:wrap;gap:0.75rem;align-items:center;">
               <div class="payday-row">
                 <label data-en="Pay Frequency" data-es="Frecuencia de Pago">Pay Frequency</label>
-                <select class="payday-select" id="pay-frequency" onchange="renderSchedule()">
+                <select class="payday-select" id="pay-frequency" onchange="safeSet('fintrail_pay_freq', this.value); renderSchedule()">
                   <option value="biweekly" data-en="Bi-weekly" data-es="Quincenal">Bi-weekly</option>
                   <option value="semimonthly">Semi-monthly (1st & 15th)</option>
                   <option value="monthly" data-en="Monthly" data-es="Mensual">Monthly</option>
@@ -2522,7 +2522,7 @@
               </div>
               <div class="payday-row">
                 <label data-en="Next Payday" data-es="Próximo Día de Pago">Next Payday</label>
-                <input type="date" class="payday-select" id="next-payday" onchange="renderSchedule()" style="font-size:0.85rem;">
+                <input type="date" class="payday-select" id="next-payday" onchange="safeSet('fintrail_payday_date', this.value); renderSchedule()" style="font-size:0.85rem;">
               </div>
               <button onclick="downloadBillSchedulePDF()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.45rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.35rem">
                 📄 <span data-en="Save PDF" data-es="Guardar PDF">Save PDF</span>
@@ -2725,7 +2725,7 @@
 
       <div class="tip-bar" style="margin-top:1.5rem;">
         <div class="tip-icon">📅</div>
-        <p><strong>Timeline reality check:</strong> With consistent effort, most people see meaningful improvement in <strong style="color:var(--accent2);">3–6 months</strong>. Severe damage (bankruptcy, collections) can take 2–7 years to fade. Start now — time is your best tool.</p>
+        <p data-en="Timeline reality check: With consistent effort, most people see improvement in 3-6 months." data-es="Verificación de tiempo: Con esfuerzo constante, la mayoría ve mejoras en 3-6 meses."><strong>Timeline reality check:</strong> With consistent effort, most people see meaningful improvement in <strong style="color:var(--accent2);">3–6 months</strong>. Severe damage (bankruptcy, collections) can take 2–7 years to fade. Start now — time is your best tool.</p>
       </div>
     </div>
 
@@ -2812,7 +2812,7 @@
 
       <div class="tip-bar" style="margin-top:1.5rem;">
         <div class="tip-icon">🎯</div>
-        <p><strong>Lender target:</strong> Most mortgage lenders want a DTI under <strong style="color:var(--accent2);">43%</strong>, and the best rates go to borrowers under <strong style="color:var(--accent2);">36%</strong>. Getting below 20% puts you in elite financial health territory.</p>
+        <p data-en="Lender target: Most mortgage lenders want a DTI under 43%." data-es="Meta del prestamista: La mayoría de los prestamistas hipotecarios quieren un DTI por debajo del 43%."><strong>Lender target:</strong> Most mortgage lenders want a DTI under <strong style="color:var(--accent2);">43%</strong>, and the best rates go to borrowers under <strong style="color:var(--accent2);">36%</strong>. Getting below 20% puts you in elite financial health territory.</p>
       </div>
     </div>
 
@@ -2887,9 +2887,9 @@
 
     <!-- SUMMARY STATS -->
     <div class="goals-summary">
-      <div class="goal-stat"><label>Total Goals</label><div class="gs-val" id="gs-count">0</div></div>
-      <div class="goal-stat"><label>Total Saved</label><div class="gs-val" id="gs-saved">$0</div></div>
-      <div class="goal-stat"><label>Total Target</label><div class="gs-val" id="gs-target">$0</div></div>
+      <div class="goal-stat"><label data-en="Total Goals" data-es="Total de Metas">Total Goals</label><div class="gs-val" id="gs-count">0</div></div>
+      <div class="goal-stat"><label data-en="Total Saved" data-es="Total Ahorrado">Total Saved</label><div class="gs-val" id="gs-saved">$0</div></div>
+      <div class="goal-stat"><label data-en="Total Target" data-es="Total Objetivo">Total Target</label><div class="gs-val" id="gs-target">$0</div></div>
     </div>
 
     <div class="goals-top">
@@ -2964,7 +2964,7 @@
 
     <div class="tip-bar">
       <div class="tip-icon">💡</div>
-      <p><strong>Automate it:</strong> Set up an automatic transfer to savings on payday. Treating savings like a fixed expense is the single most effective habit for reaching financial goals.</p>
+      <p data-en="Automate it: Set up an automatic transfer to savings on payday." data-es="Automatízalo: Configura una transferencia automática el día de pago. Tratar el ahorro como un gasto fijo es el hábito más efectivo."><strong>Automate it:</strong> Set up an automatic transfer to savings on payday. Treating savings like a fixed expense is the single most effective habit for reaching financial goals.</p>
     </div>
 
   </div>
@@ -3132,7 +3132,7 @@
 
       <div class="tip-bar" style="margin-top:0">
         <div class="tip-icon">🏆</div>
-        <p><strong>Your score updates automatically</strong> as you add transactions, bills, and savings goals. The higher your score the better your financial health — aim for <strong>80+</strong> to qualify for the best loan rates!</p>
+        <p data-en="Your score updates automatically as you add transactions, bills, and savings goals." data-es="Tu puntaje se actualiza automáticamente al agregar transacciones, facturas y metas de ahorro."><strong>Your score updates automatically</strong> as you add transactions, bills, and savings goals. The higher your score the better your financial health — aim for <strong>80+</strong> to qualify for the best loan rates!</p>
       </div>
 
     </div>
@@ -3187,7 +3187,7 @@
 
         <div class="tip-bar" style="margin-top:1.25rem">
           <div class="tip-icon">💡</div>
-          <p><strong>S&P 500 average:</strong> The stock market has historically returned about <strong>7-10%</strong> annually over long periods. Index funds are a simple way to capture this growth.</p>
+          <p data-en="S&P 500 average: The market has historically returned 7-10% annually." data-es="Promedio S&P 500: El mercado ha retornado históricamente el 7-10% anual."><strong>S&P 500 average:</strong> The stock market has historically returned about <strong>7-10%</strong> annually over long periods. Index funds are a simple way to capture this growth.</p>
         </div>
       </div>
 
@@ -3226,7 +3226,7 @@
 
     <div class="tip-bar">
       <div class="tip-icon">⏰</div>
-      <p><strong>Time is your greatest asset.</strong> Starting 10 years earlier can <strong>double or triple</strong> your final balance. Even small monthly contributions grow significantly over decades — start today!</p>
+      <p data-en="Time is your greatest asset. Starting 10 years earlier can double or triple your final balance." data-es="El tiempo es tu mayor activo. Comenzar 10 años antes puede duplicar o triplicar tu balance final."><strong>Time is your greatest asset.</strong> Starting 10 years earlier can <strong>double or triple</strong> your final balance. Even small monthly contributions grow significantly over decades — start today!</p>
     </div>
 
   </div>
@@ -3340,7 +3340,7 @@
 
     <div class="tip-bar" style="margin-top:1.5rem">
       <div class="tip-icon">💎</div>
-      <p><strong>Pro tip:</strong> Net worth is the single best number to track your financial health. Even a small positive number means you own more than you owe — keep building!</p>
+      <p data-en="Pro tip: Net worth is the single best number to track your financial health." data-es="Consejo Pro: El patrimonio neto es el mejor indicador de tu salud financiera. ¡Incluso un número positivo pequeño significa que tienes más de lo que debes!"><strong>Pro tip:</strong> Net worth is the single best number to track your financial health. Even a small positive number means you own more than you owe — keep building!</p>
     </div>
 
   </div>
@@ -3643,7 +3643,7 @@
           <div class="streak-cards" id="streak-cards"></div>
           <div class="tip-bar" style="margin-top:1rem">
             <div class="tip-icon">💡</div>
-            <p><strong>Keep it going!</strong> Streaks reset if you miss a day. Log in and update your budget daily to maintain your streak and earn bonus XP.</p>
+            <p data-en="Keep it going! Streaks reset if you miss a day. Log in daily to maintain your streak." data-es="¡Sigue así! Las rachas se reinician si fallas un día. Inicia sesión diariamente para mantener tu racha."><strong>Keep it going!</strong> Streaks reset if you miss a day. Log in and update your budget daily to maintain your streak and earn bonus XP.</p>
           </div>
         </div>
       </div>
@@ -3778,7 +3778,7 @@
               <p style="font-size:0.85rem;color:var(--muted);line-height:1.6">Fill in your debt details on the left and Claude AI will write a personalized word-for-word script tailored to your situation.</p>
               <div class="tip-bar" style="margin-top:1.5rem;text-align:left">
                 <div class="tip-icon">💡</div>
-                <p><strong>Did you know?</strong> Simply calling and asking for a lower rate works <strong>80% of the time</strong> for customers with good payment history. You have nothing to lose!</p>
+                <p data-en="Did you know? Simply calling and asking for a lower rate works 80% of the time." data-es="¿Sabías que? Simplemente llamar y pedir una tasa más baja funciona el 80% del tiempo."><strong>Did you know?</strong> Simply calling and asking for a lower rate works <strong>80% of the time</strong> for customers with good payment history. You have nothing to lose!</p>
               </div>
             </div>
 
@@ -3838,7 +3838,7 @@
 
         <div class="tip-bar" style="margin-top:1rem">
           <div class="tip-icon">⚠️</div>
-          <p><strong>Important:</strong> These scripts are for educational purposes only. Always be honest with creditors. Results vary based on your credit history, account standing, and the creditor's policies.</p>
+          <p data-en="Important: These scripts are for educational purposes only." data-es="Importante: Estos scripts son solo para fines educativos."><strong>Important:</strong> These scripts are for educational purposes only. Always be honest with creditors. Results vary based on your credit history, account standing, and the creditor's policies.</p>
         </div>
       </div>
 
@@ -7768,8 +7768,12 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   checkBillAlerts();
   handleUpgradeReturn();
   calcInvestment();
+  // Restore saved payday date and frequency, or default to today
+  const savedPayday = safeGet('fintrail_payday_date');
+  const savedFreq   = safeGet('fintrail_pay_freq');
   const todayStr = new Date().toISOString().split('T')[0];
-  document.getElementById('next-payday').value = todayStr;
+  document.getElementById('next-payday').value = savedPayday || todayStr;
+  if (savedFreq) document.getElementById('pay-frequency').value = savedFreq;
 </script>
 </body>
 </html>
