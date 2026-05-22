@@ -1053,7 +1053,7 @@
   .auth-input-group label { font-size: 0.72rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
   .auth-input {
     background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
-    padding: 0.7rem 1rem; font-family: 'Sora', sans-serif; font-size: 0.875rem;
+    padding: 0.7rem 1rem; font-family: 'Sora', sans-serif; font-size: 16px;
     color: var(--text); outline: none; transition: border-color 0.2s, box-shadow 0.2s;
   }
   .auth-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--glow-red); }
@@ -1901,6 +1901,69 @@
     .goals-summary { grid-template-columns: 1fr; }
     .premium-grid { grid-template-columns: 1fr; }
   }
+
+  /* ─── DEBT ADD FORM RESPONSIVE ─── */
+  .debt-add-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:0.6rem; align-items:end; }
+  @media (max-width:480px) {
+    .debt-add-grid { grid-template-columns:1fr 1fr; }
+    .debt-add-grid .add-btn { grid-column:1/-1; margin-top:0.25rem; }
+  }
+
+  /* ─── TABLET (768px – 1024px) ─── */
+  @media (max-width:1024px) and (min-width:701px) {
+    main { padding: 1.75rem 1.5rem 5rem; }
+    .summary-grid { grid-template-columns: repeat(2,1fr); }
+    .two-col { grid-template-columns: 1fr 1fr; }
+    .premium-grid { grid-template-columns: 1fr 1fr; }
+    .invest-stats { grid-template-columns: repeat(2,1fr); }
+    .score-bands { grid-template-columns: repeat(3,1fr); }
+    .plan-result-grid { grid-template-columns: 1fr 1fr; }
+    header { padding: 0 1.5rem; }
+    .hero { padding: 3rem 1.5rem 2.5rem; }
+    .hero h1 { font-size: 2.2rem; }
+  }
+
+  /* ─── PHONE (≤700px) ADDITIONS ─── */
+  @media (max-width:700px) {
+    /* Debt list edit/remove buttons: keep on one row */
+    #debt-list > div { flex-wrap:nowrap; }
+    /* Auth card: full-width with less padding on tiny screens */
+    .auth-card { border-radius:12px; }
+    .auth-body { padding: 1.25rem 1rem 1.5rem; }
+    .auth-top { padding: 1.5rem 1rem 1.25rem; }
+    /* Safe bottom padding for iOS browser chrome */
+    main { padding-bottom: calc(4rem + env(safe-area-inset-bottom, 16px)); }
+    /* Profile layout: tighten sidebar */
+    .profile-layout > div:first-child .card { padding: 1rem; }
+    /* Debt type grid: 2 cols on phone */
+    .debt-type-grid { grid-template-columns: 1fr 1fr; }
+    /* Script type grid */
+    .script-type-grid { grid-template-columns: 1fr 1fr; }
+    /* Cal header: wrap tightly */
+    .cal-header { gap: 0.5rem; }
+    .cal-nav-btn { padding: 0.35rem 0.55rem; font-size:0.78rem; }
+    /* Mobile nav tiles: 3 columns */
+    .mobile-nav-grid { grid-template-columns: repeat(3,1fr) !important; }
+    /* Modals: full-width on small screens */
+    .cal-event-modal-card, #edit-debt-modal > div { margin: 0.75rem; }
+  }
+
+  /* ─── VERY SMALL PHONES (≤380px) ─── */
+  @media (max-width:380px) {
+    .hero h1 { font-size: 1.5rem; }
+    .auth-logo { font-size: 1.6rem; }
+    .cal-day { min-height:44px; }
+    .cal-event { display:none; }
+    .cal-day.has-events::after { content:'•'; font-size:0.6rem; color:var(--accent); display:block; text-align:center; }
+  }
+
+  /* ─── ULTRAWIDE / LARGE DESKTOP (≥1400px) ─── */
+  @media (min-width:1400px) {
+    header > * { max-width:1400px; margin:0 auto; }
+    main { max-width:1400px; margin:0 auto; }
+    .hero { max-width:1400px; margin:0 auto; }
+  }
+
 </style>
 </head>
 <body>
@@ -3016,7 +3079,7 @@
         <!-- ADD DEBT FORM -->
         <div style="background:var(--bg);border-radius:10px;padding:1rem;margin-bottom:1rem;border:1px solid var(--border)">
           <div style="font-size:0.82rem;font-weight:700;color:var(--text);margin-bottom:0.75rem">➕ Add a Debt</div>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:0.6rem;align-items:end;">
+          <div class="debt-add-grid">
             <div class="form-group"><label>Debt Name</label><input type="text" id="debt-name" placeholder="e.g. Visa Card"></div>
             <div class="form-group"><label>Balance ($)</label><input type="number" id="debt-balance" placeholder="5000" min="0"></div>
             <div class="form-group"><label>APR (%)</label><input type="number" id="debt-apr" placeholder="19.99" step="0.01" min="0"></div>
