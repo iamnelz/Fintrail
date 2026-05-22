@@ -1967,6 +1967,22 @@
     .hero { max-width:1400px; margin:0 auto; }
   }
 
+
+  /* ── NET WORTH TRACKER ── */
+  .nw-layout { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; align-items:start; }
+  @media (max-width:860px) { .nw-layout { grid-template-columns:1fr; } }
+  .nw-item { display:flex; align-items:center; gap:0.6rem; padding:0.55rem 0.75rem; background:var(--bg); border-radius:8px; border:1px solid var(--border); }
+  .nw-item-name { flex:1; font-size:0.85rem; font-weight:600; color:var(--text); }
+  .nw-item-value { font-size:0.85rem; font-weight:700; }
+  .nw-item-value.asset { color:var(--income-color); }
+  .nw-item-value.liability { color:var(--accent); }
+  .nw-item-edit { background:none; border:1px solid var(--border); color:var(--text-soft); font-size:0.68rem; font-weight:600; padding:0.15rem 0.45rem; border-radius:5px; cursor:pointer; }
+  .nw-item-del { background:none; border:none; color:var(--muted); font-size:0.95rem; cursor:pointer; padding:0 0.25rem; }
+  .nw-bar-row { display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem; }
+  .nw-bar-label { font-size:0.78rem; color:var(--text-soft); width:120px; flex-shrink:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .nw-bar-track { flex:1; height:8px; background:var(--border); border-radius:20px; overflow:hidden; }
+  .nw-bar-fill { height:100%; border-radius:20px; transition:width 0.4s ease; }
+  .nw-bar-amount { font-size:0.78rem; font-weight:700; width:80px; text-align:right; flex-shrink:0; }
 </style>
 </head>
 <body>
@@ -2086,6 +2102,10 @@
           <span class="ndi-icon">📈</span>
           <div class="ndi-info"><span class="ndi-label" data-en="Investment Calculator" data-es="Calculadora de Inversión">Investment Calculator</span><span class="ndi-desc" data-en="Compound interest planner" data-es="Planificador de interés compuesto">Compound interest planner</span></div>
         </button>
+        <button class="nav-dropdown-item" onclick="navTo('networth', this)">
+          <span class="ndi-icon">💎</span>
+          <div class="ndi-info"><span class="ndi-label" data-en="Net Worth Tracker" data-es="Rastreador de Patrimonio">Net Worth Tracker</span><span class="ndi-desc" data-en="Assets minus liabilities" data-es="Activos menos pasivos">Assets minus liabilities</span></div>
+        </button>
         <button class="nav-dropdown-item" onclick="guardedNavTo('premium', this)">
           <span class="ndi-icon">💳</span>
           <div class="ndi-info"><span class="ndi-label" data-en="Debt Payoff Planner" data-es="Planificador de Deudas">Debt Payoff Planner <span class="pro-pill">PRO</span></span><span class="ndi-desc" data-en="Avalanche & snowball method" data-es="Método avalancha y bola de nieve">Avalanche & snowball method</span></div>
@@ -2176,6 +2196,7 @@
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem;padding:0 0.75rem 0.5rem">
     <button class="mobile-nav-tile" onclick="mobileTab('savings')">🎯<span data-en="Goals" data-es="Metas">Goals</span></button>
     <button class="mobile-nav-tile" onclick="mobileTab('invest')">📈<span data-en="Investment" data-es="Inversión">Investment</span></button>
+    <button class="mobile-nav-tile" onclick="mobileTab('networth');closeMobileNav()">💎<span data-en="Net Worth" data-es="Patrimonio">Net Worth</span></button>
     <button class="mobile-nav-tile" onclick="mobileTab('calendar')">📅<span data-en="Calendar" data-es="Calendario">Calendar</span></button>
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('premium')">💳<span data-en="Debt Planner" data-es="Plan de Deuda">Debt Planner</span></button>
   </div>
@@ -3206,6 +3227,120 @@
     <div class="tip-bar">
       <div class="tip-icon">⏰</div>
       <p><strong>Time is your greatest asset.</strong> Starting 10 years earlier can <strong>double or triple</strong> your final balance. Even small monthly contributions grow significantly over decades — start today!</p>
+    </div>
+
+  </div>
+
+
+  <!-- NET WORTH TRACKER TAB -->
+  <div class="tab-section" id="tab-networth">
+
+    <!-- HEADLINE -->
+    <div class="card" style="background:linear-gradient(135deg,#1a1a2e 0%,#2d1b4e 100%);color:#fff;margin-bottom:1.5rem;text-align:center;padding:2rem 1.5rem;position:relative;overflow:hidden">
+      <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(240,85,85,0.18) 0%,transparent 70%);pointer-events:none"></div>
+      <div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.5);margin-bottom:0.5rem">YOUR NET WORTH</div>
+      <div id="nw-headline" style="font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:700;color:#fff;line-height:1">$0</div>
+      <div id="nw-headline-change" style="font-size:0.82rem;margin-top:0.4rem;color:rgba(255,255,255,0.55)">Add your assets and liabilities below</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem;max-width:400px;margin-left:auto;margin-right:auto">
+        <div style="background:rgba(6,214,160,0.12);border:1px solid rgba(6,214,160,0.3);border-radius:12px;padding:0.9rem">
+          <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.5);margin-bottom:0.3rem">TOTAL ASSETS</div>
+          <div id="nw-total-assets" style="font-size:1.3rem;font-weight:700;color:#06d6a0">$0</div>
+        </div>
+        <div style="background:rgba(240,85,85,0.12);border:1px solid rgba(240,85,85,0.3);border-radius:12px;padding:0.9rem">
+          <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.5);margin-bottom:0.3rem">TOTAL LIABILITIES</div>
+          <div id="nw-total-liabilities" style="font-size:1.3rem;font-weight:700;color:#f05555">$0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nw-layout">
+
+      <!-- LEFT: ASSETS & LIABILITIES -->
+      <div style="display:flex;flex-direction:column;gap:1.25rem">
+
+        <!-- ASSETS -->
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+            <h2 style="margin:0;font-size:1rem">💚 Assets</h2>
+            <button onclick="addNWItem('asset')" style="background:var(--income-color);color:#fff;border:none;border-radius:8px;padding:0.35rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer">+ Add</button>
+          </div>
+          <div id="nw-asset-list" style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.75rem"></div>
+          <!-- Quick-add row -->
+          <div style="display:grid;grid-template-columns:1fr auto auto;gap:0.5rem;align-items:center;background:var(--bg);border-radius:10px;padding:0.65rem;border:1px solid var(--border)">
+            <input type="text" id="nw-asset-name" placeholder="e.g. Savings Account" style="background:none;border:none;outline:none;font-family:'Sora',sans-serif;font-size:0.85rem;color:var(--text);font-size:16px">
+            <input type="number" id="nw-asset-value" placeholder="$0" min="0" style="width:100px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:0.35rem 0.5rem;font-family:'Sora',sans-serif;font-size:16px;color:var(--text);outline:none;text-align:right">
+            <button onclick="addNWItem('asset')" style="background:var(--income-color);color:#fff;border:none;border-radius:6px;padding:0.38rem 0.65rem;font-size:0.9rem;cursor:pointer;font-weight:700">+</button>
+          </div>
+          <!-- Common asset shortcuts -->
+          <div style="display:flex;flex-wrap:wrap;gap:0.35rem;margin-top:0.6rem">
+            <button onclick="quickAddNW('asset','Cash / Checking',0)" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:20px;border:1px solid var(--border);background:none;cursor:pointer;color:var(--text-soft)">💵 Cash</button>
+            <button onclick="quickAddNW('asset','Savings Account',0)" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:20px;border:1px solid var(--border);background:none;cursor:pointer;color:var(--text-soft)">🏦 Savings</button>
+            <button onclick="quickAddNW('asset','401k / IRA',0)" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:20px;border:1px solid var(--border);background:none;cursor:pointer;color:var(--text-soft)">📈 Retirement</button>
+            <button onclick="quickAddNW('asset','Home Value',0)" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:20px;border:1px solid var(--border);background:none;cursor:pointer;color:var(--text-soft)">🏠 Home</button>
+            <button onclick="quickAddNW('asset','Vehicle Value',0)" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:20px;border:1px solid var(--border);background:none;cursor:pointer;color:var(--text-soft)">🚗 Car</button>
+          </div>
+        </div>
+
+        <!-- LIABILITIES -->
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+            <h2 style="margin:0;font-size:1rem">❤️ Liabilities</h2>
+            <button onclick="addNWItem('liability')" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.35rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer">+ Add</button>
+          </div>
+          <div id="nw-liability-list" style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.75rem"></div>
+          <div style="display:grid;grid-template-columns:1fr auto auto;gap:0.5rem;align-items:center;background:var(--bg);border-radius:10px;padding:0.65rem;border:1px solid var(--border)">
+            <input type="text" id="nw-liability-name" placeholder="e.g. Mortgage" style="background:none;border:none;outline:none;font-family:'Sora',sans-serif;font-size:16px;color:var(--text)">
+            <input type="number" id="nw-liability-value" placeholder="$0" min="0" style="width:100px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:0.35rem 0.5rem;font-family:'Sora',sans-serif;font-size:16px;color:var(--text);outline:none;text-align:right">
+            <button onclick="addNWItem('liability')" style="background:var(--accent);color:#fff;border:none;border-radius:6px;padding:0.38rem 0.65rem;font-size:0.9rem;cursor:pointer;font-weight:700">+</button>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:0.35rem;margin-top:0.6rem">
+            <button onclick="quickAddNW('liability','Mortgage',0)" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:20px;border:1px solid var(--border);background:none;cursor:pointer;color:var(--text-soft)">🏠 Mortgage</button>
+            <button onclick="quickAddNW('liability','Car Loan',0)" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:20px;border:1px solid var(--border);background:none;cursor:pointer;color:var(--text-soft)">🚗 Car Loan</button>
+            <button onclick="quickAddNW('liability','Credit Cards',0)" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:20px;border:1px solid var(--border);background:none;cursor:pointer;color:var(--text-soft)">💳 Credit Cards</button>
+            <button onclick="quickAddNW('liability','Student Loans',0)" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:20px;border:1px solid var(--border);background:none;cursor:pointer;color:var(--text-soft)">🎓 Student Loans</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: CHART + HISTORY -->
+      <div style="display:flex;flex-direction:column;gap:1.25rem">
+
+        <!-- CHART -->
+        <div class="card">
+          <h2 style="font-size:1rem;margin-bottom:0.25rem">📊 Net Worth Over Time</h2>
+          <p style="font-size:0.78rem;color:var(--text-soft);margin-bottom:1rem">A monthly snapshot is saved each time you visit this tab.</p>
+          <div id="nw-chart-wrap" style="position:relative;height:200px;width:100%">
+            <canvas id="nw-chart" style="width:100%;height:100%"></canvas>
+            <div id="nw-chart-empty" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:0.82rem">Add data to see your history chart</div>
+          </div>
+        </div>
+
+        <!-- BREAKDOWN -->
+        <div class="card">
+          <h2 style="font-size:1rem;margin-bottom:1rem">🧩 Breakdown</h2>
+          <div id="nw-breakdown" style="display:flex;flex-direction:column;gap:0.5rem">
+            <div style="text-align:center;color:var(--muted);font-size:0.82rem;padding:1rem">Add assets and liabilities to see your breakdown</div>
+          </div>
+        </div>
+
+        <!-- HISTORY TABLE -->
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+            <h2 style="font-size:1rem;margin:0">📅 Monthly History</h2>
+            <button onclick="clearNWHistory()" style="background:none;border:1px solid var(--border);color:var(--muted);font-size:0.7rem;padding:0.2rem 0.55rem;border-radius:6px;cursor:pointer">Clear</button>
+          </div>
+          <div id="nw-history-list" style="display:flex;flex-direction:column;gap:0.35rem;max-height:220px;overflow-y:auto">
+            <div style="text-align:center;color:var(--muted);font-size:0.82rem;padding:1rem">No history yet — check back next month</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="tip-bar" style="margin-top:1.5rem">
+      <div class="tip-icon">💎</div>
+      <p><strong>Pro tip:</strong> Net worth is the single best number to track your financial health. Even a small positive number means you own more than you owe — keep building!</p>
     </div>
 
   </div>
@@ -4275,7 +4410,7 @@
 
     if (!sbClient || !currentUser) return;
     try {
-      const payload = { user_id: currentUser.id, transactions, bills, goals, plan_debts: planDebts, is_pro: isPro, updated_at: new Date().toISOString() };
+      const payload = { user_id: currentUser.id, transactions, bills, goals, plan_debts: planDebts, nw_assets: nwAssets, nw_liabilities: nwLiabilities, nw_history: nwHistory, is_pro: isPro, updated_at: new Date().toISOString() };
       await sbClient.from('user_data').upsert(payload, { onConflict: 'user_id' });
     } catch(err) {
       console.log('saveUserData error:', err.message);
@@ -4326,9 +4461,11 @@
         goals = data.goals || [];
         if (data.plan_debts?.length) {
           planDebts = data.plan_debts;
-          // Keep localStorage in sync
           safeSet('fintrail_debts_' + currentUser.id, JSON.stringify(planDebts));
         }
+        if (data.nw_assets)      { nwAssets      = data.nw_assets;      safeSet('fintrail_nw_assets_'      + currentUser.id, JSON.stringify(nwAssets)); }
+        if (data.nw_liabilities) { nwLiabilities = data.nw_liabilities; safeSet('fintrail_nw_liabilities_' + currentUser.id, JSON.stringify(nwLiabilities)); }
+        if (data.nw_history)     { nwHistory     = data.nw_history;     safeSet('fintrail_nw_history_'     + currentUser.id, JSON.stringify(nwHistory)); }
         if (data.is_pro) {
           isPro = true;
           applyProState();
@@ -4486,6 +4623,7 @@
   function mobileTab(tab) {
     document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('visible'));
     document.querySelectorAll('nav button, .mobile-nav button').forEach(b => b.classList.remove('active'));
+    if (tab === 'networth') { setTimeout(initNetWorth, 50); }
     document.getElementById('tab-' + tab).classList.add('visible');
     closeMobileNav();
   }
@@ -6515,6 +6653,316 @@ Make the script conversational, natural, and realistic. Use [YOUR NAME], [ACCOUN
   };
 
   // Safe storage helper — works in private browsing mode
+
+  // ─── NET WORTH TRACKER ────────────────────────────────────────────────────────
+  let nwAssets = [];      // [{id, name, value}]
+  let nwLiabilities = []; // [{id, name, value}]
+  let nwHistory = [];     // [{month:'2025-05', value:12000}]
+  let nwChart = null;
+
+  function loadNWData() {
+    try {
+      const uid = currentUser?.id || 'demo';
+      const a = safeGet('fintrail_nw_assets_' + uid);
+      const l = safeGet('fintrail_nw_liabilities_' + uid);
+      const h = safeGet('fintrail_nw_history_' + uid);
+      if (a) nwAssets      = JSON.parse(a);
+      if (l) nwLiabilities = JSON.parse(l);
+      if (h) nwHistory     = JSON.parse(h);
+    } catch(e) {}
+    // Auto-pull debts from Debt Planner
+    if (planDebts && planDebts.length) {
+      planDebts.forEach(d => {
+        const exists = nwLiabilities.find(l => l.name === d.name + ' (debt)');
+        if (!exists) nwLiabilities.push({ id: Date.now() + Math.random(), name: d.name + ' (debt)', value: d.balance });
+      });
+    }
+    // Auto-pull savings goals
+    if (goals && goals.length) {
+      goals.forEach(g => {
+        const exists = nwAssets.find(a => a.name === g.name + ' (savings)');
+        if (!exists && g.saved > 0) nwAssets.push({ id: Date.now() + Math.random(), name: g.name + ' (savings)', value: g.saved });
+      });
+    }
+  }
+
+  function saveNWData() {
+    const uid = currentUser?.id || 'demo';
+    safeSet('fintrail_nw_assets_' + uid, JSON.stringify(nwAssets));
+    safeSet('fintrail_nw_liabilities_' + uid, JSON.stringify(nwLiabilities));
+    safeSet('fintrail_nw_history_' + uid, JSON.stringify(nwHistory));
+    // Supabase sync
+    if (sbClient && currentUser) {
+      sbClient.from('user_data').upsert({
+        user_id: currentUser.id,
+        nw_assets: nwAssets, nw_liabilities: nwLiabilities, nw_history: nwHistory,
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'user_id' }).catch(e => console.log('NW sync err:', e.message));
+    }
+  }
+
+  function calcNW() {
+    const totalAssets      = nwAssets.reduce((s, a) => s + (parseFloat(a.value) || 0), 0);
+    const totalLiabilities = nwLiabilities.reduce((s, l) => s + (parseFloat(l.value) || 0), 0);
+    const netWorth         = totalAssets - totalLiabilities;
+
+    // Headline
+    const headline = document.getElementById('nw-headline');
+    const change   = document.getElementById('nw-headline-change');
+    if (!headline) return;
+    headline.textContent = (netWorth < 0 ? '-' : '') + '$' + Math.abs(netWorth).toLocaleString(undefined, {maximumFractionDigits:0});
+    headline.style.color = netWorth < 0 ? '#f05555' : '#06d6a0';
+
+    // Last month delta
+    if (nwHistory.length >= 2) {
+      const prev  = nwHistory[nwHistory.length - 2].value;
+      const delta = netWorth - prev;
+      const sign  = delta >= 0 ? '+' : '';
+      change.textContent = sign + '$' + Math.abs(delta).toLocaleString(undefined, {maximumFractionDigits:0}) + ' vs last month';
+      change.style.color = delta >= 0 ? 'rgba(6,214,160,0.85)' : 'rgba(240,85,85,0.85)';
+    } else {
+      change.textContent = 'Add your assets and liabilities below';
+      change.style.color = 'rgba(255,255,255,0.55)';
+    }
+
+    document.getElementById('nw-total-assets').textContent      = '$' + totalAssets.toLocaleString(undefined, {maximumFractionDigits:0});
+    document.getElementById('nw-total-liabilities').textContent = '$' + totalLiabilities.toLocaleString(undefined, {maximumFractionDigits:0});
+
+    renderNWLists();
+    renderNWBreakdown(totalAssets, totalLiabilities);
+    renderNWChart();
+    snapshotNWHistory(netWorth);
+    renderNWHistory();
+  }
+
+  function renderNWLists() {
+    const aList = document.getElementById('nw-asset-list');
+    const lList = document.getElementById('nw-liability-list');
+    if (!aList || !lList) return;
+
+    aList.innerHTML = nwAssets.length === 0 ? '<div style="font-size:0.8rem;color:var(--muted);text-align:center;padding:0.5rem">No assets yet</div>' :
+      nwAssets.map(a => `
+        <div class="nw-item">
+          <span class="nw-item-name">${escHtml(a.name)}</span>
+          <span class="nw-item-value asset">$${parseFloat(a.value).toLocaleString(undefined,{maximumFractionDigits:0})}</span>
+          <button class="nw-item-edit" onclick="editNWItem('asset',${a.id})">Edit</button>
+          <button class="nw-item-del" onclick="deleteNWItem('asset',${a.id})">✕</button>
+        </div>`).join('');
+
+    lList.innerHTML = nwLiabilities.length === 0 ? '<div style="font-size:0.8rem;color:var(--muted);text-align:center;padding:0.5rem">No liabilities yet</div>' :
+      nwLiabilities.map(l => `
+        <div class="nw-item">
+          <span class="nw-item-name">${escHtml(l.name)}</span>
+          <span class="nw-item-value liability">$${parseFloat(l.value).toLocaleString(undefined,{maximumFractionDigits:0})}</span>
+          <button class="nw-item-edit" onclick="editNWItem('liability',${l.id})">Edit</button>
+          <button class="nw-item-del" onclick="deleteNWItem('liability',${l.id})">✕</button>
+        </div>`).join('');
+  }
+
+  function renderNWBreakdown(totalAssets, totalLiabilities) {
+    const el = document.getElementById('nw-breakdown');
+    if (!el) return;
+    const total = totalAssets + totalLiabilities;
+    if (total === 0) { el.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:0.82rem;padding:1rem">Add assets and liabilities to see your breakdown</div>'; return; }
+
+    const allItems = [
+      ...nwAssets.map(a => ({ name: a.name, value: parseFloat(a.value)||0, type:'asset' })),
+      ...nwLiabilities.map(l => ({ name: l.name, value: parseFloat(l.value)||0, type:'liability' }))
+    ].sort((a,b) => b.value - a.value);
+
+    el.innerHTML = allItems.map(item => {
+      const pct   = total > 0 ? Math.round((item.value / total) * 100) : 0;
+      const color = item.type === 'asset' ? 'var(--income-color)' : 'var(--accent)';
+      return `<div class="nw-bar-row">
+        <span class="nw-bar-label" title="${escHtml(item.name)}">${escHtml(item.name)}</span>
+        <div class="nw-bar-track"><div class="nw-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+        <span class="nw-bar-amount" style="color:${color}">$${item.value.toLocaleString(undefined,{maximumFractionDigits:0})}</span>
+      </div>`;
+    }).join('');
+  }
+
+  function snapshotNWHistory(netWorth) {
+    const now   = new Date();
+    const month = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+    const last  = nwHistory[nwHistory.length - 1];
+    if (!last || last.month !== month) {
+      nwHistory.push({ month, value: netWorth });
+      if (nwHistory.length > 24) nwHistory.shift(); // keep 2 years
+    } else {
+      last.value = netWorth; // update current month
+    }
+  }
+
+  function renderNWChart() {
+    const canvas = document.getElementById('nw-chart');
+    const emptyEl = document.getElementById('nw-chart-empty');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    const wrap = canvas.parentElement;
+    canvas.width  = wrap.clientWidth  * dpr;
+    canvas.height = wrap.clientHeight * dpr;
+    ctx.scale(dpr, dpr);
+    const W = wrap.clientWidth, H = wrap.clientHeight;
+
+    if (nwHistory.length < 2) {
+      emptyEl.style.display = 'flex';
+      ctx.clearRect(0,0,W,H);
+      return;
+    }
+    emptyEl.style.display = 'none';
+
+    const values = nwHistory.map(h => h.value);
+    const minV   = Math.min(...values);
+    const maxV   = Math.max(...values);
+    const range  = maxV - minV || 1;
+    const pad    = { top:20, right:20, bottom:30, left:60 };
+    const iW     = W - pad.left - pad.right;
+    const iH     = H - pad.top  - pad.bottom;
+
+    ctx.clearRect(0,0,W,H);
+
+    // Grid lines
+    ctx.strokeStyle = 'rgba(200,200,200,0.15)';
+    ctx.lineWidth = 1;
+    [0, 0.25, 0.5, 0.75, 1].forEach(p => {
+      const y = pad.top + iH * (1 - p);
+      ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left+iW, y); ctx.stroke();
+      const val = minV + range * p;
+      ctx.fillStyle = 'rgba(150,150,150,0.8)';
+      ctx.font = '10px Sora, sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText((val < 0 ? '-$' : '$') + Math.abs(Math.round(val/1000)) + 'k', pad.left - 6, y + 4);
+    });
+
+    // Zero line
+    if (minV < 0 && maxV > 0) {
+      const zy = pad.top + iH * (1 - (0 - minV)/range);
+      ctx.strokeStyle = 'rgba(240,85,85,0.4)';
+      ctx.setLineDash([4,4]); ctx.beginPath(); ctx.moveTo(pad.left,zy); ctx.lineTo(pad.left+iW,zy); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Line path
+    const pts = values.map((v,i) => ({
+      x: pad.left + (i / (values.length-1)) * iW,
+      y: pad.top  + iH * (1 - (v - minV) / range)
+    }));
+
+    // Gradient fill
+    const grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + iH);
+    grad.addColorStop(0, 'rgba(6,214,160,0.25)');
+    grad.addColorStop(1, 'rgba(6,214,160,0.02)');
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pad.top + iH);
+    pts.forEach(p => ctx.lineTo(p.x, p.y));
+    ctx.lineTo(pts[pts.length-1].x, pad.top + iH);
+    ctx.closePath();
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // Line
+    ctx.beginPath();
+    pts.forEach((p,i) => i === 0 ? ctx.moveTo(p.x,p.y) : ctx.lineTo(p.x,p.y));
+    ctx.strokeStyle = '#06d6a0';
+    ctx.lineWidth   = 2.5;
+    ctx.lineJoin    = 'round';
+    ctx.stroke();
+
+    // Dots
+    pts.forEach((p,i) => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 4, 0, Math.PI*2);
+      ctx.fillStyle   = '#06d6a0';
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth   = 2;
+      ctx.fill(); ctx.stroke();
+    });
+
+    // X labels (months)
+    ctx.fillStyle   = 'rgba(150,150,150,0.8)';
+    ctx.font        = '9px Sora, sans-serif';
+    ctx.textAlign   = 'center';
+    const step = Math.max(1, Math.floor(values.length / 6));
+    pts.forEach((p,i) => {
+      if (i % step === 0 || i === pts.length-1) {
+        const [y,m] = nwHistory[i].month.split('-');
+        const label = new Date(parseInt(y), parseInt(m)-1).toLocaleDateString('en-US', {month:'short', year:'2-digit'});
+        ctx.fillText(label, p.x, H - 8);
+      }
+    });
+  }
+
+  function renderNWHistory() {
+    const el = document.getElementById('nw-history-list');
+    if (!el) return;
+    if (nwHistory.length === 0) { el.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:0.82rem;padding:1rem">No history yet</div>'; return; }
+    const sorted = [...nwHistory].reverse();
+    el.innerHTML = sorted.map((h, i) => {
+      const prev  = sorted[i+1];
+      const delta = prev ? h.value - prev.value : null;
+      const sign  = delta !== null ? (delta >= 0 ? '+' : '') : '';
+      const color = delta === null ? 'var(--muted)' : delta >= 0 ? 'var(--income-color)' : 'var(--accent)';
+      const [y,m] = h.month.split('-');
+      const label = new Date(parseInt(y), parseInt(m)-1).toLocaleDateString('en-US', {month:'long', year:'numeric'});
+      return `<div style="display:flex;align-items:center;justify-content:space-between;padding:0.45rem 0.6rem;background:var(--bg);border-radius:8px;border:1px solid var(--border)">
+        <span style="font-size:0.8rem;color:var(--text-soft)">${label}</span>
+        <div style="display:flex;align-items:center;gap:0.6rem">
+          ${delta !== null ? `<span style="font-size:0.72rem;color:${color}">${sign}$${Math.abs(delta).toLocaleString(undefined,{maximumFractionDigits:0})}</span>` : ''}
+          <span style="font-size:0.85rem;font-weight:700;color:${h.value >= 0 ? 'var(--text)' : 'var(--accent)'}">${h.value < 0 ? '-' : ''}$${Math.abs(h.value).toLocaleString(undefined,{maximumFractionDigits:0})}</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function addNWItem(type) {
+    const nameEl  = document.getElementById(`nw-${type}-name`);
+    const valueEl = document.getElementById(`nw-${type}-value`);
+    const name    = nameEl?.value.trim();
+    const value   = parseFloat(valueEl?.value);
+    if (!name || isNaN(value) || value < 0) { alert('Please enter a name and value.'); return; }
+    const item = { id: Date.now(), name, value };
+    if (type === 'asset') nwAssets.push(item);
+    else nwLiabilities.push(item);
+    if (nameEl)  nameEl.value  = '';
+    if (valueEl) valueEl.value = '';
+    saveNWData(); calcNW();
+  }
+
+  function quickAddNW(type, name, value) {
+    const nameEl  = document.getElementById(`nw-${type}-name`);
+    const valueEl = document.getElementById(`nw-${type}-value`);
+    if (nameEl)  nameEl.value  = name;
+    if (valueEl) { valueEl.value = value; valueEl.focus(); }
+  }
+
+  function editNWItem(type, id) {
+    const list  = type === 'asset' ? nwAssets : nwLiabilities;
+    const item  = list.find(x => x.id === id);
+    if (!item) return;
+    const newVal = prompt(`Edit value for "${item.name}":`, item.value);
+    if (newVal === null) return;
+    const parsed = parseFloat(newVal);
+    if (!isNaN(parsed) && parsed >= 0) { item.value = parsed; saveNWData(); calcNW(); }
+  }
+
+  function deleteNWItem(type, id) {
+    if (type === 'asset') nwAssets = nwAssets.filter(x => x.id !== id);
+    else nwLiabilities = nwLiabilities.filter(x => x.id !== id);
+    saveNWData(); calcNW();
+  }
+
+  function clearNWHistory() {
+    if (!confirm('Clear all monthly history snapshots?')) return;
+    nwHistory = []; saveNWData(); renderNWHistory(); renderNWChart();
+  }
+
+  function initNetWorth() {
+    loadNWData();
+    calcNW();
+    window.addEventListener('resize', () => { if (document.getElementById('tab-networth')?.style.display !== 'none') renderNWChart(); });
+  }
+  // ─────────────────────────────────────────────────────────────────────────────
   function safeGet(key) { try { return localStorage.getItem(key); } catch(e) { try { return sessionStorage.getItem(key); } catch(e2) { return null; } } }
   function safeSet(key, val) { try { localStorage.setItem(key, val); } catch(e) { try { sessionStorage.setItem(key, val); } catch(e2) {} } }
 
