@@ -3607,7 +3607,7 @@
                 <label>Your Situation <span style="font-weight:400;color:var(--muted)">(optional — helps personalize the script)</span></label>
                 <textarea class="profile-input" id="neg-situation" rows="3" placeholder="e.g. I've been a customer for 5 years, recently lost my job, always paid on time until recently..." style="resize:vertical"></textarea>
               </div>
-              <button class="profile-save-btn" style="width:100%;margin-top:0.5rem" onclick="generateNegotiationScript()" id="neg-generate-btn">
+              <button class="profile-save-btn" style="width:100%;margin-top:0.5rem" onclick="generateNegotiationScript()" id="neg-generate-btn-sidebar">
                 ✨ Generate My Script
               </button>
             </div>
@@ -6250,7 +6250,9 @@ Guidelines:
     };
 
     const btn = document.getElementById('neg-generate-btn');
-    btn.disabled = true; btn.textContent = '✨ Generating...';
+    const btnSidebar = document.getElementById('neg-generate-btn-sidebar');
+    if (btn) { btn.disabled = true; btn.textContent = '✨ Generating...'; }
+    if (btnSidebar) { btnSidebar.disabled = true; btnSidebar.textContent = '✨ Generating...'; }
     document.getElementById('script-empty-state').style.display = 'none';
     document.getElementById('script-loading-state').style.display = 'block';
     document.getElementById('script-result').style.display = 'none';
@@ -6343,10 +6345,11 @@ Make the script conversational, natural, and realistic. Use [YOUR NAME], [ACCOUN
     } catch (err) {
       document.getElementById('script-loading-state').style.display = 'none';
       document.getElementById('script-empty-state').style.display = 'block';
-      document.getElementById('script-empty-state').innerHTML = `<div style="text-align:center;padding:2rem"><div style="font-size:2rem">❌</div><p style="color:var(--danger);margin-top:0.5rem">Something went wrong. Please try again.</p></div>`;
+      document.getElementById('script-empty-state').innerHTML = `<div style="text-align:center;padding:2rem"><div style="font-size:2rem">❌</div><p style="color:var(--danger);margin-top:0.5rem">Error: ${err.message || 'Something went wrong. Please try again.'}</p></div>`;
     }
 
-    btn.disabled = false; btn.textContent = '✨ Generate My Script';
+    if (btn) { btn.disabled = false; btn.textContent = '✨ Generate My Script'; }
+    if (btnSidebar) { btnSidebar.disabled = false; btnSidebar.textContent = '✨ Generate My Script'; }
   }
 
   function copyScript(id) {
@@ -7092,21 +7095,15 @@ Make the script conversational, natural, and realistic. Use [YOUR NAME], [ACCOUN
     if (typeof render === 'function' && currentUser) render();
 
     // Save preference
-    try { localStorage.setItem('fintrail_lang', currentLang); } catch(e) {}
+    safeSet('fintrail_lang', currentLang);
   }
 
   function loadLanguagePreference() {
     try {
-      const saved = localStorage.getItem('fintrail_lang');
+      const saved = safeGet('fintrail_lang');
       if (saved && saved !== 'en') {
         currentLang = saved;
-        // Only apply UI translations, don't trigger render yet
-        const isEs = true;
-        const langToggle = document.getElementById('lang-toggle');
-        if (langToggle) { langToggle.textContent = 'ES'; langToggle.style.background = 'rgba(240,85,85,0.1)'; langToggle.style.color = 'var(--accent)'; langToggle.style.borderColor = 'var(--accent)'; }
-        const mobileLang = document.getElementById('mobile-lang-label');
-        if (mobileLang) mobileLang.textContent = 'Switch to English';
-        document.title = 'Fintrail Pro — Presupuesta Mejor, Vive Mejor';
+        applyLanguage();
       }
     } catch(e) {}
   }
