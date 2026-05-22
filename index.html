@@ -2126,14 +2126,36 @@
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('ai')">💬<span data-en="AI Advisor" data-es="Asesor IA">AI Advisor</span></button>
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('premium')">🏆<span data-en="Health Score" data-es="Salud">Health Score</span></button>
     <button class="mobile-nav-tile" onclick="mobileTab('streaks')">🔥<span data-en="Streaks" data-es="Rachas">Streaks</span></button>
-    <button class="mobile-nav-tile" onclick="mobileTab('profile')">👤<span data-en="Profile" data-es="Perfil">Profile</span></button>
   </div>
 
-  <!-- BOTTOM ACTIONS -->
-  <div style="padding:0.5rem 0.75rem;display:flex;gap:0.5rem;border-top:1px solid var(--border);margin-top:0.25rem">
-    <button class="upgrade-btn-nav" style="flex:1" onclick="showPaywall('nav');closeMobileNav()">⭐ <span data-en="Go Pro" data-es="Hazte Pro">Go Pro</span></button>
-    <button onclick="signOut();closeMobileNav()" style="background:none;border:1.5px solid var(--border);color:var(--danger);font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:600;padding:0.45rem 0.75rem;border-radius:8px;cursor:pointer;white-space:nowrap">🚪 <span data-en="Sign Out" data-es="Salir">Sign Out</span></button>
+  <!-- ACCOUNT SECTION — always visible at bottom -->
+  <div style="border-top:2px solid var(--border);margin:0.5rem 0.75rem 0;padding-top:0.75rem">
+    <div style="font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:0.5rem" data-en="👤 Account" data-es="👤 Cuenta">👤 Account</div>
+
+    <!-- User info strip -->
+    <div id="mobile-user-info" style="display:flex;align-items:center;gap:0.6rem;padding:0.65rem 0.75rem;background:var(--bg);border-radius:10px;border:1px solid var(--border);margin-bottom:0.5rem">
+      <div id="mobile-avatar" style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:0.85rem;flex-shrink:0">?</div>
+      <div style="flex:1;min-width:0">
+        <div id="mobile-user-name" style="font-size:0.82rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Loading...</div>
+        <div id="mobile-user-plan" style="font-size:0.7rem;color:var(--muted)">Free Plan</div>
+      </div>
+      <span id="mobile-plan-badge" style="font-size:0.65rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:10px;background:var(--surface2);color:var(--muted);white-space:nowrap">FREE</span>
+    </div>
+
+    <!-- Account action buttons -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem;margin-bottom:0.5rem">
+      <button onclick="mobileTab('profile')" style="display:flex;align-items:center;justify-content:center;gap:0.4rem;padding:0.65rem;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:600;color:var(--text-soft);cursor:pointer">
+        ⚙️ <span data-en="Settings" data-es="Ajustes">Settings</span>
+      </button>
+      <button onclick="signOut();closeMobileNav()" style="display:flex;align-items:center;justify-content:center;gap:0.4rem;padding:0.65rem;border-radius:10px;border:1.5px solid rgba(240,85,85,0.3);background:rgba(240,85,85,0.05);font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:600;color:var(--danger);cursor:pointer">
+        🚪 <span data-en="Sign Out" data-es="Salir">Sign Out</span>
+      </button>
+    </div>
+
+    <!-- Go Pro button -->
+    <button class="upgrade-btn-nav" style="width:100%;text-align:center;justify-content:center" onclick="showPaywall('nav');closeMobileNav()">⭐ <span data-en="Go Pro — $4.99/mo" data-es="Hazte Pro — $4.99/mes">Go Pro — $4.99/mo</span></button>
   </div>
+  <div style="height:0.75rem"></div>
 </div>
 <div class="mobile-overlay" id="mobile-overlay" onclick="closeMobileNav()"></div>
 
@@ -4097,8 +4119,18 @@
     const name = user.user_metadata?.full_name || user.email.split('@')[0];
     document.getElementById('ab-status').textContent = `${name} · Free Plan`;
     document.getElementById('ab-status').title = user.email;
-    // If already pro, update immediately
     if (isPro) setProUI();
+
+    // Update mobile account strip
+    const initial = name.charAt(0).toUpperCase();
+    const mobileAvatar = document.getElementById('mobile-avatar');
+    const mobileUserName = document.getElementById('mobile-user-name');
+    const mobileUserPlan = document.getElementById('mobile-user-plan');
+    const mobilePlanBadge = document.getElementById('mobile-plan-badge');
+    if (mobileAvatar) mobileAvatar.textContent = initial;
+    if (mobileUserName) mobileUserName.textContent = name;
+    if (mobileUserPlan) mobileUserPlan.textContent = user.email;
+    if (mobilePlanBadge) mobilePlanBadge.textContent = isPro ? '⭐ PRO' : 'FREE';
   }
 
   // SIGN IN
@@ -4207,6 +4239,13 @@
       statusEl.textContent = `${currentUser?.user_metadata?.full_name || currentUser?.email?.split('@')[0] || 'User'} · Free Plan`;
       actionBtn.textContent = 'Upgrade to Pro →';
       actionBtn.onclick = () => showPaywall('bar');
+    }
+    // Update mobile plan badge
+    const mobilePlanBadge = document.getElementById('mobile-plan-badge');
+    if (mobilePlanBadge) {
+      mobilePlanBadge.textContent = isPro ? '⭐ PRO' : 'FREE';
+      mobilePlanBadge.style.background = isPro ? 'linear-gradient(135deg,#b8860b,#e9c46a)' : 'var(--surface2)';
+      mobilePlanBadge.style.color = isPro ? '#1a1a0f' : 'var(--muted)';
     }
   }
 
