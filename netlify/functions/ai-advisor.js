@@ -1,36 +1,70 @@
-// Fintrail AI Advisor Function v3
-exports.handler = async function(event) {
+// netlify/functions/ai-advisor.js
+// Place this file at: netlify/functions/ai-advisor.js in your project root
+// Set ANTHROPIC_API_KEY in Netlify → Site Settings → Environment Variables
+
+exports.handler = async (event) => {
+  // Only allow POST
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
+
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: 'ANTHROPIC_API_KEY not configured in Netlify environment variables' })
+    };
+  }
+
+  let body;
   try {
-    const { messages, system } = JSON.parse(event.body);
-    console.log('API Key exists:', !!process.env.ANTHROPIC_API_KEY);
-    console.log('API Key prefix:', process.env.ANTHROPIC_API_KEY?.substring(0, 15));
+    body = JSON.parse(event.body);
+  } catch {
+    return { statusCode: 400, body: JSON.stringify({ error: 'Invalid JSON body' }) };
+  }
+
+  const { messages, system } = body;
+  if (!messages || !Array.isArray(messages)) {
+    return { statusCode: 400, body: JSON.stringify({ error: 'messages array required' }) };
+  }
+
+  try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'x-api-key': apiKey,
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
-        model: 'claude-opus-4-5',
-        max_tokens: 1000,
-        system: system,
-        messages: messages
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1500,
+        system: system || 'You are a helpful financial advisor.',
+        messages
       })
     });
+
     const data = await response.json();
-    console.log('Anthropic status:', response.status);
-    console.log('Anthropic response:', JSON.stringify(data).substring(0, 200));
+
     if (!response.ok) {
-      return { statusCode: response.status, body: JSON.stringify({ error: data.error?.message || 'API error' }) };
+      return {
+        statusCode: response.status,
+        body: JSON.stringify({ error: data.error?.message || 'Anthropic API error' })
+      };
     }
+
     const reply = data.content?.map(b => b.text || '').join('') || '';
-    return { statusCode: 200, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reply }) };
+
+    return {
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ reply })
+    };
+
   } catch (err) {
-    console.log('Error:', err.message);
-    return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: err.message || 'Internal server error' })
+    };
   }
 };
