@@ -1882,6 +1882,7 @@
     .resources-hero { flex-direction: column; }
     nav { display: none; }
     .hamburger { display: flex; }
+    #mobile-profile-btn { display: flex !important; }
     header { padding: 0 1rem; }
     main { padding: 1.5rem 1rem 4rem; }
     .hero { padding: 2.5rem 1rem 2rem; }
@@ -1983,6 +1984,8 @@
 </div>
 
 <header>
+  <!-- Mobile profile avatar (only visible on mobile) -->
+  <button id="mobile-profile-btn" onclick="mobileTab('profile')" style="display:none;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;cursor:pointer;flex-shrink:0;font-weight:700;color:#fff;font-size:0.9rem" title="My Profile">?</button>
   <div class="logo" style="display:flex;align-items:center;gap:0.6rem">
     <div style="width:32px;height:32px;border-radius:50%;background:#f05555;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:0.85rem;font-weight:700;color:#fff;flex-shrink:0">FP</div>
     <span>Fin<span style="color:var(--accent)">trail</span> <span style="font-size:0.65rem;font-weight:700;letter-spacing:0.15em;color:var(--muted);vertical-align:middle">PRO</span></span>
@@ -2126,7 +2129,6 @@
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('ai')">💬<span data-en="AI Advisor" data-es="Asesor IA">AI Advisor</span></button>
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('premium')">🏆<span data-en="Health Score" data-es="Salud">Health Score</span></button>
     <button class="mobile-nav-tile" onclick="mobileTab('streaks')">🔥<span data-en="Streaks" data-es="Rachas">Streaks</span></button>
-    <button class="mobile-nav-tile" onclick="mobileTab('profile');closeMobileNav()">👤<span data-en="Profile" data-es="Perfil">Profile</span></button>
   </div>
 
   <!-- ACCOUNT SECTION — always visible at bottom -->
@@ -3750,51 +3752,6 @@
     </div>
   </div>
 
-  <!-- FINANCIAL CALENDAR TAB -->
-  <div class="tab-section" id="tab-calendar">
-
-    <div class="card">
-      <!-- HEADER -->
-      <div class="cal-header">
-        <div class="cal-nav">
-          <button class="cal-nav-btn" onclick="calPrev()">‹</button>
-          <div class="cal-month-label" id="cal-month-label">May 2026</div>
-          <button class="cal-nav-btn" onclick="calNext()">›</button>
-          <button class="cal-nav-btn" onclick="calToday()" style="width:auto;padding:0 0.65rem;font-size:0.75rem;font-weight:600">Today</button>
-        </div>
-        <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap">
-          <div class="cal-view-toggle">
-            <button class="cal-view-btn active" id="cal-view-month" onclick="setCalView('month')">Month</button>
-            <button class="cal-view-btn" id="cal-view-week" onclick="setCalView('week')">Week</button>
-          </div>
-          <button class="cal-add-btn" onclick="showAddEventModal()">+ Add Event</button>
-        </div>
-      </div>
-
-      <!-- LEGEND -->
-      <div class="cal-legend">
-        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#f05555"></div> Bills Due</div>
-        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#00b894"></div> Payday</div>
-        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#f5a623"></div> Savings Goal</div>
-        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#818cf8"></div> Debt Milestone</div>
-        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#06d6a0"></div> Custom Event</div>
-      </div>
-
-      <!-- CALENDAR BODY -->
-      <div id="cal-body"></div>
-    </div>
-
-    <!-- EVENT DETAIL POPUP -->
-    <div class="cal-popup" id="cal-popup" style="display:none">
-      <div class="cal-popup-header">
-        <div class="cal-popup-title" id="cal-popup-title"></div>
-        <button class="cal-popup-close" onclick="closeCalPopup()">✕</button>
-      </div>
-      <div id="cal-popup-body"></div>
-    </div>
-
-    <!-- ADD EVENT MODAL -->
-  </div>
 
   <!-- FINANCIAL CALENDAR TAB -->
   <div class="tab-section" id="tab-calendar">
@@ -4118,6 +4075,8 @@
 
   function setUserUI(user) {
     const name = user.user_metadata?.full_name || user.email.split('@')[0];
+    const btn = document.getElementById('mobile-profile-btn');
+    if (btn) btn.textContent = name.charAt(0).toUpperCase();
     document.getElementById('ab-status').textContent = `${name} · Free Plan`;
     document.getElementById('ab-status').title = user.email;
     if (isPro) setProUI();
@@ -4259,7 +4218,7 @@
         transactions = data.transactions || [];
         bills = data.bills || [];
         goals = data.goals || [];
-        if (data.plan_debts) { planDebts = data.plan_debts; renderDebtList(); calcPayoff(); }
+        if (data.plan_debts?.length) { planDebts = data.plan_debts; }
         if (data.is_pro) {
           isPro = true;
           applyProState();
@@ -4657,12 +4616,7 @@ Guidelines:
       const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          system: SYSTEM_PROMPT,
-          messages: chatHistory
-        })
+        body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, system: SYSTEM_PROMPT, messages: chatHistory })
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error?.message || 'Unknown error');
@@ -5208,12 +5162,14 @@ Guidelines:
     document.getElementById('debt-min').value = '';
     renderDebtList();
     runPayoffPlan();
+    saveUserData();
   }
 
   function removeDebt(id) {
     planDebts = planDebts.filter(d => d.id !== id);
     renderDebtList();
     runPayoffPlan();
+    saveUserData();
   }
 
   function renderDebtList() {
@@ -6159,12 +6115,7 @@ Make the script conversational, natural, and realistic. Use [YOUR NAME], [ACCOUN
       const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1500,
-          system: 'You are an expert debt negotiation coach. Generate detailed, realistic, actionable phone scripts. Be specific and practical.',
-          messages: [{ role: 'user', content: prompt }]
-        })
+        body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1500, system: 'You are an expert debt negotiation coach. Generate detailed, realistic, actionable phone scripts. Be specific and practical.', messages: [{ role: 'user', content: prompt }] })
       });
       const data = await response.json();
       const text = data.content?.map(b => b.text || '').join('') || '';
