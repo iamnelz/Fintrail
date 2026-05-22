@@ -1906,6 +1906,15 @@
 
 <!-- MOBILE NAV -->
 <div class="mobile-nav" id="mobile-nav">
+  <!-- Mobile Nav Header -->
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:0.75rem 1rem;border-bottom:1px solid var(--border);margin-bottom:0.5rem">
+    <div style="display:flex;align-items:center;gap:0.6rem">
+      <div style="width:28px;height:28px;border-radius:50%;background:#f05555;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:0.75rem;font-weight:700;color:#fff;flex-shrink:0">FP</div>
+      <span style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text)">Fin<span style="color:var(--accent)">trail</span> <span style="font-size:0.6rem;font-weight:700;letter-spacing:0.12em;color:var(--muted)">PRO</span></span>
+    </div>
+    <button onclick="closeMobileNav()" style="background:none;border:none;font-size:1.25rem;cursor:pointer;color:var(--muted);padding:0.25rem">✕</button>
+  </div>
+
   <div style="font-size:0.68rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);padding:0.4rem 1rem 0.2rem">Budget</div>
   <button onclick="mobileTab('budget')">📊 Budget Tracker</button>
   <button onclick="mobileTabSchedule()">📅 Bill Schedule</button>
@@ -1926,6 +1935,7 @@
   <button class="upgrade-btn-nav" onclick="showPaywall('nav');closeMobileNav()">⭐ Go Pro</button>
   <button onclick="mobileTab('profile')">👤 <span data-en="Profile & Security" data-es="Perfil y Seguridad">Profile & Security</span></button>
   <button onclick="toggleLanguage();closeMobileNav()" style="color:var(--text-soft)">🌐 <span id="mobile-lang-label">Switch to Español</span></button>
+  <button onclick="signOut();closeMobileNav()" style="color:var(--danger)">🚪 <span data-en="Sign Out" data-es="Cerrar Sesión">Sign Out</span></button>
 </div>
 <div class="mobile-overlay" id="mobile-overlay" onclick="closeMobileNav()"></div>
 
@@ -2027,15 +2037,15 @@
     <div class="budget-sub visible" id="bsub-tracker">
     <div class="summary-grid">
       <div class="summary-card income">
-        <label>Total Income</label>
+        <label id="label-total-income">Total Income</label>
         <div class="amount" id="total-income">$0.00</div>
       </div>
       <div class="summary-card expense">
-        <label>Total Expenses</label>
+        <label id="label-total-expenses">Total Expenses</label>
         <div class="amount" id="total-expenses">$0.00</div>
       </div>
       <div class="summary-card balance">
-        <label>Net Balance</label>
+        <label id="label-net-balance">Net Balance</label>
         <div class="amount" id="net-balance">$0.00</div>
       </div>
     </div>
@@ -2043,7 +2053,7 @@
     <div class="two-col">
       <!-- ADD FORM -->
       <div class="card">
-        <h2>Add Transaction</h2>
+        <h2 id="label-add-transaction">Add Transaction</h2>
         <div class="form-row">
           <div class="form-group">
             <label>Type</label>
@@ -2053,11 +2063,11 @@
             </div>
           </div>
           <div class="form-group">
-            <label>Description</label>
+            <label id="label-desc">Description</label>
             <input type="text" id="desc" placeholder="e.g. Salary, Rent, Groceries">
           </div>
           <div class="form-group">
-            <label>Amount ($)</label>
+            <label id="label-amount">Amount ($)</label>
             <input type="number" id="amount" placeholder="0.00" min="0" step="0.01">
           </div>
           <div class="form-group">
@@ -2081,7 +2091,7 @@
 
       <!-- TRANSACTIONS -->
       <div class="card">
-        <h2>Transactions</h2>
+        <h2 id="label-transactions">Transactions</h2>
         <div class="transaction-list" id="transaction-list">
           <div class="empty-state">No transactions yet.<br>Add one to get started!</div>
         </div>
@@ -2091,7 +2101,7 @@
     <!-- SPENDING CHART -->
     <div class="chart-section card" style="margin-top:1.5rem;" id="chart-section">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
-        <h2 style="margin-bottom:0">Spending by Category</h2>
+        <h2 id="label-spending" style="margin-bottom:0">Spending by Category</h2>
         <button onclick="downloadBudgetPDF()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.45rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.35rem">📄 Save PDF</button>
       </div>
       <div class="bar-chart" id="bar-chart">
@@ -2783,7 +2793,7 @@
         <!-- ADD DEBT FORM -->
         <div style="background:var(--bg);border-radius:10px;padding:1rem;margin-bottom:1rem;border:1px solid var(--border)">
           <div style="font-size:0.82rem;font-weight:700;color:var(--text);margin-bottom:0.75rem">➕ Add a Debt</div>
-          <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:0.6rem;align-items:end;">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:0.6rem;align-items:end;">
             <div class="form-group"><label>Debt Name</label><input type="text" id="debt-name" placeholder="e.g. Visa Card"></div>
             <div class="form-group"><label>Balance ($)</label><input type="number" id="debt-balance" placeholder="5000" min="0"></div>
             <div class="form-group"><label>APR (%)</label><input type="number" id="debt-apr" placeholder="19.99" step="0.01" min="0"></div>
@@ -4047,6 +4057,9 @@
     currentType = type;
     document.getElementById('btn-income').classList.toggle('active', type === 'income');
     document.getElementById('btn-expense').classList.toggle('active', type === 'expense');
+    const isEs = currentLang === 'es';
+    document.getElementById('btn-income').textContent = isEs ? '+ Ingreso' : '+ Income';
+    document.getElementById('btn-expense').textContent = isEs ? '− Gasto' : '− Expense';
   }
 
   // ADD TRANSACTION
@@ -6536,44 +6549,104 @@ Make each section realistic, conversational, and specific to their situation. Us
 
     // Update toggle button
     const langToggle = document.getElementById('lang-toggle');
-    if (langToggle) langToggle.textContent = isEs ? 'ES' : 'EN';
+    if (langToggle) { langToggle.textContent = isEs ? 'ES' : 'EN'; langToggle.style.background = isEs ? 'rgba(240,85,85,0.1)' : 'none'; langToggle.style.color = isEs ? 'var(--accent)' : 'var(--text-soft)'; langToggle.style.borderColor = isEs ? 'var(--accent)' : 'var(--border)'; }
 
-    // Update mobile lang label
+    // Mobile lang label
     const mobileLang = document.getElementById('mobile-lang-label');
     if (mobileLang) mobileLang.textContent = isEs ? 'Switch to English' : 'Switch to Español';
 
-    // Update all data-en / data-es elements
+    // All data-en/data-es elements
     document.querySelectorAll('[data-en]').forEach(el => {
       el.textContent = el.getAttribute(`data-${currentLang}`) || el.getAttribute('data-en');
     });
 
-    // Update nav group buttons
-    const navBtns = {
-      'nav-budget': document.getElementById('nav-budget'),
-      'nav-planning': document.getElementById('nav-planning'),
-      'nav-tools': document.getElementById('nav-tools'),
-      'nav-insights': document.getElementById('nav-insights'),
-    };
-    Object.entries(navBtns).forEach(([key, btn]) => {
-      if (btn && t[key]) btn.innerHTML = `${t[key]} <span class="nav-arrow">▾</span>`;
+    // Nav group buttons
+    const navMap = { 'nav-budget': t['nav-budget'], 'nav-planning': t['nav-planning'], 'nav-tools': t['nav-tools'], 'nav-insights': t['nav-insights'] };
+    Object.entries(navMap).forEach(([id, label]) => {
+      const btn = document.getElementById(id);
+      if (btn && label) btn.innerHTML = `${label} <span class="nav-arrow">▾</span>`;
     });
 
-    // Update hero
+    // Hero
     const heroH1 = document.querySelector('.hero h1');
     if (heroH1) heroH1.innerHTML = t['hero-h1'];
     const heroP = document.querySelector('.hero p');
     if (heroP) heroP.textContent = t['hero-p'];
 
-    // Update auth tabs
+    // Auth tabs
     const signInTab = document.getElementById('tab-signin');
     if (signInTab) signInTab.textContent = t['sign-in-tab'];
     const signUpTab = document.getElementById('tab-signup');
     if (signUpTab) signUpTab.textContent = t['create-account-tab'];
 
-    // Update page title
-    document.title = isEs
-      ? 'Fintrail Pro — Presupuesta Mejor, Vive Mejor'
-      : 'Fintrail Pro — Budget Smarter, Live Better';
+    // Budget tracker labels
+    const labelMap = {
+      'label-type': isEs ? 'TIPO' : 'TYPE',
+      'label-desc': isEs ? 'DESCRIPCIÓN' : 'DESCRIPTION',
+      'label-amount': isEs ? 'MONTO ($)' : 'AMOUNT ($)',
+      'label-category': isEs ? 'CATEGORÍA' : 'CATEGORY',
+      'label-total-income': isEs ? 'INGRESOS TOTALES' : 'TOTAL INCOME',
+      'label-total-expenses': isEs ? 'GASTOS TOTALES' : 'TOTAL EXPENSES',
+      'label-net-balance': isEs ? 'SALDO NETO' : 'NET BALANCE',
+      'label-add-transaction': isEs ? 'Agregar Transacción' : 'Add Transaction',
+      'label-transactions': isEs ? 'Transacciones' : 'Transactions',
+      'label-spending': isEs ? 'Gastos por Categoría' : 'Spending by Category',
+    };
+    Object.entries(labelMap).forEach(([id, text]) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    });
+
+    // Budget type buttons
+    const incomeBtn = document.getElementById('btn-income');
+    if (incomeBtn) incomeBtn.textContent = isEs ? '+ Ingreso' : '+ Income';
+    const expenseBtn = document.getElementById('btn-expense');
+    if (expenseBtn) expenseBtn.textContent = isEs ? '− Gasto' : '− Expense';
+
+    // Add transaction button
+    const addTxBtn = document.getElementById('btn-add-transaction');
+    if (addTxBtn) addTxBtn.textContent = isEs ? '+ Agregar' : '+ Add Transaction';
+
+    // Bill schedule labels
+    const billLabels = {
+      'label-add-bill': isEs ? 'Agregar Factura Recurrente' : 'Add Recurring Bill',
+      'label-bill-name': isEs ? 'Nombre de la Factura' : 'Bill Name',
+      'label-bill-amount': isEs ? 'Monto Mensual Total ($)' : 'Total Monthly Amount ($)',
+      'label-bill-paycheck': isEs ? 'Monto Por Pago ($)' : 'Amount Per Paycheck ($)',
+      'label-bill-day': isEs ? 'Día de Vencimiento' : 'Due Day of Month',
+      'label-bill-cat': isEs ? 'Categoría' : 'Category',
+      'label-your-bills': isEs ? 'Tus Facturas' : 'Your Bills',
+      'label-6mo-schedule': isEs ? '📅 Horario de 6 Meses' : '📅 6-Month Schedule',
+    };
+    Object.entries(billLabels).forEach(([id, text]) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    });
+
+    // Goals labels
+    const goalLabels = {
+      'label-add-goal': isEs ? 'Agregar Nueva Meta' : 'Add New Goal',
+      'label-goal-name': isEs ? 'NOMBRE DE LA META' : 'GOAL NAME',
+      'label-goal-target': isEs ? 'MONTO OBJETIVO ($)' : 'TARGET AMOUNT ($)',
+      'label-goal-saved': isEs ? 'AHORRADO HASTA AHORA ($)' : 'SAVED SO FAR ($)',
+      'label-goal-date': isEs ? 'FECHA OBJETIVO' : 'TARGET DATE',
+    };
+    Object.entries(goalLabels).forEach(([id, text]) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    });
+
+    // Save PDF buttons
+    document.querySelectorAll('[data-translate="save-pdf"]').forEach(el => {
+      el.textContent = isEs ? '📄 Guardar PDF' : '📄 Save PDF';
+    });
+
+    // Go Pro button
+    const goProBtn = document.querySelector('.upgrade-btn-nav');
+    if (goProBtn) goProBtn.innerHTML = isEs ? '⭐ Hazte Pro' : '⭐ Go Pro';
+
+    // Page title
+    document.title = isEs ? 'Fintrail Pro — Presupuesta Mejor, Vive Mejor' : 'Fintrail Pro — Budget Smarter, Live Better';
 
     // Save preference
     try { localStorage.setItem('fintrail_lang', currentLang); } catch(e) {}
