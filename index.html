@@ -1260,6 +1260,18 @@
     z-index: 98;
   }
   .mobile-overlay.open { display: block; }
+  .mobile-nav-tile {
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:0.3rem; padding:0.65rem 0.5rem; border-radius:10px; border:1.5px solid var(--border);
+    background:var(--surface); cursor:pointer; font-family:'Sora',sans-serif;
+    font-size:0.7rem; font-weight:600; color:var(--text-soft); transition:all 0.2s;
+    min-height:60px;
+  }
+  .mobile-nav-tile:hover { border-color:var(--accent); color:var(--accent); background:rgba(240,85,85,0.04); }
+  .mobile-nav-tile span { font-size:0.68rem; text-align:center; line-height:1.2; }
+  .mobile-nav-tile > *:first-child { font-size:1.3rem; }
+  .mobile-nav-tile.pro { border-color:rgba(245,166,35,0.3); }
+  .mobile-nav-tile.pro::after { content:'PRO'; font-size:0.5rem; font-weight:800; background:#e9c46a; color:#1a1a0f; padding:0.05rem 0.3rem; border-radius:6px; letter-spacing:0.05em; }
 
   /* PROFILE & SECURITY */
   .profile-layout { display:grid; grid-template-columns:240px 1fr; gap:1.5rem; align-items:start; }
@@ -1703,6 +1715,167 @@
 
   @media (max-width:860px) { .negotiate-layout { grid-template-columns:1fr; } .script-type-grid { grid-template-columns:1fr 1fr; } }
 
+  /* FINANCIAL CALENDAR */
+  .cal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem; flex-wrap:wrap; gap:0.75rem; }
+  .cal-nav { display:flex; align-items:center; gap:0.75rem; }
+  .cal-month-label { font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--text); min-width:200px; text-align:center; }
+  .cal-nav-btn { background:none; border:1.5px solid var(--border); color:var(--text-soft); width:34px; height:34px; border-radius:8px; cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center; transition:all 0.2s; }
+  .cal-nav-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .cal-view-toggle { display:flex; gap:0.35rem; }
+  .cal-view-btn { background:none; border:1.5px solid var(--border); color:var(--muted); font-family:'Sora',sans-serif; font-size:0.75rem; font-weight:600; padding:0.3rem 0.75rem; border-radius:8px; cursor:pointer; transition:all 0.2s; }
+  .cal-view-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+
+  /* LEGEND */
+  .cal-legend { display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:1rem; }
+  .cal-legend-item { display:flex; align-items:center; gap:0.35rem; font-size:0.75rem; color:var(--text-soft); }
+  .cal-legend-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+
+  /* MONTH VIEW */
+  .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:1px; background:var(--border); border-radius:12px; overflow:hidden; }
+  .cal-day-header { background:var(--surface); padding:0.5rem 0.25rem; text-align:center; font-size:0.7rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; }
+  .cal-day { background:var(--surface); min-height:90px; padding:0.4rem; position:relative; transition:background 0.15s; cursor:pointer; }
+  .cal-day:hover { background:var(--surface2); }
+  .cal-day.today { background:rgba(240,85,85,0.04); }
+  .cal-day.today .cal-day-num { background:var(--accent); color:#fff; border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; font-weight:700; }
+  .cal-day.other-month { background:var(--bg); opacity:0.5; }
+  .cal-day-num { font-size:0.78rem; font-weight:600; color:var(--text-soft); margin-bottom:0.25rem; width:22px; height:22px; display:flex; align-items:center; justify-content:center; }
+  .cal-event { font-size:0.65rem; font-weight:600; padding:0.15rem 0.35rem; border-radius:4px; margin-bottom:0.15rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer; }
+  .cal-event.bill { background:rgba(240,85,85,0.12); color:#c0392b; }
+  .cal-event.payday { background:rgba(0,184,148,0.12); color:#00876a; }
+  .cal-event.goal { background:rgba(245,166,35,0.12); color:#b7690a; }
+  .cal-event.debt { background:rgba(129,140,248,0.15); color:#4338ca; }
+  .cal-event.custom { background:rgba(6,214,160,0.12); color:#0a7c5c; }
+  .cal-more { font-size:0.62rem; color:var(--muted); font-weight:600; padding:0.1rem 0.25rem; cursor:pointer; }
+  .cal-more:hover { color:var(--accent); }
+
+  /* WEEK VIEW */
+  .week-grid { display:grid; grid-template-columns:60px repeat(7,1fr); gap:1px; background:var(--border); border-radius:12px; overflow:hidden; }
+  .week-time-col { background:var(--surface); padding:0.5rem 0.25rem; text-align:right; font-size:0.68rem; color:var(--muted); display:flex; align-items:center; justify-content:flex-end; padding-right:0.5rem; min-height:60px; }
+  .week-day-header { background:var(--surface); padding:0.5rem 0.35rem; text-align:center; font-size:0.72rem; font-weight:700; color:var(--muted); }
+  .week-day-header.today-col { color:var(--accent); }
+  .week-day-header .wdh-num { font-size:1.1rem; font-weight:700; display:block; line-height:1.2; }
+  .week-cell { background:var(--surface); min-height:60px; padding:0.3rem; position:relative; }
+  .week-cell.today-col { background:rgba(240,85,85,0.03); }
+
+  /* EVENT DETAIL POPUP */
+  .cal-popup { position:fixed; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:1.25rem; box-shadow:0 8px 30px rgba(0,0,0,0.15); z-index:500; width:280px; max-width:90vw; }
+  .cal-popup-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.75rem; }
+  .cal-popup-title { font-weight:700; font-size:0.9rem; color:var(--text); }
+  .cal-popup-close { background:none; border:none; color:var(--muted); cursor:pointer; font-size:1.1rem; padding:0; }
+  .cal-popup-detail { font-size:0.82rem; color:var(--text-soft); margin-bottom:0.35rem; display:flex; align-items:center; gap:0.4rem; }
+
+  /* ADD EVENT */
+  .cal-add-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:0.45rem 0.85rem; font-family:'Sora',sans-serif; font-size:0.78rem; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:0.35rem; transition:all 0.2s; }
+  .cal-add-btn:hover { background:#d94444; }
+
+  /* MOBILE RESPONSIVE */
+  @media (max-width:600px) {
+    .cal-day { min-height:60px; padding:0.25rem; }
+    .cal-event { font-size:0.6rem; padding:0.1rem 0.25rem; }
+    .cal-day-num { font-size:0.72rem; }
+    .cal-month-label { font-size:1rem; min-width:150px; }
+    .week-grid { grid-template-columns:40px repeat(7,1fr); }
+    .week-time-col { font-size:0.6rem; padding-right:0.25rem; }
+  }
+
+  /* FINANCIAL CALENDAR */
+  .cal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem; flex-wrap:wrap; gap:0.75rem; }
+  .cal-nav { display:flex; align-items:center; gap:0.5rem; }
+  .cal-nav-btn { background:var(--surface); border:1px solid var(--border); color:var(--text); border-radius:8px; padding:0.4rem 0.75rem; cursor:pointer; font-family:'Sora',sans-serif; font-size:0.85rem; font-weight:600; transition:all 0.2s; }
+  .cal-nav-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .cal-month-label { font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; color:var(--text); min-width:180px; text-align:center; }
+  .cal-view-toggle { display:flex; gap:0.35rem; }
+  .cal-view-btn { background:none; border:1.5px solid var(--border); color:var(--muted); font-family:'Sora',sans-serif; font-size:0.75rem; font-weight:600; padding:0.35rem 0.75rem; border-radius:6px; cursor:pointer; transition:all 0.2s; }
+  .cal-view-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+
+  /* LEGEND */
+  .cal-legend { display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem; }
+  .cal-legend-item { display:flex; align-items:center; gap:0.3rem; font-size:0.72rem; color:var(--text-soft); }
+  .cal-legend-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+
+  /* MONTH VIEW */
+  .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; background:var(--border); border-radius:12px; overflow:hidden; }
+  .cal-day-header { background:var(--surface); text-align:center; font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); padding:0.6rem 0; }
+  .cal-day {
+    background:var(--surface); min-height:80px; padding:0.4rem;
+    cursor:pointer; transition:background 0.15s; position:relative;
+  }
+  .cal-day:hover { background:var(--surface2); }
+  .cal-day.other-month { background:var(--bg); }
+  .cal-day.other-month .cal-day-num { color:var(--border); }
+  .cal-day.today { background:rgba(240,85,85,0.05); }
+  .cal-day.today .cal-day-num { background:var(--accent); color:#fff; border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; }
+  .cal-day.selected { background:rgba(240,85,85,0.08); outline:2px solid var(--accent); }
+  .cal-day-num { font-size:0.78rem; font-weight:600; color:var(--text); margin-bottom:0.25rem; width:22px; height:22px; display:flex; align-items:center; justify-content:center; }
+  .cal-events { display:flex; flex-direction:column; gap:2px; }
+  .cal-event {
+    font-size:0.65rem; font-weight:600; padding:0.12rem 0.3rem;
+    border-radius:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    cursor:pointer; line-height:1.4;
+  }
+  .cal-event.bill { background:rgba(240,85,85,0.15); color:#c0392b; }
+  .cal-event.payday { background:rgba(0,184,148,0.15); color:#00967a; }
+  .cal-event.goal { background:rgba(245,166,35,0.15); color:#c68b00; }
+  .cal-event.debt { background:rgba(129,140,248,0.15); color:#5b67e0; }
+  .cal-event.custom { background:rgba(6,214,160,0.15); color:#059669; }
+  .cal-more { font-size:0.62rem; color:var(--muted); padding:0.1rem 0.3rem; cursor:pointer; }
+
+  /* WEEK VIEW */
+  .cal-week-grid { display:grid; grid-template-columns:60px repeat(7,1fr); gap:1px; background:var(--border); border-radius:12px; overflow:hidden; }
+  .cal-week-header { background:var(--surface); text-align:center; padding:0.6rem 0.25rem; }
+  .cal-week-day-name { font-size:0.68rem; font-weight:700; text-transform:uppercase; color:var(--muted); letter-spacing:0.05em; }
+  .cal-week-day-num { font-size:1rem; font-weight:700; color:var(--text); margin-top:0.1rem; }
+  .cal-week-day-num.today-num { background:var(--accent); color:#fff; border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; margin:0.1rem auto 0; }
+  .cal-time-col { background:var(--surface); display:flex; flex-direction:column; }
+  .cal-time-slot { font-size:0.65rem; color:var(--muted); padding:0.25rem 0.4rem; height:48px; display:flex; align-items:flex-start; border-bottom:1px solid var(--border); }
+  .cal-week-col { background:var(--surface); display:flex; flex-direction:column; }
+  .cal-week-slot { height:48px; border-bottom:1px solid var(--border); padding:2px; position:relative; }
+  .cal-week-event { font-size:0.68rem; font-weight:600; padding:0.2rem 0.4rem; border-radius:4px; margin-bottom:2px; cursor:pointer; }
+
+  /* EVENT DETAIL POPUP */
+  .cal-popup {
+    position:fixed; background:var(--surface); border:1px solid var(--border);
+    border-radius:12px; padding:1.25rem; box-shadow:0 8px 30px rgba(0,0,0,0.15);
+    z-index:500; min-width:240px; max-width:300px;
+    animation:dropIn 0.15s ease;
+  }
+  .cal-popup-title { font-family:'Playfair Display',serif; font-size:1rem; color:var(--text); margin-bottom:0.25rem; }
+  .cal-popup-meta { font-size:0.78rem; color:var(--muted); margin-bottom:0.75rem; }
+  .cal-popup-close { position:absolute; top:0.75rem; right:0.75rem; background:none; border:none; color:var(--muted); cursor:pointer; font-size:1rem; }
+
+  /* ADD EVENT */
+  .cal-add-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:0.5rem 1rem; font-family:'Sora',sans-serif; font-size:0.82rem; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:0.35rem; transition:all 0.2s; }
+  .cal-add-btn:hover { background:#d94444; transform:translateY(-1px); }
+
+  /* UPCOMING EVENTS SIDEBAR */
+  .cal-layout { display:grid; grid-template-columns:1fr 280px; gap:1.5rem; align-items:start; }
+  .cal-upcoming { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:1.25rem; }
+  .cal-upcoming h3 { font-family:'Playfair Display',serif; font-size:1rem; margin-bottom:1rem; color:var(--text); }
+  .cal-upcoming-item { display:flex; align-items:flex-start; gap:0.6rem; padding:0.65rem 0; border-bottom:1px solid var(--border); }
+  .cal-upcoming-item:last-child { border-bottom:none; }
+  .cal-upcoming-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; margin-top:4px; }
+  .cal-upcoming-info h4 { font-size:0.82rem; font-weight:600; color:var(--text); }
+  .cal-upcoming-info p { font-size:0.72rem; color:var(--muted); margin-top:0.1rem; }
+  .cal-upcoming-date { font-size:0.72rem; font-weight:700; color:var(--accent); margin-left:auto; flex-shrink:0; white-space:nowrap; }
+
+  /* ADD EVENT MODAL */
+  .cal-event-modal { position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+  .cal-event-modal-card { background:var(--surface); border-radius:16px; padding:1.5rem; width:100%; max-width:400px; margin:1.5rem; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+  .cal-event-type-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0.5rem; margin-bottom:1rem; }
+  .cal-event-type-btn { padding:0.6rem; border:1.5px solid var(--border); border-radius:8px; background:var(--surface); cursor:pointer; text-align:center; font-family:'Sora',sans-serif; font-size:0.72rem; font-weight:600; color:var(--text-soft); transition:all 0.2s; }
+  .cal-event-type-btn.selected { border-color:var(--accent); color:var(--accent); background:rgba(240,85,85,0.05); }
+  .cal-event-type-btn .cet-icon { font-size:1.2rem; display:block; margin-bottom:0.2rem; }
+
+  @media (max-width:860px) { .cal-layout { grid-template-columns:1fr; } .cal-upcoming { order:-1; } }
+  @media (max-width:700px) {
+    .cal-day { min-height:54px; padding:0.25rem; }
+    .cal-day-num { font-size:0.72rem; width:18px; height:18px; }
+    .cal-event { font-size:0.58rem; padding:0.08rem 0.2rem; }
+    .cal-day-header { font-size:0.6rem; padding:0.4rem 0; }
+    .cal-month-label { font-size:1rem; min-width:140px; }
+    .cal-week-grid { grid-template-columns:40px repeat(7,1fr); }
+  }
+
   @media (max-width: 700px) {
     .two-col { grid-template-columns: 1fr; }
     .summary-grid { grid-template-columns: 1fr; }
@@ -1848,6 +2021,10 @@
           <span class="ndi-icon">💳</span>
           <div class="ndi-info"><span class="ndi-label" data-en="Debt Payoff Planner" data-es="Planificador de Deudas">Debt Payoff Planner <span class="pro-pill">PRO</span></span><span class="ndi-desc" data-en="Avalanche & snowball method" data-es="Método avalancha y bola de nieve">Avalanche & snowball method</span></div>
         </button>
+        <button class="nav-dropdown-item" onclick="navTo('calendar', this)">
+          <span class="ndi-icon">📅</span>
+          <div class="ndi-info"><span class="ndi-label" data-en="Financial Calendar" data-es="Calendario Financiero">Financial Calendar</span><span class="ndi-desc" data-en="Bills, paydays & milestones" data-es="Facturas, pagos y hitos">Bills, paydays & milestones</span></div>
+        </button>
       </div>
     </div>
 
@@ -1906,36 +2083,57 @@
 
 <!-- MOBILE NAV -->
 <div class="mobile-nav" id="mobile-nav">
-  <!-- Mobile Nav Header -->
+  <!-- Header -->
   <div style="display:flex;align-items:center;justify-content:space-between;padding:0.75rem 1rem;border-bottom:1px solid var(--border);margin-bottom:0.5rem">
-    <div style="display:flex;align-items:center;gap:0.6rem">
-      <div style="width:28px;height:28px;border-radius:50%;background:#f05555;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:0.75rem;font-weight:700;color:#fff;flex-shrink:0">FP</div>
-      <span style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text)">Fin<span style="color:var(--accent)">trail</span> <span style="font-size:0.6rem;font-weight:700;letter-spacing:0.12em;color:var(--muted)">PRO</span></span>
+    <div style="display:flex;align-items:center;gap:0.5rem">
+      <div style="width:26px;height:26px;border-radius:50%;background:#f05555;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:0.72rem;font-weight:700;color:#fff;flex-shrink:0">FP</div>
+      <span style="font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:700;color:var(--text)">Fin<span style="color:var(--accent)">trail</span> <span style="font-size:0.55rem;letter-spacing:0.12em;color:var(--muted)">PRO</span></span>
     </div>
-    <button onclick="closeMobileNav()" style="background:none;border:none;font-size:1.25rem;cursor:pointer;color:var(--muted);padding:0.25rem">✕</button>
+    <div style="display:flex;align-items:center;gap:0.5rem">
+      <button onclick="toggleLanguage()" style="background:none;border:1.5px solid var(--border);color:var(--muted);font-family:'Sora',sans-serif;font-size:0.7rem;font-weight:700;padding:0.2rem 0.55rem;border-radius:20px;cursor:pointer" id="mobile-lang-btn">EN</button>
+      <button onclick="closeMobileNav()" style="background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--muted);padding:0.25rem">✕</button>
+    </div>
   </div>
 
-  <div style="font-size:0.68rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);padding:0.4rem 1rem 0.2rem">Budget</div>
-  <button onclick="mobileTab('budget')">📊 Budget Tracker</button>
-  <button onclick="mobileTabSchedule()">📅 Bill Schedule</button>
-  <div style="font-size:0.68rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);padding:0.6rem 1rem 0.2rem">Planning</div>
-  <button onclick="mobileTab('savings')">🎯 Savings Goals</button>
-  <button onclick="mobileTab('invest')">📈 Investment Calculator</button>
-  <button onclick="mobileGuardedTab('premium')">💳 Debt Payoff Planner <span class="pro-pill">PRO</span></button>
-  <div style="font-size:0.68rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);padding:0.6rem 1rem 0.2rem">Tools</div>
-  <button onclick="mobileTab('resources')">🔍 Resources</button>
-  <button onclick="mobileGuardedTab('guide')">📘 Credit & DTI Guide <span class="pro-pill">PRO</span></button>
-  <button onclick="mobileGuardedTab('creditsim')">📊 Credit Score Simulator <span class="pro-pill">PRO</span></button>
-  <div style="font-size:0.68rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);padding:0.6rem 1rem 0.2rem">Insights</div>
-  <button onclick="mobileGuardedTab('ai')">💬 AI Advisor <span class="pro-pill">PRO</span></button>
-  <button onclick="mobileGuardedTab('premium')">🏆 Health Score & Alerts <span class="pro-pill">PRO</span></button>
-  <button onclick="mobileTab('streaks')">🔥 Streaks & Milestones</button>
-  <button onclick="mobileGuardedTab('negotiate')">💬 Debt Negotiation Scripts <span class="pro-pill">PRO</span></button>
-  <div style="border-top:1px solid var(--border);margin:0.5rem 0"></div>
-  <button class="upgrade-btn-nav" onclick="showPaywall('nav');closeMobileNav()">⭐ Go Pro</button>
-  <button onclick="mobileTab('profile')">👤 <span data-en="Profile & Security" data-es="Perfil y Seguridad">Profile & Security</span></button>
-  <button onclick="toggleLanguage();closeMobileNav()" style="color:var(--text-soft)">🌐 <span id="mobile-lang-label">Switch to Español</span></button>
-  <button onclick="signOut();closeMobileNav()" style="color:var(--danger)">🚪 <span data-en="Sign Out" data-es="Cerrar Sesión">Sign Out</span></button>
+  <!-- BUDGET -->
+  <div style="font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);padding:0.3rem 1rem 0.2rem">💰 Budget</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem;padding:0 0.75rem 0.5rem">
+    <button class="mobile-nav-tile" onclick="mobileTab('budget')">📊<span>Tracker</span></button>
+    <button class="mobile-nav-tile" onclick="mobileTabSchedule()">📅<span>Bill Schedule</span></button>
+  </div>
+
+  <!-- PLANNING -->
+  <div style="font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);padding:0.3rem 1rem 0.2rem">🎯 Planning</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem;padding:0 0.75rem 0.5rem">
+    <button class="mobile-nav-tile" onclick="mobileTab('savings')">🎯<span>Goals</span></button>
+    <button class="mobile-nav-tile" onclick="mobileTab('invest')">📈<span>Investment</span></button>
+    <button class="mobile-nav-tile" onclick="mobileTab('calendar')">📅<span>Calendar</span></button>
+    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('premium')">💳<span>Debt Planner</span></button>
+  </div>
+
+  <!-- TOOLS -->
+  <div style="font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);padding:0.3rem 1rem 0.2rem">🛠 Tools</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem;padding:0 0.75rem 0.5rem">
+    <button class="mobile-nav-tile" onclick="mobileTab('resources')">🔍<span>Resources</span></button>
+    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('guide')">📘<span>Credit Guide</span></button>
+    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('creditsim')">📊<span>Score Sim</span></button>
+    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('negotiate')">💬<span>Negotiation</span></button>
+  </div>
+
+  <!-- INSIGHTS -->
+  <div style="font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);padding:0.3rem 1rem 0.2rem">💡 Insights</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem;padding:0 0.75rem 0.5rem">
+    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('ai')">💬<span>AI Advisor</span></button>
+    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('premium')">🏆<span>Health Score</span></button>
+    <button class="mobile-nav-tile" onclick="mobileTab('streaks')">🔥<span>Streaks</span></button>
+    <button class="mobile-nav-tile" onclick="mobileTab('profile')">👤<span>Profile</span></button>
+  </div>
+
+  <!-- BOTTOM ACTIONS -->
+  <div style="padding:0.5rem 0.75rem;display:flex;gap:0.5rem;border-top:1px solid var(--border);margin-top:0.25rem">
+    <button class="upgrade-btn-nav" style="flex:1" onclick="showPaywall('nav');closeMobileNav()">⭐ Go Pro</button>
+    <button onclick="signOut();closeMobileNav()" style="background:none;border:1.5px solid var(--border);color:var(--danger);font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:600;padding:0.45rem 0.75rem;border-radius:8px;cursor:pointer;white-space:nowrap">🚪 Sign Out</button>
+  </div>
 </div>
 <div class="mobile-overlay" id="mobile-overlay" onclick="closeMobileNav()"></div>
 
@@ -3529,6 +3727,142 @@
     </div>
   </div>
 
+  <!-- FINANCIAL CALENDAR TAB -->
+  <div class="tab-section" id="tab-calendar">
+
+    <div class="card">
+      <!-- HEADER -->
+      <div class="cal-header">
+        <div class="cal-nav">
+          <button class="cal-nav-btn" onclick="calPrev()">‹</button>
+          <div class="cal-month-label" id="cal-month-label">May 2026</div>
+          <button class="cal-nav-btn" onclick="calNext()">›</button>
+          <button class="cal-nav-btn" onclick="calToday()" style="width:auto;padding:0 0.65rem;font-size:0.75rem;font-weight:600">Today</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap">
+          <div class="cal-view-toggle">
+            <button class="cal-view-btn active" id="cal-view-month" onclick="setCalView('month')">Month</button>
+            <button class="cal-view-btn" id="cal-view-week" onclick="setCalView('week')">Week</button>
+          </div>
+          <button class="cal-add-btn" onclick="showAddEventModal()">+ Add Event</button>
+        </div>
+      </div>
+
+      <!-- LEGEND -->
+      <div class="cal-legend">
+        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#f05555"></div> Bills Due</div>
+        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#00b894"></div> Payday</div>
+        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#f5a623"></div> Savings Goal</div>
+        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#818cf8"></div> Debt Milestone</div>
+        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#06d6a0"></div> Custom Event</div>
+      </div>
+
+      <!-- CALENDAR BODY -->
+      <div id="cal-body"></div>
+    </div>
+
+    <!-- EVENT DETAIL POPUP -->
+    <div class="cal-popup" id="cal-popup" style="display:none">
+      <div class="cal-popup-header">
+        <div class="cal-popup-title" id="cal-popup-title"></div>
+        <button class="cal-popup-close" onclick="closeCalPopup()">✕</button>
+      </div>
+      <div id="cal-popup-body"></div>
+    </div>
+
+    <!-- ADD EVENT MODAL -->
+    <div id="cal-event-modal" style="display:none" class="receipt-modal-overlay" onclick="closeAddEventModal(event)">
+      <div class="receipt-modal">
+        <div class="receipt-modal-header">
+          <h3>📅 Add Custom Event</h3>
+          <button class="receipt-modal-close" onclick="closeAddEventModal()">✕</button>
+        </div>
+        <div class="receipt-modal-body">
+          <div class="form-group"><label>Event Name</label><input class="profile-input" type="text" id="cal-event-name" placeholder="e.g. Tax Payment, Insurance Renewal"></div>
+          <div class="form-group"><label>Date</label><input class="profile-input" type="date" id="cal-event-date"></div>
+          <div class="form-group"><label>Amount ($) <span style="color:var(--muted);font-weight:400">(optional)</span></label><input class="profile-input" type="number" id="cal-event-amount" placeholder="0.00"></div>
+          <div class="form-group"><label>Note <span style="color:var(--muted);font-weight:400">(optional)</span></label><input class="profile-input" type="text" id="cal-event-note" placeholder="Any notes..."></div>
+          <div class="receipt-modal-actions">
+            <button class="receipt-submit-btn" onclick="addCalendarEvent()">Add to Calendar</button>
+            <button class="receipt-skip-btn" onclick="closeAddEventModal()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FINANCIAL CALENDAR TAB -->
+  <div class="tab-section" id="tab-calendar">
+
+    <div class="cal-header">
+      <div class="cal-nav">
+        <button class="cal-nav-btn" onclick="calNav(-1)">‹</button>
+        <div class="cal-month-label" id="cal-month-label">May 2026</div>
+        <button class="cal-nav-btn" onclick="calNav(1)">›</button>
+        <button class="cal-nav-btn" onclick="goToToday()" style="font-size:0.75rem">Today</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap">
+        <div class="cal-view-toggle">
+          <button class="cal-view-btn active" id="cal-view-month" onclick="setCalView('month')">Month</button>
+          <button class="cal-view-btn" id="cal-view-week" onclick="setCalView('week')">Week</button>
+        </div>
+        <button class="cal-add-btn" onclick="showAddEventModal()">+ Add Event</button>
+      </div>
+    </div>
+
+    <!-- LEGEND -->
+    <div class="cal-legend">
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#f05555"></div> Bills Due</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#00b894"></div> Payday</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#f5a623"></div> Savings Goals</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#818cf8"></div> Debt Milestones</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#06d6a0"></div> Custom Events</div>
+    </div>
+
+    <div class="cal-layout">
+
+      <!-- MAIN CALENDAR -->
+      <div>
+        <div id="cal-month-view">
+          <div class="cal-grid" id="cal-grid"></div>
+        </div>
+        <div id="cal-week-view" style="display:none">
+          <div class="cal-week-grid" id="cal-week-grid"></div>
+        </div>
+      </div>
+
+      <!-- UPCOMING EVENTS SIDEBAR -->
+      <div class="cal-upcoming">
+        <h3>📋 Upcoming Events</h3>
+        <div id="cal-upcoming-list">
+          <div class="empty-state" style="font-size:0.82rem">No upcoming events</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ADD EVENT MODAL -->
+    <div id="cal-event-modal" class="cal-event-modal" style="display:none" onclick="closeAddEventModal(event)">
+      <div class="cal-event-modal-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+          <h3 style="font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--text)">Add Custom Event</h3>
+          <button onclick="closeAddEventModal()" style="background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--muted)">✕</button>
+        </div>
+        <div class="cal-event-type-grid">
+          <button class="cal-event-type-btn selected" onclick="selectEventType('custom', this)"><span class="cet-icon">📌</span>Custom</button>
+          <button class="cal-event-type-btn" onclick="selectEventType('reminder', this)"><span class="cet-icon">🔔</span>Reminder</button>
+          <button class="cal-event-type-btn" onclick="selectEventType('milestone', this)"><span class="cet-icon">🏆</span>Milestone</button>
+        </div>
+        <div class="form-group"><label>Event Name</label><input class="profile-input" type="text" id="cal-event-name" placeholder="e.g. Pay credit card"></div>
+        <div class="form-group"><label>Date</label><input class="profile-input" type="date" id="cal-event-date"></div>
+        <div class="form-group"><label>Note (optional)</label><input class="profile-input" type="text" id="cal-event-note" placeholder="Any additional details"></div>
+        <button class="profile-save-btn" style="width:100%;margin-top:0.5rem" onclick="addCustomEvent()">Add to Calendar</button>
+      </div>
+    </div>
+
+  </div>
+
 </main>
 
 <!-- APP FOOTER -->
@@ -3998,6 +4332,7 @@
     if (tab === 'invest') awardXPForAction('investCalc');
     if (tab === 'creditsim') awardXPForAction('creditSim');
     if (tab === 'streaks') renderStreaksTab();
+    if (tab === 'calendar') { loadCalendarEvents(); renderCalendar(); }
   }
 
   function guardedNavTo(tab, btn) {
@@ -6098,7 +6433,7 @@ Make the script conversational, natural, and realistic. Use [YOUR NAME], [ACCOUN
       investCalc: { xp: 25, msg: '📈 Used investment calculator' },
       creditSim: { xp: 35, msg: '📊 Used credit score simulator' },
       aiChat: { xp: 30, msg: '🤖 Asked the AI advisor' },
-      negotiationScript: { xp: 40, msg: '💬 Used debt negotiation script generator' },
+      calendarEvent: { xp: 15, msg: '📅 Added a calendar event' },
     };
     const data = xpMap[action];
     if (data) { addXP(data.xp, data.msg); }
@@ -6448,7 +6783,11 @@ Make the script conversational, natural, and realistic. Use [YOUR NAME], [ACCOUN
     const langToggle = document.getElementById('lang-toggle');
     if (langToggle) { langToggle.textContent = isEs ? 'ES' : 'EN'; langToggle.style.background = isEs ? 'rgba(240,85,85,0.1)' : 'none'; langToggle.style.color = isEs ? 'var(--accent)' : 'var(--text-soft)'; langToggle.style.borderColor = isEs ? 'var(--accent)' : 'var(--border)'; }
 
-    // Mobile lang label
+    // Mobile lang button
+    const mobileLangBtn = document.getElementById('mobile-lang-btn');
+    if (mobileLangBtn) { mobileLangBtn.textContent = isEs ? 'ES' : 'EN'; mobileLangBtn.style.color = isEs ? 'var(--accent)' : 'var(--muted)'; mobileLangBtn.style.borderColor = isEs ? 'var(--accent)' : 'var(--border)'; }
+
+    // Mobile lang label (legacy)
     const mobileLang = document.getElementById('mobile-lang-label');
     if (mobileLang) mobileLang.textContent = isEs ? 'Switch to English' : 'Switch to Español';
 
@@ -6592,6 +6931,605 @@ Make the script conversational, natural, and realistic. Use [YOUR NAME], [ACCOUN
         document.title = 'Fintrail Pro — Presupuesta Mejor, Vive Mejor';
       }
     } catch(e) {}
+  }
+
+  // FINANCIAL CALENDAR
+  let calDate = new Date();
+  let calView = 'month';
+  let customEvents = [];
+  let calPopupTimeout = null;
+
+  function loadCalendarEvents() {
+    try { customEvents = JSON.parse(localStorage.getItem('fintrail_cal_' + (currentUser?.id || 'demo')) || '[]'); } catch(e) { customEvents = []; }
+  }
+
+  function saveCalendarEvents() {
+    try { localStorage.setItem('fintrail_cal_' + (currentUser?.id || 'demo'), JSON.stringify(customEvents)); } catch(e) {}
+  }
+
+  function getCalendarEvents(year, month) {
+    const events = [];
+    const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+    // BILLS
+    bills.forEach(b => {
+      let day = Math.min(b.day, new Date(year, month + 1, 0).getDate());
+      events.push({ date: new Date(year, month, day), type: 'bill', label: `💸 ${b.name}`, amount: b.amount, icon: '💸', color: 'bill' });
+    });
+
+    // PAYDAYS from bill schedule settings
+    try {
+      const freq = document.getElementById('pay-frequency')?.value || 'biweekly';
+      const paydayInput = document.getElementById('next-payday')?.value;
+      if (paydayInput) {
+        let startDate = new Date(paydayInput + 'T00:00:00');
+        const paydays = getPaydays(freq, startDate, 6);
+        paydays.forEach(pd => {
+          if (pd.getFullYear() === year && pd.getMonth() === month) {
+            events.push({ date: pd, type: 'payday', label: '💵 Payday', icon: '💵', color: 'payday' });
+          }
+        });
+      }
+    } catch(e) {}
+
+    // SAVINGS GOALS target dates
+    goals.forEach(g => {
+      if (g.date) {
+        const d = new Date(g.date + 'T00:00:00');
+        if (d.getFullYear() === year && d.getMonth() === month) {
+          events.push({ date: d, type: 'goal', label: `${g.icon} ${g.name}`, amount: g.target, icon: g.icon, color: 'goal' });
+        }
+      }
+    });
+
+    // DEBT MILESTONES — estimated payoff dates
+    if (planDebts.length > 0) {
+      try {
+        const extra = parseFloat(document.getElementById('extra-payment')?.value) || 0;
+        let debts = planDebts.map(d => ({ ...d, remaining: d.balance, monthlyMin: d.minPayment || Math.max(25, d.balance * 0.02) }));
+        if (payoffMethod === 'avalanche') debts.sort((a,b) => b.apr - a.apr);
+        else debts.sort((a,b) => a.balance - b.balance);
+        let month2 = 0;
+        while (debts.some(d => d.remaining > 0) && month2 < 360) {
+          month2++;
+          debts.forEach((d,i) => {
+            if (d.remaining <= 0) return;
+            const interest = (d.apr/100/12) * d.remaining;
+            d.remaining += interest;
+            let payment = d.monthlyMin + (i === 0 ? extra : 0);
+            payment = Math.min(payment, d.remaining);
+            d.remaining -= payment;
+            if (d.remaining <= 0.01) {
+              d.remaining = 0;
+              const payoffDate = new Date();
+              payoffDate.setMonth(payoffDate.getMonth() + month2);
+              if (payoffDate.getFullYear() === year && payoffDate.getMonth() === month) {
+                events.push({ date: payoffDate, type: 'debt', label: `🎉 ${d.name} paid off!`, icon: '🎉', color: 'debt' });
+              }
+            }
+          });
+        }
+      } catch(e) {}
+    }
+
+    // CUSTOM EVENTS
+    customEvents.forEach(e => {
+      const d = new Date(e.date + 'T00:00:00');
+      if (d.getFullYear() === year && d.getMonth() === month) {
+        events.push({ date: d, type: 'custom', label: `📌 ${e.name}`, amount: e.amount, note: e.note, icon: '📌', color: 'custom', id: e.id });
+      }
+    });
+
+    return events;
+  }
+
+  function renderCalendar() {
+    loadCalendarEvents();
+    const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    document.getElementById('cal-month-label').textContent = `${monthNames[calDate.getMonth()]} ${calDate.getFullYear()}`;
+
+    if (calView === 'month') renderMonthView();
+    else renderWeekView();
+  }
+
+  function renderMonthView() {
+    const year = calDate.getFullYear();
+    const month = calDate.getMonth();
+    const today = new Date(); today.setHours(0,0,0,0);
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const events = getCalendarEvents(year, month);
+
+    // Group events by day
+    const byDay = {};
+    events.forEach(e => {
+      const d = e.date.getDate();
+      if (!byDay[d]) byDay[d] = [];
+      byDay[d].push(e);
+    });
+
+    let html = `<div class="cal-grid">`;
+    dayNames.forEach(d => { html += `<div class="cal-day-header">${d}</div>`; });
+
+    // Previous month days
+    const prevDays = new Date(year, month, 0).getDate();
+    for (let i = firstDay - 1; i >= 0; i--) {
+      html += `<div class="cal-day other-month"><div class="cal-day-num">${prevDays - i}</div></div>`;
+    }
+
+    // Current month days
+    for (let d = 1; d <= daysInMonth; d++) {
+      const thisDay = new Date(year, month, d);
+      const isToday = thisDay.getTime() === today.getTime();
+      const dayEvents = byDay[d] || [];
+      const maxShow = 3;
+      const extra = dayEvents.length - maxShow;
+
+      html += `<div class="cal-day${isToday ? ' today' : ''}" onclick="handleDayClick(${year},${month},${d})">
+        <div class="cal-day-num">${d}</div>
+        ${dayEvents.slice(0, maxShow).map(e => `
+          <div class="cal-event ${e.color}" onclick="event.stopPropagation();showEventPopup(event,'${escHtml(e.label)}','${e.type}','${e.amount||''}','${escHtml(e.note||'')}',${e.id||'null'})" title="${escHtml(e.label)}">
+            ${e.label}
+          </div>`).join('')}
+        ${extra > 0 ? `<div class="cal-more" onclick="event.stopPropagation();handleDayClick(${year},${month},${d})">+${extra} more</div>` : ''}
+      </div>`;
+    }
+
+    // Next month days
+    const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+    for (let d = 1; d <= totalCells - firstDay - daysInMonth; d++) {
+      html += `<div class="cal-day other-month"><div class="cal-day-num">${d}</div></div>`;
+    }
+
+    html += `</div>`;
+    document.getElementById('cal-body').innerHTML = html;
+  }
+
+  function renderWeekView() {
+    const year = calDate.getFullYear();
+    const month = calDate.getMonth();
+    const today = new Date(); today.setHours(0,0,0,0);
+    const dayOfWeek = calDate.getDay();
+    const weekStart = new Date(calDate); weekStart.setDate(calDate.getDate() - dayOfWeek);
+    const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const shortMonths = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+    // Get events for the whole week
+    const weekDays = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(weekStart); d.setDate(weekStart.getDate() + i);
+      weekDays.push(d);
+    }
+
+    // Get all events for days in this week
+    const allEvents = {};
+    weekDays.forEach(d => {
+      const key = d.toDateString();
+      const evts = getCalendarEvents(d.getFullYear(), d.getMonth()).filter(e => e.date.toDateString() === key);
+      allEvents[key] = evts;
+    });
+
+    let html = `<div class="week-grid">
+      <div class="week-time-col" style="background:var(--surface)"></div>
+      ${weekDays.map(d => {
+        const isToday = d.getTime() === today.getTime();
+        return `<div class="week-day-header${isToday ? ' today-col' : ''}">
+          <span style="font-size:0.68rem">${dayNames[d.getDay()]}</span>
+          <span class="wdh-num">${d.getDate()}</span>
+          <span style="font-size:0.65rem;color:var(--muted)">${shortMonths[d.getMonth()]}</span>
+        </div>`;
+      }).join('')}
+      <div class="week-time-col">All day</div>
+      ${weekDays.map(d => {
+        const isToday = d.getTime() === today.getTime();
+        const evts = allEvents[d.toDateString()] || [];
+        return `<div class="week-cell${isToday ? ' today-col' : ''}" onclick="handleWeekDayClick('${d.toISOString().slice(0,10)}')">
+          ${evts.map(e => `<div class="cal-event ${e.color}" onclick="event.stopPropagation();showEventPopup(event,'${escHtml(e.label)}','${e.type}','${e.amount||''}','${escHtml(e.note||'')}',${e.id||'null'})" title="${escHtml(e.label)}">${e.label}</div>`).join('')}
+        </div>`;
+      }).join('')}
+    </div>`;
+
+    document.getElementById('cal-body').innerHTML = html;
+  }
+
+  function calPrev() {
+    if (calView === 'month') calDate.setMonth(calDate.getMonth() - 1);
+    else calDate.setDate(calDate.getDate() - 7);
+    renderCalendar();
+  }
+
+  function calNext() {
+    if (calView === 'month') calDate.setMonth(calDate.getMonth() + 1);
+    else calDate.setDate(calDate.getDate() + 7);
+    renderCalendar();
+  }
+
+  function calToday() {
+    calDate = new Date();
+    renderCalendar();
+  }
+
+  function setCalView(view) {
+    calView = view;
+    document.getElementById('cal-view-month').classList.toggle('active', view === 'month');
+    document.getElementById('cal-view-week').classList.toggle('active', view === 'week');
+    renderCalendar();
+  }
+
+  function handleDayClick(year, month, day) {
+    // Pre-fill date in add event modal
+    const d = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    document.getElementById('cal-event-date').value = d;
+    showAddEventModal();
+  }
+
+  function handleWeekDayClick(dateStr) {
+    document.getElementById('cal-event-date').value = dateStr;
+    showAddEventModal();
+  }
+
+  function showEventPopup(e, title, type, amount, note, eventId) {
+    e.stopPropagation();
+    const popup = document.getElementById('cal-popup');
+    document.getElementById('cal-popup-title').textContent = title;
+
+    const typeLabels = { bill: '💸 Bill Due', payday: '💵 Payday', goal: '🎯 Savings Goal Deadline', debt: '🎉 Debt Payoff Milestone', custom: '📌 Custom Event' };
+    let body = `<div class="cal-popup-detail">📋 ${typeLabels[type] || type}</div>`;
+    if (amount) body += `<div class="cal-popup-detail">💰 $${parseFloat(amount).toFixed(2)}</div>`;
+    if (note) body += `<div class="cal-popup-detail">📝 ${note}</div>`;
+    if (eventId && eventId !== 'null') body += `<button onclick="deleteCalEvent(${eventId})" style="margin-top:0.5rem;background:none;border:1px solid var(--danger);color:var(--danger);border-radius:6px;padding:0.25rem 0.65rem;font-size:0.75rem;cursor:pointer;font-family:'Sora',sans-serif">Delete</button>`;
+    document.getElementById('cal-popup-body').innerHTML = body;
+
+    // Position popup near click
+    popup.style.display = 'block';
+    const rect = e.target.getBoundingClientRect();
+    let top = rect.bottom + window.scrollY + 8;
+    let left = rect.left + window.scrollX;
+    if (left + 280 > window.innerWidth) left = window.innerWidth - 290;
+    if (left < 8) left = 8;
+    popup.style.top = top + 'px';
+    popup.style.left = left + 'px';
+
+    // Close on outside click
+    clearTimeout(calPopupTimeout);
+    calPopupTimeout = setTimeout(() => {
+      document.addEventListener('click', closeCalPopup, { once: true });
+    }, 100);
+  }
+
+  function closeCalPopup() {
+    document.getElementById('cal-popup').style.display = 'none';
+  }
+
+  function showAddEventModal() {
+    document.getElementById('cal-event-modal').style.display = 'flex';
+    if (!document.getElementById('cal-event-date').value) {
+      document.getElementById('cal-event-date').value = new Date().toISOString().slice(0,10);
+    }
+  }
+
+  function closeAddEventModal(e) {
+    if (e && e.target !== document.getElementById('cal-event-modal')) return;
+    document.getElementById('cal-event-modal').style.display = 'none';
+    document.getElementById('cal-event-name').value = '';
+    document.getElementById('cal-event-date').value = '';
+    document.getElementById('cal-event-amount').value = '';
+    document.getElementById('cal-event-note').value = '';
+  }
+
+  function addCalendarEvent() {
+    const name = document.getElementById('cal-event-name').value.trim();
+    const date = document.getElementById('cal-event-date').value;
+    const amount = document.getElementById('cal-event-amount').value;
+    const note = document.getElementById('cal-event-note').value.trim();
+    if (!name || !date) { alert('Please enter an event name and date.'); return; }
+    customEvents.push({ id: Date.now(), name, date, amount: amount || null, note: note || null });
+    saveCalendarEvents();
+    document.getElementById('cal-event-modal').style.display = 'none';
+    document.getElementById('cal-event-name').value = '';
+    document.getElementById('cal-event-date').value = '';
+    document.getElementById('cal-event-amount').value = '';
+    document.getElementById('cal-event-note').value = '';
+    renderCalendar();
+    awardXPForAction('calendarEvent');
+  }
+
+  function deleteCalEvent(id) {
+    customEvents = customEvents.filter(e => e.id !== id);
+    saveCalendarEvents();
+    closeCalPopup();
+    renderCalendar();
+  }
+
+  // FINANCIAL CALENDAR
+  let calCurrentDate = new Date();
+  let calView = 'month';
+  let calCustomEvents = [];
+  let selectedEventType = 'custom';
+
+  function loadCalendarEvents() {
+    try { calCustomEvents = JSON.parse(localStorage.getItem('fintrail_cal_' + (currentUser?.id || 'demo')) || '[]'); } catch(e) { calCustomEvents = []; }
+  }
+
+  function saveCalendarEvents() {
+    try { localStorage.setItem('fintrail_cal_' + (currentUser?.id || 'demo'), JSON.stringify(calCustomEvents)); } catch(e) {}
+  }
+
+  function getCalEvents(year, month) {
+    const events = [];
+    const monthStr = `${year}-${String(month+1).padStart(2,'0')}`;
+
+    // Bills due
+    bills.forEach(b => {
+      const day = String(b.day).padStart(2,'0');
+      events.push({ date:`${monthStr}-${day}`, title:b.name, type:'bill', amount:b.amount, icon:'📅' });
+    });
+
+    // Paydays from bill schedule settings
+    const freq = document.getElementById('pay-frequency')?.value || 'biweekly';
+    const paydayInput = document.getElementById('next-payday')?.value;
+    if (paydayInput) {
+      let startDate = new Date(paydayInput + 'T00:00:00');
+      const paydays = getPaydays(freq, startDate, 6);
+      paydays.forEach(pd => {
+        const pdYear = pd.getFullYear();
+        const pdMonth = pd.getMonth();
+        if (pdYear === year && pdMonth === month) {
+          events.push({ date:`${year}-${String(month+1).padStart(2,'0')}-${String(pd.getDate()).padStart(2,'0')}`, title:'💵 Payday', type:'payday', icon:'💵' });
+        }
+      });
+    }
+
+    // Savings goals target dates
+    goals.forEach(g => {
+      if (g.date) {
+        const gDate = new Date(g.date);
+        if (gDate.getFullYear() === year && gDate.getMonth() === month) {
+          events.push({ date:g.date, title:`🎯 ${g.name} Goal`, type:'goal', icon:'🎯' });
+        }
+      }
+    });
+
+    // Debt milestones (estimated payoff)
+    if (planDebts.length > 0) {
+      planDebts.forEach(d => {
+        const months = Math.ceil(d.balance / Math.max(25, d.balance * 0.02));
+        const payoffDate = new Date();
+        payoffDate.setMonth(payoffDate.getMonth() + months);
+        if (payoffDate.getFullYear() === year && payoffDate.getMonth() === month) {
+          events.push({ date:`${year}-${String(month+1).padStart(2,'0')}-${String(payoffDate.getDate()).padStart(2,'0')}`, title:`💳 ${d.name} Paid Off`, type:'debt', icon:'💳' });
+        }
+      });
+    }
+
+    // Custom events
+    calCustomEvents.filter(e => e.date?.startsWith(monthStr)).forEach(e => {
+      events.push({ ...e, icon:'📌' });
+    });
+
+    return events;
+  }
+
+  function renderCalendar() {
+    const year = calCurrentDate.getFullYear();
+    const month = calCurrentDate.getMonth();
+    const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    document.getElementById('cal-month-label').textContent = `${monthNames[month]} ${year}`;
+
+    if (calView === 'month') renderMonthView(year, month);
+    else renderWeekView();
+
+    renderUpcoming(year, month);
+  }
+
+  function renderMonthView(year, month) {
+    const today = new Date();
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month+1, 0).getDate();
+    const daysInPrevMonth = new Date(year, month, 0).getDate();
+    const events = getCalEvents(year, month);
+
+    // Build event map by date
+    const eventMap = {};
+    events.forEach(e => {
+      if (!eventMap[e.date]) eventMap[e.date] = [];
+      eventMap[e.date].push(e);
+    });
+
+    const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    let html = dayNames.map(d => `<div class="cal-day-header">${d}</div>`).join('');
+
+    // Prev month days
+    for (let i = firstDay - 1; i >= 0; i--) {
+      const d = daysInPrevMonth - i;
+      html += `<div class="cal-day other-month"><div class="cal-day-num">${d}</div></div>`;
+    }
+
+    // Current month days
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const isToday = today.getFullYear()===year && today.getMonth()===month && today.getDate()===d;
+      const dayEvents = eventMap[dateStr] || [];
+      const maxShow = window.innerWidth < 700 ? 1 : 2;
+      const shown = dayEvents.slice(0, maxShow);
+      const more = dayEvents.length - maxShow;
+
+      html += `<div class="cal-day${isToday?' today':''}" onclick="showDayDetail('${dateStr}')">
+        <div class="cal-day-num">${d}</div>
+        <div class="cal-events">
+          ${shown.map(e => `<div class="cal-event ${e.type}" title="${e.title}">${e.icon} ${e.title}</div>`).join('')}
+          ${more > 0 ? `<div class="cal-more">+${more} more</div>` : ''}
+        </div>
+      </div>`;
+    }
+
+    // Next month days
+    const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+    for (let d = 1; d <= totalCells - firstDay - daysInMonth; d++) {
+      html += `<div class="cal-day other-month"><div class="cal-day-num">${d}</div></div>`;
+    }
+
+    document.getElementById('cal-grid').innerHTML = html;
+  }
+
+  function renderWeekView() {
+    const today = new Date();
+    const startOfWeek = new Date(calCurrentDate);
+    startOfWeek.setDate(calCurrentDate.getDate() - calCurrentDate.getDay());
+    const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+    let headerHtml = `<div class="cal-week-header" style="background:var(--surface)"></div>`;
+    const weekDays = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(startOfWeek);
+      d.setDate(startOfWeek.getDate() + i);
+      weekDays.push(d);
+      const isToday = d.toDateString() === today.toDateString();
+      headerHtml += `<div class="cal-week-header">
+        <div class="cal-week-day-name">${dayNames[i]}</div>
+        <div class="cal-week-day-num${isToday?' today-num':''}">${d.getDate()}</div>
+      </div>`;
+    }
+
+    const hours = ['All Day','8 AM','9 AM','10 AM','11 AM','12 PM','1 PM','2 PM','3 PM','4 PM','5 PM','6 PM','7 PM','8 PM'];
+    let bodyHtml = '';
+    hours.forEach(h => {
+      bodyHtml += `<div class="cal-time-slot">${h}</div>`;
+      weekDays.forEach(d => {
+        const dateStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        const events = getCalEvents(d.getFullYear(), d.getMonth()).filter(e => e.date === dateStr);
+        bodyHtml += `<div class="cal-week-slot">
+          ${h === 'All Day' ? events.map(e => `<div class="cal-week-event ${e.type}">${e.icon} ${e.title}</div>`).join('') : ''}
+        </div>`;
+      });
+    });
+
+    document.getElementById('cal-week-grid').innerHTML = headerHtml + bodyHtml;
+  }
+
+  function renderUpcoming(year, month) {
+    const today = new Date();
+    const allEvents = [];
+
+    // Get events for next 60 days
+    for (let m = 0; m <= 2; m++) {
+      const d = new Date(today.getFullYear(), today.getMonth() + m, 1);
+      getCalEvents(d.getFullYear(), d.getMonth()).forEach(e => {
+        const eDate = new Date(e.date);
+        if (eDate >= today) allEvents.push(e);
+      });
+    }
+
+    // Sort by date, dedupe, take next 8
+    const seen = new Set();
+    const upcoming = allEvents
+      .filter(e => { const key = e.date+e.title; if(seen.has(key)){return false;} seen.add(key); return true; })
+      .sort((a,b) => new Date(a.date) - new Date(b.date))
+      .slice(0, 8);
+
+    const colors = { bill:'#f05555', payday:'#00b894', goal:'#f5a623', debt:'#818cf8', custom:'#06d6a0', reminder:'#06d6a0', milestone:'#818cf8' };
+    const container = document.getElementById('cal-upcoming-list');
+    if (upcoming.length === 0) { container.innerHTML = '<div class="empty-state" style="font-size:0.82rem">No upcoming events — add bills, goals or custom events!</div>'; return; }
+
+    container.innerHTML = upcoming.map(e => {
+      const eDate = new Date(e.date);
+      const diff = Math.ceil((eDate - today) / (1000*60*60*24));
+      const dateLabel = diff === 0 ? 'Today' : diff === 1 ? 'Tomorrow' : `${diff} days`;
+      return `<div class="cal-upcoming-item">
+        <div class="cal-upcoming-dot" style="background:${colors[e.type]||'#888'}"></div>
+        <div class="cal-upcoming-info">
+          <h4>${e.title}</h4>
+          <p>${e.date}${e.amount ? ' · $'+e.amount.toFixed(2) : ''}${e.note ? ' · '+e.note : ''}</p>
+        </div>
+        <div class="cal-upcoming-date">${dateLabel}</div>
+      </div>`;
+    }).join('');
+  }
+
+  function showDayDetail(dateStr) {
+    const year = parseInt(dateStr.split('-')[0]);
+    const month = parseInt(dateStr.split('-')[1]) - 1;
+    const events = getCalEvents(year, month).filter(e => e.date === dateStr);
+    if (events.length === 0) { showAddEventModal(dateStr); return; }
+
+    // Remove existing popup
+    document.querySelectorAll('.cal-popup').forEach(p => p.remove());
+
+    const colors = { bill:'#f05555', payday:'#00b894', goal:'#f5a623', debt:'#818cf8', custom:'#06d6a0' };
+    const popup = document.createElement('div');
+    popup.className = 'cal-popup';
+    popup.style.cssText = 'top:50%;left:50%;transform:translate(-50%,-50%)';
+    popup.innerHTML = `
+      <button class="cal-popup-close" onclick="this.parentElement.remove()">✕</button>
+      <div class="cal-popup-title">${new Date(dateStr+'T00:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}</div>
+      <div class="cal-popup-meta">${events.length} event${events.length!==1?'s':''}</div>
+      ${events.map(e => `
+        <div style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0;border-bottom:1px solid var(--border)">
+          <div style="width:8px;height:8px;border-radius:50%;background:${colors[e.type]||'#888'};flex-shrink:0"></div>
+          <div>
+            <div style="font-size:0.85rem;font-weight:600;color:var(--text)">${e.title}</div>
+            ${e.amount ? `<div style="font-size:0.75rem;color:var(--muted)">$${e.amount.toFixed(2)}</div>` : ''}
+            ${e.note ? `<div style="font-size:0.75rem;color:var(--muted)">${e.note}</div>` : ''}
+          </div>
+        </div>`).join('')}
+      <button onclick="showAddEventModal('${dateStr}');this.closest('.cal-popup').remove()" style="width:100%;margin-top:0.75rem;background:none;border:1.5px solid var(--border);border-radius:8px;padding:0.45rem;font-family:'Sora',sans-serif;font-size:0.78rem;cursor:pointer;color:var(--text-soft)">+ Add Event Here</button>`;
+    document.body.appendChild(popup);
+    setTimeout(() => document.addEventListener('click', function rm(e) { if(!popup.contains(e.target)){popup.remove(); document.removeEventListener('click',rm);} }), 100);
+  }
+
+  function calNav(dir) {
+    if (calView === 'month') calCurrentDate.setMonth(calCurrentDate.getMonth() + dir);
+    else calCurrentDate.setDate(calCurrentDate.getDate() + dir * 7);
+    calCurrentDate = new Date(calCurrentDate);
+    renderCalendar();
+  }
+
+  function goToToday() {
+    calCurrentDate = new Date();
+    renderCalendar();
+  }
+
+  function setCalView(view) {
+    calView = view;
+    document.getElementById('cal-month-view').style.display = view === 'month' ? 'block' : 'none';
+    document.getElementById('cal-week-view').style.display = view === 'week' ? 'block' : 'none';
+    document.getElementById('cal-view-month').classList.toggle('active', view === 'month');
+    document.getElementById('cal-view-week').classList.toggle('active', view === 'week');
+    renderCalendar();
+  }
+
+  function showAddEventModal(dateStr) {
+    document.getElementById('cal-event-modal').style.display = 'flex';
+    if (dateStr) document.getElementById('cal-event-date').value = dateStr;
+    else document.getElementById('cal-event-date').value = new Date().toISOString().split('T')[0];
+    document.getElementById('cal-event-name').value = '';
+    document.getElementById('cal-event-note').value = '';
+  }
+
+  function closeAddEventModal(e) {
+    if (e && e.target !== document.getElementById('cal-event-modal')) return;
+    document.getElementById('cal-event-modal').style.display = 'none';
+  }
+
+  function selectEventType(type, btn) {
+    selectedEventType = type;
+    document.querySelectorAll('.cal-event-type-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+  }
+
+  function addCustomEvent() {
+    const name = document.getElementById('cal-event-name').value.trim();
+    const date = document.getElementById('cal-event-date').value;
+    const note = document.getElementById('cal-event-note').value.trim();
+    if (!name || !date) { alert('Please enter an event name and date.'); return; }
+    calCustomEvents.push({ id: Date.now(), title: name, date, note, type: selectedEventType });
+    saveCalendarEvents();
+    document.getElementById('cal-event-modal').style.display = 'none';
+    calCurrentDate = new Date(date + 'T00:00:00');
+    renderCalendar();
+    awardXPForAction('calendarEvent');
   }
 
   // INIT
