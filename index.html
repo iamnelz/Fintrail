@@ -1901,7 +1901,10 @@
     .invest-stats { grid-template-columns: 1fr 1fr; }
     .dti-inputs { grid-template-columns: 1fr; }
     .guide-intro { grid-template-columns: 1fr; }
-    .goals-summary { grid-template-columns: 1fr; }
+    .goals-summary { grid-template-columns: repeat(3,1fr); gap: 0.5rem; margin-bottom: 0.75rem; }
+    .goal-stat { padding: 0.6rem 0.5rem; }
+    .goal-stat label { font-size: 0.6rem; }
+    .goal-stat .gs-val { font-size: 1.1rem; }
     .premium-grid { grid-template-columns: 1fr; }
   }
 
@@ -2889,6 +2892,9 @@
       <div class="goal-stat"><label data-en="Total Goals" data-es="Total de Metas">Total Goals</label><div class="gs-val" id="gs-count">0</div></div>
       <div class="goal-stat"><label data-en="Total Saved" data-es="Total Ahorrado">Total Saved</label><div class="gs-val" id="gs-saved">$0</div></div>
       <div class="goal-stat"><label data-en="Total Target" data-es="Total Objetivo">Total Target</label><div class="gs-val" id="gs-target">$0</div></div>
+    </div>
+    <div id="goals-scroll-hint" style="display:none;text-align:center;font-size:0.75rem;color:var(--muted);margin-bottom:0.75rem;padding:0.4rem;background:var(--surface2);border-radius:8px">
+      <span data-en="👇 Scroll down to add a savings goal" data-es="👇 Desliza hacia abajo para agregar una meta">👇 Scroll down to add a savings goal</span>
     </div>
 
     <div class="goals-top">
