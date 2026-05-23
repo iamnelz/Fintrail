@@ -2216,7 +2216,7 @@
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('ai')">💬<span data-en="AI Advisor" data-es="Asesor IA">AI Advisor</span></button>
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('premium')">🏆<span data-en="Health Score" data-es="Salud">Health Score</span></button>
     <button class="mobile-nav-tile" onclick="mobileTab('streaks')">🔥<span data-en="Streaks" data-es="Rachas">Streaks</span></button>
-    <button class="mobile-nav-tile" onclick="mobileTab('milestones');closeMobileNav()">🏅<span data-en="Milestones" data-es="Logros">Milestones</span></button>
+    <button class="mobile-nav-tile" onclick="mobileTab('streaks');closeMobileNav()">🏅<span data-en="Milestones" data-es="Logros">Milestones</span></button>
   </div>
 
   <!-- ACCOUNT SECTION — always visible at bottom -->
@@ -4284,12 +4284,14 @@
 
   // DATA PERSISTENCE — save & load from Supabase
   async function saveUserData() {
-    // Always save to localStorage as a reliable local fallback
+    // Always save to localStorage as reliable fallback with timestamp
     const _uid2 = currentUser?.id || 'demo';
-    safeSet('fintrail_debts_' + _uid2,  JSON.stringify(planDebts));
-    safeSet('fintrail_goals_' + _uid2,  JSON.stringify(goals));
-    safeSet('fintrail_bills_' + _uid2,  JSON.stringify(bills));
-    safeSet('fintrail_txns_' + _uid2,   JSON.stringify(transactions));
+    const _ts = Date.now();
+    safeSet('fintrail_debts_' + _uid2,       JSON.stringify(planDebts));
+    safeSet('fintrail_goals_' + _uid2,       JSON.stringify(goals));
+    safeSet('fintrail_goals_ts_' + _uid2,    String(_ts));
+    safeSet('fintrail_bills_' + _uid2,       JSON.stringify(bills));
+    safeSet('fintrail_txns_' + _uid2,        JSON.stringify(transactions));
 
     if (!sbClient || !currentUser) return;
     try {
@@ -4341,7 +4343,14 @@
       if (data) {
         transactions = data.transactions || [];
         bills = data.bills || [];
-        goals = data.goals || [];
+        // Use timestamp to decide: if local is newer than Supabase, keep local
+        // This prevents a stale Supabase row from wiping recent mobile changes
+        const _goalsTs = parseInt(safeGet('fintrail_goals_ts_' + currentUser.id) || '0');
+        const _supaTs = data.updated_at ? new Date(data.updated_at).getTime() : 0;
+        if (_supaTs > _goalsTs) {
+          goals = data.goals || [];
+        }
+        // else keep existing goals (localStorage will restore below)
         if (data.plan_debts?.length) {
           planDebts = data.plan_debts;
           safeSet('fintrail_debts_' + currentUser.id, JSON.stringify(planDebts));
@@ -4468,7 +4477,10 @@
     }
     document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('visible'));
     document.querySelectorAll('.nav-group-btn, .nav-dropdown-item').forEach(b => b.classList.remove('active'));
-    document.getElementById('tab-' + tab).classList.add('visible');
+    const _nEl = document.getElementById('tab-' + tab);
+    if (!_nEl) { console.warn('navTo: tab not found:', tab); return; }
+    _nEl.classList.add('visible');
+    window.scrollTo(0, 0);
     if (btn) btn.classList.add('active');
     const group = btn?.closest('.nav-group')?.querySelector('.nav-group-btn');
     if (group) group.classList.add('active');
@@ -4513,7 +4525,10 @@
   function mobileTab(tab) {
     document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('visible'));
     document.querySelectorAll('nav button, .mobile-nav button').forEach(b => b.classList.remove('active'));
-    document.getElementById('tab-' + tab).classList.add('visible');
+    const tabEl = document.getElementById('tab-' + tab);
+    if (!tabEl) { console.warn('mobileTab: no tab found for', tab); return; }
+    tabEl.classList.add('visible');
+    window.scrollTo(0, 0);
     closeMobileNav();
     if (tab === 'networth') setTimeout(initNetWorth, 50);
     if (tab === 'streaks') renderStreaksTab();
@@ -4849,6 +4864,10 @@ Guidelines:
     document.getElementById('g-target').value = '';
     document.getElementById('g-saved').value = '';
     document.getElementById('g-date').value = '';
+    // Save to localStorage immediately (sync) before async Supabase write
+    const _gUid = currentUser?.id || 'demo';
+    safeSet('fintrail_goals_' + _gUid, JSON.stringify(goals));
+    safeSet('fintrail_goals_ts_' + _gUid, String(Date.now()));
     renderGoals(); saveUserData();
     awardXPForAction('goal');
   }
@@ -4856,6 +4875,10 @@ Guidelines:
   function deleteGoal(id) {
     if (!confirm('Delete this savings goal?')) return;
     goals = goals.filter(g => String(g.id) !== String(id));
+    // Save immediately to localStorage before async Supabase write
+    const _dUid = currentUser?.id || 'demo';
+    safeSet('fintrail_goals_' + _dUid, JSON.stringify(goals));
+    safeSet('fintrail_goals_ts_' + _dUid, String(Date.now()));
     saveUserData();
     renderGoals();
   }
@@ -4868,6 +4891,9 @@ Guidelines:
     if (goal) {
       goal.saved = Math.min(goal.saved + amount, goal.target);
       input.value = '';
+      const _depUid = currentUser?.id || 'demo';
+      safeSet('fintrail_goals_' + _depUid, JSON.stringify(goals));
+      safeSet('fintrail_goals_ts_' + _depUid, String(Date.now()));
       renderGoals();
       saveUserData();
       // Require receipt for XP
