@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fintrail Pro — Budget Smarter, Live Better</title>
+<!-- REPLACE content value below with your actual Google Search Console verification code -->
+<meta name="google-site-verification" content="PASTE_YOUR_VERIFICATION_CODE_HERE" />
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
 <style>
@@ -4363,9 +4365,18 @@
           planDebts = data.plan_debts;
           safeSet('fintrail_debts_' + currentUser.id, JSON.stringify(planDebts));
         }
-        if (data.nw_assets)      { nwAssets      = data.nw_assets;      safeSet('fintrail_nw_assets_'      + currentUser.id, JSON.stringify(nwAssets)); }
-        if (data.nw_liabilities) { nwLiabilities = data.nw_liabilities; safeSet('fintrail_nw_liabilities_' + currentUser.id, JSON.stringify(nwLiabilities)); }
-        if (data.nw_history)     { nwHistory     = data.nw_history;     safeSet('fintrail_nw_history_'     + currentUser.id, JSON.stringify(nwHistory)); }
+        // NW data: use timestamp to pick the newest version across devices
+        const _nwLocalTs = parseInt(safeGet('fintrail_nw_ts_' + currentUser.id) || '0');
+        const _nwSupaTs  = data.updated_at ? new Date(data.updated_at).getTime() : 0;
+        if (data.nw_assets && _nwSupaTs >= _nwLocalTs) {
+          nwAssets      = data.nw_assets;
+          nwLiabilities = data.nw_liabilities || [];
+          nwHistory     = data.nw_history     || [];
+          safeSet('fintrail_nw_assets_'      + currentUser.id, JSON.stringify(nwAssets));
+          safeSet('fintrail_nw_liabilities_' + currentUser.id, JSON.stringify(nwLiabilities));
+          safeSet('fintrail_nw_history_'     + currentUser.id, JSON.stringify(nwHistory));
+          safeSet('fintrail_nw_ts_'          + currentUser.id, String(_nwSupaTs));
+        }
         // Sync game data (XP, level, achievements) across devices
         if (data.game_data) {
           const localGame = safeGet('fintrail_game_' + currentUser.id);
@@ -6658,6 +6669,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     safeSet('fintrail_nw_assets_local',        JSON.stringify(nwAssets));
     safeSet('fintrail_nw_liabilities_local',   JSON.stringify(nwLiabilities));
     safeSet('fintrail_nw_history_local',       JSON.stringify(nwHistory));
+    safeSet('fintrail_nw_ts_' + uid,           String(Date.now()));
     // Supabase sync
     if (sbClient && currentUser) {
       sbClient.from('user_data').upsert({
@@ -6911,7 +6923,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
 
   function editNWItem(type, id) {
     const list  = type === 'asset' ? nwAssets : nwLiabilities;
-    const item  = list.find(x => x.id === id);
+    const item  = list.find(x => String(x.id) === String(id));
     if (!item) return;
     const newVal = prompt(`Edit value for "${item.name}":`, item.value);
     if (newVal === null) return;
@@ -6920,8 +6932,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   }
 
   function deleteNWItem(type, id) {
-    if (type === 'asset') nwAssets = nwAssets.filter(x => x.id !== id);
-    else nwLiabilities = nwLiabilities.filter(x => x.id !== id);
+    if (type === 'asset') nwAssets = nwAssets.filter(x => String(x.id) !== String(id));
+    else nwLiabilities = nwLiabilities.filter(x => String(x.id) !== String(id));
     saveNWData(); calcNW();
   }
 
@@ -6932,7 +6944,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
 
   let nwLoaded = false;
   function initNetWorth() {
-    if (!nwLoaded) {
+    // Always reload if we have a user but haven't loaded yet this session
+    if (!nwLoaded || !nwAssets.length) {
       loadNWData();
       nwLoaded = true;
     }
