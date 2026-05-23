@@ -4297,7 +4297,7 @@
 
     if (!sbClient || !currentUser) return;
     try {
-      const payload = { user_id: currentUser.id, transactions, bills, goals, plan_debts: planDebts, nw_assets: nwAssets, nw_liabilities: nwLiabilities, nw_history: nwHistory, is_pro: isPro, updated_at: new Date().toISOString() };
+      const payload = { user_id: currentUser.id, transactions, bills, goals, plan_debts: planDebts, nw_assets: nwAssets, nw_liabilities: nwLiabilities, nw_history: nwHistory, game_data: gameData, is_pro: isPro, updated_at: new Date().toISOString() };
       await sbClient.from('user_data').upsert(payload, { onConflict: 'user_id' });
     } catch(err) {
       console.log('saveUserData error:', err.message);
@@ -4360,6 +4360,17 @@
         if (data.nw_assets)      { nwAssets      = data.nw_assets;      safeSet('fintrail_nw_assets_'      + currentUser.id, JSON.stringify(nwAssets)); }
         if (data.nw_liabilities) { nwLiabilities = data.nw_liabilities; safeSet('fintrail_nw_liabilities_' + currentUser.id, JSON.stringify(nwLiabilities)); }
         if (data.nw_history)     { nwHistory     = data.nw_history;     safeSet('fintrail_nw_history_'     + currentUser.id, JSON.stringify(nwHistory)); }
+        // Sync game data (XP, level, achievements) across devices
+        if (data.game_data) {
+          const localGame = safeGet('fintrail_game_' + currentUser.id);
+          const localXP = localGame ? (JSON.parse(localGame).totalXP || 0) : 0;
+          const supaXP  = data.game_data.totalXP || 0;
+          // Use whichever has more XP (highest progress wins)
+          if (supaXP >= localXP) {
+            gameData = { ...gameData, ...data.game_data };
+            safeSet('fintrail_game_' + currentUser.id, JSON.stringify(gameData));
+          }
+        }
         if (data.is_pro) {
           isPro = true;
           applyProState();
@@ -6939,7 +6950,15 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   }
 
   function saveGameData() {
-    safeSet('fintrail_game_' + (currentUser?.id || 'demo'), JSON.stringify(gameData));
+    const uid = currentUser?.id || 'demo';
+    safeSet('fintrail_game_' + uid, JSON.stringify(gameData));
+    // Sync to Supabase so XP/level is consistent across all devices
+    if (sbClient && currentUser) {
+      sbClient.from('user_data').upsert(
+        { user_id: currentUser.id, game_data: gameData, updated_at: new Date().toISOString() },
+        { onConflict: 'user_id' }
+      ).catch(e => console.log('gameData sync err:', e.message));
+    }
   }
 
   function copyRewardCode(code) {
@@ -6952,11 +6971,11 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
 
   function checkLevelUp(prevXP, newXP) {
     const prevLevel = getLEVELS().findIndex((l, i) => {
-      const next = LEVELS[i+1];
+      const next = getLEVELS()[i+1];
       return prevXP >= l.minXP && (!next || prevXP < next.minXP);
     });
     const newLevel = getLEVELS().findIndex((l, i) => {
-      const next = LEVELS[i+1];
+      const next = getLEVELS()[i+1];
       return newXP >= l.minXP && (!next || newXP < next.minXP);
     });
     if (newLevel > prevLevel && newLevel >= 0) {
