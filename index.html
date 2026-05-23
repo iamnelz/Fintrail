@@ -2544,26 +2544,26 @@
     <!-- HERO -->
     <div class="resources-hero">
       <div>
-        <h2>Financial Resources & Partner Rates</h2>
-        <p>Curated lenders, grants, tools & education. Compare rates and find the best fit for you.</p>
+        <h2 data-en="Financial Resources &amp; Partner Rates" data-es="Recursos Financieros y Tasas">Financial Resources & Partner Rates</h2>
+        <p data-en="Curated lenders, grants, tools &amp; education. Compare rates and find the best fit for you." data-es="Prestamistas, becas, herramientas y educación. Compara tasas y encuentra la mejor opción para ti.">Curated lenders, grants, tools & education. Compare rates and find the best fit for you.</p>
       </div>
       <div class="filter-row" id="filter-row">
         <button class="filter-btn active" onclick="filterResources('all', this)">All</button>
-        <button class="filter-btn" onclick="filterResources('mortgage', this)">🏠 Mortgages</button>
-        <button class="filter-btn" onclick="filterResources('personal', this)">💳 Personal Loans</button>
-        <button class="filter-btn" onclick="filterResources('auto', this)">🚗 Auto Loans</button>
-        <button class="filter-btn" onclick="filterResources('refi', this)">🔄 Refinance</button>
-        <button class="filter-btn" onclick="filterResources('grants', this)">🎁 Grants</button>
+        <button class="filter-btn" onclick="filterResources('mortgage', this)" data-en="🏠 Mortgages" data-es="🏠 Hipotecas">🏠 Mortgages</button>
+        <button class="filter-btn" onclick="filterResources('personal', this)" data-en="💳 Personal Loans" data-es="💳 Préstamos Personales">💳 Personal Loans</button>
+        <button class="filter-btn" onclick="filterResources('auto', this)" data-en="🚗 Auto Loans" data-es="🚗 Préstamos de Auto">🚗 Auto Loans</button>
+        <button class="filter-btn" onclick="filterResources('refi', this)" data-en="🔄 Refinance" data-es="🔄 Refinanciar">🔄 Refinance</button>
+        <button class="filter-btn" onclick="filterResources('grants', this)" data-en="🎁 Grants" data-es="🎁 Becas y Ayudas">🎁 Grants</button>
         <button class="filter-btn" onclick="filterResources('tools', this)">🛠 Tools</button>
         <button class="filter-btn" onclick="filterResources('education', this)">📚 Education</button>
-        <button class="filter-btn" onclick="filterResources('credit', this)">📊 Credit Scores</button>
+        <button class="filter-btn" onclick="filterResources('credit', this)" data-en="📊 Credit Scores" data-es="📊 Puntajes de Crédito">📊 Credit Scores</button>
       </div>
     </div>
 
     <!-- LOAN COMPARISON CALCULATOR -->
     <div class="compare-tool">
-      <h2>🧮 Loan Payment Calculator</h2>
-      <p>Estimate your monthly payment before you apply. Adjust the numbers to compare scenarios.</p>
+      <h2 data-en="🧮 Loan Payment Calculator" data-es="🧮 Calculadora de Préstamos">🧮 Loan Payment Calculator</h2>
+      <p data-en="Estimate your monthly payment before you apply. Adjust the numbers to compare scenarios." data-es="Estima tu pago mensual antes de aplicar. Ajusta los números para comparar escenarios.">Estimate your monthly payment before you apply. Adjust the numbers to compare scenarios.</p>
       <div class="compare-inputs">
         <div class="form-group"><label data-en="Loan Amount ($)" data-es="Monto del Préstamo ($)">Loan Amount ($)</label><input type="number" id="cmp-amount" value="25000" oninput="calcLoan()"></div>
         <div class="form-group"><label data-en="Interest Rate (% APR)" data-es="Tasa de Interés (% APR)">Interest Rate (% APR)</label><input type="number" id="cmp-rate" value="6.99" step="0.01" oninput="calcLoan()"></div>
@@ -2571,7 +2571,7 @@
           <select id="cmp-term" onchange="calcLoan()">
             <option value="12" data-en="1 year" data-es="1 año">1 year</option>
             <option value="24" data-en="2 years" data-es="2 años">2 years</option>
-            <option value="36" selected>3 years</option>
+            <option value="36" selected data-en="3 years" data-es="3 años">3 years</option>
             <option value="48" data-en="4 years" data-es="4 años">4 years</option>
             <option value="60" data-en="5 years" data-es="5 años">5 years</option>
             <option value="84" data-en="7 years" data-es="7 años">7 years</option>
@@ -2600,7 +2600,7 @@
       <div id="rate-banner" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1.75rem;"></div>
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0.65rem 1rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:0.6rem;">
         <span style="font-size:1rem;">ℹ️</span>
-        <p style="font-size:0.75rem;color:var(--muted);line-height:1.5;"><strong style="color:var(--dark);">Affiliate Disclosure:</strong> Fintrail may earn a commission when you apply through our partner links, at no extra cost to you. Rates shown are representative and subject to change. Always verify current rates directly with the lender.</p>
+        <p style="font-size:0.75rem;color:var(--muted);line-height:1.5;"><strong style="color:var(--dark);" data-en="Affiliate Disclosure:" data-es="Divulgación de Afiliados:">Affiliate Disclosure:</strong> <span data-en="Fintrail may earn a commission when you apply through our partner links, at no extra cost to you. Rates shown are representative and subject to change. Always verify current rates directly with the lender." data-es="Fintrail puede ganar una comisión cuando aplicas a través de nuestros enlaces de socios, sin costo adicional para ti. Las tasas mostradas son representativas y sujetas a cambio. Siempre verifica las tasas actuales directamente con el prestamista.">Fintrail may earn a commission when you apply through our partner links, at no extra cost to you. Rates shown are representative and subject to change. Always verify current rates directly with the lender.</span></p>
       </div>
     </div>
 
@@ -4093,12 +4093,15 @@
     { tag: 'credit', title: 'myFICO', logo: '🎯', badges: ['badge-fast|All 3 Bureaus'], rates: [], desc: 'Get your official FICO scores from all three bureaus — the exact scores most lenders use. Includes score simulators and monitoring alerts.', cta: 'See All 3 Scores', url: 'https://www.myfico.com', ctaStyle: 'secondary', fine: 'Paid service. Prices start around $19.95/mo for all three bureau scores.', commission: '💰 Earn per subscription referral' },
   ];
 
-  const rateBannerData = [
-    { type: '30-yr Mortgage', rate: '6.49%', note: 'via Better' },
-    { type: 'Personal Loan', rate: '7.49%', note: 'via LightStream' },
-    { type: 'Auto Loan', rate: '4.74%', note: 'via PenFed' },
-    { type: 'Student Refi', rate: '4.99%', note: 'via SoFi' },
-  ];
+  function getRateBannerData() {
+    const es = currentLang === 'es';
+    return [
+      { type: es ? 'Hipoteca 30 años' : '30-yr Mortgage', rate: '6.49%', note: 'via Better' },
+      { type: es ? 'Préstamo Personal' : 'Personal Loan', rate: '7.49%', note: 'via LightStream' },
+      { type: es ? 'Préstamo de Auto' : 'Auto Loan', rate: '4.74%', note: 'via PenFed' },
+      { type: es ? 'Refi Estudiantil' : 'Student Refi', rate: '4.99%', note: 'via SoFi' },
+    ];
+  }
 
   // ======================================================
   // SUPABASE CONFIG — replace with your project credentials
@@ -4316,7 +4319,7 @@
       badge.textContent = `${level.badge} ${level.name}`;
       badge.classList.add('premium-plan');
       statusEl.textContent = `⭐ Pro Plan${statusTitle ? ' · ' + statusTitle : ''} · ${currentUser?.email || ''}`;
-      actionBtn.textContent = 'Manage Subscription';
+      actionBtn.textContent = currentLang === 'es' ? 'Administrar Suscripción' : 'Manage Subscription';
       actionBtn.onclick = cancelSubscription;
     } else {
       bar.classList.remove('premium');
@@ -4636,11 +4639,11 @@
   }
 
   function renderRateBanner() {
-    document.getElementById('rate-banner').innerHTML = rateBannerData.map(r => `
+    document.getElementById('rate-banner').innerHTML = getRateBannerData().map(r => `
       <div class="rate-chip">
         <div class="rc-type">${r.type}</div>
         <div class="rc-rate">${r.rate}</div>
-        <div class="rc-label">as low as · ${r.note}</div>
+        <div class="rc-label">${currentLang==='es'?'desde · ':'as low as · '}${r.note}</div>
       </div>`).join('');
   }
 
@@ -7255,7 +7258,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       // ACCOUNT BAR
       'free-plan': 'Free Plan',
       'upgrade-btn': 'Upgrade to Pro →',
-      'manage-sub': 'Manage Subscription',
+      'manage-sub': currentLang === 'es' ? 'Administrar Suscripción' : 'Manage Subscription',
       'sign-out': 'Sign Out',
       // AUTH
       'sign-in-tab': 'Sign In',
