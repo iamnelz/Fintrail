@@ -4438,6 +4438,8 @@
     }
     render(); renderBillList(); renderSchedule(); renderGoals();
     if (planDebts.length) { renderDebtList(); runPayoffPlan(); }
+    // Mark NW as pre-loaded from Supabase so initNetWorth uses this data directly
+    if (nwAssets.length || nwLiabilities.length) nwLoaded = true;
     loadProfileUI();
   }
 
@@ -6755,8 +6757,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
         <div class="nw-item">
           <span class="nw-item-name">${escHtml(a.name)}</span>
           <span class="nw-item-value asset">$${parseFloat(a.value).toLocaleString(undefined,{maximumFractionDigits:0})}</span>
-          <button class="nw-item-edit" onclick="editNWItem('asset','${a.id}')">Edit</button>
-          <button class="nw-item-del" onclick="deleteNWItem('asset','${a.id}')">✕</button>
+          <button class="nw-item-edit" onclick="event.stopPropagation();editNWItem('asset','${a.id}')">Edit</button>
+          <button class="nw-item-del" onclick="event.stopPropagation();deleteNWItem('asset','${a.id}')" title="Delete">&times;</button>
         </div>`).join('');
 
     lList.innerHTML = nwLiabilities.length === 0 ? `<div style="font-size:0.8rem;color:var(--muted);text-align:center;padding:0.5rem">${currentLang==='es'?'Aún no hay pasivos':'No liabilities yet'}</div>` :
@@ -6764,8 +6766,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
         <div class="nw-item">
           <span class="nw-item-name">${escHtml(l.name)}</span>
           <span class="nw-item-value liability">$${parseFloat(l.value).toLocaleString(undefined,{maximumFractionDigits:0})}</span>
-          <button class="nw-item-edit" onclick="editNWItem('liability','${l.id}')">Edit</button>
-          <button class="nw-item-del" onclick="deleteNWItem('liability','${l.id}')">✕</button>
+          <button class="nw-item-edit" onclick="event.stopPropagation();editNWItem('liability','${l.id}')">Edit</button>
+          <button class="nw-item-del" onclick="event.stopPropagation();deleteNWItem('liability','${l.id}')" title="Delete">&times;</button>
         </div>`).join('');
   }
 
