@@ -4718,7 +4718,14 @@
   let chatHistory = [];
   let isTyping = false;
 
-  const SYSTEM_PROMPT = `You are Fintrail AI Advisor, a friendly and knowledgeable personal finance assistant embedded in the Fintrail app. Your role is to educate and guide users on personal finance topics including budgeting, credit scores, debt management, saving, investing, loans, and financial planning.
+  function getSystemPrompt() {
+    const isEs = currentLang === 'es';
+    const langInstruction = isEs
+      ? 'IMPORTANT: The user interface is in Spanish. You MUST respond entirely in Spanish. Do not switch to English under any circumstances.'
+      : 'Respond in English.';
+    return `You are Fintrail AI Advisor, a friendly and knowledgeable personal finance assistant embedded in the Fintrail app. Your role is to educate and guide users on personal finance topics including budgeting, credit scores, debt management, saving, investing, loans, and financial planning.
+
+${langInstruction}
 
 Guidelines:
 - Be warm, clear, and encouraging — finance can feel overwhelming, so keep it approachable
@@ -4728,6 +4735,7 @@ Guidelines:
 - Always remind users you're for educational purposes and suggest consulting a CFP for personalized advice on complex situations
 - Keep responses concise — aim for 3-5 short paragraphs max
 - Never recommend specific stocks, funds by ticker, or make specific investment predictions`;
+  }
 
   function handleKey(e) {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
@@ -4739,9 +4747,10 @@ Guidelines:
   }
 
   function askSuggested(btn) {
-    // Send English question to AI for best response; show translated text in chat input
-    const englishQ = btn.getAttribute('data-en') || btn.textContent.trim();
-    document.getElementById('chat-input').value = englishQ;
+    // Show and send the displayed question text (Spanish if in ES mode)
+    // The AI responds in the correct language via the system prompt
+    const question = btn.textContent.trim();
+    document.getElementById('chat-input').value = question;
     sendMessage();
   }
 
@@ -4764,7 +4773,7 @@ Guidelines:
       const response = await fetch('/.netlify/functions/ai-advisor', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: chatHistory, system: SYSTEM_PROMPT })
+        body: JSON.stringify({ messages: chatHistory, system: getSystemPrompt() })
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Unknown error');
