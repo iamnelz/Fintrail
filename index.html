@@ -6940,6 +6940,13 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   function deleteNWItem(type, id) {
     if (type === 'asset') nwAssets = nwAssets.filter(x => String(x.id) !== String(id));
     else nwLiabilities = nwLiabilities.filter(x => String(x.id) !== String(id));
+    // Write to localStorage immediately BEFORE any async operations
+    const _duid = currentUser?.id || 'demo';
+    safeSet('fintrail_nw_assets_'      + _duid, JSON.stringify(nwAssets));
+    safeSet('fintrail_nw_liabilities_' + _duid, JSON.stringify(nwLiabilities));
+    safeSet('fintrail_nw_assets_local',          JSON.stringify(nwAssets));
+    safeSet('fintrail_nw_liabilities_local',     JSON.stringify(nwLiabilities));
+    safeSet('fintrail_nw_ts_' + _duid,           String(Date.now()));
     saveNWData(); calcNW();
   }
 
@@ -6950,8 +6957,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
 
   let nwLoaded = false;
   function initNetWorth() {
-    // Always reload if we have a user but haven't loaded yet this session
-    if (!nwLoaded || !nwAssets.length) {
+    // Only load once per session — nwLoaded prevents re-loading after delete empties arrays
+    if (!nwLoaded) {
       loadNWData();
       nwLoaded = true;
     }
