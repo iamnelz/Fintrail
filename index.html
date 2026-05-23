@@ -2215,8 +2215,7 @@
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem;padding:0 0.75rem 0.5rem">
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('ai')">💬<span data-en="AI Advisor" data-es="Asesor IA">AI Advisor</span></button>
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('premium')">🏆<span data-en="Health Score" data-es="Salud">Health Score</span></button>
-    <button class="mobile-nav-tile" onclick="mobileTab('streaks')">🔥<span data-en="Streaks" data-es="Rachas">Streaks</span></button>
-    <button class="mobile-nav-tile" onclick="mobileTab('streaks');closeMobileNav()">🏅<span data-en="Milestones" data-es="Logros">Milestones</span></button>
+    <button class="mobile-nav-tile" onclick="mobileTab('streaks');closeMobileNav()">🔥🏅<span data-en="Streaks &amp; Milestones" data-es="Rachas y Logros">Streaks &amp; Milestones</span></button>
   </div>
 
   <!-- ACCOUNT SECTION — always visible at bottom -->
@@ -6548,13 +6547,13 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   // =============================================
   // STREAKS & GAMIFICATION SYSTEM
   // =============================================
-  const LEVELS = [
-    { name: 'Bronze', badge: '🥉', minXP: 0, maxXP: 1500, subtitle: 'Just Getting Started', statusTitle: null, reward: null, color: '#cd7f32' },
-    { name: 'Silver', badge: '🥈', minXP: 1500, maxXP: 3500, subtitle: 'Building Momentum', statusTitle: 'Silver Member', reward: { type: 'discount', value: '10% off', desc: '10% discount on your next month', code: 'SILVER10' }, color: '#aaa9ad' },
-    { name: 'Gold', badge: '🥇', minXP: 3500, maxXP: 7500, subtitle: 'Finance Pro in Training', statusTitle: 'Gold Member', reward: { type: 'free', value: '1 Free Month', desc: 'One free month of Fintrail Pro', code: 'GOLD1MO' }, color: '#e9c46a' },
-    { name: 'Platinum', badge: '💎', minXP: 7500, maxXP: 10500, subtitle: 'Financial Champion', statusTitle: '💎 Champion', reward: { type: 'free', value: '2 Free Months', desc: 'Two free months of Fintrail Pro', code: 'PLAT2MO' }, color: '#818cf8' },
-    { name: 'Diamond', badge: '💠', minXP: 10500, maxXP: 99999, subtitle: 'Elite Financial Master', statusTitle: '💠 Elite Member', reward: { type: 'lifetime', value: '$3.99/mo Forever', desc: 'Locked-in discounted rate for life', code: 'DIAMOND399' }, color: '#06d6a0' },
-  ];
+  function getLEVELS() { return [
+    { name: currentLang==='es'?'Bronce':'Bronze', badge: '🥉', minXP: 0, maxXP: 1500, subtitle: currentLang==='es'?'Comenzando el Camino':'Just Getting Started', statusTitle: null, reward: null, color: '#cd7f32' },
+    { name: currentLang==='es'?'Plata':'Silver', badge: '🥈', minXP: 1500, maxXP: 3500, subtitle: currentLang==='es'?'Construyendo Impulso':'Building Momentum', statusTitle: currentLang==='es'?'Miembro Plata':'Silver Member', reward: { type: 'discount', value: '10% off', desc: currentLang==='es'?'10% de descuento en tu próximo mes':'10% discount on your next month', code: 'SILVER10' }, color: '#aaa9ad' },
+    { name: currentLang==='es'?'Oro':'Gold', badge: '🥇', minXP: 3500, maxXP: 7500, subtitle: currentLang==='es'?'Profesional Financiero':'Finance Pro in Training', statusTitle: currentLang==='es'?'⭐ Miembro Oro':'Gold Member', reward: { type: 'free', value: currentLang==='es'?'1 Mes Gratis':'1 Free Month', desc: currentLang==='es'?'Un mes gratis de Fintrail Pro':'One free month of Fintrail Pro', code: 'GOLD1MO' }, color: '#e9c46a' },
+    { name: currentLang==='es'?'Platino':'Platinum', badge: '💎', minXP: 7500, maxXP: 10500, subtitle: currentLang==='es'?'Campeón Financiero':'Financial Champion', statusTitle: currentLang==='es'?'💎 Campeón':'💎 Champion', reward: { type: 'free', value: currentLang==='es'?'2 Meses Gratis':'2 Free Months', desc: currentLang==='es'?'Dos meses gratis de Fintrail Pro':'Two free months of Fintrail Pro', code: 'PLAT2MO' }, color: '#818cf8' },
+    { name: currentLang==='es'?'Diamante':'Diamond', badge: '💠', minXP: 10500, maxXP: 99999, subtitle: currentLang==='es'?'Maestro Financiero Élite':'Elite Financial Master', statusTitle: currentLang==='es'?'💠 Miembro Élite':'💠 Elite Member', reward: { type: 'lifetime', value: '$3.99/mo Para Siempre', desc: currentLang==='es'?'Tarifa descontada de por vida':'Locked-in discounted rate for life', code: 'DIAMOND399' }, color: '#06d6a0' },
+  ]; }
 
   const BADGES_DEF = [
     { id: 'first_login', emoji: '👋', name: 'Welcome!', desc: 'Log in for the first time', xp: 50, condition: () => true },
@@ -6949,11 +6948,11 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   }
 
   function checkLevelUp(prevXP, newXP) {
-    const prevLevel = LEVELS.findIndex((l, i) => {
+    const prevLevel = getLEVELS().findIndex((l, i) => {
       const next = LEVELS[i+1];
       return prevXP >= l.minXP && (!next || prevXP < next.minXP);
     });
-    const newLevel = LEVELS.findIndex((l, i) => {
+    const newLevel = getLEVELS().findIndex((l, i) => {
       const next = LEVELS[i+1];
       return newXP >= l.minXP && (!next || newXP < next.minXP);
     });
@@ -7060,16 +7059,16 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
 
   function getCurrentLevel() {
     const xp = gameData.totalXP || 0;
-    for (let i = LEVELS.length - 1; i >= 0; i--) {
-      if (xp >= LEVELS[i].minXP) return { ...LEVELS[i], index: i };
+    const _lv = getLEVELS(); for (let i = _lv.length - 1; i >= 0; i--) {
+      if (xp >= _lv[i].minXP) return { ..._lv[i], index: i };
     }
-    return { ...LEVELS[0], index: 0 };
+    return { ...getLEVELS()[0], index: 0 };
   }
 
   function renderLevelCard() {
     const level = getCurrentLevel();
     const xp = gameData.totalXP || 0;
-    const nextLevel = LEVELS[level.index + 1];
+    const nextLevel = getLEVELS()[level.index + 1];
     const progress = nextLevel ? ((xp - level.minXP) / (nextLevel.minXP - level.minXP)) * 100 : 100;
 
     document.getElementById('level-badge').textContent = level.badge;
@@ -7088,7 +7087,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     if (rewardContainer) {
       if (level.reward) {
         rewardContainer.innerHTML = `
-          <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.4);margin-bottom:0.4rem">🎁 Your Reward</div>
+          <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.4);margin-bottom:0.4rem">${currentLang==='es'?'🎁 Tu Recompensa':'🎁 Your Reward'}</div>
           <div class="reward-card">
             <div class="rc-icon">🎁</div>
             <div class="rc-content">
@@ -7098,7 +7097,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
             <button class="rc-code" onclick="copyRewardCode('${level.reward.code}')" title="Click to copy">${level.reward.code}</button>
           </div>`;
       } else {
-        rewardContainer.innerHTML = `<div class="reward-locked">🔒 Reach Silver to unlock rewards</div>`;
+        rewardContainer.innerHTML = `<div class="reward-locked">${currentLang==='es'?'🔒 Llega a Plata para desbloquear recompensas':'🔒 Reach Silver to unlock rewards'}</div>`;
       }
     }
 
@@ -7107,7 +7106,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     if (roadmapContainer) {
       roadmapContainer.innerHTML = `
         <div class="lrp-title">${currentLang==='es'?'Mapa de Recompensas':'Rewards Roadmap'}</div>
-        ${LEVELS.map((l, i) => {
+        ${getLEVELS().map((l, i) => {
           const isCurrentOrPast = i <= level.index;
           const isCurrent = i === level.index;
           return `<div class="lrp-row ${isCurrent ? 'current' : ''}">
