@@ -1981,8 +1981,8 @@
   .nw-item-value { font-size:0.85rem; font-weight:700; }
   .nw-item-value.asset { color:var(--income-color); }
   .nw-item-value.liability { color:var(--accent); }
-  .nw-item-edit { background:none; border:1px solid var(--border); color:var(--text-soft); font-size:0.68rem; font-weight:600; padding:0.15rem 0.45rem; border-radius:5px; cursor:pointer; }
-  .nw-item-del { background:none; border:none; color:var(--muted); font-size:0.95rem; cursor:pointer; padding:0 0.25rem; }
+  .nw-item-edit { background:none; border:1px solid var(--border); color:var(--text-soft); font-size:0.75rem; font-weight:600; padding:0.4rem 0.75rem; border-radius:6px; cursor:pointer; min-height:36px; min-width:44px; touch-action:manipulation; }
+  .nw-item-del { background:none; border:none; color:var(--muted); font-size:1rem; cursor:pointer; padding:0.4rem 0.6rem; min-height:36px; min-width:36px; touch-action:manipulation; }
   .nw-bar-row { display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem; }
   .nw-bar-label { font-size:0.78rem; color:var(--text-soft); width:120px; flex-shrink:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .nw-bar-track { flex:1; height:8px; background:var(--border); border-radius:20px; overflow:hidden; }
@@ -3907,6 +3907,30 @@
   </div>
 
 </main>
+
+<!-- NW EDIT MODAL -->
+<div id="edit-nw-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:1002;align-items:center;justify-content:center;backdrop-filter:blur(4px);touch-action:none">
+  <div style="background:var(--surface);border-radius:16px;padding:1.5rem;width:100%;max-width:360px;margin:1.5rem;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem">
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--text)">✏️ Edit Item</h3>
+      <button onclick="closeNWEditModal()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--muted);padding:0.25rem 0.5rem;min-height:44px">✕</button>
+    </div>
+    <input type="hidden" id="edit-nw-id">
+    <input type="hidden" id="edit-nw-type">
+    <div style="margin-bottom:0.75rem">
+      <label style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);display:block;margin-bottom:0.35rem">Name</label>
+      <input id="edit-nw-name" type="text" style="width:100%;padding:0.75rem;border:1px solid var(--border);border-radius:8px;background:var(--surface2);font-size:16px;color:var(--text);outline:none;box-sizing:border-box">
+    </div>
+    <div style="margin-bottom:1.25rem">
+      <label style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);display:block;margin-bottom:0.35rem">Value ($)</label>
+      <input id="edit-nw-value" type="number" min="0" step="0.01" style="width:100%;padding:0.75rem;border:1px solid var(--border);border-radius:8px;background:var(--surface2);font-size:16px;color:var(--text);outline:none;box-sizing:border-box">
+    </div>
+    <div style="display:flex;gap:0.75rem">
+      <button onclick="saveNWEdit()" style="flex:1;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:0.85rem;font-family:'Sora',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;min-height:48px">Save</button>
+      <button onclick="closeNWEditModal()" style="background:none;border:1.5px solid var(--border);color:var(--muted);border-radius:10px;padding:0.85rem 1rem;font-family:'Sora',sans-serif;font-size:0.9rem;cursor:pointer;min-height:48px">Cancel</button>
+    </div>
+  </div>
+</div>
 
 <!-- DEBT EDIT MODAL -->
 <div id="edit-debt-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1001;align-items:center;justify-content:center;backdrop-filter:blur(4px)">
@@ -6647,9 +6671,11 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       if (l) nwLiabilities = JSON.parse(l);
       if (h) nwHistory     = JSON.parse(h);
     } catch(e) {}
-    // Auto-pull ONLY on first visit (when both arrays are empty — brand new user)
-    // This respects manual edits/deletions on subsequent visits
-    const isFirstVisit = nwAssets.length === 0 && nwLiabilities.length === 0;
+    // Auto-pull ONLY for brand new users who have never set up NW tracker
+    // Check localStorage to see if they've ever saved NW data before
+    const uid = currentUser?.id || 'demo';
+    const hasEverSaved = safeGet('fintrail_nw_ts_' + uid) || safeGet('fintrail_nw_assets_local');
+    const isFirstVisit = nwAssets.length === 0 && nwLiabilities.length === 0 && !hasEverSaved;
     if (isFirstVisit) {
       if (planDebts && planDebts.length) {
         planDebts.forEach(d => {
@@ -6661,8 +6687,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
           if (g.saved > 0) nwAssets.push({ id: String(Date.now()) + '_' + Math.floor(Math.random()*10000), name: g.name + ' (savings)', value: g.saved });
         });
       }
-      // Save the auto-pulled data so it's there next visit
-      if (isFirstVisit && (nwAssets.length || nwLiabilities.length)) saveNWData();
+      if (nwAssets.length || nwLiabilities.length) saveNWData();
     }
   }
 
@@ -6928,13 +6953,37 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   }
 
   function editNWItem(type, id) {
-    const list  = type === 'asset' ? nwAssets : nwLiabilities;
-    const item  = list.find(x => String(x.id) === String(id));
+    const list = type === 'asset' ? nwAssets : nwLiabilities;
+    const item = list.find(x => String(x.id) === String(id));
     if (!item) return;
-    const newVal = prompt(`Edit value for "${item.name}":`, item.value);
-    if (newVal === null) return;
-    const parsed = parseFloat(newVal);
-    if (!isNaN(parsed) && parsed >= 0) { item.value = parsed; saveNWData(); calcNW(); }
+    // Use inline edit modal instead of prompt() which is blocked on mobile
+    document.getElementById('edit-nw-id').value = id;
+    document.getElementById('edit-nw-type').value = type;
+    document.getElementById('edit-nw-name').value = item.name;
+    document.getElementById('edit-nw-value').value = item.value;
+    document.getElementById('edit-nw-modal').style.display = 'flex';
+    setTimeout(() => document.getElementById('edit-nw-value').focus(), 100);
+  }
+
+  function saveNWEdit() {
+    const id    = document.getElementById('edit-nw-id').value;
+    const type  = document.getElementById('edit-nw-type').value;
+    const name  = document.getElementById('edit-nw-name').value.trim();
+    const value = parseFloat(document.getElementById('edit-nw-value').value);
+    if (!name || isNaN(value) || value < 0) return;
+    const list = type === 'asset' ? nwAssets : nwLiabilities;
+    const item = list.find(x => String(x.id) === String(id));
+    if (item) { item.name = name; item.value = value; }
+    document.getElementById('edit-nw-modal').style.display = 'none';
+    const _uid = currentUser?.id || 'demo';
+    safeSet('fintrail_nw_assets_'      + _uid, JSON.stringify(nwAssets));
+    safeSet('fintrail_nw_liabilities_' + _uid, JSON.stringify(nwLiabilities));
+    safeSet('fintrail_nw_ts_' + _uid,           String(Date.now()));
+    saveNWData(); calcNW();
+  }
+
+  function closeNWEditModal() {
+    document.getElementById('edit-nw-modal').style.display = 'none';
   }
 
   function deleteNWItem(type, id) {
