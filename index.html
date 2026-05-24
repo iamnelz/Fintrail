@@ -3174,63 +3174,7 @@
 
       </div>
 
-      <div id="debt-planner-section" class="planner-card" style="order:1">
-        <h2 data-en="🎯 Personalized Debt Payoff Planner" data-es="🎯 Plan Personalizado de Pago de Deudas">🎯 Personalized Debt Payoff Planner</h2>
-        <p><span data-en="Enter your debts below and we'll build a personalized payoff plan using either the Avalanche (highest interest first) or Snowball (smallest balance first) method." data-es="Ingresa tus deudas y construiremos un plan de pago usando el método Avalancha (mayor interés primero) o Bola de Nieve (menor saldo primero).">Enter your debts below and we'll build a personalized payoff plan using either the Avalanche (highest interest first) or Snowball (smallest balance first) method.</span></p>
-        <div style="display:flex;justify-content:flex-end;margin-bottom:0.75rem;margin-top:0.5rem">
-          <button onclick="downloadDebtPlanPDF()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.45rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.35rem">📄 Save PDF</button>
-        </div>
 
-        <!-- METHOD TOGGLE -->
-        <div class="method-toggle">
-          <button class="method-btn active" id="method-avalanche" onclick="setMethod('avalanche', this)" data-en="🔥 Avalanche — Save Most Money" data-es="🔥 Avalancha — Ahorra Más">🔥 Avalanche — Save Most Money</button>
-          <button class="method-btn" id="method-snowball" onclick="setMethod('snowball', this)" data-en="⛄ Snowball — Quick Wins First" data-es="⛄ Bola de Nieve — Victorias Rápidas">⛄ Snowball — Quick Wins First</button>
-        </div>
-
-        <!-- METHOD EXPLANATION -->
-        <div id="method-explanation" style="background:var(--bg);border-radius:10px;padding:0.85rem 1rem;margin-bottom:1rem;border:1px solid var(--border);font-size:0.82rem;color:var(--text-soft);line-height:1.6">
-          <strong style="color:var(--text)">🔥 Avalanche Method:</strong> Pay minimums on all debts, then put ALL extra money toward the <strong>highest interest rate</strong> debt first. Mathematically saves the most money in interest.
-        </div>
-
-        <!-- EXTRA PAYMENT INPUT -->
-        <div class="planner-inputs" style="margin-bottom:1rem">
-          <div class="form-group">
-            <label data-en="Extra Monthly Payment ($)" data-es="Pago Mensual Extra ($)">Extra Monthly Payment ($)</label>
-            <input type="number" id="extra-payment" value="200" min="0" placeholder="e.g. 200" oninput="runPayoffPlan()">
-            <div style="font-size:0.72rem;color:var(--muted);margin-top:0.3rem">💡 This extra amount gets focused on one debt at a time</div>
-          </div>
-        </div>
-
-        <!-- ADD DEBT FORM -->
-        <div style="background:var(--bg);border-radius:10px;padding:1rem;margin-bottom:1rem;border:1px solid var(--border)">
-          <div style="font-size:0.82rem;font-weight:700;color:var(--text);margin-bottom:0.75rem">➕ Add a Debt</div>
-          <div class="debt-add-grid">
-            <div class="form-group"><label data-en="Debt Name" data-es="Nombre de la Deuda">Debt Name</label><input type="text" id="debt-name" placeholder="e.g. Visa Card"></div>
-            <div class="form-group"><label data-en="Balance ($)" data-es="Saldo ($)">Balance ($)</label><input type="number" id="debt-balance" placeholder="5000" min="0"></div>
-            <div class="form-group"><label data-en="APR (%)" data-es="TNA (%)">APR (%)</label><input type="number" id="debt-apr" placeholder="19.99" step="0.01" min="0"></div>
-            <div class="form-group"><label data-en="Min Payment ($)" data-es="Pago Mínimo ($)">Min Payment ($)</label><input type="number" id="debt-min" placeholder="Auto" min="0"></div>
-            <button class="add-btn" style="margin-top:0" onclick="addDebt()">+</button>
-          </div>
-        </div>
-
-        <div id="debt-list" style="display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1rem;"></div>
-
-        <div id="plan-result" style="display:none">
-          <!-- PAYMENT ALLOCATION -->
-          <div style="background:var(--bg);border-radius:12px;padding:1.25rem;margin-bottom:1rem;border:1px solid var(--border)">
-            <div style="font-size:0.82rem;font-weight:700;color:var(--text);margin-bottom:0.75rem;text-transform:uppercase;letter-spacing:0.06em">📋 This Month's Payment Plan</div>
-            <div id="payment-allocation"></div>
-          </div>
-
-          <div class="plan-result">
-            <div class="plan-result-grid" id="plan-summary"></div>
-            <div class="payoff-timeline" id="payoff-timeline"></div>
-          </div>
-        </div>
-        <div id="plan-empty" style="text-align:center;color:var(--muted);font-size:0.85rem;padding:1.5rem">Add your debts above to generate your personalized payoff plan.</div>
-      </div>
-
-      </div><!-- end debt-planner-section -->
       <div class="tip-bar" style="margin-top:0">
         <div class="tip-icon">🏆</div>
         <p data-en="Score:" data-es="Puntaje:" data-en-html="<strong>Your score updates automatically</strong> as you add transactions, bills, and savings goals. Log more data for a more accurate score." data-es-html="<strong>Tu puntaje se actualiza automáticamente</strong> al agregar transacciones, facturas y metas de ahorro. Registra más datos para un puntaje más preciso."><strong>Your score updates automatically</strong> as you add transactions, bills, and savings goals. The higher your score the better your financial health — aim for <strong>80+</strong> to qualify for the best loan rates!</p>
