@@ -1104,6 +1104,8 @@
 
   /* PREMIUM FEATURES TAB */
   .premium-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:1.5rem; margin-bottom:1.5rem; }
+  .planner-card { order: 0; }
+  .health-score-card, .alerts-card { order: 1; }
 
   /* HEALTH SCORE */
   .health-score-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:1.75rem; text-align:center; }
@@ -1917,13 +1919,21 @@
     .goal-stat label { font-size: 0.6rem; }
     .goal-stat .gs-val { font-size: 1.1rem; }
     .premium-grid { grid-template-columns: 1fr; }
+    /* Reorder sections on mobile: debt planner first, health score second */
+    #premium-tab-content { display: flex; flex-direction: column; }
+    #premium-tab-content .planner-card { order: 1; }
+    #premium-tab-content .premium-grid { order: 2; margin-top: 0; }
+    #premium-tab-content .tip-bar { order: 3; }
   }
 
   /* ─── DEBT ADD FORM RESPONSIVE ─── */
   .debt-add-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:0.6rem; align-items:end; }
   @media (max-width:480px) {
-    .debt-add-grid { grid-template-columns:1fr 1fr; }
-    .debt-add-grid .add-btn { grid-column:1/-1; margin-top:0.25rem; }
+    .debt-add-grid { grid-template-columns:1fr 1fr; gap:0.5rem; }
+    .debt-add-grid input { font-size:16px; padding:0.6rem 0.5rem; }
+    .debt-add-grid .add-btn { grid-column:1/-1; margin-top:0.25rem; height:48px; font-size:1rem; }
+    .method-toggle { flex-direction:column; gap:0.5rem; }
+    .method-btn { width:100%; text-align:center; }
   }
 
   /* ─── TABLET (768px – 1024px) ─── */
@@ -3093,8 +3103,7 @@
 
       </div>
 
-      <!-- DEBT PAYOFF PLANNER -->
-      <div class="planner-card">
+
         <h2 data-en="🎯 Personalized Debt Payoff Planner" data-es="🎯 Plan Personalizado de Pago de Deudas">🎯 Personalized Debt Payoff Planner</h2>
         <p><span data-en="Enter your debts below and we'll build a personalized payoff plan using either the Avalanche (highest interest first) or Snowball (smallest balance first) method." data-es="Ingresa tus deudas y construiremos un plan de pago usando el método Avalancha (mayor interés primero) o Bola de Nieve (menor saldo primero).">Enter your debts below and we'll build a personalized payoff plan using either the Avalanche (highest interest first) or Snowball (smallest balance first) method.</span></p>
         <div style="display:flex;justify-content:flex-end;margin-bottom:0.75rem;margin-top:0.5rem">
@@ -6746,6 +6755,21 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     }
   }
 
+  function updateNWHeadline() {
+    const totalAssets      = nwAssets.reduce((s, a) => s + (parseFloat(a.value) || 0), 0);
+    const totalLiabilities = nwLiabilities.reduce((s, l) => s + (parseFloat(l.value) || 0), 0);
+    const netWorth         = totalAssets - totalLiabilities;
+    const headline = document.getElementById('nw-headline');
+    const taEl = document.getElementById('nw-total-assets');
+    const tlEl = document.getElementById('nw-total-liabilities');
+    if (headline) {
+      headline.textContent = (netWorth < 0 ? '-' : '') + '$' + Math.abs(netWorth).toLocaleString(undefined, {maximumFractionDigits:0});
+      headline.style.color = netWorth < 0 ? '#f05555' : '#06d6a0';
+    }
+    if (taEl) taEl.textContent = '$' + totalAssets.toLocaleString(undefined, {maximumFractionDigits:0});
+    if (tlEl) tlEl.textContent = '$' + totalLiabilities.toLocaleString(undefined, {maximumFractionDigits:0});
+  }
+
   function calcNW() {
     const totalAssets      = nwAssets.reduce((s, a) => s + (parseFloat(a.value) || 0), 0);
     const totalLiabilities = nwLiabilities.reduce((s, l) => s + (parseFloat(l.value) || 0), 0);
@@ -6979,7 +7003,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     safeSet('fintrail_nw_liabilities_local',    JSON.stringify(nwLiabilities));
     saveNWData();
     renderNWLists();
-    calcNW();
+    updateNWHeadline();
+    setTimeout(calcNW, 50);
   }
 
   function quickAddNW(type, name, value) {
@@ -7033,7 +7058,11 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     safeSet('fintrail_nw_assets_local',          JSON.stringify(nwAssets));
     safeSet('fintrail_nw_liabilities_local',     JSON.stringify(nwLiabilities));
     safeSet('fintrail_nw_ts_' + _duid,           String(Date.now()));
-    saveNWData(); calcNW();
+    // Update UI immediately without waiting for async Supabase
+    renderNWLists();
+    updateNWHeadline();
+    saveNWData();
+    setTimeout(calcNW, 50); // defer full recalc so UI responds first
   }
 
   function clearNWHistory() {
