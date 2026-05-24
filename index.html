@@ -2010,28 +2010,45 @@
   .nw-bar-fill { height:100%; border-radius:20px; transition:width 0.4s ease; }
   .nw-bar-amount { font-size:0.78rem; font-weight:700; width:80px; text-align:right; flex-shrink:0; }
 
-  /* CLEANUP FIX: tablet/iPad navigation and safer responsive grids */
+
+  /* === Preservation-first responsive patch: keeps all features, fixes tablet/iPad nav overflow === */
   @media (max-width:1024px) {
-    nav { display: none; }
-    .hamburger { display: flex; }
-    #mobile-profile-btn { display: flex !important; }
     header { padding: 0 1rem; }
-    .mobile-nav-panel { max-width: 420px; }
-    .resources-hero { flex-direction: column; align-items: flex-start; }
+    header nav { display: none !important; }
+    .hamburger { display: flex !important; }
+    #mobile-profile-btn { display: flex !important; }
+    .mobile-nav { max-height: calc(100vh - 64px); overflow-y: auto; -webkit-overflow-scrolling: touch; }
+    main { padding-left: 1rem; padding-right: 1rem; }
+    .resources-hero { flex-direction: column; align-items: stretch; }
+    .two-col,
+    .goals-top,
+    .bill-setup-grid,
+    .ai-layout,
+    .invest-layout,
+    .profile-layout,
+    .creditsim-layout,
+    .streaks-layout,
+    .negotiate-layout,
+    .cal-layout,
+    .nw-layout { grid-template-columns: 1fr !important; }
   }
 
-  @media (max-width:900px) {
-    .two-col, .ai-layout, .goals-top, .bill-setup-grid, .cal-layout, .profile-layout, .negotiate-layout, .invest-layout {
-      grid-template-columns: 1fr !important;
-    }
-    .summary-grid, .goals-summary { grid-template-columns: repeat(3, 1fr); }
+  @media (min-width:701px) and (max-width:1024px) {
+    .summary-grid,
+    .goals-summary,
+    .premium-grid,
+    .invest-stats,
+    .plan-result-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    .score-bands { grid-template-columns: repeat(3, 1fr) !important; }
+    .mobile-nav-grid { grid-template-columns: repeat(4, 1fr) !important; }
+    .chat-window { height: 560px; }
   }
 
-  @media (max-width:560px) {
-    .summary-grid, .goals-summary { grid-template-columns: 1fr; }
-    .resources-grid, .goals-grid { grid-template-columns: 1fr; }
-    .mobile-nav-grid { grid-template-columns: repeat(2, 1fr) !important; }
-    .msg-bubble { max-width: 88%; }
+  @media (max-width:700px) {
+    .summary-grid { grid-template-columns: 1fr !important; }
+    .goals-summary { grid-template-columns: repeat(3, 1fr) !important; }
+    .mobile-nav-grid { grid-template-columns: repeat(3, 1fr) !important; }
+    input, select, textarea { font-size: 16px !important; }
   }
 
 </style>
@@ -4067,13 +4084,6 @@
   let currentType = 'income';
   let currentFilter = 'all';
 
-  // DOM SAFETY HELPERS
-  // These keep optional/removed UI blocks from crashing the whole app on desktop, phone, or tablet.
-  const $id = (id) => document.getElementById(id);
-  const setDisplay = (id, value) => { const el = $id(id); if (el) el.style.display = value; };
-  const setText = (id, value) => { const el = $id(id); if (el) el.textContent = value; };
-  const setHTML = (id, value) => { const el = $id(id); if (el) el.innerHTML = value; };
-
   // RESOURCES DATA — affiliate-ready
   const resources = [
     // MORTGAGES
@@ -4603,15 +4613,22 @@
   }
 
   function applyProState() {
+    // Safe display helper prevents one missing/renamed section from crashing the whole app.
+    const setDisplay = (id, display) => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = display;
+    };
+
     setDisplay('guide-gate', isPro ? 'none' : 'block');
     setDisplay('guide-content', isPro ? 'block' : 'none');
     setDisplay('ai-gate', isPro ? 'none' : 'block');
     setDisplay('ai-content', isPro ? 'block' : 'none');
     setDisplay('affiliate-gate', isPro ? 'none' : 'block');
     setDisplay('affiliate-content', isPro ? 'block' : 'none');
-    updatePremiumTab();
-    updateCreditSimTab();
-    updateNegotiateTab();
+
+    if (typeof updatePremiumTab === 'function') updatePremiumTab();
+    if (typeof updateCreditSimTab === 'function') updateCreditSimTab();
+    if (typeof updateNegotiateTab === 'function') updateNegotiateTab();
     if (typeof renderResources === 'function') renderResources();
     if (isPro) {
       if (typeof renderRateBanner === 'function') renderRateBanner();
@@ -4660,6 +4677,7 @@
     const nav = document.getElementById('mobile-nav');
     const overlay = document.getElementById('mobile-overlay');
     const hamburger = document.getElementById('hamburger');
+    if (!nav || !overlay || !hamburger) return;
     const isOpen = nav.classList.contains('open');
     nav.classList.toggle('open', !isOpen);
     overlay.classList.toggle('open', !isOpen);
@@ -4667,9 +4685,9 @@
   }
 
   function closeMobileNav() {
-    document.getElementById('mobile-nav').classList.remove('open');
-    document.getElementById('mobile-overlay').classList.remove('open');
-    document.getElementById('hamburger').classList.remove('open');
+    document.getElementById('mobile-nav')?.classList.remove('open');
+    document.getElementById('mobile-overlay')?.classList.remove('open');
+    document.getElementById('hamburger')?.classList.remove('open');
   }
 
   function mobileTab(tab) {
@@ -4700,9 +4718,11 @@
   // TAB SWITCHING
   function showTab(tab, btn) {
     document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('visible'));
-    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-    document.getElementById('tab-' + tab).classList.add('visible');
-    btn.classList.add('active');
+    document.querySelectorAll('nav button, .mobile-nav button').forEach(b => b.classList.remove('active'));
+    const section = document.getElementById('tab-' + tab);
+    if (!section) { console.warn('showTab: no tab found for', tab); return; }
+    section.classList.add('visible');
+    if (btn) btn.classList.add('active');
   }
 
   // TRANSACTION TYPE
@@ -5781,13 +5801,13 @@ Guidelines:
   }
 
   function updatePremiumTab() {
-    // Older builds used premium-tab-* IDs; current markup uses healthscore-tab-* IDs.
-    const gate = $id('premium-tab-gate') || $id('healthscore-tab-gate');
-    const content = $id('premium-tab-content') || $id('healthscore-tab-content');
-    if (!gate || !content) return;
-    gate.style.display = isPro ? 'none' : 'block';
-    content.style.display = isPro ? 'block' : 'none';
-    if (isPro && typeof calculateHealthScore === 'function') calculateHealthScore();
+    const gate = document.getElementById('premium-tab-gate');
+    const content = document.getElementById('premium-tab-content');
+    if (gate && content) {
+      gate.style.display = isPro ? 'none' : 'block';
+      content.style.display = isPro ? 'block' : 'none';
+      if (isPro) calculateHealthScore();
+    }
   }
 
   // INVESTMENT CALCULATOR
@@ -6166,7 +6186,84 @@ Guidelines:
         </div>
         ${htmlContent}
         <div class="footer">Generated by Fintrail · fintrail.app · For personal use only · Not financial advice</div>
-      </body>
+      
+
+<script id="fintrail-tab-scope-fix">
+/* Fintrail preservation fix — keeps feature tabs intact and prevents Net Worth premium-analysis locks from leaking into every tab. */
+(function () {
+  function getActiveTabId() {
+    const active = document.querySelector('.tab-section.visible');
+    return active ? active.id : '';
+  }
+
+  function looksLikeNetWorthPremiumAnalysis(el) {
+    const text = (el && el.textContent ? el.textContent : '').toLowerCase();
+    return (
+      text.includes('premium analysis') ||
+      text.includes('hidden trends') ||
+      text.includes('insights and projections') ||
+      text.includes('net worth analysis') ||
+      text.includes('net worth projections')
+    );
+  }
+
+  window.scopeNetWorthPremiumAnalysis = function scopeNetWorthPremiumAnalysis() {
+    const activeTab = getActiveTabId();
+
+    // Enforce one visible app tab at a time, including iPad/Safari edge cases.
+    document.querySelectorAll('.tab-section').forEach(section => {
+      section.style.display = section.classList.contains('visible') ? 'block' : 'none';
+    });
+
+    // If a premium analysis lock/card was accidentally placed outside a tab,
+    // only show it while the Net Worth tab is active.
+    document.querySelectorAll('.lock-gate, .premium-analysis, [data-scope="networth-only"]').forEach(el => {
+      if (!looksLikeNetWorthPremiumAnalysis(el)) return;
+      const section = el.closest('.tab-section');
+      const belongsToNetWorth = section && section.id === 'tab-networth';
+      const isOrphan = !section;
+      if (belongsToNetWorth || isOrphan) {
+        el.style.display = activeTab === 'tab-networth' ? '' : 'none';
+      }
+    });
+  };
+
+  function wrapTabFunction(name) {
+    const original = window[name];
+    if (typeof original !== 'function' || original.__fintrailScoped) return;
+    const wrapped = function () {
+      const result = original.apply(this, arguments);
+      setTimeout(window.scopeNetWorthPremiumAnalysis, 0);
+      return result;
+    };
+    wrapped.__fintrailScoped = true;
+    window[name] = wrapped;
+  }
+
+  function install() {
+    wrapTabFunction('navTo');
+    wrapTabFunction('mobileTab');
+    wrapTabFunction('showTab');
+    wrapTabFunction('guardedNavTo');
+    wrapTabFunction('mobileGuardedTab');
+    window.scopeNetWorthPremiumAnalysis();
+
+    const root = document.querySelector('main') || document.body;
+    if (root && !window.__fintrailTabScopeObserver) {
+      window.__fintrailTabScopeObserver = new MutationObserver(() => {
+        clearTimeout(window.__fintrailTabScopeTimer);
+        window.__fintrailTabScopeTimer = setTimeout(window.scopeNetWorthPremiumAnalysis, 20);
+      });
+      window.__fintrailTabScopeObserver.observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'style'] });
+    }
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install);
+  else install();
+})();
+</script>
+
+</body>
       </html>
     `);
     printWindow.document.close();
@@ -7423,47 +7520,43 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     document.querySelectorAll('.debt-type-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     const config = debtTypeConfig[type];
-    setText('script-title', config.title);
-    setText('script-subtitle', config.subtitle);
-    // Update goal options based on type. This block is optional in the current UI.
-    const goalSelect = $id('neg-goal');
+    document.getElementById('script-title').textContent = config.title;
+    document.getElementById('script-subtitle').textContent = config.subtitle;
+    // Update goal options based on type
+    const goalSelect = document.getElementById('neg-goal');
     const goalOptions = {
       credit: ['lower_rate|Lower interest rate', 'waive_fees|Waive late fees', 'hardship|Hardship program', 'payment_plan|Set up payment plan'],
       medical: ['payment_plan|Set up payment plan', 'settle|Reduce bill amount', 'hardship|Financial hardship discount', 'waive_fees|Waive interest/fees'],
       student: ['payment_plan|Income-based repayment', 'hardship|Deferment or forbearance', 'lower_rate|Interest rate reduction', 'settle|Loan modification'],
       collections: ['settle|Settle for less than owed', 'remove_collections|Pay for delete agreement', 'payment_plan|Set up payment plan', 'hardship|Hardship settlement'],
     };
-    if (goalSelect) {
-      goalSelect.innerHTML = goalOptions[type].map(o => {
-        const [val, label] = o.split('|');
-        return `<option value="${val}">${label}</option>`;
-      }).join('');
-    }
+    goalSelect.innerHTML = goalOptions[type].map(o => {
+      const [val, label] = o.split('|');
+      return `<option value="${val}">${label}</option>`;
+    }).join('');
   }
 
   function switchScriptTab(tab, btn) {
     currentScriptTab = tab;
     document.querySelectorAll('.script-tab-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    const scriptBox = $id('script-box');
-    if (!scriptBox) return;
     if (negotiationScripts[tab]) {
-      scriptBox.textContent = negotiationScripts[tab];
-      scriptBox.classList.remove('loading');
+      document.getElementById('script-box').textContent = negotiationScripts[tab];
+      document.getElementById('script-box').classList.remove('loading');
     } else {
-      scriptBox.textContent = 'Generate your script first to see this section.';
+      document.getElementById('script-box').textContent = 'Generate your script first to see this section.';
     }
   }
 
 
 
   function updateNegotiateTab() {
-    const gate = $id('negotiate-gate');
-    const content = $id('negotiate-content');
-    // Current markup does not include these wrappers; tab access is handled by guarded navigation.
-    if (!gate || !content) return;
-    gate.style.display = isPro ? 'none' : 'block';
-    content.style.display = isPro ? 'block' : 'none';
+    const gate = document.getElementById('negotiate-gate');
+    const content = document.getElementById('negotiate-content');
+    if (gate && content) {
+      gate.style.display = isPro ? 'none' : 'block';
+      content.style.display = isPro ? 'block' : 'none';
+    }
   }
 
   // LANGUAGE SYSTEM
@@ -8065,8 +8158,87 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   const savedPayday = safeGet('fintrail_payday_date');
   const savedFreq   = safeGet('fintrail_pay_freq');
   const todayStr = new Date().toISOString().split('T')[0];
-  document.getElementById('next-payday').value = savedPayday || todayStr;
-  if (savedFreq) document.getElementById('pay-frequency').value = savedFreq;
+  const nextPaydayEl = document.getElementById('next-payday');
+  const payFrequencyEl = document.getElementById('pay-frequency');
+  if (nextPaydayEl) nextPaydayEl.value = savedPayday || todayStr;
+  if (savedFreq && payFrequencyEl) payFrequencyEl.value = savedFreq;
 </script>
+
+
+<script id="fintrail-tab-scope-fix">
+/* Fintrail preservation fix — keeps feature tabs intact and prevents Net Worth premium-analysis locks from leaking into every tab. */
+(function () {
+  function getActiveTabId() {
+    const active = document.querySelector('.tab-section.visible');
+    return active ? active.id : '';
+  }
+
+  function looksLikeNetWorthPremiumAnalysis(el) {
+    const text = (el && el.textContent ? el.textContent : '').toLowerCase();
+    return (
+      text.includes('premium analysis') ||
+      text.includes('hidden trends') ||
+      text.includes('insights and projections') ||
+      text.includes('net worth analysis') ||
+      text.includes('net worth projections')
+    );
+  }
+
+  window.scopeNetWorthPremiumAnalysis = function scopeNetWorthPremiumAnalysis() {
+    const activeTab = getActiveTabId();
+
+    // Enforce one visible app tab at a time, including iPad/Safari edge cases.
+    document.querySelectorAll('.tab-section').forEach(section => {
+      section.style.display = section.classList.contains('visible') ? 'block' : 'none';
+    });
+
+    // If a premium analysis lock/card was accidentally placed outside a tab,
+    // only show it while the Net Worth tab is active.
+    document.querySelectorAll('.lock-gate, .premium-analysis, [data-scope="networth-only"]').forEach(el => {
+      if (!looksLikeNetWorthPremiumAnalysis(el)) return;
+      const section = el.closest('.tab-section');
+      const belongsToNetWorth = section && section.id === 'tab-networth';
+      const isOrphan = !section;
+      if (belongsToNetWorth || isOrphan) {
+        el.style.display = activeTab === 'tab-networth' ? '' : 'none';
+      }
+    });
+  };
+
+  function wrapTabFunction(name) {
+    const original = window[name];
+    if (typeof original !== 'function' || original.__fintrailScoped) return;
+    const wrapped = function () {
+      const result = original.apply(this, arguments);
+      setTimeout(window.scopeNetWorthPremiumAnalysis, 0);
+      return result;
+    };
+    wrapped.__fintrailScoped = true;
+    window[name] = wrapped;
+  }
+
+  function install() {
+    wrapTabFunction('navTo');
+    wrapTabFunction('mobileTab');
+    wrapTabFunction('showTab');
+    wrapTabFunction('guardedNavTo');
+    wrapTabFunction('mobileGuardedTab');
+    window.scopeNetWorthPremiumAnalysis();
+
+    const root = document.querySelector('main') || document.body;
+    if (root && !window.__fintrailTabScopeObserver) {
+      window.__fintrailTabScopeObserver = new MutationObserver(() => {
+        clearTimeout(window.__fintrailTabScopeTimer);
+        window.__fintrailTabScopeTimer = setTimeout(window.scopeNetWorthPremiumAnalysis, 20);
+      });
+      window.__fintrailTabScopeObserver.observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'style'] });
+    }
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install);
+  else install();
+})();
+</script>
+
 </body>
 </html>
