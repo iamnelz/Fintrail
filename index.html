@@ -137,6 +137,8 @@
     position: relative;
     overflow: hidden;
     transition: border-color 0.2s;
+    pointer-events: none; /* clearly not clickable/editable */
+    user-select: none;
   }
   .summary-card:hover { border-color: #3a3a48; }
   .summary-card::before {
@@ -161,6 +163,13 @@
     font-family: 'Playfair Display', serif;
     font-size: 1.85rem;
     color: var(--text);
+  }
+  @media (max-width:700px) {
+    #add-txn-hint { display: block !important; }
+    .summary-card { padding: 0.65rem 0.75rem; border-radius: 10px; }
+    .summary-card .amount { font-size: 1.15rem; }
+    .summary-card label { font-size: 0.6rem; margin-bottom: 0.25rem; }
+    .summary-grid { gap: 0.5rem; margin-bottom: 1rem; }
   }
   .summary-card.income .amount { color: var(--income-color); }
   .summary-card.expense .amount { color: var(--expense-color); }
@@ -2350,6 +2359,10 @@
 
     <!-- TRACKER SUB -->
     <div class="budget-sub visible" id="bsub-tracker">
+    <!-- Mobile hint to scroll down to add transaction -->
+    <div id="add-txn-hint" style="display:none;text-align:center;font-size:0.78rem;color:var(--accent);font-weight:600;padding:0.4rem 0.75rem;background:rgba(240,85,85,0.08);border-radius:8px;margin-bottom:0.75rem;border:1px solid rgba(240,85,85,0.2)">
+      <span data-en="👇 Scroll down to add a transaction" data-es="👇 Desliza para agregar una transacción">👇 Scroll down to add a transaction</span>
+    </div>
     <div class="summary-grid">
       <div class="summary-card income">
         <label id="label-total-income">Total Income</label>
@@ -3191,6 +3204,7 @@
             </select>
           </div>
         </div>
+        </div><!-- end sim-results-panel -->
 
         <div class="tip-bar" style="margin-top:1.25rem">
           <div class="tip-icon">💡</div>
@@ -3555,12 +3569,12 @@
             </div>
             <div class="form-group">
               <label>Enter Your Credit Score</label>
-              <input type="range" class="score-range-input" id="base-score" min="300" max="850" value="680" oninput="updateSimulator()">
-              <div class="score-range-labels"><span>300 Poor</span><span id="base-score-display" style="font-weight:700;color:var(--accent)">680</span><span>850 Exceptional</span></div>
+              <input type="range" class="score-range-input" id="base-score" min="0" max="850" value="680" oninput="updateSimulator()">
+              <div class="score-range-labels"><span>0 No Credit</span><span id="base-score-display" style="font-weight:700;color:var(--accent)">680</span><span>850 Exceptional</span></div>
             </div>
             <div class="form-group" style="margin-top:0.75rem">
               <label>Or type your score</label>
-              <input type="number" class="profile-input" id="base-score-num" value="680" min="300" max="850" 
+              <input type="number" class="profile-input" id="base-score-num" value="680" min="0" max="850" 
                 onblur="syncScoreSlider()" 
                 onkeydown="if(event.key==='Enter')syncScoreSlider()"
                 style="font-size:1.1rem;font-weight:700;text-align:center">
@@ -3575,6 +3589,19 @@
         </div>
 
         <!-- RIGHT: RESULTS -->
+        <div id="no-credit-guide" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1.25rem">
+          <h3 style="font-family:'Playfair Display',serif;font-size:1.05rem;margin-bottom:0.75rem">🌱 Building Credit From Scratch</h3>
+          <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:1rem;line-height:1.6">You have no credit history yet. Follow these 5 steps to reach a Good score (670+) within 6–12 months:</p>
+          <div style="display:flex;flex-direction:column;gap:0.6rem">
+            <div style="background:var(--bg);border-radius:10px;padding:0.85rem;border-left:3px solid var(--income-color)"><div style="font-weight:700;font-size:0.85rem;margin-bottom:0.2rem">1. Get a Secured Credit Card</div><div style="font-size:0.78rem;color:var(--text-soft)">Deposit $200–$500 as collateral. Use it for small purchases and pay the full balance monthly. Can build a 650+ score in 6 months.</div></div>
+            <div style="background:var(--bg);border-radius:10px;padding:0.85rem;border-left:3px solid var(--income-color)"><div style="font-weight:700;font-size:0.85rem;margin-bottom:0.2rem">2. Become an Authorized User</div><div style="font-size:0.78rem;color:var(--text-soft)">Ask a trusted family member with good credit to add you to their card. You inherit their payment history immediately.</div></div>
+            <div style="background:var(--bg);border-radius:10px;padding:0.85rem;border-left:3px solid var(--income-color)"><div style="font-weight:700;font-size:0.85rem;margin-bottom:0.2rem">3. Open a Credit Builder Loan</div><div style="font-size:0.78rem;color:var(--text-soft)">Banks offer small $300–$1,000 loans to build credit. Make monthly payments and receive the money at the end.</div></div>
+            <div style="background:var(--bg);border-radius:10px;padding:0.85rem;border-left:3px solid var(--income-color)"><div style="font-weight:700;font-size:0.85rem;margin-bottom:0.2rem">4. Keep Utilization Under 30%</div><div style="font-size:0.78rem;color:var(--text-soft)">Never use more than 30% of your credit limit. On a $500 card, keep balance under $150. Under 10% is ideal.</div></div>
+            <div style="background:var(--bg);border-radius:10px;padding:0.85rem;border-left:3px solid var(--income-color)"><div style="font-weight:700;font-size:0.85rem;margin-bottom:0.2rem">5. Never Miss a Payment</div><div style="font-size:0.78rem;color:var(--text-soft)">Payment history is 35% of your score. Set up autopay for at least the minimum so you never miss a due date.</div></div>
+          </div>
+          <div style="margin-top:1rem;padding:0.75rem;background:rgba(6,214,160,0.08);border-radius:8px;border:1px solid rgba(6,214,160,0.2);font-size:0.78rem;color:var(--text-soft)">⏱️ <strong>Timeline:</strong> Most people reach 650+ in 6 months and 700+ in 12 months following steps 1 &amp; 5 consistently.</div>
+        </div>
+        <div id="sim-results-panel">
         <div class="sim-results-card">
           <h2>Simulated Score Impact</h2>
 
@@ -6267,7 +6294,7 @@ Guidelines:
     const input = document.getElementById('base-score-num');
     const raw = parseInt(input.value);
     if (isNaN(raw) || input.value === '') return;
-    const val = Math.min(850, Math.max(300, raw));
+    const val = Math.min(850, Math.max(0, raw));
     input.value = val;
     document.getElementById('base-score').value = val;
     updateSimulator();
@@ -6276,7 +6303,13 @@ Guidelines:
   function updateSimulator() {
     const base = parseInt(document.getElementById('base-score').value);
     document.getElementById('base-score-num').value = base;
-    document.getElementById('base-score-display').textContent = base;
+    document.getElementById('base-score-display').textContent = base === 0 ? 'No Credit' : base;
+    // Show no-credit guidance panel
+    const noCredit = document.getElementById('no-credit-guide');
+    const simPanel = document.getElementById('sim-results-panel');
+    if (noCredit) noCredit.style.display = base === 0 ? 'block' : 'none';
+    if (simPanel) simPanel.style.display = base === 0 ? 'none' : 'block';
+    if (base === 0) return; // skip simulator for no-credit
 
     // Calculate total impact from selected actions
     let totalImpact = 0;
@@ -6944,7 +6977,9 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     safeSet('fintrail_nw_liabilities_' + _uid, JSON.stringify(nwLiabilities));
     safeSet('fintrail_nw_assets_local',         JSON.stringify(nwAssets));
     safeSet('fintrail_nw_liabilities_local',    JSON.stringify(nwLiabilities));
-    saveNWData(); calcNW();
+    saveNWData();
+    renderNWLists();
+    calcNW();
   }
 
   function quickAddNW(type, name, value) {
