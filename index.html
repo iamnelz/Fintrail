@@ -2009,148 +2009,6 @@
   .nw-bar-track { flex:1; height:8px; background:var(--border); border-radius:20px; overflow:hidden; }
   .nw-bar-fill { height:100%; border-radius:20px; transition:width 0.4s ease; }
   .nw-bar-amount { font-size:0.78rem; font-weight:700; width:80px; text-align:right; flex-shrink:0; }
-
-
-  /* =========================================================
-     LAYOUT-SAFE RESPONSIVE PATCH — added 2026-05-24
-     Scope: CSS only. Keeps Supabase, Stripe, login, and app JS untouched.
-     Goal: stable layout across desktop, tablets/iPad, and phones.
-  ========================================================= */
-  html { width: 100%; overflow-x: hidden; }
-  body { width: 100%; overflow-x: hidden; }
-  img, svg, canvas, video { max-width: 100%; height: auto; }
-  main, header, .account-bar, .hero, .card, .resources-hero, .paywall-modal, .auth-card { min-width: 0; }
-  .card, .resource-card, .goal-card, .compare-tool, .lock-gate, .tip-bar { overflow-wrap: anywhere; }
-  .two-col > *, .goals-top > *, .bill-setup-grid > *, .ai-layout > *, .profile-layout > *, .invest-layout > *, .creditsim-layout > *, .streaks-layout > *, .negotiate-layout > *, .cal-layout > *, .nw-layout > * { min-width: 0; }
-  input, select, textarea, button { max-width: 100%; }
-  .transaction-list, .bill-list, .chat-messages, .mobile-nav { overscroll-behavior: contain; }
-
-  /* Desktop keeps the full grouped navigation but prevents crowding. */
-  @media (min-width: 1025px) {
-    header { gap: 1rem; }
-    nav { min-width: 0; justify-content: flex-end; }
-    .nav-group-btn { white-space: nowrap; }
-    main { width: min(1100px, calc(100% - 3rem)); }
-  }
-
-  /* Tablets/iPads: switch to hamburger layout before desktop nav starts wrapping. */
-  @media (max-width: 1024px) {
-    header {
-      padding: 0 1rem !important;
-      gap: 0.75rem;
-    }
-    header nav { display: none !important; }
-    .hamburger { display: flex !important; }
-    #mobile-profile-btn { display: flex !important; }
-    .logo { min-width: 0; flex: 1; font-size: 1.2rem; }
-    .logo > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .mobile-overlay { top: 64px; }
-    .mobile-nav {
-      top: 64px;
-      padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
-    }
-    .mobile-nav-grid { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
-
-    main {
-      width: 100%;
-      max-width: 100%;
-      padding: 1.5rem 1rem calc(4rem + env(safe-area-inset-bottom, 0px)) !important;
-    }
-    .hero { padding-left: 1rem !important; padding-right: 1rem !important; }
-    .two-col,
-    .goals-top,
-    .bill-setup-grid,
-    .ai-layout,
-    .profile-layout,
-    .invest-layout,
-    .creditsim-layout,
-    .streaks-layout,
-    .negotiate-layout,
-    .cal-layout,
-    .nw-layout {
-      grid-template-columns: 1fr !important;
-    }
-    .summary-grid,
-    .goals-summary,
-    .premium-grid,
-    .compare-results,
-    .resources-grid,
-    .goals-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    }
-    .resources-hero { flex-direction: column; align-items: stretch; }
-    .cal-upcoming { order: -1; }
-    .chat-window { height: min(620px, 72vh); }
-    .auth-card, .paywall-modal { max-width: 520px; }
-  }
-
-  /* iPad portrait / small tablets: more breathing room, fewer columns. */
-  @media (max-width: 820px) {
-    .summary-grid,
-    .goals-summary,
-    .premium-grid,
-    .compare-results,
-    .resources-grid,
-    .goals-grid,
-    .score-bands,
-    .invest-stats,
-    .plan-result-grid,
-    .dti-zones,
-    .cal-event-type-grid {
-      grid-template-columns: 1fr !important;
-    }
-    .mobile-nav-grid { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
-    .guide-intro, .dti-inputs { grid-template-columns: 1fr !important; }
-    .account-bar { gap: 0.5rem; }
-    .ab-left span { max-width: 50vw; }
-  }
-
-  /* Phones: single column, compact cards, touch-friendly controls. */
-  @media (max-width: 600px) {
-    header { height: 60px; }
-    .mobile-overlay, .mobile-nav { top: 60px; }
-    .logo { font-size: 1.02rem !important; gap: 0.4rem !important; }
-    .logo > div { width: 28px !important; height: 28px !important; font-size: 0.72rem !important; }
-    main { padding: 1rem 0.75rem calc(4rem + env(safe-area-inset-bottom, 0px)) !important; }
-    .hero { padding: 1.75rem 0.75rem 1.5rem !important; }
-    .hero h1 { font-size: clamp(1.45rem, 8vw, 1.9rem) !important; }
-    .hero p { font-size: 0.82rem; }
-    .hero-chips { display: none !important; }
-    .card, .resource-card, .goal-card, .compare-tool, .lock-gate { padding: 1rem !important; border-radius: 12px; }
-    .summary-grid, .goals-summary, .premium-grid, .compare-inputs, .compare-results, .resources-grid, .goals-grid { grid-template-columns: 1fr !important; }
-    .summary-card { padding: 0.85rem 1rem !important; }
-    .summary-card .amount { font-size: 1.35rem !important; }
-    .type-toggle, .guide-tabs, .schedule-toggle, .method-toggle { grid-template-columns: 1fr !important; flex-wrap: wrap; }
-    .type-btn, .guide-tab-btn, .sched-tab-btn, .method-btn, .add-btn, .auth-submit, .rc-cta, .deposit-btn { min-height: 44px; }
-    .transaction-item, .bill-item, .payday-bill-row, .itl-row { gap: 0.5rem; align-items: flex-start; }
-    .transaction-item .t-right, .bi-right, .pbr-right { flex-shrink: 0; }
-    .bar-row, .igb-row { align-items: stretch; gap: 0.4rem; }
-    .bar-label, .igb-label { width: 70px; font-size: 0.72rem; }
-    .bar-val, .igb-val { width: 58px; font-size: 0.72rem; }
-    .chat-window { height: 70vh; min-height: 460px; }
-    .msg-bubble { max-width: 86%; }
-    .chat-input-area { padding: 0.75rem; }
-    .account-bar { padding: 0.35rem 0.75rem !important; }
-    .ab-left span { max-width: 42vw !important; }
-    .ab-plan { max-width: 28vw; overflow: hidden; text-overflow: ellipsis; }
-    .mobile-nav-grid { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
-    .mobile-nav-tile { min-height: 64px; padding: 0.55rem 0.35rem; }
-    .cal-header, .schedule-header, .goal-card-header, .resources-hero { flex-direction: column; align-items: stretch; }
-    .cal-week-grid { grid-template-columns: 34px repeat(7, minmax(30px, 1fr)) !important; }
-    .cal-day { min-height: 50px !important; }
-    .cal-event { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .paywall-modal, .auth-card, .cal-event-modal-card, #edit-debt-modal > div { width: calc(100vw - 1.5rem) !important; margin: 0.75rem !important; }
-    .paywall-top, .paywall-price, .paywall-features, .paywall-actions, .auth-top, .auth-body { padding-left: 1rem !important; padding-right: 1rem !important; }
-  }
-
-  /* Very small phones: avoid horizontal overflow and hide nonessential labels. */
-  @media (max-width: 380px) {
-    .mobile-nav-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
-    .summary-card .amount, .goal-stat .gs-val { font-size: 1.1rem !important; }
-    .price-amount { font-size: 2.3rem !important; }
-    .cal-event { display: none; }
-  }
-
 </style>
 </head>
 <body>
@@ -3413,10 +3271,6 @@
 
     </div>
 
-    <div class="tip-bar">
-      <div class="tip-icon">⏰</div>
-      <p data-en="Time:" data-es="Tiempo:" data-en-html="<strong>Time is your greatest asset.</strong> Starting 10 years earlier can <strong>double or triple</strong> your final balance. Even small monthly contributions grow significantly over decades — start today!" data-es-html="<strong>El tiempo es tu mayor activo.</strong> Comenzar 10 años antes puede <strong>duplicar o triplicar</strong> tu balance final. ¡Incluso contribuciones pequeñas crecen enormemente con el tiempo!"><strong>Time is your greatest asset.</strong> Starting 10 years earlier can <strong>double or triple</strong> your final balance. Even small monthly contributions grow significantly over decades — start today!</p>
-    </div>
 
   </div>
 
@@ -4713,12 +4567,14 @@
   }
 
   function applyProState() {
-    document.getElementById('guide-gate').style.display = isPro ? 'none' : 'block';
-    document.getElementById('guide-content').style.display = isPro ? 'block' : 'none';
-    document.getElementById('ai-gate').style.display = isPro ? 'none' : 'block';
-    document.getElementById('ai-content').style.display = isPro ? 'block' : 'none';
-    document.getElementById('affiliate-gate').style.display = isPro ? 'none' : 'block';
-    document.getElementById('affiliate-content').style.display = isPro ? 'block' : 'none';
+    // Null-safe — elements may not exist in all contexts
+    const setDisplay = (id, show) => { const el = document.getElementById(id); if (el) el.style.display = show ? 'block' : 'none'; };
+    setDisplay('guide-gate',       !isPro);
+    setDisplay('guide-content',    isPro);
+    setDisplay('ai-gate',          !isPro);
+    setDisplay('ai-content',       isPro);
+    setDisplay('affiliate-gate',   !isPro);
+    setDisplay('affiliate-content', isPro);
     updatePremiumTab();
     updateCreditSimTab();
     updateNegotiateTab();
@@ -5888,13 +5744,17 @@ Guidelines:
   }
 
   function updatePremiumTab() {
-    const gate = document.getElementById('premium-tab-gate');
-    const content = document.getElementById('premium-tab-content');
-    if (gate && content) {
-      gate.style.display = isPro ? 'none' : 'block';
-      content.style.display = isPro ? 'block' : 'none';
-      if (isPro) calculateHealthScore();
-    }
+    // Update debtplan tab
+    const dpGate = document.getElementById('debtplan-tab-gate');
+    const dpContent = document.getElementById('debtplan-tab-content');
+    if (dpGate) dpGate.style.display = isPro ? 'none' : 'block';
+    if (dpContent) dpContent.style.display = isPro ? 'block' : 'none';
+    // Update healthscore tab
+    const hsGate = document.getElementById('healthscore-tab-gate');
+    const hsContent = document.getElementById('healthscore-tab-content');
+    if (hsGate) hsGate.style.display = isPro ? 'none' : 'block';
+    if (hsContent) hsContent.style.display = isPro ? 'block' : 'none';
+    if (isPro) calculateHealthScore();
   }
 
   // INVESTMENT CALCULATOR
