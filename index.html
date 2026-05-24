@@ -1921,9 +1921,10 @@
     .premium-grid { grid-template-columns: 1fr; }
     /* Reorder sections on mobile: debt planner first, health score second */
     #premium-tab-content { display: flex; flex-direction: column; }
-    #premium-tab-content .planner-card { order: 1; }
-    #premium-tab-content .premium-grid { order: 2; margin-top: 0; }
-    #premium-tab-content .tip-bar { order: 3; }
+    #premium-tab-content .premium-grid { order: 3; }
+    #premium-tab-content .planner-card, #debt-planner-section { order: 1; }
+    #premium-tab-content > .tip-bar { order: 4; }
+    #premium-tab-content .planner-card ~ .tip-bar { order: 2; }
   }
 
   /* ─── DEBT ADD FORM RESPONSIVE ─── */
@@ -3103,7 +3104,7 @@
 
       </div>
 
-
+      <div id="debt-planner-section" class="planner-card">
         <h2 data-en="🎯 Personalized Debt Payoff Planner" data-es="🎯 Plan Personalizado de Pago de Deudas">🎯 Personalized Debt Payoff Planner</h2>
         <p><span data-en="Enter your debts below and we'll build a personalized payoff plan using either the Avalanche (highest interest first) or Snowball (smallest balance first) method." data-es="Ingresa tus deudas y construiremos un plan de pago usando el método Avalancha (mayor interés primero) o Bola de Nieve (menor saldo primero).">Enter your debts below and we'll build a personalized payoff plan using either the Avalanche (highest interest first) or Snowball (smallest balance first) method.</span></p>
         <div style="display:flex;justify-content:flex-end;margin-bottom:0.75rem;margin-top:0.5rem">
@@ -3159,6 +3160,7 @@
         <div id="plan-empty" style="text-align:center;color:var(--muted);font-size:0.85rem;padding:1.5rem">Add your debts above to generate your personalized payoff plan.</div>
       </div>
 
+      </div><!-- end debt-planner-section -->
       <div class="tip-bar" style="margin-top:0">
         <div class="tip-icon">🏆</div>
         <p data-en="Score:" data-es="Puntaje:" data-en-html="<strong>Your score updates automatically</strong> as you add transactions, bills, and savings goals. Log more data for a more accurate score." data-es-html="<strong>Tu puntaje se actualiza automáticamente</strong> al agregar transacciones, facturas y metas de ahorro. Registra más datos para un puntaje más preciso."><strong>Your score updates automatically</strong> as you add transactions, bills, and savings goals. The higher your score the better your financial health — aim for <strong>80+</strong> to qualify for the best loan rates!</p>
@@ -3297,7 +3299,7 @@
           <div id="nw-asset-list" style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.75rem"></div>
           <!-- Quick-add row -->
           <div style="display:grid;grid-template-columns:1fr auto auto;gap:0.5rem;align-items:center;background:var(--bg);border-radius:10px;padding:0.65rem;border:1px solid var(--border)">
-            <input type="text" id="nw-asset-name" placeholder="e.g. Savings Account" style="background:none;border:none;outline:none;font-family:'Sora',sans-serif;font-size:0.85rem;color:var(--text);font-size:16px">
+            <input type="text" id="nw-asset-name" placeholder="e.g. Savings Account" onkeydown="if(event.key==='Enter'){document.getElementById('nw-asset-value').focus();}" style="background:none;border:none;outline:none;font-family:'Sora',sans-serif;font-size:0.85rem;color:var(--text);font-size:16px">
             <input type="number" id="nw-asset-value" placeholder="0.00" min="0" style="width:90px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:0.35rem 0.5rem;font-family:'Sora',sans-serif;font-size:16px;color:var(--text);outline:none;text-align:right">
             <button onclick="addNWItem('asset')" style="background:var(--income-color);color:#fff;border:none;border-radius:6px;padding:0.38rem 0.65rem;font-size:0.9rem;cursor:pointer;font-weight:700">+</button>
           </div>
@@ -3319,7 +3321,7 @@
           </div>
           <div id="nw-liability-list" style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.75rem"></div>
           <div style="display:grid;grid-template-columns:1fr auto auto;gap:0.5rem;align-items:center;background:var(--bg);border-radius:10px;padding:0.65rem;border:1px solid var(--border)">
-            <input type="text" id="nw-liability-name" placeholder="e.g. Mortgage" style="background:none;border:none;outline:none;font-family:'Sora',sans-serif;font-size:16px;color:var(--text)">
+            <input type="text" id="nw-liability-name" placeholder="e.g. Mortgage" onkeydown="if(event.key==='Enter'){document.getElementById('nw-liability-value').focus();}" style="background:none;border:none;outline:none;font-family:'Sora',sans-serif;font-size:16px;color:var(--text)">
             <input type="number" id="nw-liability-value" placeholder="0.00" min="0" style="width:90px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:0.35rem 0.5rem;font-family:'Sora',sans-serif;font-size:16px;color:var(--text);outline:none;text-align:right">
             <button onclick="addNWItem('liability')" style="background:var(--accent);color:#fff;border:none;border-radius:6px;padding:0.38rem 0.65rem;font-size:0.9rem;cursor:pointer;font-weight:700">+</button>
           </div>
@@ -3959,7 +3961,7 @@
     </div>
     <div style="margin-bottom:1.25rem">
       <label style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);display:block;margin-bottom:0.35rem">Value ($)</label>
-      <input id="edit-nw-value" type="number" min="0" step="0.01" style="width:100%;padding:0.75rem;border:1px solid var(--border);border-radius:8px;background:var(--surface2);font-size:16px;color:var(--text);outline:none;box-sizing:border-box">
+      <input id="edit-nw-value" type="number" min="0" step="0.01" onkeydown="if(event.key==='Enter')saveNWEdit()" style="width:100%;padding:0.75rem;border:1px solid var(--border);border-radius:8px;background:var(--surface2);font-size:16px;color:var(--text);outline:none;box-sizing:border-box">
     </div>
     <div style="display:flex;gap:0.75rem">
       <button onclick="saveNWEdit()" style="flex:1;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:0.85rem;font-family:'Sora',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;min-height:48px">Save</button>
