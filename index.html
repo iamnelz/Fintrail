@@ -2009,6 +2009,31 @@
   .nw-bar-track { flex:1; height:8px; background:var(--border); border-radius:20px; overflow:hidden; }
   .nw-bar-fill { height:100%; border-radius:20px; transition:width 0.4s ease; }
   .nw-bar-amount { font-size:0.78rem; font-weight:700; width:80px; text-align:right; flex-shrink:0; }
+
+  /* CLEANUP FIX: tablet/iPad navigation and safer responsive grids */
+  @media (max-width:1024px) {
+    nav { display: none; }
+    .hamburger { display: flex; }
+    #mobile-profile-btn { display: flex !important; }
+    header { padding: 0 1rem; }
+    .mobile-nav-panel { max-width: 420px; }
+    .resources-hero { flex-direction: column; align-items: flex-start; }
+  }
+
+  @media (max-width:900px) {
+    .two-col, .ai-layout, .goals-top, .bill-setup-grid, .cal-layout, .profile-layout, .negotiate-layout, .invest-layout {
+      grid-template-columns: 1fr !important;
+    }
+    .summary-grid, .goals-summary { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  @media (max-width:560px) {
+    .summary-grid, .goals-summary { grid-template-columns: 1fr; }
+    .resources-grid, .goals-grid { grid-template-columns: 1fr; }
+    .mobile-nav-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    .msg-bubble { max-width: 88%; }
+  }
+
 </style>
 </head>
 <body>
@@ -4042,6 +4067,13 @@
   let currentType = 'income';
   let currentFilter = 'all';
 
+  // DOM SAFETY HELPERS
+  // These keep optional/removed UI blocks from crashing the whole app on desktop, phone, or tablet.
+  const $id = (id) => document.getElementById(id);
+  const setDisplay = (id, value) => { const el = $id(id); if (el) el.style.display = value; };
+  const setText = (id, value) => { const el = $id(id); if (el) el.textContent = value; };
+  const setHTML = (id, value) => { const el = $id(id); if (el) el.innerHTML = value; };
+
   // RESOURCES DATA — affiliate-ready
   const resources = [
     // MORTGAGES
@@ -4571,17 +4603,20 @@
   }
 
   function applyProState() {
-    document.getElementById('guide-gate').style.display = isPro ? 'none' : 'block';
-    document.getElementById('guide-content').style.display = isPro ? 'block' : 'none';
-    document.getElementById('ai-gate').style.display = isPro ? 'none' : 'block';
-    document.getElementById('ai-content').style.display = isPro ? 'block' : 'none';
-    document.getElementById('affiliate-gate').style.display = isPro ? 'none' : 'block';
-    document.getElementById('affiliate-content').style.display = isPro ? 'block' : 'none';
+    setDisplay('guide-gate', isPro ? 'none' : 'block');
+    setDisplay('guide-content', isPro ? 'block' : 'none');
+    setDisplay('ai-gate', isPro ? 'none' : 'block');
+    setDisplay('ai-content', isPro ? 'block' : 'none');
+    setDisplay('affiliate-gate', isPro ? 'none' : 'block');
+    setDisplay('affiliate-content', isPro ? 'block' : 'none');
     updatePremiumTab();
     updateCreditSimTab();
     updateNegotiateTab();
-    renderResources();
-    if (isPro) { renderRateBanner(); calcLoan(); }
+    if (typeof renderResources === 'function') renderResources();
+    if (isPro) {
+      if (typeof renderRateBanner === 'function') renderRateBanner();
+      if (typeof calcLoan === 'function') calcLoan();
+    }
   }
 
   function navTo(tab, btn) {
@@ -5746,13 +5781,13 @@ Guidelines:
   }
 
   function updatePremiumTab() {
-    const gate = document.getElementById('premium-tab-gate');
-    const content = document.getElementById('premium-tab-content');
-    if (gate && content) {
-      gate.style.display = isPro ? 'none' : 'block';
-      content.style.display = isPro ? 'block' : 'none';
-      if (isPro) calculateHealthScore();
-    }
+    // Older builds used premium-tab-* IDs; current markup uses healthscore-tab-* IDs.
+    const gate = $id('premium-tab-gate') || $id('healthscore-tab-gate');
+    const content = $id('premium-tab-content') || $id('healthscore-tab-content');
+    if (!gate || !content) return;
+    gate.style.display = isPro ? 'none' : 'block';
+    content.style.display = isPro ? 'block' : 'none';
+    if (isPro && typeof calculateHealthScore === 'function') calculateHealthScore();
   }
 
   // INVESTMENT CALCULATOR
@@ -7388,43 +7423,47 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     document.querySelectorAll('.debt-type-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     const config = debtTypeConfig[type];
-    document.getElementById('script-title').textContent = config.title;
-    document.getElementById('script-subtitle').textContent = config.subtitle;
-    // Update goal options based on type
-    const goalSelect = document.getElementById('neg-goal');
+    setText('script-title', config.title);
+    setText('script-subtitle', config.subtitle);
+    // Update goal options based on type. This block is optional in the current UI.
+    const goalSelect = $id('neg-goal');
     const goalOptions = {
       credit: ['lower_rate|Lower interest rate', 'waive_fees|Waive late fees', 'hardship|Hardship program', 'payment_plan|Set up payment plan'],
       medical: ['payment_plan|Set up payment plan', 'settle|Reduce bill amount', 'hardship|Financial hardship discount', 'waive_fees|Waive interest/fees'],
       student: ['payment_plan|Income-based repayment', 'hardship|Deferment or forbearance', 'lower_rate|Interest rate reduction', 'settle|Loan modification'],
       collections: ['settle|Settle for less than owed', 'remove_collections|Pay for delete agreement', 'payment_plan|Set up payment plan', 'hardship|Hardship settlement'],
     };
-    goalSelect.innerHTML = goalOptions[type].map(o => {
-      const [val, label] = o.split('|');
-      return `<option value="${val}">${label}</option>`;
-    }).join('');
+    if (goalSelect) {
+      goalSelect.innerHTML = goalOptions[type].map(o => {
+        const [val, label] = o.split('|');
+        return `<option value="${val}">${label}</option>`;
+      }).join('');
+    }
   }
 
   function switchScriptTab(tab, btn) {
     currentScriptTab = tab;
     document.querySelectorAll('.script-tab-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
+    const scriptBox = $id('script-box');
+    if (!scriptBox) return;
     if (negotiationScripts[tab]) {
-      document.getElementById('script-box').textContent = negotiationScripts[tab];
-      document.getElementById('script-box').classList.remove('loading');
+      scriptBox.textContent = negotiationScripts[tab];
+      scriptBox.classList.remove('loading');
     } else {
-      document.getElementById('script-box').textContent = 'Generate your script first to see this section.';
+      scriptBox.textContent = 'Generate your script first to see this section.';
     }
   }
 
 
 
   function updateNegotiateTab() {
-    const gate = document.getElementById('negotiate-gate');
-    const content = document.getElementById('negotiate-content');
-    if (gate && content) {
-      gate.style.display = isPro ? 'none' : 'block';
-      content.style.display = isPro ? 'block' : 'none';
-    }
+    const gate = $id('negotiate-gate');
+    const content = $id('negotiate-content');
+    // Current markup does not include these wrappers; tab access is handled by guarded navigation.
+    if (!gate || !content) return;
+    gate.style.display = isPro ? 'none' : 'block';
+    content.style.display = isPro ? 'block' : 'none';
   }
 
   // LANGUAGE SYSTEM
