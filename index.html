@@ -2144,8 +2144,45 @@
     margin-top:0.25rem;
   }
 
-  /* Hide transactions card on phone to match dashboard view; data/functionality remains intact. */
-  #bsub-tracker .two-col > .card:nth-child(2) { display:none; }
+  /* Mobile transaction history: keep visible so users can review/delete what they added. */
+  #bsub-tracker .two-col > .card:nth-child(2) {
+    display:block;
+    margin-top:0.9rem;
+    padding:1.05rem;
+    border-radius:18px;
+    box-shadow:0 10px 28px rgba(18,24,40,0.06);
+  }
+  #bsub-tracker .two-col > .card:nth-child(2) h2 {
+    font-size:1.15rem;
+    margin-bottom:0.8rem;
+  }
+  #bsub-tracker .transaction-list {
+    max-height:260px;
+    overflow-y:auto;
+    gap:0.55rem;
+    padding-right:0.1rem;
+  }
+  #bsub-tracker .transaction-item {
+    border-radius:12px;
+    padding:0.72rem 0.75rem;
+    background:#fff;
+    align-items:flex-start;
+  }
+  #bsub-tracker .transaction-item .t-name { font-size:0.82rem; }
+  #bsub-tracker .transaction-item .t-cat { font-size:0.68rem; }
+  #bsub-tracker .transaction-item .t-right { gap:0.55rem; align-items:center; }
+  #bsub-tracker .transaction-item .t-amount { font-size:0.82rem; white-space:nowrap; }
+  #bsub-tracker .del-btn {
+    color:var(--danger);
+    background:rgba(240,85,85,0.08);
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+  }
 
   /* Compact 3-card summary row */
   #bsub-tracker .summary-grid {
