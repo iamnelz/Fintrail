@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fintrail Pro — Budget Smarter, Live Better</title>
-<!-- BUILD: v3-final-2026-05-24 -->
 <!-- REPLACE content value below with your actual Google Search Console verification code -->
 <meta name="google-site-verification" content="PASTE_YOUR_VERIFICATION_CODE_HERE" />
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -4261,14 +4260,12 @@
 
   function showApp(user) {
     document.getElementById('auth-screen').style.display = 'none';
-    nwLoaded = false;
+    nwLoaded = false; // Reset so Supabase NW data loads fresh on login
     setUserUI(user);
-    loadUserData(); // calls applyProState internally when isPro data loads
+    loadUserData();
     loadProfileUI();
-    // Apply any locally-cached pro state immediately (don't wait for Supabase)
-    const localPro = safeGet('fintrail_is_pro_' + (user.id || 'demo'));
-    if (localPro === 'true' && !isPro) { isPro = true; applyProState(); setProUI(); }
-    setTimeout(loadGameData, 300);
+    setTimeout(loadGameData, 500);
+    // Apply saved language now that user is logged in
     if (currentLang !== 'en') setTimeout(applyLanguage, 300);
   }
 
@@ -4472,7 +4469,6 @@
         }
         if (data.is_pro) {
           isPro = true;
-          safeSet('fintrail_is_pro_' + currentUser.id, 'true');
           applyProState();
           setProUI();
         }
@@ -4606,7 +4602,7 @@
     if (tab === 'invest') awardXPForAction('investCalc');
     if (tab === 'creditsim') awardXPForAction('creditSim');
     if (tab === 'streaks') renderStreaksTab();
-    if (tab === 'calendar') { try { loadCalendarEvents(); renderCalendar(); } catch(e) { console.error('Calendar render failed:', e); } }
+    if (tab === 'calendar') { loadCalendarEvents(); renderCalendar(); }
     if (tab === 'networth') { setTimeout(initNetWorth, 50); }
     if (currentLang !== 'en') setTimeout(applyLanguage, 30);
   }
@@ -4649,7 +4645,7 @@
     closeMobileNav();
     if (tab === 'networth') setTimeout(initNetWorth, 50);
     if (tab === 'streaks') renderStreaksTab();
-    if (tab === 'calendar') { try { loadCalendarEvents(); renderCalendar(); } catch(e) { console.error('Calendar render failed:', e); } }
+    if (tab === 'calendar') { loadCalendarEvents(); renderCalendar(); }
     if (currentLang !== 'en') setTimeout(applyLanguage, 30);
   }
 
@@ -4707,8 +4703,7 @@
     const income = transactions.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
     const expenses = transactions.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
     const balance = income - expenses;
-    const tiEl = document.getElementById('total-income'); if (!tiEl) return;
-    tiEl.textContent = fmt(income);
+    document.getElementById('total-income').textContent = fmt(income);
     document.getElementById('total-expenses').textContent = fmt(expenses);
     const balEl = document.getElementById('net-balance');
     balEl.textContent = fmt(balance);
@@ -5037,17 +5032,13 @@ Guidelines:
   function renderGoals() {
     const grid = document.getElementById('goals-grid');
     const empty = document.getElementById('goals-empty');
-    if (!grid) return; // Tab not in DOM yet
 
     // Stats
     const totalSaved = goals.reduce((s, g) => s + g.saved, 0);
     const totalTarget = goals.reduce((s, g) => s + g.target, 0);
-    const gsCount = document.getElementById('gs-count');
-    const gsSaved = document.getElementById('gs-saved');
-    const gsTarget = document.getElementById('gs-target');
-    if (gsCount) gsCount.textContent = goals.length;
-    if (gsSaved) gsSaved.textContent = '$' + totalSaved.toLocaleString('en-US', {maximumFractionDigits:0});
-    if (gsTarget) gsTarget.textContent = '$' + totalTarget.toLocaleString('en-US', {maximumFractionDigits:0});
+    document.getElementById('gs-count').textContent = goals.length;
+    document.getElementById('gs-saved').textContent = '$' + totalSaved.toLocaleString('en-US', {maximumFractionDigits:0});
+    document.getElementById('gs-target').textContent = '$' + totalTarget.toLocaleString('en-US', {maximumFractionDigits:0});
 
     if (goals.length === 0) {
       grid.innerHTML = '';
@@ -6775,11 +6766,11 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     safeSet('fintrail_nw_ts_' + uid,           String(Date.now()));
     // Supabase sync
     if (sbClient && currentUser) {
-      (async () => { try { await sbClient.from('user_data').upsert({
+      sbClient.from('user_data').upsert({
         user_id: currentUser.id,
         nw_assets: nwAssets, nw_liabilities: nwLiabilities, nw_history: nwHistory,
         updated_at: new Date().toISOString()
-      }, { onConflict: 'user_id' }); } catch(e) { console.log('NW sync err:', e.message); } })();
+      }, { onConflict: 'user_id' }).catch(e => console.log('NW sync err:', e.message));
     }
   }
 
@@ -7119,12 +7110,9 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const saved = safeGet('fintrail_game_' + (currentUser?.id || 'demo'));
     if (saved) { try { gameData = { ...gameData, ...JSON.parse(saved) }; } catch(e) {} }
     checkLoginStreak();
-    checkPendingXP();
+    checkPendingXP(); // release any XP that's been waiting 48hrs
+    renderStreaks();
     checkAndAwardBadges();
-    // Re-render streaks tab if it's currently visible
-    const streaksTab = document.getElementById('tab-streaks');
-    if (streaksTab && streaksTab.classList.contains('visible')) renderStreaksTab();
-    else renderStreaks(); // always update streak data
   }
 
   function saveGameData() {
@@ -7135,7 +7123,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       sbClient.from('user_data').upsert(
         { user_id: currentUser.id, game_data: gameData, updated_at: new Date().toISOString() },
         { onConflict: 'user_id' }
-      ); } catch(e) { console.log('gameData sync err:', e.message); } })();
+      ).catch(e => console.log('gameData sync err:', e.message));
     }
   }
 
@@ -7322,7 +7310,6 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   }
 
   function renderStreaks() {
-    if (!document.getElementById('streak-cards')) return;
     const streaks = [
       { icon: '🔥', label: currentLang==='es'?'Racha de Inicio':'Login Streak', desc: currentLang==='es'?'Inicia sesión diario':'Log in daily', count: gameData.loginStreak || 0, unit: 'days' },
       { icon: '📝', label: currentLang==='es'?'Racha de Presupuesto':'Budget Streak', desc: currentLang==='es'?'Registra transacciones':'Log transactions regularly', count: transactions.length > 0 ? Math.min(gameData.loginStreak || 0, 7) : 0, unit: 'days' },
@@ -7349,9 +7336,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   function renderBadges() {
     const earned = gameData.earnedBadges || [];
     const earnedCount = earned.length;
-    const badgesCountEl = document.getElementById('badges-count');
-    if (!badgesCountEl) return;
-    badgesCountEl.textContent = `${earnedCount}/${BADGES_DEF.length} earned`;
+    document.getElementById('badges-count').textContent = `${earnedCount}/${BADGES_DEF.length} earned`;
 
     document.getElementById('badges-grid').innerHTML = BADGES_DEF.map(b => {
       const isEarned = earned.includes(b.id);
@@ -7382,10 +7367,10 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   }
 
   function renderStreaksTab() {
-    try { renderLevelCard(); } catch(e) { console.error('renderLevelCard failed:', e); }
-    try { renderStreaks(); } catch(e) { console.error('renderStreaks failed:', e); }
-    try { renderBadges(); } catch(e) { console.error('renderBadges failed:', e); }
-    try { renderActivityFeed(); } catch(e) { console.error('renderActivityFeed failed:', e); }
+    renderLevelCard();
+    renderStreaks();
+    renderBadges();
+    renderActivityFeed();
   }
 
   // DEBT NEGOTIATION SCRIPTS
@@ -8031,14 +8016,14 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   // INIT
   loadConfig();
   loadLanguagePreference();
-  // applyProState runs after auth - not on init (isPro not set yet)
+  applyProState();
   render();
   renderResources();
   renderGoals();
-  try { calcLoan(); } catch(e) {}
-  try { checkBillAlerts(); } catch(e) {}
-  try { handleUpgradeReturn(); } catch(e) {}
-  try { calcInvestment(); } catch(e) {}
+  calcLoan();
+  checkBillAlerts();
+  handleUpgradeReturn();
+  calcInvestment();
   // Restore saved payday date and frequency, or default to today
   const savedPayday = safeGet('fintrail_payday_date');
   const savedFreq   = safeGet('fintrail_pay_freq');
