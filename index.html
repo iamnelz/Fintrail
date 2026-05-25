@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fintrail Pro — Budget Smarter, Live Better</title>
+<!-- BUILD: old-complete-baseline-safe-fixes-2026-05-24 -->
 <!-- REPLACE content value below with your actual Google Search Console verification code -->
 <meta name="google-site-verification" content="PASTE_YOUR_VERIFICATION_CODE_HERE" />
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -137,8 +138,6 @@
     position: relative;
     overflow: hidden;
     transition: border-color 0.2s;
-    pointer-events: none; /* clearly not clickable/editable */
-    user-select: none;
   }
   .summary-card:hover { border-color: #3a3a48; }
   .summary-card::before {
@@ -163,13 +162,6 @@
     font-family: 'Playfair Display', serif;
     font-size: 1.85rem;
     color: var(--text);
-  }
-  @media (max-width:700px) {
-    #add-txn-hint { display: block !important; }
-    .summary-card { padding: 0.65rem 0.75rem; border-radius: 10px; }
-    .summary-card .amount { font-size: 1.15rem; }
-    .summary-card label { font-size: 0.6rem; margin-bottom: 0.25rem; }
-    .summary-grid { gap: 0.5rem; margin-bottom: 1rem; }
   }
   .summary-card.income .amount { color: var(--income-color); }
   .summary-card.expense .amount { color: var(--expense-color); }
@@ -1104,8 +1096,6 @@
 
   /* PREMIUM FEATURES TAB */
   .premium-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:1.5rem; margin-bottom:1.5rem; }
-  .planner-card { order: 0; }
-  .health-score-card, .alerts-card { order: 1; }
 
   /* HEALTH SCORE */
   .health-score-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:1.75rem; text-align:center; }
@@ -1919,23 +1909,13 @@
     .goal-stat label { font-size: 0.6rem; }
     .goal-stat .gs-val { font-size: 1.1rem; }
     .premium-grid { grid-template-columns: 1fr; }
-    /* Reorder sections on mobile: debt planner first, health score second */
-    #premium-tab-content { display: flex; flex-direction: column; }
-    #premium-tab-content .premium-grid { order: 3; }
-    #premium-tab-content .planner-card, #debt-planner-section { order: 1; }
-    #premium-tab-content > .tip-bar { order: 4; }
-    #premium-tab-content .planner-card ~ .tip-bar { order: 2; }
   }
 
   /* ─── DEBT ADD FORM RESPONSIVE ─── */
-  .debt-add-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; align-items:end; }
-  @media (max-width:700px) {
-    .debt-add-grid { grid-template-columns:1fr; gap:0.5rem; }
-    .debt-add-grid input { font-size:16px !important; padding:0.7rem 0.75rem; }
-    .debt-add-grid .form-group { width:100%; }
-    .debt-add-grid .add-btn { grid-column:1/-1; margin-top:0.25rem; height:52px; font-size:1rem; width:100%; }
-    .method-toggle { grid-template-columns:1fr; }
-    .method-btn { width:100%; text-align:center; }
+  .debt-add-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:0.6rem; align-items:end; }
+  @media (max-width:480px) {
+    .debt-add-grid { grid-template-columns:1fr 1fr; }
+    .debt-add-grid .add-btn { grid-column:1/-1; margin-top:0.25rem; }
   }
 
   /* ─── TABLET (768px – 1024px) ─── */
@@ -2009,6 +1989,46 @@
   .nw-bar-track { flex:1; height:8px; background:var(--border); border-radius:20px; overflow:hidden; }
   .nw-bar-fill { height:100%; border-radius:20px; transition:width 0.4s ease; }
   .nw-bar-amount { font-size:0.78rem; font-weight:700; width:80px; text-align:right; flex-shrink:0; }
+
+
+  /* === SAFE RESPONSIVE PATCH: desktop / tablet / phone === */
+  html, body { max-width: 100%; overflow-x: hidden; }
+  img, svg, canvas, video { max-width: 100%; height: auto; }
+  input, select, textarea, button { max-width: 100%; }
+
+  @media (max-width: 1100px) {
+    header { padding: 0 1rem; height: auto; min-height: 64px; flex-wrap: wrap; gap: 0.5rem; }
+    nav { width: 100%; justify-content: center; overflow-x: auto; padding-bottom: 0.35rem; }
+    nav button { white-space: nowrap; font-size: 0.76rem; padding: 0.42rem 0.7rem; }
+    main { max-width: 100%; padding: 1.5rem 1rem 3rem; }
+    .two-col, .ai-layout, .guide-intro, .bill-setup-grid, .goals-top { grid-template-columns: 1fr !important; }
+    .resources-hero { flex-direction: column; align-items: flex-start; }
+    .chat-window { height: min(620px, 72vh); }
+  }
+
+  @media (max-width: 760px) {
+    header { position: sticky; top: 0; padding: 0.75rem 1rem; }
+    .logo { font-size: 1.25rem; }
+    nav { display: none; }
+    .hero { padding: 2rem 1rem 1.5rem; }
+    .hero h1 { font-size: 1.55rem; }
+    .summary-grid, .goals-summary, .score-bands, .dti-inputs, .dti-zones, .compare-results, .compare-inputs { grid-template-columns: 1fr !important; }
+    .card { padding: 1rem; border-radius: 12px; }
+    .transaction-item, .bill-item, .payday-bill-row { align-items: flex-start; gap: 0.5rem; }
+    .transaction-item .t-right, .bi-right, .pbr-right { flex-direction: column; align-items: flex-end; gap: 0.3rem; }
+    .resources-grid, .goals-grid { grid-template-columns: 1fr !important; }
+    .msg-bubble { max-width: 88%; }
+    .chat-input-area { padding: 0.75rem; }
+    .tip-bar { align-items: flex-start; padding: 1rem; }
+  }
+
+  @media (max-width: 420px) {
+    main { padding-left: 0.75rem; padding-right: 0.75rem; }
+    .hero-chip, .filter-btn { font-size: 0.68rem; }
+    .card h2 { font-size: 1rem; }
+    .summary-card .amount, .goal-stat .gs-val { font-size: 1.1rem; }
+  }
+
 </style>
 </head>
 <body>
@@ -2132,7 +2152,7 @@
           <span class="ndi-icon">💎</span>
           <div class="ndi-info"><span class="ndi-label" data-en="Net Worth Tracker" data-es="Rastreador de Patrimonio">Net Worth Tracker</span><span class="ndi-desc" data-en="Assets minus liabilities" data-es="Activos menos pasivos">Assets minus liabilities</span></div>
         </button>
-        <button class="nav-dropdown-item" onclick="guardedNavTo('debtplan', this)">
+        <button class="nav-dropdown-item" onclick="guardedNavTo('premium', this)">
           <span class="ndi-icon">💳</span>
           <div class="ndi-info"><span class="ndi-label" data-en="Debt Payoff Planner" data-es="Planificador de Deudas">Debt Payoff Planner <span class="pro-pill">PRO</span></span><span class="ndi-desc" data-en="Avalanche & snowball method" data-es="Método avalancha y bola de nieve">Avalanche & snowball method</span></div>
         </button>
@@ -2172,7 +2192,7 @@
           <span class="ndi-icon">💬</span>
           <div class="ndi-info"><span class="ndi-label" data-en="AI Advisor" data-es="Asesor IA">AI Advisor <span class="pro-pill">PRO</span></span><span class="ndi-desc" data-en="Ask any finance question" data-es="Haz cualquier pregunta financiera">Ask any finance question</span></div>
         </button>
-        <button class="nav-dropdown-item" onclick="guardedNavTo('healthscore', this)">
+        <button class="nav-dropdown-item" onclick="guardedNavTo('premium', this)">
           <span class="ndi-icon">🏆</span>
           <div class="ndi-info"><span class="ndi-label" data-en="Health Score & Alerts" data-es="Puntaje de Salud & Alertas">Health Score & Alerts <span class="pro-pill">PRO</span></span><span class="ndi-desc" data-en="Financial health tracking" data-es="Seguimiento de salud financiera">Financial health tracking</span></div>
         </button>
@@ -2224,7 +2244,7 @@
     <button class="mobile-nav-tile" onclick="mobileTab('invest')">📈<span data-en="Investment" data-es="Inversión">Investment</span></button>
     <button class="mobile-nav-tile" onclick="mobileTab('networth');closeMobileNav()">💎<span data-en="Net Worth" data-es="Patrimonio">Net Worth</span></button>
     <button class="mobile-nav-tile" onclick="mobileTab('calendar')">📅<span data-en="Calendar" data-es="Calendario">Calendar</span></button>
-    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('debtplan')">💳<span data-en="Debt Planner" data-es="Plan de Deuda">Debt Planner</span></button>
+    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('premium')">💳<span data-en="Debt Planner" data-es="Plan de Deuda">Debt Planner</span></button>
   </div>
 
   <!-- TOOLS -->
@@ -2240,7 +2260,7 @@
   <div style="font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);padding:0.3rem 1rem 0.2rem" data-en="💡 Insights" data-es="💡 Análisis">💡 Insights</div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem;padding:0 0.75rem 0.5rem">
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('ai')">💬<span data-en="AI Advisor" data-es="Asesor IA">AI Advisor</span></button>
-    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('healthscore')">🏆<span data-en="Health Score" data-es="Salud">Health Score</span></button>
+    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('premium')">🏆<span data-en="Health Score" data-es="Salud">Health Score</span></button>
     <button class="mobile-nav-tile" onclick="mobileTab('streaks');closeMobileNav()">🔥🏅<span data-en="Streaks &amp; Milestones" data-es="Rachas y Logros">Streaks &amp; Milestones</span></button>
   </div>
 
@@ -2371,10 +2391,6 @@
 
     <!-- TRACKER SUB -->
     <div class="budget-sub visible" id="bsub-tracker">
-    <!-- Mobile hint to scroll down to add transaction -->
-    <div id="add-txn-hint" style="display:none;text-align:center;font-size:0.78rem;color:var(--accent);font-weight:600;padding:0.4rem 0.75rem;background:rgba(240,85,85,0.08);border-radius:8px;margin-bottom:0.75rem;border:1px solid rgba(240,85,85,0.2)">
-      <span data-en="👇 Scroll down to add a transaction" data-es="👇 Desliza para agregar una transacción">👇 Scroll down to add a transaction</span>
-    </div>
     <div class="summary-grid">
       <div class="summary-card income">
         <label id="label-total-income">Total Income</label>
@@ -3002,91 +3018,22 @@
   </div>
 
   <!-- PREMIUM FEATURES TAB -->
-    <!-- DEBT PAYOFF PLANNER TAB -->
-  <div class="tab-section" id="tab-debtplan">
-    <div id="debtplan-tab-gate" style="display:none">
-      <div class="lock-gate">
-        <div class="lg-icon">💳</div>
-        <h3>Debt Payoff Planner <span class="premium-badge">PRO</span></h3>
-        <p>Unlock the Avalanche & Snowball payoff planner with personalized timelines.</p>
-        <button class="lock-gate-btn" onclick="showPaywall('debtplan')">Unlock with Pro — $4.99/mo</button>
-        <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--muted)">7-day free trial · Cancel anytime</div>
-      </div>
-    </div>
-    <div id="debtplan-tab-content">
-      <div id="debt-planner-section" class="planner-card">
-        <h2 data-en="🎯 Personalized Debt Payoff Planner" data-es="🎯 Plan Personalizado de Pago de Deudas">🎯 Personalized Debt Payoff Planner</h2>
-        <p><span data-en="Enter your debts below and we'll build a personalized payoff plan using either the Avalanche (highest interest first) or Snowball (smallest balance first) method." data-es="Ingresa tus deudas y construiremos un plan de pago usando el método Avalancha (mayor interés primero) o Bola de Nieve (menor saldo primero).">Enter your debts below and we'll build a personalized payoff plan using either the Avalanche (highest interest first) or Snowball (smallest balance first) method.</span></p>
-        <div style="display:flex;justify-content:flex-end;margin-bottom:0.75rem;margin-top:0.5rem">
-          <button onclick="downloadDebtPlanPDF()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.45rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.35rem">📄 Save PDF</button>
-        </div>
-        <!-- METHOD TOGGLE -->
-        <div class="method-toggle">
-          <button class="method-btn active" id="method-avalanche" onclick="setMethod('avalanche', this)" data-en="🔥 Avalanche — Save Most Money" data-es="🔥 Avalancha — Ahorra Más">🔥 Avalanche — Save Most Money</button>
-          <button class="method-btn" id="method-snowball" onclick="setMethod('snowball', this)" data-en="⛄ Snowball — Quick Wins First" data-es="⛄ Bola de Nieve — Victorias Rápidas">⛄ Snowball — Quick Wins First</button>
-        </div>
+  <div class="tab-section" id="tab-premium">
 
-        <!-- METHOD EXPLANATION -->
-        <div id="method-explanation" style="background:var(--bg);border-radius:10px;padding:0.85rem 1rem;margin-bottom:1rem;border:1px solid var(--border);font-size:0.82rem;color:var(--text-soft);line-height:1.6">
-          <strong style="color:var(--text)">🔥 Avalanche Method:</strong> Pay minimums on all debts, then put ALL extra money toward the <strong>highest interest rate</strong> debt first. Mathematically saves the most money in interest.
-        </div>
-
-        <!-- EXTRA PAYMENT INPUT -->
-        <div class="planner-inputs" style="margin-bottom:1rem">
-          <div class="form-group">
-            <label data-en="Extra Monthly Payment ($)" data-es="Pago Mensual Extra ($)">Extra Monthly Payment ($)</label>
-            <input type="number" id="extra-payment" value="200" min="0" placeholder="e.g. 200" oninput="runPayoffPlan()">
-            <div style="font-size:0.72rem;color:var(--muted);margin-top:0.3rem">💡 This extra amount gets focused on one debt at a time</div>
-          </div>
-        </div>
-
-        <!-- ADD DEBT FORM -->
-        <div style="background:var(--bg);border-radius:10px;padding:1rem;margin-bottom:1rem;border:1px solid var(--border)">
-          <div style="font-size:0.82rem;font-weight:700;color:var(--text);margin-bottom:0.75rem">➕ Add a Debt</div>
-          <div class="debt-add-grid">
-            <div class="form-group"><label data-en="Debt Name" data-es="Nombre de la Deuda">Debt Name</label><input type="text" id="debt-name" placeholder="e.g. Visa Card"></div>
-            <div class="form-group"><label data-en="Balance ($)" data-es="Saldo ($)">Balance ($)</label><input type="number" id="debt-balance" placeholder="5000" min="0"></div>
-            <div class="form-group"><label data-en="APR (%)" data-es="TNA (%)">APR (%)</label><input type="number" id="debt-apr" placeholder="19.99" step="0.01" min="0"></div>
-            <div class="form-group"><label data-en="Min Payment ($)" data-es="Pago Mínimo ($)">Min Payment ($)</label><input type="number" id="debt-min" placeholder="Auto" min="0"></div>
-            <button class="add-btn" style="margin-top:0" onclick="addDebt()">+</button>
-          </div>
-        </div>
-
-        <div id="debt-list" style="display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1rem;"></div>
-
-        <div id="plan-result" style="display:none">
-          <!-- PAYMENT ALLOCATION -->
-          <div style="background:var(--bg);border-radius:12px;padding:1.25rem;margin-bottom:1rem;border:1px solid var(--border)">
-            <div style="font-size:0.82rem;font-weight:700;color:var(--text);margin-bottom:0.75rem;text-transform:uppercase;letter-spacing:0.06em">📋 This Month's Payment Plan</div>
-            <div id="payment-allocation"></div>
-          </div>
-
-          <div class="plan-result">
-            <div class="plan-result-grid" id="plan-summary"></div>
-            <div class="payoff-timeline" id="payoff-timeline"></div>
-          </div>
-        </div>
-        <div id="plan-empty" style="text-align:center;color:var(--muted);font-size:0.85rem;padding:1.5rem">Add your debts above to generate your personalized payoff plan.</div>
-      </div>
-
-      
-      </div><!-- end debt-planner-section -->
-    </div>
-  </div>
-
-  <!-- FINANCIAL HEALTH SCORE TAB -->
-  <div class="tab-section" id="tab-healthscore">
-    <div id="healthscore-tab-gate" style="display:none">
+    <div id="premium-tab-gate" style="display:none">
       <div class="lock-gate">
         <div class="lg-icon">🏆</div>
-        <h3>Financial Health Score <span class="premium-badge">PRO</span></h3>
-        <p>Unlock your Financial Health Score and smart Budget Alerts.</p>
-        <button class="lock-gate-btn" onclick="showPaywall('healthscore')">Unlock with Pro — $4.99/mo</button>
+        <h3>Premium Features <span class="premium-badge">PRO</span></h3>
+        <p>Unlock your Financial Health Score, personalized Debt Payoff Planner, and smart Budget Alerts.</p>
+        <button class="lock-gate-btn" onclick="showPaywall('premium')">Unlock with Pro — $4.99/mo</button>
         <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--muted)">7-day free trial · Cancel anytime</div>
       </div>
     </div>
-    <div id="healthscore-tab-content">
-      <div class="premium-grid" style="order:3">
+
+    <div id="premium-tab-content">
+
+      <!-- HEALTH SCORE + ALERTS ROW -->
+      <div class="premium-grid">
 
         <!-- FINANCIAL HEALTH SCORE -->
         <div class="health-score-card">
@@ -3174,17 +3121,72 @@
 
       </div>
 
+      <!-- DEBT PAYOFF PLANNER -->
+      <div class="planner-card">
+        <h2 data-en="🎯 Personalized Debt Payoff Planner" data-es="🎯 Plan Personalizado de Pago de Deudas">🎯 Personalized Debt Payoff Planner</h2>
+        <p><span data-en="Enter your debts below and we'll build a personalized payoff plan using either the Avalanche (highest interest first) or Snowball (smallest balance first) method." data-es="Ingresa tus deudas y construiremos un plan de pago usando el método Avalancha (mayor interés primero) o Bola de Nieve (menor saldo primero).">Enter your debts below and we'll build a personalized payoff plan using either the Avalanche (highest interest first) or Snowball (smallest balance first) method.</span></p>
+        <div style="display:flex;justify-content:flex-end;margin-bottom:0.75rem;margin-top:0.5rem">
+          <button onclick="downloadDebtPlanPDF()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.45rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.35rem">📄 Save PDF</button>
+        </div>
+
+        <!-- METHOD TOGGLE -->
+        <div class="method-toggle">
+          <button class="method-btn active" id="method-avalanche" onclick="setMethod('avalanche', this)" data-en="🔥 Avalanche — Save Most Money" data-es="🔥 Avalancha — Ahorra Más">🔥 Avalanche — Save Most Money</button>
+          <button class="method-btn" id="method-snowball" onclick="setMethod('snowball', this)" data-en="⛄ Snowball — Quick Wins First" data-es="⛄ Bola de Nieve — Victorias Rápidas">⛄ Snowball — Quick Wins First</button>
+        </div>
+
+        <!-- METHOD EXPLANATION -->
+        <div id="method-explanation" style="background:var(--bg);border-radius:10px;padding:0.85rem 1rem;margin-bottom:1rem;border:1px solid var(--border);font-size:0.82rem;color:var(--text-soft);line-height:1.6">
+          <strong style="color:var(--text)">🔥 Avalanche Method:</strong> Pay minimums on all debts, then put ALL extra money toward the <strong>highest interest rate</strong> debt first. Mathematically saves the most money in interest.
+        </div>
+
+        <!-- EXTRA PAYMENT INPUT -->
+        <div class="planner-inputs" style="margin-bottom:1rem">
+          <div class="form-group">
+            <label data-en="Extra Monthly Payment ($)" data-es="Pago Mensual Extra ($)">Extra Monthly Payment ($)</label>
+            <input type="number" id="extra-payment" value="200" min="0" placeholder="e.g. 200" oninput="runPayoffPlan()">
+            <div style="font-size:0.72rem;color:var(--muted);margin-top:0.3rem">💡 This extra amount gets focused on one debt at a time</div>
+          </div>
+        </div>
+
+        <!-- ADD DEBT FORM -->
+        <div style="background:var(--bg);border-radius:10px;padding:1rem;margin-bottom:1rem;border:1px solid var(--border)">
+          <div style="font-size:0.82rem;font-weight:700;color:var(--text);margin-bottom:0.75rem">➕ Add a Debt</div>
+          <div class="debt-add-grid">
+            <div class="form-group"><label data-en="Debt Name" data-es="Nombre de la Deuda">Debt Name</label><input type="text" id="debt-name" placeholder="e.g. Visa Card"></div>
+            <div class="form-group"><label data-en="Balance ($)" data-es="Saldo ($)">Balance ($)</label><input type="number" id="debt-balance" placeholder="5000" min="0"></div>
+            <div class="form-group"><label data-en="APR (%)" data-es="TNA (%)">APR (%)</label><input type="number" id="debt-apr" placeholder="19.99" step="0.01" min="0"></div>
+            <div class="form-group"><label data-en="Min Payment ($)" data-es="Pago Mínimo ($)">Min Payment ($)</label><input type="number" id="debt-min" placeholder="Auto" min="0"></div>
+            <button class="add-btn" style="margin-top:0" onclick="addDebt()">+</button>
+          </div>
+        </div>
+
+        <div id="debt-list" style="display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1rem;"></div>
+
+        <div id="plan-result" style="display:none">
+          <!-- PAYMENT ALLOCATION -->
+          <div style="background:var(--bg);border-radius:12px;padding:1.25rem;margin-bottom:1rem;border:1px solid var(--border)">
+            <div style="font-size:0.82rem;font-weight:700;color:var(--text);margin-bottom:0.75rem;text-transform:uppercase;letter-spacing:0.06em">📋 This Month's Payment Plan</div>
+            <div id="payment-allocation"></div>
+          </div>
+
+          <div class="plan-result">
+            <div class="plan-result-grid" id="plan-summary"></div>
+            <div class="payoff-timeline" id="payoff-timeline"></div>
+          </div>
+        </div>
+        <div id="plan-empty" style="text-align:center;color:var(--muted);font-size:0.85rem;padding:1.5rem">Add your debts above to generate your personalized payoff plan.</div>
+      </div>
 
       <div class="tip-bar" style="margin-top:0">
         <div class="tip-icon">🏆</div>
         <p data-en="Score:" data-es="Puntaje:" data-en-html="<strong>Your score updates automatically</strong> as you add transactions, bills, and savings goals. Log more data for a more accurate score." data-es-html="<strong>Tu puntaje se actualiza automáticamente</strong> al agregar transacciones, facturas y metas de ahorro. Registra más datos para un puntaje más preciso."><strong>Your score updates automatically</strong> as you add transactions, bills, and savings goals. The higher your score the better your financial health — aim for <strong>80+</strong> to qualify for the best loan rates!</p>
       </div>
 
-
     </div>
   </div>
 
-    <!-- INVESTMENT CALCULATOR TAB -->
+  <!-- INVESTMENT CALCULATOR TAB -->
   <div class="tab-section" id="tab-invest">
 
     <div class="invest-layout">
@@ -3230,7 +3232,6 @@
             </select>
           </div>
         </div>
-        </div><!-- end sim-results-panel -->
 
         <div class="tip-bar" style="margin-top:1.25rem">
           <div class="tip-icon">💡</div>
@@ -3271,6 +3272,10 @@
 
     </div>
 
+    <div class="tip-bar">
+      <div class="tip-icon">⏰</div>
+      <p data-en="Time:" data-es="Tiempo:" data-en-html="<strong>Time is your greatest asset.</strong> Starting 10 years earlier can <strong>double or triple</strong> your final balance. Even small monthly contributions grow significantly over decades — start today!" data-es-html="<strong>El tiempo es tu mayor activo.</strong> Comenzar 10 años antes puede <strong>duplicar o triplicar</strong> tu balance final. ¡Incluso contribuciones pequeñas crecen enormemente con el tiempo!"><strong>Time is your greatest asset.</strong> Starting 10 years earlier can <strong>double or triple</strong> your final balance. Even small monthly contributions grow significantly over decades — start today!</p>
+    </div>
 
   </div>
 
@@ -3310,7 +3315,7 @@
           <div id="nw-asset-list" style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.75rem"></div>
           <!-- Quick-add row -->
           <div style="display:grid;grid-template-columns:1fr auto auto;gap:0.5rem;align-items:center;background:var(--bg);border-radius:10px;padding:0.65rem;border:1px solid var(--border)">
-            <input type="text" id="nw-asset-name" placeholder="e.g. Savings Account" onkeydown="if(event.key==='Enter'){document.getElementById('nw-asset-value').focus();}" style="background:none;border:none;outline:none;font-family:'Sora',sans-serif;font-size:0.85rem;color:var(--text);font-size:16px">
+            <input type="text" id="nw-asset-name" placeholder="e.g. Savings Account" style="background:none;border:none;outline:none;font-family:'Sora',sans-serif;font-size:0.85rem;color:var(--text);font-size:16px">
             <input type="number" id="nw-asset-value" placeholder="0.00" min="0" style="width:90px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:0.35rem 0.5rem;font-family:'Sora',sans-serif;font-size:16px;color:var(--text);outline:none;text-align:right">
             <button onclick="addNWItem('asset')" style="background:var(--income-color);color:#fff;border:none;border-radius:6px;padding:0.38rem 0.65rem;font-size:0.9rem;cursor:pointer;font-weight:700">+</button>
           </div>
@@ -3332,7 +3337,7 @@
           </div>
           <div id="nw-liability-list" style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.75rem"></div>
           <div style="display:grid;grid-template-columns:1fr auto auto;gap:0.5rem;align-items:center;background:var(--bg);border-radius:10px;padding:0.65rem;border:1px solid var(--border)">
-            <input type="text" id="nw-liability-name" placeholder="e.g. Mortgage" onkeydown="if(event.key==='Enter'){document.getElementById('nw-liability-value').focus();}" style="background:none;border:none;outline:none;font-family:'Sora',sans-serif;font-size:16px;color:var(--text)">
+            <input type="text" id="nw-liability-name" placeholder="e.g. Mortgage" style="background:none;border:none;outline:none;font-family:'Sora',sans-serif;font-size:16px;color:var(--text)">
             <input type="number" id="nw-liability-value" placeholder="0.00" min="0" style="width:90px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:0.35rem 0.5rem;font-family:'Sora',sans-serif;font-size:16px;color:var(--text);outline:none;text-align:right">
             <button onclick="addNWItem('liability')" style="background:var(--accent);color:#fff;border:none;border-radius:6px;padding:0.38rem 0.65rem;font-size:0.9rem;cursor:pointer;font-weight:700">+</button>
           </div>
@@ -3591,12 +3596,12 @@
             </div>
             <div class="form-group">
               <label>Enter Your Credit Score</label>
-              <input type="range" class="score-range-input" id="base-score" min="0" max="850" value="680" oninput="updateSimulator()">
-              <div class="score-range-labels"><span>0 No Credit</span><span id="base-score-display" style="font-weight:700;color:var(--accent)">680</span><span>850 Exceptional</span></div>
+              <input type="range" class="score-range-input" id="base-score" min="300" max="850" value="680" oninput="updateSimulator()">
+              <div class="score-range-labels"><span>300 Poor</span><span id="base-score-display" style="font-weight:700;color:var(--accent)">680</span><span>850 Exceptional</span></div>
             </div>
             <div class="form-group" style="margin-top:0.75rem">
               <label>Or type your score</label>
-              <input type="number" class="profile-input" id="base-score-num" value="680" min="0" max="850" 
+              <input type="number" class="profile-input" id="base-score-num" value="680" min="300" max="850" 
                 onblur="syncScoreSlider()" 
                 onkeydown="if(event.key==='Enter')syncScoreSlider()"
                 style="font-size:1.1rem;font-weight:700;text-align:center">
@@ -3611,19 +3616,6 @@
         </div>
 
         <!-- RIGHT: RESULTS -->
-        <div id="no-credit-guide" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1.25rem">
-          <h3 style="font-family:'Playfair Display',serif;font-size:1.05rem;margin-bottom:0.75rem">🌱 Building Credit From Scratch</h3>
-          <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:1rem;line-height:1.6">You have no credit history yet. Follow these 5 steps to reach a Good score (670+) within 6–12 months:</p>
-          <div style="display:flex;flex-direction:column;gap:0.6rem">
-            <div style="background:var(--bg);border-radius:10px;padding:0.85rem;border-left:3px solid var(--income-color)"><div style="font-weight:700;font-size:0.85rem;margin-bottom:0.2rem">1. Get a Secured Credit Card</div><div style="font-size:0.78rem;color:var(--text-soft)">Deposit $200–$500 as collateral. Use it for small purchases and pay the full balance monthly. Can build a 650+ score in 6 months.</div></div>
-            <div style="background:var(--bg);border-radius:10px;padding:0.85rem;border-left:3px solid var(--income-color)"><div style="font-weight:700;font-size:0.85rem;margin-bottom:0.2rem">2. Become an Authorized User</div><div style="font-size:0.78rem;color:var(--text-soft)">Ask a trusted family member with good credit to add you to their card. You inherit their payment history immediately.</div></div>
-            <div style="background:var(--bg);border-radius:10px;padding:0.85rem;border-left:3px solid var(--income-color)"><div style="font-weight:700;font-size:0.85rem;margin-bottom:0.2rem">3. Open a Credit Builder Loan</div><div style="font-size:0.78rem;color:var(--text-soft)">Banks offer small $300–$1,000 loans to build credit. Make monthly payments and receive the money at the end.</div></div>
-            <div style="background:var(--bg);border-radius:10px;padding:0.85rem;border-left:3px solid var(--income-color)"><div style="font-weight:700;font-size:0.85rem;margin-bottom:0.2rem">4. Keep Utilization Under 30%</div><div style="font-size:0.78rem;color:var(--text-soft)">Never use more than 30% of your credit limit. On a $500 card, keep balance under $150. Under 10% is ideal.</div></div>
-            <div style="background:var(--bg);border-radius:10px;padding:0.85rem;border-left:3px solid var(--income-color)"><div style="font-weight:700;font-size:0.85rem;margin-bottom:0.2rem">5. Never Miss a Payment</div><div style="font-size:0.78rem;color:var(--text-soft)">Payment history is 35% of your score. Set up autopay for at least the minimum so you never miss a due date.</div></div>
-          </div>
-          <div style="margin-top:1rem;padding:0.75rem;background:rgba(6,214,160,0.08);border-radius:8px;border:1px solid rgba(6,214,160,0.2);font-size:0.78rem;color:var(--text-soft)">⏱️ <strong>Timeline:</strong> Most people reach 650+ in 6 months and 700+ in 12 months following steps 1 &amp; 5 consistently.</div>
-        </div>
-        <div id="sim-results-panel">
         <div class="sim-results-card">
           <h2>Simulated Score Impact</h2>
 
@@ -3972,7 +3964,7 @@
     </div>
     <div style="margin-bottom:1.25rem">
       <label style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);display:block;margin-bottom:0.35rem">Value ($)</label>
-      <input id="edit-nw-value" type="number" min="0" step="0.01" onkeydown="if(event.key==='Enter')saveNWEdit()" style="width:100%;padding:0.75rem;border:1px solid var(--border);border-radius:8px;background:var(--surface2);font-size:16px;color:var(--text);outline:none;box-sizing:border-box">
+      <input id="edit-nw-value" type="number" min="0" step="0.01" style="width:100%;padding:0.75rem;border:1px solid var(--border);border-radius:8px;background:var(--surface2);font-size:16px;color:var(--text);outline:none;box-sizing:border-box">
     </div>
     <div style="display:flex;gap:0.75rem">
       <button onclick="saveNWEdit()" style="flex:1;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:0.85rem;font-family:'Sora',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;min-height:48px">Save</button>
@@ -4602,7 +4594,7 @@
     if (tab === 'invest') awardXPForAction('investCalc');
     if (tab === 'creditsim') awardXPForAction('creditSim');
     if (tab === 'streaks') renderStreaksTab();
-    if (tab === 'calendar') { loadCalendarEvents(); renderCalendar(); }
+    if (tab === 'calendar') { try { loadCalendarEvents(); renderCalendar(); } catch(e) { console.error('Calendar render failed:', e); } }
     if (tab === 'networth') { setTimeout(initNetWorth, 50); }
     if (currentLang !== 'en') setTimeout(applyLanguage, 30);
   }
@@ -4623,6 +4615,7 @@
     const nav = document.getElementById('mobile-nav');
     const overlay = document.getElementById('mobile-overlay');
     const hamburger = document.getElementById('hamburger');
+    if (!nav || !overlay || !hamburger) return;
     const isOpen = nav.classList.contains('open');
     nav.classList.toggle('open', !isOpen);
     overlay.classList.toggle('open', !isOpen);
@@ -4630,9 +4623,12 @@
   }
 
   function closeMobileNav() {
-    document.getElementById('mobile-nav').classList.remove('open');
-    document.getElementById('mobile-overlay').classList.remove('open');
-    document.getElementById('hamburger').classList.remove('open');
+    const nav = document.getElementById('mobile-nav');
+    const overlay = document.getElementById('mobile-overlay');
+    const hamburger = document.getElementById('hamburger');
+    if (nav) nav.classList.remove('open');
+    if (overlay) overlay.classList.remove('open');
+    if (hamburger) hamburger.classList.remove('open');
   }
 
   function mobileTab(tab) {
@@ -4703,7 +4699,8 @@
     const income = transactions.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
     const expenses = transactions.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
     const balance = income - expenses;
-    document.getElementById('total-income').textContent = fmt(income);
+    const tiEl = document.getElementById('total-income'); if (!tiEl) return;
+    tiEl.textContent = fmt(income);
     document.getElementById('total-expenses').textContent = fmt(expenses);
     const balEl = document.getElementById('net-balance');
     balEl.textContent = fmt(balance);
@@ -5032,13 +5029,17 @@ Guidelines:
   function renderGoals() {
     const grid = document.getElementById('goals-grid');
     const empty = document.getElementById('goals-empty');
+    if (!grid) return; // Tab not in DOM yet
 
     // Stats
     const totalSaved = goals.reduce((s, g) => s + g.saved, 0);
     const totalTarget = goals.reduce((s, g) => s + g.target, 0);
-    document.getElementById('gs-count').textContent = goals.length;
-    document.getElementById('gs-saved').textContent = '$' + totalSaved.toLocaleString('en-US', {maximumFractionDigits:0});
-    document.getElementById('gs-target').textContent = '$' + totalTarget.toLocaleString('en-US', {maximumFractionDigits:0});
+    const gsCount = document.getElementById('gs-count');
+    const gsSaved = document.getElementById('gs-saved');
+    const gsTarget = document.getElementById('gs-target');
+    if (gsCount) gsCount.textContent = goals.length;
+    if (gsSaved) gsSaved.textContent = '$' + totalSaved.toLocaleString('en-US', {maximumFractionDigits:0});
+    if (gsTarget) gsTarget.textContent = '$' + totalTarget.toLocaleString('en-US', {maximumFractionDigits:0});
 
     if (goals.length === 0) {
       grid.innerHTML = '';
@@ -5380,6 +5381,7 @@ Guidelines:
   // FINANCIAL HEALTH SCORE
   // =============================================
   function calculateHealthScore() {
+    if (!document.getElementById('gauge-fill')) return;
     const income = transactions.filter(t => t.type === 'income').reduce((s,t) => s+t.amount, 0);
     const expenses = transactions.filter(t => t.type === 'expense').reduce((s,t) => s+t.amount, 0);
     const balance = income - expenses;
@@ -5744,17 +5746,13 @@ Guidelines:
   }
 
   function updatePremiumTab() {
-    // Update debtplan tab
-    const dpGate = document.getElementById('debtplan-tab-gate');
-    const dpContent = document.getElementById('debtplan-tab-content');
-    if (dpGate) dpGate.style.display = isPro ? 'none' : 'block';
-    if (dpContent) dpContent.style.display = isPro ? 'block' : 'none';
-    // Update healthscore tab
-    const hsGate = document.getElementById('healthscore-tab-gate');
-    const hsContent = document.getElementById('healthscore-tab-content');
-    if (hsGate) hsGate.style.display = isPro ? 'none' : 'block';
-    if (hsContent) hsContent.style.display = isPro ? 'block' : 'none';
-    if (isPro) calculateHealthScore();
+    const gate = document.getElementById('premium-tab-gate');
+    const content = document.getElementById('premium-tab-content');
+    if (gate && content) {
+      gate.style.display = isPro ? 'none' : 'block';
+      content.style.display = isPro ? 'block' : 'none';
+      if (isPro) calculateHealthScore();
+    }
   }
 
   // INVESTMENT CALCULATOR
@@ -6322,7 +6320,7 @@ Guidelines:
     const input = document.getElementById('base-score-num');
     const raw = parseInt(input.value);
     if (isNaN(raw) || input.value === '') return;
-    const val = Math.min(850, Math.max(0, raw));
+    const val = Math.min(850, Math.max(300, raw));
     input.value = val;
     document.getElementById('base-score').value = val;
     updateSimulator();
@@ -6331,13 +6329,7 @@ Guidelines:
   function updateSimulator() {
     const base = parseInt(document.getElementById('base-score').value);
     document.getElementById('base-score-num').value = base;
-    document.getElementById('base-score-display').textContent = base === 0 ? 'No Credit' : base;
-    // Show no-credit guidance panel
-    const noCredit = document.getElementById('no-credit-guide');
-    const simPanel = document.getElementById('sim-results-panel');
-    if (noCredit) noCredit.style.display = base === 0 ? 'block' : 'none';
-    if (simPanel) simPanel.style.display = base === 0 ? 'none' : 'block';
-    if (base === 0) return; // skip simulator for no-credit
+    document.getElementById('base-score-display').textContent = base;
 
     // Calculate total impact from selected actions
     let totalImpact = 0;
@@ -6774,21 +6766,6 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     }
   }
 
-  function updateNWHeadline() {
-    const totalAssets      = nwAssets.reduce((s, a) => s + (parseFloat(a.value) || 0), 0);
-    const totalLiabilities = nwLiabilities.reduce((s, l) => s + (parseFloat(l.value) || 0), 0);
-    const netWorth         = totalAssets - totalLiabilities;
-    const headline = document.getElementById('nw-headline');
-    const taEl = document.getElementById('nw-total-assets');
-    const tlEl = document.getElementById('nw-total-liabilities');
-    if (headline) {
-      headline.textContent = (netWorth < 0 ? '-' : '') + '$' + Math.abs(netWorth).toLocaleString(undefined, {maximumFractionDigits:0});
-      headline.style.color = netWorth < 0 ? '#f05555' : '#06d6a0';
-    }
-    if (taEl) taEl.textContent = '$' + totalAssets.toLocaleString(undefined, {maximumFractionDigits:0});
-    if (tlEl) tlEl.textContent = '$' + totalLiabilities.toLocaleString(undefined, {maximumFractionDigits:0});
-  }
-
   function calcNW() {
     const totalAssets      = nwAssets.reduce((s, a) => s + (parseFloat(a.value) || 0), 0);
     const totalLiabilities = nwLiabilities.reduce((s, l) => s + (parseFloat(l.value) || 0), 0);
@@ -7020,10 +6997,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     safeSet('fintrail_nw_liabilities_' + _uid, JSON.stringify(nwLiabilities));
     safeSet('fintrail_nw_assets_local',         JSON.stringify(nwAssets));
     safeSet('fintrail_nw_liabilities_local',    JSON.stringify(nwLiabilities));
-    saveNWData();
-    renderNWLists();
-    updateNWHeadline();
-    setTimeout(calcNW, 50);
+    saveNWData(); calcNW();
   }
 
   function quickAddNW(type, name, value) {
@@ -7077,11 +7051,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     safeSet('fintrail_nw_assets_local',          JSON.stringify(nwAssets));
     safeSet('fintrail_nw_liabilities_local',     JSON.stringify(nwLiabilities));
     safeSet('fintrail_nw_ts_' + _duid,           String(Date.now()));
-    // Update UI immediately without waiting for async Supabase
-    renderNWLists();
-    updateNWHeadline();
-    saveNWData();
-    setTimeout(calcNW, 50); // defer full recalc so UI responds first
+    saveNWData(); calcNW();
   }
 
   function clearNWHistory() {
@@ -7120,10 +7090,16 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     safeSet('fintrail_game_' + uid, JSON.stringify(gameData));
     // Sync to Supabase so XP/level is consistent across all devices
     if (sbClient && currentUser) {
-      sbClient.from('user_data').upsert(
-        { user_id: currentUser.id, game_data: gameData, updated_at: new Date().toISOString() },
-        { onConflict: 'user_id' }
-      ).catch(e => console.log('gameData sync err:', e.message));
+      (async () => {
+        try {
+          await sbClient.from('user_data').upsert(
+            { user_id: currentUser.id, game_data: gameData, updated_at: new Date().toISOString() },
+            { onConflict: 'user_id' }
+          );
+        } catch (e) {
+          console.log('gameData sync err:', e.message);
+        }
+      })();
     }
   }
 
@@ -7310,6 +7286,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   }
 
   function renderStreaks() {
+    if (!document.getElementById('streak-cards')) return;
     const streaks = [
       { icon: '🔥', label: currentLang==='es'?'Racha de Inicio':'Login Streak', desc: currentLang==='es'?'Inicia sesión diario':'Log in daily', count: gameData.loginStreak || 0, unit: 'days' },
       { icon: '📝', label: currentLang==='es'?'Racha de Presupuesto':'Budget Streak', desc: currentLang==='es'?'Registra transacciones':'Log transactions regularly', count: transactions.length > 0 ? Math.min(gameData.loginStreak || 0, 7) : 0, unit: 'days' },
@@ -7336,7 +7313,9 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   function renderBadges() {
     const earned = gameData.earnedBadges || [];
     const earnedCount = earned.length;
-    document.getElementById('badges-count').textContent = `${earnedCount}/${BADGES_DEF.length} earned`;
+    const badgesCountEl = document.getElementById('badges-count');
+    if (!badgesCountEl) return;
+    badgesCountEl.textContent = `${earnedCount}/${BADGES_DEF.length} earned`;
 
     document.getElementById('badges-grid').innerHTML = BADGES_DEF.map(b => {
       const isEarned = earned.includes(b.id);
@@ -7421,6 +7400,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
 
 
   function updateNegotiateTab() {
+    if (!document.getElementById('negotiate-gate') && !document.getElementById('negotiate-content')) return;
     const gate = document.getElementById('negotiate-gate');
     const content = document.getElementById('negotiate-content');
     if (gate && content) {
@@ -7792,6 +7772,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   }
 
   function renderCalendar() {
+    if (!document.getElementById('cal-month-label')) return;
     const year = calCurrentDate.getFullYear();
     const month = calCurrentDate.getMonth();
     const monthNames = currentLang === 'es'
