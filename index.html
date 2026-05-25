@@ -2340,6 +2340,18 @@
   #bsub-tracker .bar-val { min-width:58px; font-size:0.68rem; }
 }
 
+
+/* FIX: Mobile Budget sub-tabs must behave like real pages.
+   The mobile redesign made #bsub-tracker display:flex, which overrode
+   .budget-sub { display:none } and caused the Budget Tracker to remain
+   visible behind Bill Schedule. */
+@media (max-width:700px) {
+  .budget-sub:not(.visible) { display: none !important; }
+  .budget-sub.visible { display: block !important; }
+  #bsub-tracker.visible { display: flex !important; }
+  #bsub-schedule.visible { display: block !important; }
+}
+
 </style>
 </head>
 <body>
@@ -4916,9 +4928,14 @@
   }
 
   function mobileTabSchedule() {
-    showTab('budget', document.getElementById('nav-budget'));
-    setTimeout(() => showBudgetSub('schedule', document.querySelector('.sched-tab-btn:nth-child(2)')), 100);
+    document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('visible'));
+    const budgetTab = document.getElementById('tab-budget');
+    if (budgetTab) budgetTab.classList.add('visible');
+    const scheduleBtn = document.querySelector('.sched-tab-btn:nth-child(2)');
+    showBudgetSub('schedule', scheduleBtn);
+    window.scrollTo(0, 0);
     closeMobileNav();
+    if (currentLang !== 'en') setTimeout(applyLanguage, 30);
   }
 
   // MOBILE NAV
@@ -4948,6 +4965,10 @@
     const tabEl = document.getElementById('tab-' + tab);
     if (!tabEl) { console.warn('mobileTab: no tab found for', tab); return; }
     tabEl.classList.add('visible');
+    if (tab === 'budget') {
+      const trackerBtn = document.querySelector('.sched-tab-btn:nth-child(1)');
+      showBudgetSub('tracker', trackerBtn);
+    }
     window.scrollTo(0, 0);
     closeMobileNav();
     if (tab === 'networth') setTimeout(initNetWorth, 50);
@@ -5412,8 +5433,11 @@ Guidelines:
   function showBudgetSub(sub, btn) {
     document.querySelectorAll('.budget-sub').forEach(s => s.classList.remove('visible'));
     document.querySelectorAll('.sched-tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('bsub-' + sub).classList.add('visible');
-    btn.classList.add('active');
+    const panel = document.getElementById('bsub-' + sub);
+    if (panel) panel.classList.add('visible');
+    if (btn) btn.classList.add('active');
+    if (sub === 'schedule') { try { renderBillList(); renderSchedule(); } catch(e) { console.warn('Schedule refresh skipped:', e); } }
+    if (currentLang !== 'en') setTimeout(applyLanguage, 30);
   }
 
   function autoFillPaycheck() {
