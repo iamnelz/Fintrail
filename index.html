@@ -6756,13 +6756,22 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     safeSet('fintrail_nw_liabilities_local',   JSON.stringify(nwLiabilities));
     safeSet('fintrail_nw_history_local',       JSON.stringify(nwHistory));
     safeSet('fintrail_nw_ts_' + uid,           String(Date.now()));
-    // Supabase sync
+    // Supabase sync — async/await avoids PostgREST .catch() crashes in Supabase v2
     if (sbClient && currentUser) {
-      sbClient.from('user_data').upsert({
-        user_id: currentUser.id,
-        nw_assets: nwAssets, nw_liabilities: nwLiabilities, nw_history: nwHistory,
-        updated_at: new Date().toISOString()
-      }, { onConflict: 'user_id' }).catch(e => console.log('NW sync err:', e.message));
+      (async () => {
+        try {
+          const { error } = await sbClient.from('user_data').upsert({
+            user_id: currentUser.id,
+            nw_assets: nwAssets,
+            nw_liabilities: nwLiabilities,
+            nw_history: nwHistory,
+            updated_at: new Date().toISOString()
+          }, { onConflict: 'user_id' });
+          if (error) console.log('NW sync err:', error.message);
+        } catch (e) {
+          console.log('NW sync err:', e?.message || e);
+        }
+      })();
     }
   }
 
@@ -6790,14 +6799,17 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       change.style.color = 'rgba(255,255,255,0.55)';
     }
 
-    document.getElementById('nw-total-assets').textContent      = '$' + totalAssets.toLocaleString(undefined, {maximumFractionDigits:0});
-    document.getElementById('nw-total-liabilities').textContent = '$' + totalLiabilities.toLocaleString(undefined, {maximumFractionDigits:0});
+    const totalAssetsEl = document.getElementById('nw-total-assets');
+    const totalLiabilitiesEl = document.getElementById('nw-total-liabilities');
+    if (totalAssetsEl) totalAssetsEl.textContent = '$' + totalAssets.toLocaleString(undefined, {maximumFractionDigits:0});
+    if (totalLiabilitiesEl) totalLiabilitiesEl.textContent = '$' + totalLiabilities.toLocaleString(undefined, {maximumFractionDigits:0});
 
+    // Snapshot first, then redraw everything so delete/add/edit changes appear immediately.
+    snapshotNWHistory(netWorth);
     renderNWLists();
     renderNWBreakdown(totalAssets, totalLiabilities);
-    renderNWChart();
-    snapshotNWHistory(netWorth);
     renderNWHistory();
+    renderNWChart();
   }
 
   function renderNWLists() {
@@ -6810,8 +6822,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
         <div class="nw-item">
           <span class="nw-item-name">${escHtml(a.name)}</span>
           <span class="nw-item-value asset">$${parseFloat(a.value).toLocaleString(undefined,{maximumFractionDigits:0})}</span>
-          <button class="nw-item-edit" onclick="event.stopPropagation();editNWItem('asset','${a.id}')">Edit</button>
-          <button class="nw-item-del" onclick="event.stopPropagation();deleteNWItem('asset','${a.id}')" title="Delete">&times;</button>
+          <button type="button" class="nw-item-edit" onclick="event.stopPropagation();editNWItem('asset','${a.id}')">Edit</button>
+          <button type="button" class="nw-item-del" onclick="event.stopPropagation();deleteNWItem('asset','${a.id}')" title="Delete">&times;</button>
         </div>`).join('');
 
     lList.innerHTML = nwLiabilities.length === 0 ? `<div style="font-size:0.8rem;color:var(--muted);text-align:center;padding:0.5rem">${currentLang==='es'?'Aún no hay pasivos':'No liabilities yet'}</div>` :
@@ -6819,8 +6831,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
         <div class="nw-item">
           <span class="nw-item-name">${escHtml(l.name)}</span>
           <span class="nw-item-value liability">$${parseFloat(l.value).toLocaleString(undefined,{maximumFractionDigits:0})}</span>
-          <button class="nw-item-edit" onclick="event.stopPropagation();editNWItem('liability','${l.id}')">Edit</button>
-          <button class="nw-item-del" onclick="event.stopPropagation();deleteNWItem('liability','${l.id}')" title="Delete">&times;</button>
+          <button type="button" class="nw-item-edit" onclick="event.stopPropagation();editNWItem('liability','${l.id}')">Edit</button>
+          <button type="button" class="nw-item-del" onclick="event.stopPropagation();deleteNWItem('liability','${l.id}')" title="Delete">&times;</button>
         </div>`).join('');
   }
 
@@ -6871,11 +6883,11 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const W = wrap.clientWidth, H = wrap.clientHeight;
 
     if (nwHistory.length < 2) {
-      emptyEl.style.display = 'flex';
+      if (emptyEl) emptyEl.style.display = 'flex';
       ctx.clearRect(0,0,W,H);
       return;
     }
-    emptyEl.style.display = 'none';
+    if (emptyEl) emptyEl.style.display = 'none';
 
     const values = nwHistory.map(h => h.value);
     const minV   = Math.min(...values);
@@ -7042,16 +7054,40 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   }
 
   function deleteNWItem(type, id) {
-    if (type === 'asset') nwAssets = nwAssets.filter(x => String(x.id) !== String(id));
-    else nwLiabilities = nwLiabilities.filter(x => String(x.id) !== String(id));
-    // Write to localStorage immediately BEFORE any async operations
+    const beforeAssets = nwAssets.length;
+    const beforeLiabilities = nwLiabilities.length;
+
+    if (type === 'asset') {
+      nwAssets = nwAssets.filter(x => String(x.id) !== String(id));
+    } else {
+      nwLiabilities = nwLiabilities.filter(x => String(x.id) !== String(id));
+    }
+
+    // If nothing changed, still repaint once to prevent stale UI on mobile browsers.
+    const changed = beforeAssets !== nwAssets.length || beforeLiabilities !== nwLiabilities.length;
+
+    // Write to localStorage immediately BEFORE any async operations.
     const _duid = currentUser?.id || 'demo';
     safeSet('fintrail_nw_assets_'      + _duid, JSON.stringify(nwAssets));
     safeSet('fintrail_nw_liabilities_' + _duid, JSON.stringify(nwLiabilities));
     safeSet('fintrail_nw_assets_local',          JSON.stringify(nwAssets));
     safeSet('fintrail_nw_liabilities_local',     JSON.stringify(nwLiabilities));
     safeSet('fintrail_nw_ts_' + _duid,           String(Date.now()));
-    saveNWData(); calcNW();
+
+    // Repaint synchronously so the deleted row disappears immediately.
+    renderNWLists();
+    calcNW();
+
+    // Persist after UI update; this is async-safe and should not block the repaint.
+    saveNWData();
+
+    // Extra repaint on next frame fixes iOS/Safari delayed DOM refresh.
+    if (changed && typeof requestAnimationFrame === 'function') {
+      requestAnimationFrame(() => {
+        renderNWLists();
+        calcNW();
+      });
+    }
   }
 
   function clearNWHistory() {
