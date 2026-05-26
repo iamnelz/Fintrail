@@ -2604,7 +2604,7 @@
     <button class="mobile-nav-tile" onclick="mobileTab('invest')">📈<span data-en="Investment" data-es="Inversión">Investment</span></button>
     <button class="mobile-nav-tile" onclick="mobileTab('networth');closeMobileNav()">💎<span data-en="Net Worth" data-es="Patrimonio">Net Worth</span></button>
     <button class="mobile-nav-tile" onclick="mobileTab('calendar')">📅<span data-en="Calendar" data-es="Calendario">Calendar</span></button>
-    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('premium')">💳<span data-en="Debt Planner" data-es="Plan de Deuda">Debt Planner</span></button>
+    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('debtplan')">💳<span data-en="Debt Planner" data-es="Plan de Deuda">Debt Planner</span></button>
   </div>
 
   <!-- TOOLS -->
@@ -2620,7 +2620,7 @@
   <div style="font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);padding:0.3rem 1rem 0.2rem" data-en="💡 Insights" data-es="💡 Análisis">💡 Insights</div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem;padding:0 0.75rem 0.5rem">
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('ai')">💬<span data-en="AI Advisor" data-es="Asesor IA">AI Advisor</span></button>
-    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('premium')">🏆<span data-en="Health Score" data-es="Salud">Health Score</span></button>
+    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('healthscore')">🏆<span data-en="Health Score" data-es="Salud">Health Score</span></button>
     <button class="mobile-nav-tile" onclick="mobileTab('streaks');closeMobileNav()">🔥🏅<span data-en="Streaks &amp; Milestones" data-es="Rachas y Logros">Streaks &amp; Milestones</span></button>
   </div>
 
@@ -3377,14 +3377,14 @@
 
   </div>
 
-  <!-- PREMIUM FEATURES TAB -->
-  <div class="tab-section" id="tab-premium">
+  <!-- HEALTH SCORE TAB -->
+  <div class="tab-section" id="tab-healthscore">
 
     <div id="premium-tab-gate" style="display:none">
       <div class="lock-gate">
         <div class="lg-icon">🏆</div>
-        <h3>Premium Features <span class="premium-badge">PRO</span></h3>
-        <p>Unlock your Financial Health Score, personalized Debt Payoff Planner, and smart Budget Alerts.</p>
+        <h3>Financial Health Score <span class="premium-badge">PRO</span></h3>
+        <p>Unlock your Financial Health Score and smart Budget Alerts.</p>
         <button class="lock-gate-btn" onclick="showPaywall('premium')">Unlock with Pro — $4.99/mo</button>
         <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--muted)">7-day free trial · Cancel anytime</div>
       </div>
@@ -3481,6 +3481,19 @@
 
       </div>
 
+
+
+      <div class="tip-bar" style="margin-top:0">
+        <div class="tip-icon">🏆</div>
+        <p data-en="Score:" data-es="Puntaje:" data-en-html="<strong>Your score updates automatically</strong> as you add transactions, bills, and savings goals. Log more data for a more accurate score." data-es-html="<strong>Tu puntaje se actualiza automáticamente</strong> al agregar transacciones, facturas y metas de ahorro. Registra más datos para un puntaje más preciso."><strong>Your score updates automatically</strong> as you add transactions, bills, and savings goals. The higher your score the better your financial health — aim for <strong>80+</strong> to qualify for the best loan rates!</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- DEBT PAYOFF PLANNER TAB -->
+  <div class="tab-section" id="tab-debtplan">
+
       <!-- DEBT PAYOFF PLANNER -->
       <div class="planner-card">
         <h2 data-en="🎯 Personalized Debt Payoff Planner" data-es="🎯 Plan Personalizado de Pago de Deudas">🎯 Personalized Debt Payoff Planner</h2>
@@ -3538,12 +3551,6 @@
         <div id="plan-empty" style="text-align:center;color:var(--muted);font-size:0.85rem;padding:1.5rem">Add your debts above to generate your personalized payoff plan.</div>
       </div>
 
-      <div class="tip-bar" style="margin-top:0">
-        <div class="tip-icon">🏆</div>
-        <p data-en="Score:" data-es="Puntaje:" data-en-html="<strong>Your score updates automatically</strong> as you add transactions, bills, and savings goals. Log more data for a more accurate score." data-es-html="<strong>Tu puntaje se actualiza automáticamente</strong> al agregar transacciones, facturas y metas de ahorro. Registra más datos para un puntaje más preciso."><strong>Your score updates automatically</strong> as you add transactions, bills, and savings goals. The higher your score the better your financial health — aim for <strong>80+</strong> to qualify for the best loan rates!</p>
-      </div>
-
-    </div>
   </div>
 
   <!-- INVESTMENT CALCULATOR TAB -->
@@ -4956,6 +4963,8 @@
     if (tab === 'streaks') renderStreaksTab();
     if (tab === 'calendar') { try { loadCalendarEvents(); renderCalendar(); } catch(e) { console.error('Calendar render failed:', e); } }
     if (tab === 'networth') { setTimeout(initNetWorth, 50); }
+    if (tab === 'healthscore') { try { calculateHealthScore(); } catch(e) { console.error('Health score render failed:', e); } }
+    if (tab === 'debtplan') { try { renderDebtList(); runPayoffPlan(); } catch(e) { console.error('Debt planner render failed:', e); } }
     if (currentLang !== 'en') setTimeout(applyLanguage, 30);
   }
 
@@ -5011,6 +5020,8 @@
     if (tab === 'networth') setTimeout(initNetWorth, 50);
     if (tab === 'streaks') renderStreaksTab();
     if (tab === 'calendar') { loadCalendarEvents(); renderCalendar(); }
+    if (tab === 'healthscore') { try { calculateHealthScore(); } catch(e) { console.error('Health score render failed:', e); } }
+    if (tab === 'debtplan') { try { renderDebtList(); runPayoffPlan(); } catch(e) { console.error('Debt planner render failed:', e); } }
     if (currentLang !== 'en') setTimeout(applyLanguage, 30);
   }
 
