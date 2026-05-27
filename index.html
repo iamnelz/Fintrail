@@ -3406,7 +3406,7 @@
             </svg>
             <div style="position:absolute;bottom:0;width:100%;text-align:center;">
               <span class="score-number" id="health-score-num">--</span>
-              <span class="score-label" id="health-score-label">Calculating...</span>
+              <span class="score-label" id="health-score-label" data-en="Calculating..." data-es="Calculando...">Calculating...</span>
             </div>
           </div>
           <div class="score-breakdown" id="score-breakdown"></div>
@@ -3415,8 +3415,8 @@
 
         <!-- ALERTS -->
         <div class="alerts-card">
-          <h2>📱 Budget Alerts & Reminders</h2>
-          <p>Get browser notifications for upcoming bills and budget warnings so you never miss a payment.</p>
+          <h2 data-en="📱 Budget Alerts & Reminders" data-es="📱 Alertas y Recordatorios de Presupuesto">📱 Budget Alerts & Reminders</h2>
+          <p data-en="Get browser notifications for upcoming bills and budget warnings so you never miss a payment." data-es="Recibe notificaciones del navegador sobre próximas facturas y alertas de presupuesto para no perder ningún pago.">Get browser notifications for upcoming bills and budget warnings so you never miss a payment.</p>
 
           <div class="alert-toggle-row">
             <div class="atr-left">
@@ -3476,7 +3476,7 @@
 
           <div id="notif-status" class="notif-status pending" data-en="Click below to enable browser notifications" data-es="Haz clic abajo para activar notificaciones">Click below to enable browser notifications</div>
           <button class="alert-test-btn" onclick="requestNotifications()" data-en="🔔 Enable Notifications" data-es="🔔 Activar Notificaciones">🔔 Enable Notifications</button>
-          <button class="alert-test-btn" style="margin-top:0.5rem" onclick="sendTestNotification()" data-en="Test Notification" data-es="Probar Notificación" data-en="Test Notification" data-es="Probar Notificación">Test Notification</button>
+          <button class="alert-test-btn" style="margin-top:0.5rem" onclick="sendTestNotification()" data-en="Test Notification" data-es="Probar Notificación">Test Notification</button>
         </div>
 
       </div>
@@ -3485,7 +3485,7 @@
 
       <div class="tip-bar" style="margin-top:0">
         <div class="tip-icon">🏆</div>
-        <p data-en="Score:" data-es="Puntaje:" data-en-html="<strong>Your score updates automatically</strong> as you add transactions, bills, and savings goals. Log more data for a more accurate score." data-es-html="<strong>Tu puntaje se actualiza automáticamente</strong> al agregar transacciones, facturas y metas de ahorro. Registra más datos para un puntaje más preciso."><strong>Your score updates automatically</strong> as you add transactions, bills, and savings goals. The higher your score the better your financial health — aim for <strong>80+</strong> to qualify for the best loan rates!</p>
+        <p data-en-html="<strong>Your score updates automatically</strong> as you add transactions, bills, and savings goals. The higher your score, the better your financial health — aim for <strong>80+</strong> to qualify for the best loan rates!" data-es-html="<strong>Tu puntaje se actualiza automáticamente</strong> al agregar transacciones, facturas y metas de ahorro. Mientras más alto sea tu puntaje, mejor será tu salud financiera — apunta a <strong>80+</strong> para calificar para mejores tasas de préstamo."><strong>Your score updates automatically</strong> as you add transactions, bills, and savings goals. The higher your score, the better your financial health — aim for <strong>80+</strong> to qualify for the best loan rates!</p>
       </div>
 
     </div>
@@ -5790,15 +5790,20 @@ Guidelines:
     document.getElementById('health-score-num').textContent = total;
     document.getElementById('health-score-num').style.color = total >= 75 ? '#00b894' : total >= 50 ? '#f5a623' : '#f05555';
 
-    let label = total >= 80 ? 'Excellent 🌟' : total >= 65 ? 'Good 👍' : total >= 50 ? 'Fair ⚡' : 'Needs Work 💪';
+    let label;
+    if (currentLang === 'es') {
+      label = total >= 80 ? 'Excelente 🌟' : total >= 65 ? 'Bueno 👍' : total >= 50 ? 'Regular ⚡' : 'Necesita Mejorar 💪';
+    } else {
+      label = total >= 80 ? 'Excellent 🌟' : total >= 65 ? 'Good 👍' : total >= 50 ? 'Fair ⚡' : 'Needs Work 💪';
+    }
     document.getElementById('health-score-label').textContent = label;
 
     const breakdown = document.getElementById('score-breakdown');
     const items = [
       { label: currentLang==='es' ? '💰 Balance de Presupuesto' : '💰 Budget Balance', score: budgetScore, max: 25, color: '#00b894' },
-      { label: '🎯 Savings Progress', score: savingsScore, max: 25, color: '#f5a623' },
-      { label: '💳 Debt Load', score: debtScore, max: 25, color: '#f05555' },
-      { label: '📅 Bill Tracking', score: billScore, max: 25, color: '#818cf8' },
+      { label: currentLang==='es' ? '🎯 Progreso de Ahorros' : '🎯 Savings Progress', score: savingsScore, max: 25, color: '#f5a623' },
+      { label: currentLang==='es' ? '💳 Carga de Deuda' : '💳 Debt Load', score: debtScore, max: 25, color: '#f05555' },
+      { label: currentLang==='es' ? '📅 Seguimiento de Facturas' : '📅 Bill Tracking', score: billScore, max: 25, color: '#818cf8' },
     ];
     breakdown.innerHTML = items.map(item => `
       <div class="sb-row">
