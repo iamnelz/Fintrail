@@ -4094,42 +4094,42 @@
       <!-- LEFT: INPUTS -->
       <div>
         <div class="card">
-          <h2 style="margin-bottom:0.35rem">💬 Debt Negotiation Scripts</h2>
-          <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:1.25rem;line-height:1.6">Fill in your details and Claude AI will write a personalized script you can read word-for-word when calling your creditor.</p>
+          <h2 style="margin-bottom:0.35rem" data-en="💬 Debt Negotiation Scripts" data-es="💬 Scripts de Negociación de Deuda">💬 Debt Negotiation Scripts</h2>
+          <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:1.25rem;line-height:1.6" data-en="Fill in your details and Claude AI will write a personalized script you can read word-for-word when calling your creditor." data-es="Ingresa tus detalles y la IA de Claude escribirá un guion personalizado que podrás leer palabra por palabra cuando llames a tu acreedor.">Fill in your details and Claude AI will write a personalized script you can read word-for-word when calling your creditor.</p>
 
           <!-- SCRIPT TYPE -->
           <div class="form-group" style="margin-bottom:1rem">
-            <label>What do you want to negotiate?</label>
+            <label data-en="What do you want to negotiate?" data-es="¿Qué quieres negociar?">What do you want to negotiate?</label>
             <div class="script-type-grid" id="script-type-grid">
               <button class="script-type-btn selected" onclick="selectScriptType('rate', this)">
                 <span class="stb-icon">📉</span>
-                <span class="stb-label">Lower Interest Rate</span>
-                <span class="stb-desc">Ask to reduce your APR</span>
+                <span class="stb-label" data-en="Lower Interest Rate" data-es="Bajar Tasa de Interés">Lower Interest Rate</span>
+                <span class="stb-desc" data-en="Ask to reduce your APR" data-es="Pide reducir tu APR">Ask to reduce your APR</span>
               </button>
               <button class="script-type-btn" onclick="selectScriptType('hardship', this)">
                 <span class="stb-icon">🤝</span>
-                <span class="stb-label">Hardship Plan</span>
-                <span class="stb-desc">Reduced payments due to hardship</span>
+                <span class="stb-label" data-en="Hardship Plan" data-es="Plan por Dificultad">Hardship Plan</span>
+                <span class="stb-desc" data-en="Reduced payments due to hardship" data-es="Pagos reducidos por dificultad económica">Reduced payments due to hardship</span>
               </button>
               <button class="script-type-btn" onclick="selectScriptType('settlement', this)">
                 <span class="stb-icon">💰</span>
-                <span class="stb-label">Debt Settlement</span>
-                <span class="stb-desc">Settle for less than owed</span>
+                <span class="stb-label" data-en="Debt Settlement" data-es="Liquidación de Deuda">Debt Settlement</span>
+                <span class="stb-desc" data-en="Settle for less than owed" data-es="Liquida por menos de lo adeudado">Settle for less than owed</span>
               </button>
               <button class="script-type-btn" onclick="selectScriptType('medical', this)">
                 <span class="stb-icon">🏥</span>
-                <span class="stb-label">Medical Bill</span>
-                <span class="stb-desc">Reduce or negotiate medical debt</span>
+                <span class="stb-label" data-en="Medical Bill" data-es="Factura Médica">Medical Bill</span>
+                <span class="stb-desc" data-en="Reduce or negotiate medical debt" data-es="Reduce o negocia deuda médica">Reduce or negotiate medical debt</span>
               </button>
               <button class="script-type-btn" onclick="selectScriptType('collections', this)">
                 <span class="stb-icon">📋</span>
-                <span class="stb-label">Collections Removal</span>
-                <span class="stb-desc">Pay-for-delete or goodwill removal</span>
+                <span class="stb-label" data-en="Collections Removal" data-es="Eliminar Cobranza">Collections Removal</span>
+                <span class="stb-desc" data-en="Pay-for-delete or goodwill removal" data-es="Pago por eliminación o carta de buena voluntad">Pay-for-delete or goodwill removal</span>
               </button>
               <button class="script-type-btn" onclick="selectScriptType('student', this)">
                 <span class="stb-icon">🎓</span>
-                <span class="stb-label">Student Loan</span>
-                <span class="stb-desc">IBR, deferment, or forgiveness</span>
+                <span class="stb-label" data-en="Student Loan" data-es="Préstamo Estudiantil">Student Loan</span>
+                <span class="stb-desc" data-en="IBR, deferment, or forgiveness" data-es="IBR, aplazamiento o condonación">IBR, deferment, or forgiveness</span>
               </button>
             </div>
           </div>
@@ -4137,42 +4137,42 @@
           <!-- DEBT DETAILS -->
           <div class="form-group">
             <label data-en="Creditor / Company Name" data-es="Acreedor / Empresa">Creditor / Company Name</label>
-            <input class="profile-input" type="text" id="neg-creditor" placeholder="e.g. Chase, Capital One, Medical Center">
+            <input class="profile-input" type="text" id="neg-creditor" placeholder="e.g. Chase, Capital One, Medical Center" data-en-placeholder="e.g. Chase, Capital One, Medical Center" data-es-placeholder="ej. Chase, Capital One, Centro Médico">
           </div>
           <div class="form-group">
             <label data-en="Current Balance ($)" data-es="Saldo Actual ($)">Current Balance ($)</label>
-            <input class="profile-input" type="number" id="neg-balance" placeholder="e.g. 5000">
+            <input class="profile-input" type="number" id="neg-balance" placeholder="e.g. 5000" data-en-placeholder="e.g. 5000" data-es-placeholder="ej. 5000">
           </div>
           <div class="form-group">
-            <label data-en="Current Interest Rate (%)" data-es="Tasa de Interés Actual (%)">Current Interest Rate (%) <span style="color:var(--muted);font-weight:400">(if applicable)</span></label>
-            <input class="profile-input" type="number" id="neg-rate" placeholder="e.g. 24.99" step="0.01">
+            <label data-en-html="Current Interest Rate (%) <span style=&quot;color:var(--muted);font-weight:400&quot;>(if applicable)</span>" data-es-html="Tasa de Interés Actual (%) <span style=&quot;color:var(--muted);font-weight:400&quot;>(si aplica)</span>">Current Interest Rate (%) <span style="color:var(--muted);font-weight:400">(if applicable)</span></label>
+            <input class="profile-input" type="number" id="neg-rate" placeholder="e.g. 24.99" data-en-placeholder="e.g. 24.99" data-es-placeholder="ej. 24.99" step="0.01">
           </div>
           <div class="form-group">
-            <label>Your Hardship Reason</label>
+            <label data-en="Your Hardship Reason" data-es="Tu Motivo de Dificultad">Your Hardship Reason</label>
             <select class="profile-input" id="neg-hardship">
-              <option value="">Select a reason...</option>
-              <option>Job loss or reduced income</option>
-              <option>Medical emergency or illness</option>
-              <option>Divorce or separation</option>
-              <option>Death of a family member</option>
-              <option>Natural disaster</option>
-              <option>COVID-19 financial impact</option>
-              <option>Unexpected major expense</option>
-              <option>Long-time loyal customer</option>
-              <option>Received a competitor offer</option>
+              <option value="" data-en="Select a reason..." data-es="Selecciona una razón...">Select a reason...</option>
+              <option data-en="Job loss or reduced income" data-es="Pérdida de empleo o reducción de ingresos">Job loss or reduced income</option>
+              <option data-en="Medical emergency or illness" data-es="Emergencia médica o enfermedad">Medical emergency or illness</option>
+              <option data-en="Divorce or separation" data-es="Divorcio o separación">Divorce or separation</option>
+              <option data-en="Death of a family member" data-es="Fallecimiento de un familiar">Death of a family member</option>
+              <option data-en="Natural disaster" data-es="Desastre natural">Natural disaster</option>
+              <option data-en="COVID-19 financial impact" data-es="Impacto financiero por COVID-19">COVID-19 financial impact</option>
+              <option data-en="Unexpected major expense" data-es="Gasto importante inesperado">Unexpected major expense</option>
+              <option data-en="Long-time loyal customer" data-es="Cliente leal de muchos años">Long-time loyal customer</option>
+              <option data-en="Received a competitor offer" data-es="Recibí una oferta de un competidor">Received a competitor offer</option>
             </select>
           </div>
           <div class="form-group">
-            <label>Years as Customer <span style="color:var(--muted);font-weight:400">(if applicable)</span></label>
-            <input class="profile-input" type="number" id="neg-years" placeholder="e.g. 5">
+            <label data-en-html="Years as Customer <span style=&quot;color:var(--muted);font-weight:400&quot;>(if applicable)</span>" data-es-html="Años como Cliente <span style=&quot;color:var(--muted);font-weight:400&quot;>(si aplica)</span>">Years as Customer <span style="color:var(--muted);font-weight:400">(if applicable)</span></label>
+            <input class="profile-input" type="number" id="neg-years" placeholder="e.g. 5" data-en-placeholder="e.g. 5" data-es-placeholder="ej. 5">
           </div>
           <div class="form-group">
-            <label>Any additional context <span style="color:var(--muted);font-weight:400">(optional)</span></label>
-            <textarea class="profile-input" id="neg-context" rows="3" placeholder="e.g. I have always paid on time, I received a better offer from another bank..." style="resize:vertical"></textarea>
+            <label data-en-html="Any additional context <span style=&quot;color:var(--muted);font-weight:400&quot;>(optional)</span>" data-es-html="Contexto adicional <span style=&quot;color:var(--muted);font-weight:400&quot;>(opcional)</span>">Any additional context <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+            <textarea class="profile-input" id="neg-context" rows="3" placeholder="e.g. I have always paid on time, I received a better offer from another bank..." data-en-placeholder="e.g. I have always paid on time, I received a better offer from another bank..." data-es-placeholder="ej. Siempre he pagado a tiempo, recibí una mejor oferta de otro banco..." style="resize:vertical"></textarea>
           </div>
 
           <button class="script-generate-btn" id="neg-generate-btn" onclick="generateNegotiationScript()">
-            ✨ Generate My Script
+            <span data-en="✨ Generate My Script" data-es="✨ Generar Mi Guion">✨ Generate My Script</span>
           </button>
         </div>
       </div>
@@ -4181,16 +4181,16 @@
       <div>
         <div class="script-output-card">
           <div class="script-output-header">
-            <h3 id="script-output-title">📄 Your Personalized Script</h3>
-            <p id="script-output-subtitle">Fill in your details and click Generate to get your custom script</p>
+            <h3 id="script-output-title" data-en="📄 Your Personalized Script" data-es="📄 Tu Guion Personalizado">📄 Your Personalized Script</h3>
+            <p id="script-output-subtitle" data-en="Fill in your details and click Generate to get your custom script" data-es="Ingresa tus detalles y haz clic en Generar para obtener tu guion personalizado">Fill in your details and click Generate to get your custom script</p>
           </div>
           <div class="script-output-body" id="script-output-body">
 
             <!-- EMPTY STATE -->
             <div id="script-empty-state" style="text-align:center;padding:2.5rem 1rem">
               <div style="font-size:3rem;margin-bottom:1rem">💬</div>
-              <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--text);margin-bottom:0.5rem">Ready to negotiate?</div>
-              <p style="font-size:0.85rem;color:var(--muted);line-height:1.6">Fill in your debt details on the left and Claude AI will write a personalized word-for-word script tailored to your situation.</p>
+              <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--text);margin-bottom:0.5rem" data-en="Ready to negotiate?" data-es="¿Lista para negociar?">Ready to negotiate?</div>
+              <p style="font-size:0.85rem;color:var(--muted);line-height:1.6" data-en="Fill in your debt details on the left and Claude AI will write a personalized word-for-word script tailored to your situation." data-es="Ingresa los detalles de tu deuda a la izquierda y Claude AI escribirá un guion personalizado palabra por palabra adaptado a tu situación.">Fill in your debt details on the left and Claude AI will write a personalized word-for-word script tailored to your situation.</p>
               <div class="tip-bar" style="margin-top:1.5rem;text-align:left">
                 <div class="tip-icon">💡</div>
                 <p data-en="Did you know?" data-es="¿Sabías que?" data-en-html="<strong>Did you know?</strong> Simply calling and asking for a lower rate works <strong>80% of the time</strong>. Be polite, cite your payment history, and ask to speak with a retention specialist." data-es-html="<strong>¿Sabías que?</strong> Simplemente llamar y pedir una tasa más baja funciona el <strong>80% del tiempo</strong>. Sé cortés, menciona tu historial de pagos y pide hablar con un especialista de retención."><strong>Did you know?</strong> Simply calling and asking for a lower rate works <strong>80% of the time</strong> for customers with good payment history. You have nothing to lose!</p>
@@ -4203,49 +4203,49 @@
                 <div class="script-loading-dot"></div>
                 <div class="script-loading-dot"></div>
                 <div class="script-loading-dot"></div>
-                <span>Claude is writing your script...</span>
+                <span data-en="Claude is writing your script..." data-es="Claude está escribiendo tu guion...">Claude is writing your script...</span>
               </div>
             </div>
 
             <!-- SCRIPT RESULT -->
             <div id="script-result" style="display:none">
               <div class="script-section">
-                <div class="script-section-title">📞 Before You Call</div>
+                <div class="script-section-title" data-en="📞 Before You Call" data-es="📞 Antes de Llamar">📞 Before You Call</div>
                 <div id="script-before" class="script-tips"></div>
               </div>
               <div class="script-section">
-                <div class="script-section-title">🗣️ Opening — What to Say First</div>
+                <div class="script-section-title" data-en="🗣️ Opening — What to Say First" data-es="🗣️ Inicio — Qué Decir Primero">🗣️ Opening — What to Say First</div>
                 <div style="position:relative">
                   <div id="script-opening" class="script-text"></div>
-                  <button class="script-copy-btn" onclick="copyScript('script-opening')">Copy</button>
+                  <button class="script-copy-btn" onclick="copyScript('script-opening')" data-en="Copy" data-es="Copiar">Copy</button>
                 </div>
               </div>
               <div class="script-section">
-                <div class="script-section-title">💬 Main Ask — The Negotiation</div>
+                <div class="script-section-title" data-en="💬 Main Ask — The Negotiation" data-es="💬 Solicitud Principal — La Negociación">💬 Main Ask — The Negotiation</div>
                 <div style="position:relative">
                   <div id="script-main" class="script-text"></div>
-                  <button class="script-copy-btn" onclick="copyScript('script-main')">Copy</button>
+                  <button class="script-copy-btn" onclick="copyScript('script-main')" data-en="Copy" data-es="Copiar">Copy</button>
                 </div>
               </div>
               <div class="script-section">
-                <div class="script-section-title">🔄 If They Say No — Rebuttal</div>
+                <div class="script-section-title" data-en="🔄 If They Say No — Rebuttal" data-es="🔄 Si Dicen Que No — Respuesta">🔄 If They Say No — Rebuttal</div>
                 <div style="position:relative">
                   <div id="script-rebuttal" class="script-text"></div>
-                  <button class="script-copy-btn" onclick="copyScript('script-rebuttal')">Copy</button>
+                  <button class="script-copy-btn" onclick="copyScript('script-rebuttal')" data-en="Copy" data-es="Copiar">Copy</button>
                 </div>
               </div>
               <div class="script-section">
-                <div class="script-section-title">✅ Closing — How to End the Call</div>
+                <div class="script-section-title" data-en="✅ Closing — How to End the Call" data-es="✅ Cierre — Cómo Terminar la Llamada">✅ Closing — How to End the Call</div>
                 <div style="position:relative">
                   <div id="script-closing" class="script-text"></div>
-                  <button class="script-copy-btn" onclick="copyScript('script-closing')">Copy</button>
+                  <button class="script-copy-btn" onclick="copyScript('script-closing')" data-en="Copy" data-es="Copiar">Copy</button>
                 </div>
               </div>
               <div class="script-section">
-                <div class="script-section-title">💡 Pro Tips</div>
+                <div class="script-section-title" data-en="💡 Pro Tips" data-es="💡 Consejos Pro">💡 Pro Tips</div>
                 <div id="script-tips-list" class="script-tips"></div>
               </div>
-              <button onclick="generateNegotiationScript()" style="width:100%;background:none;border:1.5px solid var(--border);color:var(--text-soft);border-radius:10px;padding:0.75rem;font-family:'Sora',sans-serif;font-size:0.85rem;cursor:pointer;margin-top:0.5rem;transition:all 0.2s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">↺ Regenerate Script</button>
+              <button onclick="generateNegotiationScript()" style="width:100%;background:none;border:1.5px solid var(--border);color:var(--text-soft);border-radius:10px;padding:0.75rem;font-family:'Sora',sans-serif;font-size:0.85rem;cursor:pointer;margin-top:0.5rem;transition:all 0.2s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'"><span data-en="↺ Regenerate Script" data-es="↺ Regenerar Guion">↺ Regenerate Script</span></button>
             </div>
 
           </div>
@@ -6817,9 +6817,13 @@ Guidelines:
     const years = document.getElementById('neg-years').value;
     const context = document.getElementById('neg-context').value.trim();
 
-    if (!creditor) { alert('Please enter the creditor name.'); return; }
+    if (!creditor) { alert(currentLang === 'es' ? 'Por favor ingresa el nombre del acreedor.' : 'Please enter the creditor name.'); return; }
 
-    const typeLabels = {
+    const typeLabels = currentLang === 'es' ? {
+      rate: 'bajar la tasa de interés', hardship: 'plan de pagos por dificultad económica',
+      settlement: 'liquidación de deuda', medical: 'reducción de factura médica',
+      collections: 'eliminación de cobranza (pago por eliminación)', student: 'alivio de préstamo estudiantil'
+    } : {
       rate: 'lower interest rate', hardship: 'hardship payment plan',
       settlement: 'debt settlement', medical: 'medical bill reduction',
       collections: 'collections removal (pay-for-delete)', student: 'student loan relief'
@@ -6827,8 +6831,8 @@ Guidelines:
 
     const btn = document.getElementById('neg-generate-btn');
     const btnSidebar = document.getElementById('neg-generate-btn-sidebar');
-    if (btn) { btn.disabled = true; btn.textContent = '✨ Generating...'; }
-    if (btnSidebar) { btnSidebar.disabled = true; btnSidebar.textContent = '✨ Generating...'; }
+    if (btn) { btn.disabled = true; btn.textContent = currentLang === 'es' ? '✨ Generando...' : '✨ Generating...'; }
+    if (btnSidebar) { btnSidebar.disabled = true; btnSidebar.textContent = currentLang === 'es' ? '✨ Generando...' : '✨ Generating...'; }
     document.getElementById('script-empty-state').style.display = 'none';
     document.getElementById('script-loading-state').style.display = 'block';
     document.getElementById('script-result').style.display = 'none';
@@ -6843,6 +6847,8 @@ Situation:
 - Hardship: ${hardship || 'not specified'}
 - Years as customer: ${years || 'not specified'}
 - Extra context: ${context || 'none'}
+
+Respond in ${currentLang === 'es' ? 'Spanish' : 'English'}.
 
 Return this exact JSON structure (no markdown, no backticks, just raw JSON):
 {
@@ -6861,7 +6867,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           messages: [{ role: 'user', content: prompt }],
-          system: 'You are an expert debt negotiation coach. You MUST respond with valid JSON only — no other text, no markdown. Return exactly: {"before":"...","opening":"...","main":"...","rebuttal":"...","closing":"...","tips":"..."}'
+          system: currentLang === 'es' ? 'Eres una experta asesora en negociación de deudas. DEBES responder solo con JSON válido en español — sin otro texto, sin markdown. Devuelve exactamente: {"before":"...","opening":"...","main":"...","rebuttal":"...","closing":"...","tips":"..."}' : 'You are an expert debt negotiation coach. You MUST respond with valid JSON only — no other text, no markdown. Return exactly: {"before":"...","opening":"...","main":"...","rebuttal":"...","closing":"...","tips":"..."}'
         })
       });
       const data = await response.json();
@@ -6885,15 +6891,15 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
         document.getElementById('script-main').textContent = '';
         document.getElementById('script-rebuttal').textContent = '';
         document.getElementById('script-closing').textContent = '';
-        document.getElementById('script-before').innerHTML = '<div class="script-tip"><span class="script-tip-icon">📋</span><span>Script generated — see Opening section</span></div>';
+        document.getElementById('script-before').innerHTML = `<div class="script-tip"><span class="script-tip-icon">📋</span><span>${currentLang === 'es' ? 'Guion generado — revisa la sección de inicio' : 'Script generated — see Opening section'}</span></div>`;
         document.getElementById('script-tips-list').innerHTML = '';
-        document.getElementById('script-output-title').textContent = '📄 Your Negotiation Script';
-        document.getElementById('script-output-subtitle').textContent = 'Personalized for ' + creditor;
+        document.getElementById('script-output-title').textContent = currentLang === 'es' ? '📄 Tu Guion de Negociación' : '📄 Your Negotiation Script';
+        document.getElementById('script-output-subtitle').textContent = (currentLang === 'es' ? 'Personalizado para ' : 'Personalized for ') + creditor;
         document.getElementById('script-loading-state').style.display = 'none';
         document.getElementById('script-result').style.display = 'block';
         awardXPForAction('negotiationScript');
-        if (btn) { btn.disabled = false; btn.textContent = '✨ Generate My Script'; }
-        if (btnSidebar) { btnSidebar.disabled = false; btnSidebar.textContent = '✨ Generate My Script'; }
+        if (btn) { btn.disabled = false; btn.textContent = currentLang === 'es' ? '✨ Generar Mi Guion' : '✨ Generate My Script'; }
+        if (btnSidebar) { btnSidebar.disabled = false; btnSidebar.textContent = currentLang === 'es' ? '✨ Generar Mi Guion' : '✨ Generate My Script'; }
         return;
       }
 
@@ -6917,8 +6923,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       ).join('');
 
       // Update header
-      document.getElementById('script-output-title').textContent = `📄 ${typeLabels[selectedScriptType].charAt(0).toUpperCase() + typeLabels[selectedScriptType].slice(1)} Script`;
-      document.getElementById('script-output-subtitle').textContent = `Personalized for ${creditor}${balance ? ' · $' + parseFloat(balance).toLocaleString() + ' balance' : ''}`;
+      document.getElementById('script-output-title').textContent = currentLang === 'es' ? `📄 Guion para ${typeLabels[selectedScriptType]}` : `📄 ${typeLabels[selectedScriptType].charAt(0).toUpperCase() + typeLabels[selectedScriptType].slice(1)} Script`;
+      document.getElementById('script-output-subtitle').textContent = currentLang === 'es' ? `Personalizado para ${creditor}${balance ? ' · saldo de $' + parseFloat(balance).toLocaleString() : ''}` : `Personalized for ${creditor}${balance ? ' · $' + parseFloat(balance).toLocaleString() + ' balance' : ''}`;
 
       document.getElementById('script-loading-state').style.display = 'none';
       document.getElementById('script-result').style.display = 'block';
@@ -6928,20 +6934,20 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     } catch (err) {
       document.getElementById('script-loading-state').style.display = 'none';
       document.getElementById('script-empty-state').style.display = 'block';
-      document.getElementById('script-empty-state').innerHTML = `<div style="text-align:center;padding:2rem"><div style="font-size:2rem">❌</div><p style="color:var(--danger);margin-top:0.5rem">Error: ${err.message || 'Something went wrong. Please try again.'}</p></div>`;
+      document.getElementById('script-empty-state').innerHTML = `<div style="text-align:center;padding:2rem"><div style="font-size:2rem">❌</div><p style="color:var(--danger);margin-top:0.5rem">${currentLang === 'es' ? 'Error: Algo salió mal. Inténtalo de nuevo.' : 'Error: ' + (err.message || 'Something went wrong. Please try again.')}</p></div>`;
     }
 
-    if (btn) { btn.disabled = false; btn.textContent = '✨ Generate My Script'; }
-    if (btnSidebar) { btnSidebar.disabled = false; btnSidebar.textContent = '✨ Generate My Script'; }
+    if (btn) { btn.disabled = false; btn.textContent = currentLang === 'es' ? '✨ Generar Mi Guion' : '✨ Generate My Script'; }
+    if (btnSidebar) { btnSidebar.disabled = false; btnSidebar.textContent = currentLang === 'es' ? '✨ Generar Mi Guion' : '✨ Generate My Script'; }
   }
 
   function copyScript(id) {
     const text = document.getElementById(id).textContent;
     navigator.clipboard.writeText(text).then(() => {
       const btn = document.querySelector(`#${id} + .script-copy-btn, [onclick="copyScript('${id}')"]`);
-      showXPToast('📋 Script copied to clipboard!');
+      showXPToast(currentLang === 'es' ? '📋 ¡Guion copiado al portapapeles!' : '📋 Script copied to clipboard!');
     }).catch(() => {
-      prompt('Copy this script:', text);
+      prompt(currentLang === 'es' ? 'Copia este guion:' : 'Copy this script:', text);
     });
   }
 
