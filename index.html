@@ -7052,7 +7052,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     { name: currentLang==='es'?'Plata':'Silver', badge: '🥈', minXP: 4000, maxXP: 9000, subtitle: currentLang==='es'?'Construyendo Impulso':'Building Momentum', statusTitle: currentLang==='es'?'Miembro Plata':'Silver Member', reward: { type: 'discount', value: '5% off', desc: currentLang==='es'?'5% de descuento en tu próximo mes':'5% discount on your next month', code: 'SILVER5' }, color: '#aaa9ad' },
     { name: currentLang==='es'?'Oro':'Gold', badge: '🥇', minXP: 9000, maxXP: 18000, subtitle: currentLang==='es'?'Profesional Financiero':'Finance Pro in Training', statusTitle: currentLang==='es'?'⭐ Miembro Oro':'Gold Member', reward: { type: 'discount', value: '10% off', desc: currentLang==='es'?'10% de descuento en un mes de Fintrail Pro':'10% off one month of Fintrail Pro', code: 'GOLD10' }, color: '#e9c46a' },
     { name: currentLang==='es'?'Platino':'Platinum', badge: '💎', minXP: 18000, maxXP: 32000, subtitle: currentLang==='es'?'Campeón Financiero':'Financial Champion', statusTitle: currentLang==='es'?'💎 Campeón':'💎 Champion', reward: { type: 'discount', value: '25% off', desc: currentLang==='es'?'25% de descuento en un mes de Fintrail Pro':'25% off one month of Fintrail Pro', code: 'PLAT25' }, color: '#818cf8' },
-    { name: currentLang==='es'?'Diamante':'Diamond', badge: '💠', minXP: 32000, maxXP: 999999, subtitle: currentLang==='es'?'Maestro Financiero Élite':'Elite Financial Master', statusTitle: currentLang==='es'?'💠 Miembro Élite':'💠 Elite Member', reward: { type: 'lifetime', value: '$3.99/mo Para Siempre', desc: currentLang==='es'?'Tarifa descontada de por vida':'Locked-in discounted rate for life', code: 'DIAMOND399' }, color: '#06d6a0' },
+    { name: currentLang==='es'?'Diamante':'Diamond', badge: '💠', minXP: 32000, maxXP: 999999, subtitle: currentLang==='es'?'Maestro Financiero Élite':'Elite Financial Master', statusTitle: currentLang==='es'?'💠 Miembro Élite':'💠 Elite Member', reward: { type: 'lifetime', value: currentLang==='es'?'$3.99/mes Para Siempre':'$3.99/mo Forever', desc: currentLang==='es'?'Tarifa descontada de por vida':'Locked-in discounted rate for life', code: 'DIAMOND399' }, color: '#06d6a0' },
   ]; }
 
   const BADGES_DEF = [
@@ -7077,6 +7077,33 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     { id: 'fifty_transactions', emoji: '📒', name: 'Power Tracker', desc: 'Log 50 transactions', xp: 250, condition: () => transactions.length >= 50 },
     { id: 'profile_complete', emoji: '✅', name: 'All Set Up', desc: 'Complete your profile', xp: 50, condition: () => !!(currentUser?.user_metadata?.full_name) },
   ];
+
+  function getBadgeText(b) {
+    const es = {
+      first_login: ['¡Bienvenido!', 'Inicia sesión por primera vez'],
+      first_transaction: ['Primer Registro', 'Registra tu primera transacción'],
+      ten_transactions: ['Registrador', 'Registra 10 transacciones'],
+      first_goal: ['Creador de Metas', 'Crea tu primera meta de ahorro'],
+      goal_complete: ['Meta Alcanzada', 'Completa una meta de ahorro'],
+      first_bill: ['Control de Facturas', 'Agrega tu primera factura'],
+      five_bills: ['Organizado', 'Registra 5 o más facturas'],
+      budget_surplus: ['En Positivo', 'Mantén un balance positivo'],
+      streak_7: ['Guerrero Semanal', 'Mantén una racha de 7 días'],
+      streak_30: ['Maestro Mensual', 'Mantén una racha de 30 días'],
+      pro_member: ['Miembro Pro', 'Actualiza a Fintrail Pro'],
+      debt_planner: ['Destructor de Deudas', 'Crea un plan para pagar deudas'],
+      invest_calc: ['Pensador del Futuro', 'Usa la calculadora de inversión'],
+      credit_sim: ['Experto en Puntaje', 'Usa el simulador de crédito'],
+      ai_chat: ['Con IA', 'Hazle una pregunta al asesor de IA'],
+      three_goals: ['Ambicioso', 'Crea 3 o más metas de ahorro'],
+      savings_1000: ['Cuatro Cifras', 'Ahorra $1,000 entre todas tus metas'],
+      savings_10000: ['Cinco Cifras', 'Ahorra $10,000 entre todas tus metas'],
+      fifty_transactions: ['Rastreador Poderoso', 'Registra 50 transacciones'],
+      profile_complete: ['Todo Listo', 'Completa tu perfil']
+    };
+    if (currentLang === 'es' && es[b.id]) return { name: es[b.id][0], desc: es[b.id][1] };
+    return { name: b.name, desc: b.desc };
+  }
 
   let gameData = {
     loginStreak: 0,
@@ -7662,7 +7689,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   function showBadgeToast(badge) {
     const toast = document.createElement('div');
     toast.style.cssText = `position:fixed;bottom:2rem;right:2rem;background:linear-gradient(135deg,#1a1a2e,#2d1b4e);color:#fff;padding:1rem 1.25rem;border-radius:12px;border:1px solid rgba(255,209,102,0.3);box-shadow:0 8px 30px rgba(0,0,0,0.3);z-index:9999;animation:slideIn 0.3s ease;display:flex;align-items:center;gap:0.75rem;max-width:280px`;
-    toast.innerHTML = `<span style="font-size:1.75rem">${badge.emoji}</span><div><div style="font-weight:700;font-size:0.875rem;color:#fff">Badge Unlocked!</div><div style="font-size:0.78rem;color:rgba(255,255,255,0.7);margin-top:0.1rem">${badge.name} · +${badge.xp} XP</div></div>`;
+    const bt = getBadgeText(badge);
+    toast.innerHTML = `<span style="font-size:1.75rem">${badge.emoji}</span><div><div style="font-weight:700;font-size:0.875rem;color:#fff">${currentLang==='es'?'¡Logro desbloqueado!':'Badge Unlocked!'}</div><div style="font-size:0.78rem;color:rgba(255,255,255,0.7);margin-top:0.1rem">${bt.name} · +${badge.xp} XP</div></div>`;
     document.body.appendChild(toast);
     setTimeout(() => toast.style.opacity = '0', 3000);
     setTimeout(() => toast.remove(), 3500);
@@ -7735,10 +7763,10 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   function renderStreaks() {
     if (!document.getElementById('streak-cards')) return;
     const streaks = [
-      { icon: '🔥', label: currentLang==='es'?'Racha de Inicio':'Login Streak', desc: currentLang==='es'?'Inicia sesión diario':'Log in daily', count: gameData.loginStreak || 0, unit: 'days' },
-      { icon: '📝', label: currentLang==='es'?'Racha de Presupuesto':'Budget Streak', desc: currentLang==='es'?'Registra transacciones':'Log transactions regularly', count: transactions.length > 0 ? Math.min(gameData.loginStreak || 0, 7) : 0, unit: 'days' },
-      { icon: '📅', label: currentLang==='es'?'Facturas Seguidas':'Bills Tracked', desc: currentLang==='es'?'Facturas en el horario':'Bills added to schedule', count: bills.length, unit: 'bills' },
-      { icon: '🎯', label: currentLang==='es'?'Metas Activas':'Goals Active', desc: currentLang==='es'?'Metas de ahorro en progreso':'Savings goals in progress', count: goals.filter(g => g.saved < g.target).length, unit: 'goals' },
+      { icon: '🔥', label: currentLang==='es'?'Racha de Inicio':'Login Streak', desc: currentLang==='es'?'Inicia sesión diario':'Log in daily', count: gameData.loginStreak || 0, unit: currentLang==='es'?'días':'days' },
+      { icon: '📝', label: currentLang==='es'?'Racha de Presupuesto':'Budget Streak', desc: currentLang==='es'?'Registra transacciones':'Log transactions regularly', count: transactions.length > 0 ? Math.min(gameData.loginStreak || 0, 7) : 0, unit: currentLang==='es'?'días':'days' },
+      { icon: '📅', label: currentLang==='es'?'Facturas Seguidas':'Bills Tracked', desc: currentLang==='es'?'Facturas en el horario':'Bills added to schedule', count: bills.length, unit: currentLang==='es'?'facturas':'bills' },
+      { icon: '🎯', label: currentLang==='es'?'Metas Activas':'Goals Active', desc: currentLang==='es'?'Metas de ahorro en progreso':'Savings goals in progress', count: goals.filter(g => g.saved < g.target).length, unit: currentLang==='es'?'metas':'goals' },
     ];
 
     document.getElementById('streak-cards').innerHTML = streaks.map(s => `
@@ -7762,15 +7790,16 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const earnedCount = earned.length;
     const badgesCountEl = document.getElementById('badges-count');
     if (!badgesCountEl) return;
-    badgesCountEl.textContent = `${earnedCount}/${BADGES_DEF.length} earned`;
+    badgesCountEl.textContent = `${earnedCount}/${BADGES_DEF.length} ${currentLang==='es'?'logrados':'earned'}`;
 
     document.getElementById('badges-grid').innerHTML = BADGES_DEF.map(b => {
       const isEarned = earned.includes(b.id);
-      return `<div class="badge-item ${isEarned ? 'earned' : 'locked'}" title="${b.desc}">
-        ${isEarned ? '<div class="badge-earned-stamp">✓ Earned</div>' : ''}
+      const bt = getBadgeText(b);
+      return `<div class="badge-item ${isEarned ? 'earned' : 'locked'}" title="${bt.desc}">
+        ${isEarned ? `<div class="badge-earned-stamp">✓ ${currentLang==='es'?'Logrado':'Earned'}</div>` : ''}
         <div class="badge-emoji">${b.emoji}</div>
-        <div class="badge-name">${b.name}</div>
-        <div class="badge-desc">${b.desc}</div>
+        <div class="badge-name">${bt.name}</div>
+        <div class="badge-desc">${bt.desc}</div>
         <div class="badge-xp">+${b.xp} XP</div>
       </div>`;
     }).join('');
@@ -7781,15 +7810,25 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const container = document.getElementById('activity-feed');
     if (!container) return;
     if (feed.length === 0) {
-      container.innerHTML = '<div class="empty-state">No activity yet — start using Fintrail to earn XP!</div>';
+      container.innerHTML = `<div class="empty-state">${currentLang==='es'?'Aún no hay actividad — empieza a usar Fintrail para ganar XP.':'No activity yet — start using Fintrail to earn XP!'}</div>`;
       return;
     }
-    container.innerHTML = feed.slice(0, 10).map(a => `
+    container.innerHTML = feed.slice(0, 10).map(a => {
+      const txtMap = {
+        'Used investment calculator': 'Usaste la calculadora de inversión',
+        'Used credit score simulator': 'Usaste el simulador de crédito',
+        'Added a bill': 'Agregaste una factura',
+        'Asked AI advisor': 'Preguntaste al asesor de IA'
+      };
+      let text = (currentLang==='es' && txtMap[a.text]) ? txtMap[a.text] : a.text;
+      if (currentLang==='es') text = text.replace(/Day (\d+) login streak!/, '¡Racha de inicio de $1 días!');
+      return `
       <div class="activity-item">
         <span class="activity-icon">${a.icon}</span>
-        <span class="activity-text">${a.text}</span>
+        <span class="activity-text">${text}</span>
         <span class="activity-xp">${a.xp}</span>
-      </div>`).join('');
+      </div>`;
+    }).join('');
   }
 
   function renderStreaksTab() {
