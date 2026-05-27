@@ -7541,7 +7541,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       return newXP >= l.minXP && (!next || newXP < next.minXP);
     });
     if (newLevel > prevLevel && newLevel >= 0) {
-      const level = LEVELS[newLevel];
+      const level = getLEVELS()[newLevel];
       showLevelUpToast(level);
     }
   }
@@ -7575,9 +7575,31 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     renderActivityFeed();
   }
 
+  // Fintrail launched on May 19, 2026. This prevents imported/stale localStorage
+  // or cross-device sync data from showing impossible login streaks.
+  const FINTRAIL_LAUNCH_DATE = new Date('2026-05-19T00:00:00');
+
+  function getMaxPossibleLoginStreak() {
+    const today = new Date();
+    const launch = new Date(FINTRAIL_LAUNCH_DATE);
+    today.setHours(0, 0, 0, 0);
+    launch.setHours(0, 0, 0, 0);
+    const diffDays = Math.floor((today - launch) / 86400000) + 1;
+    return Math.max(1, diffDays);
+  }
+
+  function clampLoginStreak() {
+    const maxStreak = getMaxPossibleLoginStreak();
+    const current = Number(gameData.loginStreak || 0);
+    if (!Number.isFinite(current) || current < 0 || current > maxStreak) {
+      gameData.loginStreak = Math.min(Math.max(current || 1, 1), maxStreak);
+    }
+  }
+
   function checkLoginStreak() {
     const today = new Date().toDateString();
     const last = gameData.lastLogin;
+
     if (!last) {
       gameData.loginStreak = 1;
       gameData.lastLogin = today;
@@ -7586,6 +7608,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
       if (last === yesterday.toDateString()) {
         gameData.loginStreak = (gameData.loginStreak || 0) + 1;
+        clampLoginStreak();
         const xp = Math.min(50 + gameData.loginStreak * 5, 150);
         addXP(xp, `🔥 Day ${gameData.loginStreak} login streak!`);
       } else {
@@ -7594,6 +7617,9 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       }
       gameData.lastLogin = today;
     }
+
+    // Always normalize after loading old/stale game data.
+    clampLoginStreak();
     saveGameData();
   }
 
