@@ -2512,7 +2512,7 @@
           <span class="ndi-icon">💎</span>
           <div class="ndi-info"><span class="ndi-label" data-en="Net Worth Tracker" data-es="Rastreador de Patrimonio">Net Worth Tracker</span><span class="ndi-desc" data-en="Assets minus liabilities" data-es="Activos menos pasivos">Assets minus liabilities</span></div>
         </button>
-        <button class="nav-dropdown-item" onclick="guardedNavTo('premium', this)">
+        <button class="nav-dropdown-item" onclick="guardedNavTo('debtplan', this)">
           <span class="ndi-icon">💳</span>
           <div class="ndi-info"><span class="ndi-label" data-en="Debt Payoff Planner" data-es="Planificador de Deudas">Debt Payoff Planner <span class="pro-pill">PRO</span></span><span class="ndi-desc" data-en="Avalanche & snowball method" data-es="Método avalancha y bola de nieve">Avalanche & snowball method</span></div>
         </button>
@@ -2552,7 +2552,7 @@
           <span class="ndi-icon">💬</span>
           <div class="ndi-info"><span class="ndi-label" data-en="AI Advisor" data-es="Asesor IA">AI Advisor <span class="pro-pill">PRO</span></span><span class="ndi-desc" data-en="Ask any finance question" data-es="Haz cualquier pregunta financiera">Ask any finance question</span></div>
         </button>
-        <button class="nav-dropdown-item" onclick="guardedNavTo('premium', this)">
+        <button class="nav-dropdown-item" onclick="guardedNavTo('healthscore', this)">
           <span class="ndi-icon">🏆</span>
           <div class="ndi-info"><span class="ndi-label" data-en="Health Score & Alerts" data-es="Puntaje de Salud & Alertas">Health Score & Alerts <span class="pro-pill">PRO</span></span><span class="ndi-desc" data-en="Financial health tracking" data-es="Seguimiento de salud financiera">Financial health tracking</span></div>
         </button>
@@ -4969,6 +4969,7 @@
   }
 
   function guardedNavTo(tab, btn) {
+    if (tab === 'premium') tab = 'healthscore'; // legacy desktop nav safeguard after splitting Debt Planner + Health Score
     if (!isPro) { showPaywall(tab); closeMobileNav(); return; }
     navTo(tab, btn);
   }
