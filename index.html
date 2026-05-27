@@ -2998,7 +2998,7 @@
         <h3>Partner Lender Rates <span class="premium-badge">PRO</span></h3>
         <p>Access exclusive mortgage, personal loan, auto loan, and refinance rates from top lenders — plus our loan payment calculator and rate comparison tools.</p>
         <button class="lock-gate-btn" onclick="showPaywall('resources')">Unlock with Pro — $4.99/mo</button>
-        <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--muted)">7-day free trial · Cancel anytime</div>
+        <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--muted)" data-en="7-day free trial · Cancel anytime" data-es="Prueba gratis de 7 días · Cancela cuando quieras">7-day free trial · Cancel anytime</div>
       </div>
     </div>
 
@@ -3023,7 +3023,7 @@
         <h3>Credit & DTI Guides <span class="premium-badge">PRO</span></h3>
         <p>Get step-by-step credit score improvement plans, spending factor breakdowns, and advanced debt-to-income reduction strategies — all in one place.</p>
         <button class="lock-gate-btn" onclick="showPaywall('guide')">Unlock with Pro — $4.99/mo</button>
-        <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--muted)">7-day free trial · Cancel anytime</div>
+        <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--muted)" data-en="7-day free trial · Cancel anytime" data-es="Prueba gratis de 7 días · Cancela cuando quieras">7-day free trial · Cancel anytime</div>
       </div>
     </div>
 
@@ -3234,7 +3234,7 @@
         <h3>AI Financial Advisor <span class="premium-badge">PRO</span></h3>
         <p>Chat with your personal AI finance coach — ask about budgeting, credit, debt payoff, investing basics, and more. Unlimited questions, instant answers.</p>
         <button class="lock-gate-btn" onclick="showPaywall('ai')">Unlock with Pro — $4.99/mo</button>
-        <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--muted)">7-day free trial · Cancel anytime</div>
+        <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--muted)" data-en="7-day free trial · Cancel anytime" data-es="Prueba gratis de 7 días · Cancela cuando quieras">7-day free trial · Cancel anytime</div>
       </div>
     </div>
 
@@ -3386,7 +3386,7 @@
         <h3>Financial Health Score <span class="premium-badge">PRO</span></h3>
         <p>Unlock your Financial Health Score and smart Budget Alerts.</p>
         <button class="lock-gate-btn" onclick="showPaywall('premium')">Unlock with Pro — $4.99/mo</button>
-        <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--muted)">7-day free trial · Cancel anytime</div>
+        <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--muted)" data-en="7-day free trial · Cancel anytime" data-es="Prueba gratis de 7 días · Cancela cuando quieras">7-day free trial · Cancel anytime</div>
       </div>
     </div>
 
@@ -3942,10 +3942,10 @@
     <div id="creditsim-gate" style="display:none">
       <div class="lock-gate">
         <div class="lg-icon">📊</div>
-        <h3>Credit Score Simulator <span class="premium-badge">PRO</span></h3>
-        <p>See exactly how financial actions — paying off debt, opening accounts, missing payments — will impact your credit score before you make them.</p>
-        <button class="lock-gate-btn" onclick="showPaywall('creditsim')">Unlock with Pro — $4.99/mo</button>
-        <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--muted)">7-day free trial · Cancel anytime</div>
+        <h3><span data-en="Credit Score Simulator" data-es="Simulador de Puntaje de Crédito">Credit Score Simulator</span> <span class="premium-badge">PRO</span></h3>
+        <p data-en="See exactly how financial actions — paying off debt, opening accounts, missing payments — will impact your credit score before you make them." data-es="Ve cómo acciones financieras — pagar deudas, abrir cuentas o fallar pagos — pueden afectar tu puntaje antes de hacerlas.">See exactly how financial actions — paying off debt, opening accounts, missing payments — will impact your credit score before you make them.</p>
+        <button class="lock-gate-btn" onclick="showPaywall('creditsim')" data-en="Unlock with Pro — $4.99/mo" data-es="Desbloquear con Pro — $4.99/mes">Unlock with Pro — $4.99/mo</button>
+        <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--muted)" data-en="7-day free trial · Cancel anytime" data-es="Prueba gratis de 7 días · Cancela cuando quieras">7-day free trial · Cancel anytime</div>
       </div>
     </div>
 
@@ -3955,19 +3955,19 @@
         <!-- LEFT: SCORE INPUT + ACTIONS -->
         <div>
           <div class="score-input-card" style="margin-bottom:1.5rem">
-            <h2>Your Current Score</h2>
+            <h2 data-en="Your Current Score" data-es="Tu Puntaje Actual">Your Current Score</h2>
             <div class="big-score-display">
-              <div class="bsd-label">Current Score</div>
+              <div class="bsd-label" data-en="Current Score" data-es="Puntaje Actual">Current Score</div>
               <div class="bsd-score" id="sim-current-score" style="color:#e9c46a">680</div>
               <div class="bsd-rating" id="sim-current-rating" style="color:rgba(255,255,255,0.7)">Fair</div>
             </div>
             <div class="form-group">
-              <label>Enter Your Credit Score</label>
+              <label data-en="Enter Your Credit Score" data-es="Ingresa Tu Puntaje de Crédito">Enter Your Credit Score</label>
               <input type="range" class="score-range-input" id="base-score" min="300" max="850" value="680" oninput="updateSimulator()">
-              <div class="score-range-labels"><span>300 Poor</span><span id="base-score-display" style="font-weight:700;color:var(--accent)">680</span><span>850 Exceptional</span></div>
+              <div class="score-range-labels"><span data-en="300 Poor" data-es="300 Bajo">300 Poor</span><span id="base-score-display" style="font-weight:700;color:var(--accent)">680</span><span data-en="850 Exceptional" data-es="850 Excepcional">850 Exceptional</span></div>
             </div>
             <div class="form-group" style="margin-top:0.75rem">
-              <label>Or type your score</label>
+              <label data-en="Or type your score" data-es="O escribe tu puntaje">Or type your score</label>
               <input type="number" class="profile-input" id="base-score-num" value="680" min="300" max="850" 
                 onblur="syncScoreSlider()" 
                 onkeydown="if(event.key==='Enter')syncScoreSlider()"
@@ -3976,22 +3976,22 @@
           </div>
 
           <div class="score-input-card">
-            <h2>Simulate Actions</h2>
-            <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:1rem;line-height:1.6">Select actions you're considering to see their estimated impact on your score:</p>
+            <h2 data-en="Simulate Actions" data-es="Simula Acciones">Simulate Actions</h2>
+            <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:1rem;line-height:1.6" data-en="Select actions you're considering to see their estimated impact on your score:" data-es="Selecciona las acciones que estás considerando para ver su impacto estimado en tu puntaje:">Select actions you're considering to see their estimated impact on your score:</p>
             <div class="action-cards" id="action-cards"></div>
           </div>
         </div>
 
         <!-- RIGHT: RESULTS -->
         <div class="sim-results-card">
-          <h2>Simulated Score Impact</h2>
+          <h2 data-en="Simulated Score Impact" data-es="Impacto Simulado en el Puntaje">Simulated Score Impact</h2>
 
           <!-- SCORE METER -->
           <div style="margin-bottom:0.5rem;display:flex;justify-content:space-between;align-items:center">
-            <span style="font-size:0.78rem;color:var(--muted)">Score Range</span>
+            <span style="font-size:0.78rem;color:var(--muted)" data-en="Score Range" data-es="Rango de Puntaje">Score Range</span>
             <div style="display:flex;align-items:center;gap:1rem;font-size:0.78rem">
-              <span style="display:flex;align-items:center;gap:0.3rem"><span style="width:12px;height:4px;background:#1a1a2e;display:inline-block;border-radius:2px"></span> Current</span>
-              <span style="display:flex;align-items:center;gap:0.3rem"><span style="width:12px;height:4px;background:var(--accent);display:inline-block;border-radius:2px"></span> Simulated</span>
+              <span style="display:flex;align-items:center;gap:0.3rem"><span style="width:12px;height:4px;background:#1a1a2e;display:inline-block;border-radius:2px"></span> <span data-en="Current" data-es="Actual">Current</span></span>
+              <span style="display:flex;align-items:center;gap:0.3rem"><span style="width:12px;height:4px;background:var(--accent);display:inline-block;border-radius:2px"></span> <span data-en="Simulated" data-es="Simulado">Simulated</span></span>
             </div>
           </div>
           <div class="score-meter" id="score-meter">
@@ -4003,24 +4003,24 @@
           <!-- SCORE COMPARISON -->
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem">
             <div style="background:var(--bg);border-radius:10px;padding:1rem;text-align:center;border:1px solid var(--border)">
-              <div style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem">Current Score</div>
+              <div style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem" data-en="Current Score" data-es="Puntaje Actual">Current Score</div>
               <div class="bsd-score" id="result-current" style="font-size:2rem;color:var(--text)">680</div>
               <div id="result-current-rating" style="font-size:0.78rem;color:var(--muted);margin-top:0.2rem">Fair</div>
             </div>
             <div style="background:var(--bg);border-radius:10px;padding:1rem;text-align:center;border:2px solid var(--accent)">
-              <div style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem">Simulated Score</div>
+              <div style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem" data-en="Simulated Score" data-es="Puntaje Simulado">Simulated Score</div>
               <div class="bsd-score" id="result-simulated" style="font-size:2rem">680</div>
               <div id="result-change" style="font-size:0.78rem;margin-top:0.2rem;font-weight:700">No change</div>
             </div>
           </div>
 
           <!-- TIMELINE -->
-          <h2 style="font-size:1rem;margin-bottom:0.75rem">Time to Reach Milestones</h2>
+          <h2 style="font-size:1rem;margin-bottom:0.75rem" data-en="Time to Reach Milestones" data-es="Tiempo Para Alcanzar Metas">Time to Reach Milestones</h2>
           <div class="timeline-grid" id="score-timeline"></div>
 
           <!-- ACTION PLAN -->
-          <h2 style="font-size:1rem;margin-bottom:0.75rem">🎯 Personalized Action Plan</h2>
-          <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:0.75rem">Ranked by impact on your score:</p>
+          <h2 style="font-size:1rem;margin-bottom:0.75rem" data-en="🎯 Personalized Action Plan" data-es="🎯 Plan de Acción Personalizado">🎯 Personalized Action Plan</h2>
+          <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:0.75rem" data-en="Ranked by impact on your score:" data-es="Ordenado por impacto en tu puntaje:">Ranked by impact on your score:</p>
           <div class="action-plan" id="action-plan"></div>
         </div>
 
@@ -6659,28 +6659,28 @@ Guidelines:
 
   // CREDIT SCORE SIMULATOR
   const creditActions = [
-    { id: 'payoff_cc', icon: '💳', label: 'Pay Off Credit Card Balance', desc: 'Reduce utilization to 0%', impact: +45, type: 'positive', detail: 'Credit utilization is 30% of your score — paying off balances has the fastest impact.' },
-    { id: 'reduce_util', icon: '📉', label: 'Reduce Utilization to 30%', desc: 'Pay down balances across cards', impact: +25, type: 'positive', detail: 'Keeping utilization under 30% is a key scoring factor.' },
-    { id: 'on_time_6mo', icon: '✅', label: '6 Months On-Time Payments', desc: 'Pay every bill on time', impact: +30, type: 'positive', detail: 'Payment history is 35% of your score — the most important factor.' },
-    { id: 'on_time_12mo', icon: '🏆', label: '12 Months On-Time Payments', desc: 'A full year of perfect payments', impact: +55, type: 'positive', detail: 'A year of on-time payments can dramatically rebuild damaged credit.' },
-    { id: 'new_card', icon: '🆕', label: 'Open New Credit Card', desc: 'Hard inquiry + new account', impact: -10, type: 'negative', detail: 'New accounts lower your average age and create a hard inquiry.' },
-    { id: 'close_old', icon: '✂️', label: 'Close Old Credit Card', desc: 'Reduces available credit & history', impact: -20, type: 'negative', detail: 'Closing cards reduces available credit and can shorten credit history.' },
-    { id: 'miss_payment', icon: '⚠️', label: 'Miss a Payment (30 days)', desc: 'Late payment reported', impact: -60, type: 'negative', detail: 'A single missed payment can drop your score significantly and stays for 7 years.' },
-    { id: 'collections', icon: '🔴', label: 'Account Goes to Collections', desc: 'Unpaid debt sold to collector', impact: -100, type: 'negative', detail: 'Collections devastate your score and stay on your report for 7 years.' },
-    { id: 'dispute_error', icon: '🔍', label: 'Dispute & Remove Error', desc: 'Remove inaccurate negative item', impact: +40, type: 'positive', detail: '1 in 5 reports have errors. Successfully disputing one can add major points.' },
-    { id: 'become_auth', icon: '👥', label: 'Become Authorized User', desc: 'Added to good account', impact: +20, type: 'positive', detail: 'Piggybacking on a trusted person\'s good credit can boost your score quickly.' },
-    { id: 'new_loan', icon: '🏦', label: 'Take Out New Loan', desc: 'Auto, personal, or student loan', impact: -8, type: 'negative', detail: 'Adds a hard inquiry and new account, temporarily lowering your score.' },
-    { id: 'pay_collection', icon: '💰', label: 'Pay Off Collection Account', desc: 'Settle outstanding collection', impact: +15, type: 'positive', detail: 'Paying collections helps, though the account may still show on your report.' },
+    { id: 'payoff_cc', icon: '💳', label: 'Pay Off Credit Card Balance', labelEs: 'Pagar Saldo de Tarjeta', desc: 'Reduce utilization to 0%', descEs: 'Reduce la utilización a 0%', impact: +45, type: 'positive', detail: 'Credit utilization is 30% of your score — paying off balances has the fastest impact.', detailEs: 'La utilización de crédito representa el 30% de tu puntaje — pagar saldos suele tener el impacto más rápido.' },
+    { id: 'reduce_util', icon: '📉', label: 'Reduce Utilization to 30%', labelEs: 'Reducir Utilización al 30%', desc: 'Pay down balances across cards', descEs: 'Baja saldos en tus tarjetas', impact: +25, type: 'positive', detail: 'Keeping utilization under 30% is a key scoring factor.', detailEs: 'Mantener la utilización por debajo del 30% es un factor importante para tu puntaje.' },
+    { id: 'on_time_6mo', icon: '✅', label: '6 Months On-Time Payments', labelEs: '6 Meses de Pagos a Tiempo', desc: 'Pay every bill on time', descEs: 'Paga todas tus facturas a tiempo', impact: +30, type: 'positive', detail: 'Payment history is 35% of your score — the most important factor.', detailEs: 'El historial de pagos representa el 35% de tu puntaje — es el factor más importante.' },
+    { id: 'on_time_12mo', icon: '🏆', label: '12 Months On-Time Payments', labelEs: '12 Meses de Pagos a Tiempo', desc: 'A full year of perfect payments', descEs: 'Un año completo de pagos perfectos', impact: +55, type: 'positive', detail: 'A year of on-time payments can dramatically rebuild damaged credit.', detailEs: 'Un año de pagos a tiempo puede ayudar mucho a reconstruir un crédito afectado.' },
+    { id: 'new_card', icon: '🆕', label: 'Open New Credit Card', labelEs: 'Abrir Nueva Tarjeta de Crédito', desc: 'Hard inquiry + new account', descEs: 'Consulta dura + cuenta nueva', impact: -10, type: 'negative', detail: 'New accounts lower your average age and create a hard inquiry.', detailEs: 'Las cuentas nuevas reducen la edad promedio de tu crédito y generan una consulta dura.' },
+    { id: 'close_old', icon: '✂️', label: 'Close Old Credit Card', labelEs: 'Cerrar Tarjeta Antigua', desc: 'Reduces available credit & history', descEs: 'Reduce crédito disponible e historial', impact: -20, type: 'negative', detail: 'Closing cards reduces available credit and can shorten credit history.', detailEs: 'Cerrar tarjetas reduce tu crédito disponible y puede acortar tu historial crediticio.' },
+    { id: 'miss_payment', icon: '⚠️', label: 'Miss a Payment (30 days)', labelEs: 'Fallar un Pago (30 días)', desc: 'Late payment reported', descEs: 'Pago atrasado reportado', impact: -60, type: 'negative', detail: 'A single missed payment can drop your score significantly and stays for 7 years.', detailEs: 'Un solo pago atrasado puede bajar mucho tu puntaje y permanecer hasta 7 años.' },
+    { id: 'collections', icon: '🔴', label: 'Account Goes to Collections', labelEs: 'Cuenta Enviada a Cobranza', desc: 'Unpaid debt sold to collector', descEs: 'Deuda impaga enviada a cobrador', impact: -100, type: 'negative', detail: 'Collections devastate your score and stay on your report for 7 years.', detailEs: 'Las cobranzas pueden dañar mucho tu puntaje y permanecer en tu reporte hasta 7 años.' },
+    { id: 'dispute_error', icon: '🔍', label: 'Dispute & Remove Error', labelEs: 'Disputar y Eliminar Error', desc: 'Remove inaccurate negative item', descEs: 'Elimina un dato negativo incorrecto', impact: +40, type: 'positive', detail: '1 in 5 reports have errors. Successfully disputing one can add major points.', detailEs: '1 de cada 5 reportes tiene errores. Disputar uno con éxito puede sumar puntos importantes.' },
+    { id: 'become_auth', icon: '👥', label: 'Become Authorized User', labelEs: 'Ser Usuario Autorizado', desc: 'Added to good account', descEs: 'Agregado a una cuenta positiva', impact: +20, type: 'positive', detail: 'Piggybacking on a trusted person\'s good credit can boost your score quickly.', detailEs: 'Ser agregado a una cuenta positiva de alguien de confianza puede mejorar tu puntaje rápidamente.' },
+    { id: 'new_loan', icon: '🏦', label: 'Take Out New Loan', labelEs: 'Tomar un Nuevo Préstamo', desc: 'Auto, personal, or student loan', descEs: 'Auto, personal o estudiantil', impact: -8, type: 'negative', detail: 'Adds a hard inquiry and new account, temporarily lowering your score.', detailEs: 'Agrega una consulta dura y una cuenta nueva, lo que puede bajar temporalmente tu puntaje.' },
+    { id: 'pay_collection', icon: '💰', label: 'Pay Off Collection Account', labelEs: 'Pagar Cuenta en Cobranza', desc: 'Settle outstanding collection', descEs: 'Liquidar una cobranza pendiente', impact: +15, type: 'positive', detail: 'Paying collections helps, though the account may still show on your report.', detailEs: 'Pagar cobranzas ayuda, aunque la cuenta todavía puede aparecer en tu reporte.' },
   ];
 
   let selectedActions = new Set();
 
   function getScoreRating(score) {
-    if (score >= 800) return { label: 'Exceptional', color: '#06d6a0' };
-    if (score >= 740) return { label: 'Very Good', color: '#00b894' };
-    if (score >= 670) return { label: 'Good', color: '#e9c46a' };
-    if (score >= 580) return { label: 'Fair', color: '#f5a623' };
-    return { label: 'Poor', color: '#f05555' };
+    if (score >= 800) return { label: currentLang === 'es' ? 'Excepcional' : 'Exceptional', color: '#06d6a0' };
+    if (score >= 740) return { label: currentLang === 'es' ? 'Muy Bueno' : 'Very Good', color: '#00b894' };
+    if (score >= 670) return { label: currentLang === 'es' ? 'Bueno' : 'Good', color: '#e9c46a' };
+    if (score >= 580) return { label: currentLang === 'es' ? 'Regular' : 'Fair', color: '#f5a623' };
+    return { label: currentLang === 'es' ? 'Bajo' : 'Poor', color: '#f05555' };
   }
 
   function renderActionCards() {
@@ -6690,8 +6690,8 @@ Guidelines:
         <div class="ac-left">
           <span class="ac-icon">${a.icon}</span>
           <div class="ac-info">
-            <h4>${a.label}</h4>
-            <p>${a.desc}</p>
+            <h4>${currentLang === 'es' ? a.labelEs : a.label}</h4>
+            <p>${currentLang === 'es' ? a.descEs : a.desc}</p>
           </div>
         </div>
         <span class="ac-impact ${a.type}">${a.impact > 0 ? '+' : ''}${a.impact}</span>
@@ -6744,9 +6744,9 @@ Guidelines:
     document.getElementById('result-current-rating').textContent = baseRating.label;
 
     const changeEl = document.getElementById('result-change');
-    if (change > 0) { changeEl.textContent = `▲ +${change} points`; changeEl.style.color = '#00b894'; }
-    else if (change < 0) { changeEl.textContent = `▼ ${change} points`; changeEl.style.color = '#f05555'; }
-    else { changeEl.textContent = 'No change'; changeEl.style.color = 'var(--muted)'; }
+    if (change > 0) { changeEl.textContent = currentLang === 'es' ? `▲ +${change} puntos` : `▲ +${change} points`; changeEl.style.color = '#00b894'; }
+    else if (change < 0) { changeEl.textContent = currentLang === 'es' ? `▼ ${change} puntos` : `▼ ${change} points`; changeEl.style.color = '#f05555'; }
+    else { changeEl.textContent = currentLang === 'es' ? 'Sin cambio' : 'No change'; changeEl.style.color = 'var(--muted)'; }
 
     // Update needles on meter
     const toPercent = s => ((s - 300) / 550) * 100;
@@ -6755,21 +6755,21 @@ Guidelines:
 
     // Timeline — how long to reach milestones
     const milestones = [
-      { score: 700, label: 'Good Credit' },
-      { score: 750, label: 'Very Good' },
-      { score: 800, label: 'Exceptional' }
+      { score: 700, label: currentLang === 'es' ? 'Buen Crédito' : 'Good Credit' },
+      { score: 750, label: currentLang === 'es' ? 'Muy Bueno' : 'Very Good' },
+      { score: 800, label: currentLang === 'es' ? 'Excepcional' : 'Exceptional' }
     ];
     const startScore = Math.max(base, simulated);
     document.getElementById('score-timeline').innerHTML = milestones.map(m => {
       if (startScore >= m.score) {
-        return `<div class="tl-card"><div class="tl-label">${m.label}</div><div class="tl-score" style="color:#00b894">✅</div><div class="tl-time">Already achieved!</div></div>`;
+        return `<div class="tl-card"><div class="tl-label">${m.label}</div><div class="tl-score" style="color:#00b894">✅</div><div class="tl-time">${currentLang === 'es' ? '¡Ya logrado!' : 'Already achieved!'}</div></div>`;
       }
       const gap = m.score - startScore;
       // Estimate months based on consistent on-time payments (+5/mo average improvement)
       const months = Math.ceil(gap / 5);
       const yrs = Math.floor(months/12);
       const mos = months % 12;
-      const timeStr = yrs > 0 ? `~${yrs}yr ${mos>0?mos+'mo':''}` : `~${mos} months`;
+      const timeStr = yrs > 0 ? (currentLang === 'es' ? `~${yrs} año${yrs>1?'s':''} ${mos>0?mos+' mes':''}` : `~${yrs}yr ${mos>0?mos+'mo':''}`) : (currentLang === 'es' ? `~${mos} meses` : `~${mos} months`);
       return `<div class="tl-card"><div class="tl-label">${m.label}</div><div class="tl-score">${m.score}</div><div class="tl-time">${timeStr}</div></div>`;
     }).join('');
 
@@ -6783,9 +6783,9 @@ Guidelines:
       <div class="ap-item">
         <div class="ap-rank">${i+1}</div>
         <div class="ap-content">
-          <h4>${a.icon} ${a.label}</h4>
-          <p>${a.detail}</p>
-          <span class="ap-impact-badge">+${a.impact} estimated points</span>
+          <h4>${a.icon} ${currentLang === 'es' ? a.labelEs : a.label}</h4>
+          <p>${currentLang === 'es' ? a.detailEs : a.detail}</p>
+          <span class="ap-impact-badge">+${a.impact} ${currentLang === 'es' ? 'puntos estimados' : 'estimated points'}</span>
         </div>
       </div>`).join('');
   }
@@ -8191,6 +8191,13 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     });
     // Re-render dynamic content in new language
     if (typeof render === 'function' && currentUser) render();
+
+
+    // Credit simulator dynamic content
+    if (typeof renderActionCards === 'function' && document.getElementById('action-cards')) {
+      renderActionCards();
+      if (typeof updateSimulator === 'function' && document.getElementById('base-score')) updateSimulator();
+    }
 
     // Save preference
     safeSet('fintrail_lang', currentLang);
