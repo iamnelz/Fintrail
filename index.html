@@ -8074,6 +8074,14 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       }
     });
 
+    // Rich HTML-only translations (labels/spans that use data-en-html/data-es-html without data-en)
+    document.querySelectorAll('[data-en-html]:not([data-en])').forEach(el => {
+      const html = isEs
+        ? el.getAttribute('data-es-html')
+        : el.getAttribute('data-en-html');
+      if (html) el.innerHTML = html;
+    });
+
     // Nav group buttons
     const navMap = { 'nav-budget': t['nav-budget'], 'nav-planning': t['nav-planning'], 'nav-tools': t['nav-tools'], 'nav-insights': t['nav-insights'] };
     Object.entries(navMap).forEach(([id, label]) => {
