@@ -2548,9 +2548,9 @@
       <button class="nav-group-btn" id="nav-insights">💡 Insights <span class="nav-arrow">▾</span></button>
       <div class="nav-dropdown">
         <div class="nav-dropdown-section" data-en="Insights" data-es="Análisis">Insights</div>
-        <button class="nav-dropdown-item" onclick="guardedNavTo('ai', this)">
+        <button class="nav-dropdown-item" onclick="navTo('ai', this)">
           <span class="ndi-icon">💬</span>
-          <div class="ndi-info"><span class="ndi-label" data-en="AI Advisor" data-es="Asesor IA">AI Advisor <span class="pro-pill">PRO</span></span><span class="ndi-desc" data-en="Ask any finance question" data-es="Haz cualquier pregunta financiera">Ask any finance question</span></div>
+          <div class="ndi-info"><span class="ndi-label" data-en="AI Advisor" data-es="Asesor IA">AI Advisor</span><span class="ndi-desc" data-en="5 free prompts/day · Pro unlimited" data-es="5 preguntas gratis/día · Pro ilimitado">5 free prompts/day · Pro unlimited</span></div>
         </button>
         <button class="nav-dropdown-item" onclick="guardedNavTo('healthscore', this)">
           <span class="ndi-icon">🏆</span>
@@ -2619,7 +2619,7 @@
   <!-- INSIGHTS -->
   <div style="font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);padding:0.3rem 1rem 0.2rem" data-en="💡 Insights" data-es="💡 Análisis">💡 Insights</div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem;padding:0 0.75rem 0.5rem">
-    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('ai')">💬<span data-en="AI Advisor" data-es="Asesor IA">AI Advisor</span></button>
+    <button class="mobile-nav-tile" onclick="mobileTab('ai')">💬<span data-en="AI Advisor" data-es="Asesor IA">AI Advisor</span></button>
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('healthscore')">🏆<span data-en="Health Score" data-es="Salud">Health Score</span></button>
     <button class="mobile-nav-tile" onclick="mobileTab('streaks');closeMobileNav()">🔥🏅<span data-en="Streaks &amp; Milestones" data-es="Rachas y Logros">Streaks &amp; Milestones</span></button>
   </div>
@@ -3227,7 +3227,7 @@
   <!-- AI ADVISOR TAB -->
   <div class="tab-section" id="tab-ai">
 
-    <!-- PREMIUM GATE -->
+    <!-- AI SOFT PAYWALL NOTE: gate hidden because free users get 5 prompts/day; Pro users get unlimited. -->
     <div id="ai-gate" style="display:none">
       <div class="lock-gate">
         <div class="lg-icon">💬</div>
@@ -4930,8 +4930,9 @@
     const setDisplay = (id, show) => { const el = document.getElementById(id); if (el) el.style.display = show ? 'block' : 'none'; };
     setDisplay('guide-gate',       !isPro);
     setDisplay('guide-content',    isPro);
-    setDisplay('ai-gate',          !isPro);
-    setDisplay('ai-content',       isPro);
+    // AI Advisor uses a soft paywall: free users can open it and use 5 prompts/day; Pro users get unlimited prompts.
+    setDisplay('ai-gate',          false);
+    setDisplay('ai-content',       true);
     setDisplay('affiliate-gate',   !isPro);
     setDisplay('affiliate-content', isPro);
     updatePremiumTab();
@@ -4970,6 +4971,11 @@
 
   function guardedNavTo(tab, btn) {
     if (tab === 'premium') tab = 'healthscore'; // legacy desktop nav safeguard after splitting Debt Planner + Health Score
+
+    // AI Advisor is not hard-locked anymore. Free users can open it and use
+    // 5 prompts per day; the server-side AI function enforces the limit.
+    if (tab === 'ai') { navTo(tab, btn); return; }
+
     if (!isPro) { showPaywall(tab); closeMobileNav(); return; }
     navTo(tab, btn);
   }
@@ -5027,6 +5033,9 @@
   }
 
   function mobileGuardedTab(tab) {
+    // AI Advisor is a soft-paywall feature: free users get 5 prompts/day.
+    if (tab === 'ai') { mobileTab(tab); return; }
+
     if (!isPro) { showPaywall(tab); closeMobileNav(); return; }
     mobileTab(tab);
   }
