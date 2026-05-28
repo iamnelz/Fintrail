@@ -5276,9 +5276,13 @@ Guidelines:
     const typingId = showTyping();
 
     try {
+      const { data: { session } } = await sbClient.auth.getSession();
       const response = await fetch('/.netlify/functions/ai-advisor', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.access_token || ''}`
+        },
         body: JSON.stringify({ messages: chatHistory, system: getSystemPrompt() })
       });
       const data = await response.json();
@@ -5289,7 +5293,11 @@ Guidelines:
       appendMessage('ai', reply);
     } catch (err) {
       removeTyping(typingId);
-      appendMessage('ai', 'Sorry, something went wrong. Please try again in a moment.');
+      const message = err.message || 'Sorry, something went wrong. Please try again in a moment.';
+      appendMessage('ai', message);
+      if (message.includes('Upgrade to Pro')) {
+        showPaywall('ai-limit');
+      }
     }
 
     isTyping = false;
@@ -6862,9 +6870,13 @@ Return this exact JSON structure (no markdown, no backticks, just raw JSON):
 
 Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. Be specific and realistic.`
     try {
+      const { data: { session } } = await sbClient.auth.getSession();
       const response = await fetch('/.netlify/functions/ai-advisor', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.access_token || ''}`
+        },
         body: JSON.stringify({
           messages: [{ role: 'user', content: prompt }],
           system: currentLang === 'es' ? 'Eres una experta asesora en negociación de deudas. DEBES responder solo con JSON válido en español — sin otro texto, sin markdown. Devuelve exactamente: {"before":"...","opening":"...","main":"...","rebuttal":"...","closing":"...","tips":"..."}' : 'You are an expert debt negotiation coach. You MUST respond with valid JSON only — no other text, no markdown. Return exactly: {"before":"...","opening":"...","main":"...","rebuttal":"...","closing":"...","tips":"..."}'
