@@ -1,8 +1,7 @@
-// netlify/functions/ai-advisor.js
-// Place at: netlify/functions/ai-advisor.js in your project root
-// Set ANTHROPIC_API_KEY in Netlify → Site Settings → Environment Variables
-
 const https = require('https');
+const { createClient } = require('@supabase/supabase-js');
+
+const FREE_DAILY_AI_LIMIT = 5;
 
 function httpsPost(options, body) {
   return new Promise((resolve, reject) => {
@@ -24,21 +23,103 @@ exports.handler = async (event) => {
   const headers = {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
   };
 
   if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers, body: '' };
-  if (event.httpMethod !== 'POST') return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
+  if (event.httpMethod !== 'POST') {
+    return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
+  }
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
-    console.error('ANTHROPIC_API_KEY not set in environment variables');
     return { statusCode: 500, headers, body: JSON.stringify({ error: 'API key not configured' }) };
+  }
+
+  const authHeader = event.headers.authorization || event.headers.Authorization || '';
+  const token = authHeader.replace('Bearer ', '');
+
+  if (!token) {
+    return { statusCode: 401, headers, body: JSON.stringify({ error: 'Please sign in to use the AI Advisor.' }) };
+  }
+
+  const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_KEY
+  );
+
+  const { data: authData, error: authError } = await supabase.auth.getUser(token);
+
+  if (authError || !authData?.user) {
+    return { statusCode: 401, headers, body: JSON.stringify({ error: 'Invalid session. Please sign in again.' }) };
+  }
+
+  const user = authData.user;
+  const today = new Date().toISOString().slice(0, 10);
+
+  let { data: userData, error: userDataError } = await supabase
+    .from('user_data')
+    .select('user_id, is_pro, ai_prompts_used_today, ai_prompt_reset_date')
+    .eq('user_id', user.id)
+    .single();
+
+  if (userDataError && userDataError.code !== 'PGRST116') {
+    return { statusCode: 500, headers, body: JSON.stringify({ error: 'Could not check your AI usage.' }) };
+  }
+
+  if (!userData) {
+    const { data: createdData, error: createError } = await supabase
+      .from('user_data')
+      .insert({
+        user_id: user.id,
+        is_pro: false,
+        ai_prompts_used_today: 0,
+        ai_prompt_reset_date: today
+      })
+      .select('user_id, is_pro, ai_prompts_used_today, ai_prompt_reset_date')
+      .single();
+
+    if (createError) {
+      return { statusCode: 500, headers, body: JSON.stringify({ error: 'Could not create usage record.' }) };
+    }
+
+    userData = createdData;
+  }
+
+  let usedToday = userData.ai_prompts_used_today || 0;
+
+  if (userData.ai_prompt_reset_date !== today) {
+    usedToday = 0;
+
+    await supabase
+      .from('user_data')
+      .update({
+        ai_prompts_used_today: 0,
+        ai_prompt_reset_date: today
+      })
+      .eq('user_id', user.id);
+  }
+
+  const isPro = !!userData.is_pro;
+
+  if (!isPro && usedToday >= FREE_DAILY_AI_LIMIT) {
+    return {
+      statusCode: 403,
+      headers,
+      body: JSON.stringify({
+        error: 'You’ve used your 5 free AI prompts for today. Upgrade to Pro for unlimited AI guidance.',
+        limitReached: true,
+        used: usedToday,
+        limit: FREE_DAILY_AI_LIMIT
+      })
+    };
   }
 
   let body;
   try { body = JSON.parse(event.body); }
-  catch (e) { return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid JSON body' }) }; }
+  catch (e) {
+    return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid JSON body' }) };
+  }
 
   const { messages, system } = body;
   if (!messages || !Array.isArray(messages)) {
@@ -66,19 +147,41 @@ exports.handler = async (event) => {
 
   try {
     const result = await httpsPost(options, requestBody);
-    console.log('Anthropic status:', result.status);
 
     if (result.status !== 200) {
-      console.error('Anthropic error:', JSON.stringify(result.body));
-      return { statusCode: result.status, headers, body: JSON.stringify({ error: result.body?.error?.message || 'Anthropic API error' }) };
+      return {
+        statusCode: result.status,
+        headers,
+        body: JSON.stringify({ error: result.body?.error?.message || 'Anthropic API error' })
+      };
     }
 
     const reply = (result.body.content || []).map(b => b.text || '').join('');
-    console.log('Reply length:', reply.length);
-    return { statusCode: 200, headers, body: JSON.stringify({ reply }) };
+
+    if (!isPro) {
+      usedToday += 1;
+
+      await supabase
+        .from('user_data')
+        .update({
+          ai_prompts_used_today: usedToday,
+          ai_prompt_reset_date: today
+        })
+        .eq('user_id', user.id);
+    }
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        reply,
+        aiUsage: isPro
+          ? { unlimited: true }
+          : { used: usedToday, limit: FREE_DAILY_AI_LIMIT, remaining: Math.max(0, FREE_DAILY_AI_LIMIT - usedToday) }
+      })
+    };
 
   } catch (err) {
-    console.error('Function error:', err.message);
     return { statusCode: 500, headers, body: JSON.stringify({ error: err.message || 'Internal server error' }) };
   }
 };
