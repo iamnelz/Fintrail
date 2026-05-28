@@ -4866,23 +4866,55 @@
 
   async function activatePro() {
     const btn = document.querySelector('.pw-cta.primary');
-    if (btn) { btn.disabled = true; btn.textContent = 'Redirecting to checkout...'; }
+    const originalText = btn ? btn.textContent : 'Start Pro — $4.99/mo';
+
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'Redirecting to checkout...';
+    }
+
     try {
+      if (!currentUser?.email) {
+        throw new Error('Please sign in before upgrading to Pro.');
+      }
+
       const response = await fetch('/.netlify/functions/create-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: currentUser?.email || '' })
+        body: JSON.stringify({ email: currentUser.email })
       });
-      const data = await response.json();
+
+      let data = {};
+      try {
+        data = await response.json();
+      } catch (jsonErr) {
+        data = {};
+      }
+
+      if (data.alreadySubscribed) {
+        alert('You already have an active Pro subscription. You will not be charged again.');
+        closePaywall();
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Something went wrong. Please try again.');
+      }
+
       if (data.url) {
         window.location.href = data.url;
-      } else {
-        alert('Something went wrong. Please try again.');
-        if (btn) { btn.disabled = false; btn.textContent = 'Start Pro — $4.99/mo'; }
+        return;
       }
+
+      throw new Error('Checkout could not be started. Please try again.');
+
     } catch (err) {
-      alert('Something went wrong. Please try again.');
-      if (btn) { btn.disabled = false; btn.textContent = 'Start Pro — $4.99/mo'; }
+      alert(err.message || 'Something went wrong. Please try again.');
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = originalText || 'Start Pro — $4.99/mo';
+      }
     }
   }
 
