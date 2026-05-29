@@ -3,16 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="manifest" href="/manifest.json">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
-<meta name="theme-color" content="#f05555">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Fintrail Pro">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="application-name" content="Fintrail Pro">
 <title>Fintrail Pro — Budget Smarter, Live Better</title>
 <!-- BUILD: xp-economy-rebalanced-2026-05-26 -->
 <!-- REPLACE content value below with your actual Google Search Console verification code -->
@@ -2399,89 +2389,6 @@
   #bsub-schedule.visible { display: block !important; }
 }
 
-  /* PWA INSTALL PROMPT */
-  .pwa-install-card {
-    position: fixed;
-    left: 1rem;
-    right: 1rem;
-    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
-    z-index: 3000;
-    background: #ffffff;
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    box-shadow: 0 18px 45px rgba(18,24,40,0.18);
-    padding: 1rem;
-    display: none;
-    align-items: flex-start;
-    gap: 0.85rem;
-    max-width: 520px;
-    margin: 0 auto;
-    animation: slideUp 0.25s ease;
-  }
-  .pwa-install-card.visible { display: flex; }
-  .pwa-install-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 14px;
-    background: #f05555;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Playfair Display', serif;
-    font-weight: 800;
-    flex-shrink: 0;
-    box-shadow: 0 8px 18px rgba(240,85,85,0.22);
-  }
-  .pwa-install-copy { flex: 1; min-width: 0; }
-  .pwa-install-copy h3 {
-    font-size: 0.95rem;
-    font-weight: 800;
-    color: var(--text);
-    margin-bottom: 0.25rem;
-  }
-  .pwa-install-copy p {
-    font-size: 0.8rem;
-    color: var(--text-soft);
-    line-height: 1.5;
-    margin-bottom: 0.65rem;
-  }
-  .pwa-install-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-  .pwa-install-btn {
-    border: none;
-    border-radius: 10px;
-    padding: 0.58rem 0.85rem;
-    font-family: 'Sora', sans-serif;
-    font-size: 0.78rem;
-    font-weight: 800;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .pwa-install-btn.primary { background: var(--accent); color: #fff; }
-  .pwa-install-btn.primary:hover { background: #d94444; transform: translateY(-1px); }
-  .pwa-install-btn.secondary { background: var(--surface2); color: var(--text-soft); }
-  .pwa-install-close {
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-size: 1rem;
-    cursor: pointer;
-    padding: 0.15rem;
-    line-height: 1;
-  }
-  @media (max-width:700px) {
-    .pwa-install-card {
-      bottom: calc(5.25rem + env(safe-area-inset-bottom, 0px));
-      left: 0.75rem;
-      right: 0.75rem;
-      padding: 0.9rem;
-    }
-    .pwa-install-icon { width: 44px; height: 44px; border-radius: 13px; }
-    .pwa-install-copy h3 { font-size: 0.9rem; }
-    .pwa-install-copy p { font-size: 0.76rem; }
-  }
-
-
 </style>
 </head>
 <body>
@@ -2747,21 +2654,6 @@
   <div style="height:0.75rem"></div>
 </div>
 <div class="mobile-overlay" id="mobile-overlay" onclick="closeMobileNav()"></div>
-
-<!-- PWA INSTALL PROMPT -->
-<div id="pwa-install-card" class="pwa-install-card" role="dialog" aria-live="polite" aria-label="Install Fintrail Pro">
-  <div class="pwa-install-icon">FP</div>
-  <div class="pwa-install-copy">
-    <h3 id="pwa-install-title">Add Fintrail to your Home Screen</h3>
-    <p id="pwa-install-text">Use Fintrail like an app for faster access on your phone.</p>
-    <div class="pwa-install-actions">
-      <button id="pwa-install-btn" class="pwa-install-btn primary" onclick="installFintrailApp()">Install</button>
-      <button class="pwa-install-btn secondary" onclick="dismissPWAInstallPrompt()">Not now</button>
-    </div>
-  </div>
-  <button class="pwa-install-close" onclick="dismissPWAInstallPrompt()" aria-label="Close">✕</button>
-</div>
-
 
 <!-- RECEIPT UPLOAD MODAL -->
 <div id="receipt-modal" style="display:none" class="receipt-modal-overlay" onclick="closeReceiptModal(event)">
@@ -4703,6 +4595,7 @@
   }
 
   let currentUser = null;
+  let userDataLoadedFromSupabase = false;
 
   // AUTH INIT — check if already logged in
   async function initAuth() {
@@ -4725,13 +4618,16 @@
     });
   }
 
-  function showApp(user) {
+  async function showApp(user) {
     document.getElementById('auth-screen').style.display = 'none';
     nwLoaded = false; // Reset so Supabase NW data loads fresh on login
+    userDataLoadedFromSupabase = false;
     setUserUI(user);
-    loadUserData();
+    await loadUserData();
     loadProfileUI();
-    setTimeout(loadGameData, 500);
+    // Load streak/XP only after Supabase has had a chance to sync first.
+    // This prevents stale device/localStorage data from overwriting the real account progress on phone/private Safari.
+    loadGameData({ preferSupabase: userDataLoadedFromSupabase });
     // Apply saved language now that user is logged in
     if (currentLang !== 'en') setTimeout(applyLanguage, 300);
   }
@@ -4792,7 +4688,19 @@
   async function signInGoogle() {
     if (!sbClient) { showAuthMsg('Configure Supabase credentials to enable Google auth.', 'error'); return; }
     const redirectTo = window.location.origin + window.location.pathname;
-    await sbClient.auth.signInWithOAuth({ provider: 'google', options: { redirectTo, queryParams: { access_type: 'offline', prompt: 'consent' } } });
+    try {
+      const { error } = await sbClient.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo,
+          skipBrowserRedirect: false,
+          queryParams: { access_type: 'offline', prompt: 'select_account' }
+        }
+      });
+      if (error) showAuthMsg(error.message, 'error');
+    } catch (err) {
+      showAuthMsg('Google sign-in could not open on this browser. Please try Safari/Chrome or use email and password.', 'error');
+    }
   }
 
   // FORGOT PASSWORD
@@ -4889,72 +4797,76 @@
 
   async function loadUserData() {
     if (!sbClient || !currentUser) return;
+    const uid = currentUser.id;
+    userDataLoadedFromSupabase = false;
+
     try {
-      const { data } = await sbClient.from('user_data').select('*').eq('user_id', currentUser.id).single();
+      const { data, error } = await sbClient.from('user_data').select('*').eq('user_id', uid).maybeSingle();
+      if (error) throw error;
+
       if (data) {
-        transactions = data.transactions || [];
-        bills = data.bills || [];
-        // Use timestamp to decide: if local is newer than Supabase, keep local
-        // This prevents a stale Supabase row from wiping recent mobile changes
-        const _goalsTs = parseInt(safeGet('fintrail_goals_ts_' + currentUser.id) || '0');
-        const _supaTs = data.updated_at ? new Date(data.updated_at).getTime() : 0;
-        if (_supaTs > _goalsTs) {
-          goals = data.goals || [];
-        }
-        // else keep existing goals (localStorage will restore below)
-        if (data.plan_debts?.length) {
-          planDebts = data.plan_debts;
-          safeSet('fintrail_debts_' + currentUser.id, JSON.stringify(planDebts));
-        }
-        // NW data: use timestamp to pick the newest version across devices
-        const _nwLocalTs = parseInt(safeGet('fintrail_nw_ts_' + currentUser.id) || '0');
-        const _nwSupaTs  = data.updated_at ? new Date(data.updated_at).getTime() : 0;
-        if (data.nw_assets && _nwSupaTs >= _nwLocalTs) {
-          nwAssets      = data.nw_assets;
-          nwLiabilities = data.nw_liabilities || [];
-          nwHistory     = data.nw_history     || [];
-          safeSet('fintrail_nw_assets_'      + currentUser.id, JSON.stringify(nwAssets));
-          safeSet('fintrail_nw_liabilities_' + currentUser.id, JSON.stringify(nwLiabilities));
-          safeSet('fintrail_nw_history_'     + currentUser.id, JSON.stringify(nwHistory));
-          safeSet('fintrail_nw_ts_'          + currentUser.id, String(_nwSupaTs));
-          // Refresh display if NW tab is already open
-          nwLoaded = false;
-          if (document.getElementById('tab-networth')?.classList.contains('visible')) {
-            initNetWorth();
-          }
-        }
-        // Sync game data (XP, level, achievements) across devices
+        userDataLoadedFromSupabase = true;
+
+        // Supabase is the source of truth after login so every phone/computer shows the same account data.
+        transactions   = Array.isArray(data.transactions) ? data.transactions : [];
+        bills          = Array.isArray(data.bills) ? data.bills : [];
+        goals          = Array.isArray(data.goals) ? data.goals : [];
+        planDebts      = Array.isArray(data.plan_debts) ? data.plan_debts : [];
+        nwAssets       = Array.isArray(data.nw_assets) ? data.nw_assets : [];
+        nwLiabilities  = Array.isArray(data.nw_liabilities) ? data.nw_liabilities : [];
+        nwHistory      = Array.isArray(data.nw_history) ? data.nw_history : [];
+
         if (data.game_data) {
-          const localGame = safeGet('fintrail_game_' + currentUser.id);
-          const localXP = localGame ? (JSON.parse(localGame).totalXP || 0) : 0;
-          const supaXP  = data.game_data.totalXP || 0;
-          // Use whichever has more XP (highest progress wins)
-          if (supaXP >= localXP) {
-            gameData = { ...gameData, ...data.game_data };
-            safeSet('fintrail_game_' + currentUser.id, JSON.stringify(gameData));
-          }
+          // Preserve the highest XP if another device somehow has newer unsynced progress,
+          // but otherwise use Supabase so Safari Private Mode and new phones do not reset levels.
+          let localGame = null;
+          try { const raw = safeGet('fintrail_game_' + uid); if (raw) localGame = JSON.parse(raw); } catch(e) {}
+          const supaXP  = Number(data.game_data.totalXP || 0);
+          const localXP = Number(localGame?.totalXP || 0);
+          gameData = (localXP > supaXP) ? { ...gameData, ...data.game_data, ...localGame } : { ...gameData, ...data.game_data };
         }
-        if (data.is_pro) {
-          isPro = true;
-          applyProState();
-          setProUI();
-        }
+
+        isPro = !!data.is_pro;
+
+        // Refresh device cache with the account data. This is fallback only, not the source of truth.
+        const ts = data.updated_at ? new Date(data.updated_at).getTime() : Date.now();
+        safeSet('fintrail_txns_' + uid, JSON.stringify(transactions));
+        safeSet('fintrail_bills_' + uid, JSON.stringify(bills));
+        safeSet('fintrail_goals_' + uid, JSON.stringify(goals));
+        safeSet('fintrail_goals_ts_' + uid, String(ts));
+        safeSet('fintrail_debts_' + uid, JSON.stringify(planDebts));
+        safeSet('fintrail_nw_assets_' + uid, JSON.stringify(nwAssets));
+        safeSet('fintrail_nw_liabilities_' + uid, JSON.stringify(nwLiabilities));
+        safeSet('fintrail_nw_history_' + uid, JSON.stringify(nwHistory));
+        safeSet('fintrail_nw_ts_' + uid, String(ts));
+        safeSet('fintrail_game_' + uid, JSON.stringify(gameData));
+
+        applyProState();
+        setProUI();
+      } else {
+        // No Supabase row yet: use any same-device fallback, then save it to Supabase once.
+        try { const lg = safeGet('fintrail_goals_' + uid); if (lg) goals = JSON.parse(lg); } catch(e) {}
+        try { const lb = safeGet('fintrail_bills_' + uid); if (lb) bills = JSON.parse(lb); } catch(e) {}
+        try { const lt = safeGet('fintrail_txns_' + uid); if (lt) transactions = JSON.parse(lt); } catch(e) {}
+        try { const ld = safeGet('fintrail_debts_' + uid); if (ld) planDebts = JSON.parse(ld); } catch(e) {}
+        try { const la = safeGet('fintrail_nw_assets_' + uid); if (la) nwAssets = JSON.parse(la); } catch(e) {}
+        try { const ll = safeGet('fintrail_nw_liabilities_' + uid); if (ll) nwLiabilities = JSON.parse(ll); } catch(e) {}
+        try { const lh = safeGet('fintrail_nw_history_' + uid); if (lh) nwHistory = JSON.parse(lh); } catch(e) {}
+        try { const gd = safeGet('fintrail_game_' + uid); if (gd) gameData = { ...gameData, ...JSON.parse(gd) }; } catch(e) {}
+        await saveUserData();
       }
     } catch (err) {
-      console.log('No existing user data:', err.message);
+      console.log('loadUserData error:', err.message);
+      // If Supabase cannot be reached, fall back to same-device cache only.
+      try { const lg = safeGet('fintrail_goals_' + uid); if (lg) goals = JSON.parse(lg); } catch(e) {}
+      try { const lb = safeGet('fintrail_bills_' + uid); if (lb) bills = JSON.parse(lb); } catch(e) {}
+      try { const lt = safeGet('fintrail_txns_' + uid); if (lt) transactions = JSON.parse(lt); } catch(e) {}
+      try { const ld = safeGet('fintrail_debts_' + uid); if (ld) planDebts = JSON.parse(ld); } catch(e) {}
+      try { const gd = safeGet('fintrail_game_' + uid); if (gd) gameData = { ...gameData, ...JSON.parse(gd) }; } catch(e) {}
     }
-    // localStorage is the source of truth for goals/bills (always written on every save)
-    // This ensures deletions persist even if Supabase is slow or column missing
-    const _fuid = currentUser?.id || 'demo';
-    try { const lg = safeGet('fintrail_goals_' + _fuid); if (lg) goals = JSON.parse(lg); } catch(e) {}
-    try { const lb = safeGet('fintrail_bills_' + _fuid); if (lb) bills = JSON.parse(lb); } catch(e) {}
-    try { const lt = safeGet('fintrail_txns_' + _fuid); if (lt) transactions = JSON.parse(lt); } catch(e) {}
-    if (!planDebts.length) {
-      try { const loc = safeGet('fintrail_debts_' + _fuid); if (loc) planDebts = JSON.parse(loc); } catch(e) {}
-    }
+
     render(); renderBillList(); renderSchedule(); renderGoals();
     if (planDebts.length) { renderDebtList(); runPayoffPlan(); }
-    // Mark NW as pre-loaded from Supabase so initNetWorth uses this data directly
     if (nwAssets.length || nwLiabilities.length) nwLoaded = true;
     loadProfileUI();
   }
@@ -7642,13 +7554,18 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   function safeGet(key) { try { return localStorage.getItem(key); } catch(e) { try { return sessionStorage.getItem(key); } catch(e2) { return null; } } }
   function safeSet(key, val) { try { localStorage.setItem(key, val); } catch(e) { try { sessionStorage.setItem(key, val); } catch(e2) {} } }
 
-  function loadGameData() {
-    const saved = safeGet('fintrail_game_' + (currentUser?.id || 'demo'));
-    if (saved) { try { gameData = { ...gameData, ...JSON.parse(saved) }; } catch(e) {} }
+  function loadGameData(options = {}) {
+    const uid = currentUser?.id || 'demo';
+    const saved = safeGet('fintrail_game_' + uid);
+    // If Supabase was loaded this session, do not let stale localStorage downgrade XP/level/streaks.
+    if (saved && !options.preferSupabase) {
+      try { gameData = { ...gameData, ...JSON.parse(saved) }; } catch(e) {}
+    }
     checkLoginStreak();
     checkPendingXP(); // release any XP that's been waiting 48hrs
     renderStreaks();
     checkAndAwardBadges();
+    saveGameData();
   }
 
   function saveGameData() {
@@ -8619,113 +8536,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     awardXPForAction('calendarEvent');
   }
 
-
-  // =============================================
-  // PWA / HOME SCREEN INSTALL SUPPORT
-  // =============================================
-  let deferredPWAInstallPrompt = null;
-
-  function isRunningStandalone() {
-    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-  }
-
-  function isIOSDevice() {
-    return /iphone|ipad|ipod/i.test(window.navigator.userAgent);
-  }
-
-  function shouldShowPWAInstallPrompt() {
-    if (isRunningStandalone()) return false;
-    const dismissedAt = parseInt(localStorage.getItem('fintrail_pwa_prompt_dismissed_at') || '0', 10);
-    const sevenDays = 7 * 24 * 60 * 60 * 1000;
-    return !dismissedAt || (Date.now() - dismissedAt) > sevenDays;
-  }
-
-  function showPWAInstallPrompt(force = false) {
-    const card = document.getElementById('pwa-install-card');
-    if (!card) return;
-    if (!force && !shouldShowPWAInstallPrompt()) return;
-
-    const title = document.getElementById('pwa-install-title');
-    const text = document.getElementById('pwa-install-text');
-    const btn = document.getElementById('pwa-install-btn');
-
-    if (isIOSDevice() && !deferredPWAInstallPrompt) {
-      title.textContent = currentLang === 'es' ? 'Agrega Fintrail a tu pantalla de inicio' : 'Add Fintrail to your Home Screen';
-      text.textContent = currentLang === 'es'
-        ? 'En iPhone: toca Compartir, luego “Agregar a pantalla de inicio”.'
-        : 'On iPhone: tap Share, then “Add to Home Screen.”';
-      btn.textContent = currentLang === 'es' ? 'Entendido' : 'Got it';
-    } else {
-      title.textContent = currentLang === 'es' ? 'Instala Fintrail como app' : 'Install Fintrail like an app';
-      text.textContent = currentLang === 'es'
-        ? 'Accede más rápido desde tu teléfono con una experiencia tipo app.'
-        : 'Get faster access from your phone with an app-like experience.';
-      btn.textContent = currentLang === 'es' ? 'Instalar' : 'Install';
-    }
-
-    card.classList.add('visible');
-  }
-
-  function dismissPWAInstallPrompt() {
-    localStorage.setItem('fintrail_pwa_prompt_dismissed_at', Date.now().toString());
-    const card = document.getElementById('pwa-install-card');
-    if (card) card.classList.remove('visible');
-  }
-
-  async function installFintrailApp() {
-    if (isIOSDevice() && !deferredPWAInstallPrompt) {
-      dismissPWAInstallPrompt();
-      return;
-    }
-
-    if (!deferredPWAInstallPrompt) {
-      showPWAInstallPrompt(true);
-      return;
-    }
-
-    deferredPWAInstallPrompt.prompt();
-    const choice = await deferredPWAInstallPrompt.userChoice;
-    deferredPWAInstallPrompt = null;
-
-    if (choice && choice.outcome === 'accepted') {
-      localStorage.setItem('fintrail_pwa_installed', 'true');
-    }
-    dismissPWAInstallPrompt();
-  }
-
-  function initPWAInstallPrompt() {
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPWAInstallPrompt = e;
-      setTimeout(() => showPWAInstallPrompt(), 2500);
-    });
-
-    window.addEventListener('appinstalled', () => {
-      localStorage.setItem('fintrail_pwa_installed', 'true');
-      const card = document.getElementById('pwa-install-card');
-      if (card) card.classList.remove('visible');
-    });
-
-    // iPhone/iPad Safari does not support beforeinstallprompt, so show helpful instructions.
-    if (isIOSDevice() && shouldShowPWAInstallPrompt()) {
-      setTimeout(() => showPWAInstallPrompt(), 3500);
-    }
-  }
-
-  function registerServiceWorker() {
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(() => {
-          // Keep the app working even if the service worker is unavailable.
-        });
-      });
-    }
-  }
-
-
   // INIT
-  initPWAInstallPrompt();
-  registerServiceWorker();
   loadConfig();
   loadLanguagePreference();
   applyProState();
