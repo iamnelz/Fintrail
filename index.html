@@ -4,11 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fintrail Pro — Budget Smarter, Live Better</title>
-<!-- BUILD: stable-master-founding-member-monthly-report-limits-2026-05-29 -->
+<!-- BUILD: stable-working-plus-founding-members-2026-05-29 -->
 <!-- REPLACE content value below with your actual Google Search Console verification code -->
 <meta name="google-site-verification" content="PASTE_YOUR_VERIFICATION_CODE_HERE" />
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<!-- SUPABASE FOUNDING MEMBER NOTE: add column profiles.founding_member BOOLEAN DEFAULT FALSE to persist this server-side. -->
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1873,7 +1872,7 @@
   .cal-event-type-btn.selected { border-color:var(--accent); color:var(--accent); background:rgba(240,85,85,0.05); }
   .cal-event-type-btn .cet-icon { font-size:1.2rem; display:block; margin-bottom:0.2rem; }
 
-  @media (max-width:860px) { .cal-layout { grid-template-columns:1fr; } .cal-upcoming { order:2; } }
+  @media (max-width:860px) { .cal-layout { grid-template-columns:1fr; } .cal-upcoming { order:-1; } }
   @media (max-width:700px) {
     .cal-day { min-height:54px; padding:0.25rem; }
     .cal-day-num { font-size:0.72rem; width:18px; height:18px; }
@@ -2581,107 +2580,73 @@
 
 
 
-  /* FOUNDING MEMBER BADGE */
-  .founding-member-badge {
-    display:inline-flex; align-items:center; gap:0.35rem;
-    background:linear-gradient(135deg,#1a1a2e,#2d1b4e);
-    color:#ffd166; font-size:0.68rem; font-weight:800;
-    padding:0.22rem 0.65rem; border-radius:20px;
-    margin-top:0.5rem; border:1px solid rgba(255,209,102,0.45);
-    text-transform:uppercase; letter-spacing:0.05em;
-  }
-  .founding-card {
-    background:linear-gradient(135deg,rgba(26,26,46,0.96),rgba(45,27,78,0.96));
-    border:1px solid rgba(255,209,102,0.35);
-    border-radius:14px; padding:1rem; margin:1rem 0; color:#fff;
-    box-shadow:0 10px 26px rgba(26,26,46,0.12);
-  }
-  .founding-card h3 { font-size:0.95rem; font-weight:800; color:#ffd166; margin-bottom:0.3rem; }
-  .founding-card p { font-size:0.8rem; color:rgba(255,255,255,0.72); line-height:1.55; margin-bottom:0.55rem; }
-  .founding-card .founding-meta {
-    display:flex; flex-wrap:wrap; gap:0.45rem; margin-top:0.55rem;
-  }
-  .founding-card .founding-chip {
-    background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12);
-    color:#ffd166; border-radius:999px; padding:0.25rem 0.6rem;
-    font-size:0.7rem; font-weight:800;
-  }
-
-
-
-/* === STABLE MASTER PATCH: Founding Member + preserved mobile fixes === */
+/* === FOUNDING MEMBER PATCH — added to stable working file === */
 .founding-member-badge {
-  display:inline-flex; align-items:center; gap:0.35rem;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:0.35rem;
   background:linear-gradient(135deg,#1a1a2e,#2d1b4e);
-  color:#ffd166; font-size:0.68rem; font-weight:800;
-  padding:0.22rem 0.65rem; border-radius:20px;
-  margin-top:0.5rem; border:1px solid rgba(255,209,102,0.45);
-  text-transform:uppercase; letter-spacing:0.05em;
+  color:#ffd166;
+  font-size:0.68rem;
+  font-weight:800;
+  padding:0.25rem 0.7rem;
+  border-radius:999px;
+  margin-top:0.55rem;
+  border:1px solid rgba(255,209,102,0.45);
+  text-transform:uppercase;
+  letter-spacing:0.04em;
 }
-.founding-card {
-  background:linear-gradient(135deg,rgba(26,26,46,0.96),rgba(45,27,78,0.96));
-  border:1px solid rgba(255,209,102,0.35);
-  border-radius:14px; padding:1rem; margin:1rem 0; color:#fff;
+.founding-member-card {
+  background:linear-gradient(135deg,rgba(26,26,46,0.97),rgba(45,27,78,0.97));
+  border:1px solid rgba(255,209,102,0.38);
+  border-radius:14px;
+  padding:1rem;
+  margin-top:1rem;
+  color:#fff;
   box-shadow:0 10px 26px rgba(26,26,46,0.12);
 }
-.founding-card h3 { font-size:0.95rem; font-weight:800; color:#ffd166; margin-bottom:0.3rem; }
-.founding-card p { font-size:0.8rem; color:rgba(255,255,255,0.72); line-height:1.55; margin-bottom:0.55rem; }
-.founding-card .founding-meta { display:flex; flex-wrap:wrap; gap:0.45rem; margin-top:0.55rem; }
-.founding-card .founding-chip {
-  background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12);
-  color:#ffd166; border-radius:999px; padding:0.25rem 0.6rem;
-  font-size:0.7rem; font-weight:800;
+.founding-member-card h3 {
+  font-size:0.98rem;
+  font-weight:800;
+  color:#ffd166;
+  margin-bottom:0.35rem;
 }
-#founding-paywall-note {
-  margin:0.75rem 0 0;
+.founding-member-card p {
+  font-size:0.8rem;
+  color:rgba(255,255,255,0.75);
+  line-height:1.55;
+  margin-bottom:0.55rem;
+}
+.founding-member-card .founding-chip-row {
+  display:flex;
+  flex-wrap:wrap;
+  gap:0.45rem;
+  margin-top:0.6rem;
+}
+.founding-member-card .founding-chip {
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.13);
+  color:#ffd166;
+  border-radius:999px;
+  padding:0.25rem 0.6rem;
+  font-size:0.68rem;
+  font-weight:800;
+}
+.founding-paywall-note {
+  margin:0.75rem 2rem 0;
   padding:0.75rem;
   border-radius:10px;
-  background:rgba(255,209,102,0.12);
+  background:rgba(255,209,102,0.14);
   color:#1a1a2e;
   font-size:0.78rem;
   line-height:1.45;
   text-align:center;
-  border:1px solid rgba(255,209,102,0.35);
+  border:1px solid rgba(255,209,102,0.36);
 }
 @media (max-width:700px) {
-  .founding-card { margin:0.75rem 0; }
-}
-
-/* Preserve mobile debt planner overflow fix */
-@media (max-width:700px) {
-  #tab-debtplan .planner-card { padding:1rem !important; overflow:hidden !important; }
-  #tab-debtplan .planner-inputs,
-  #tab-debtplan .debt-add-grid {
-    display:grid !important; grid-template-columns:1fr !important;
-    gap:0.75rem !important; width:100% !important; max-width:100% !important;
-  }
-  #tab-debtplan .debt-add-grid .form-group,
-  #tab-debtplan .planner-inputs .form-group {
-    width:100% !important; min-width:0 !important;
-  }
-  #tab-debtplan .debt-add-grid input,
-  #tab-debtplan .planner-inputs input {
-    width:100% !important; min-width:0 !important; max-width:100% !important; box-sizing:border-box !important;
-  }
-  #tab-debtplan .debt-add-grid .add-btn {
-    width:100% !important; grid-column:1 / -1 !important; min-height:48px !important;
-  }
-  #tab-debtplan .method-toggle { grid-template-columns:1fr !important; }
-  #tab-debtplan .method-btn { width:100% !important; }
-}
-
-/* Preserve mobile AI Advisor order: chat first, questions below */
-@media (max-width:800px) {
-  #tab-ai .ai-layout { display:flex !important; flex-direction:column !important; }
-  #tab-ai .chat-window { order:1 !important; }
-  #tab-ai .ai-sidebar { order:2 !important; }
-}
-
-/* Preserve mobile Financial Calendar order: calendar first, upcoming below */
-@media (max-width:860px) {
-  #tab-calendar .cal-layout { display:flex !important; flex-direction:column !important; }
-  #tab-calendar .cal-layout > div:first-child { order:1 !important; width:100% !important; }
-  #tab-calendar .cal-upcoming { order:2 !important; width:100% !important; }
+  .founding-member-card { margin-top:0.75rem; }
+  .founding-paywall-note { margin:0.75rem 1.25rem 0; }
 }
 
 </style>
@@ -3021,6 +2986,7 @@
     <div class="paywall-actions">
       <button class="pw-cta primary" onclick="activatePro()">Start Pro — $4.99/mo</button>
       <div class="pw-trial">🎉 Founding price: first 7 days free · then $4.99/mo</div>
+      <div class="founding-paywall-note">🏆 Founding Member Offer: subscribe before January 31, 2027 and lock in $4.99/month while your subscription remains active. If you cancel, you have 90 days to rejoin and keep this price.</div>
       <button class="pw-cta secondary" onclick="closePaywall()">Maybe later</button>
     </div>
   </div>
@@ -4162,7 +4128,6 @@
           <div class="profile-name" id="profile-display-name">User</div>
           <div class="profile-email" id="profile-display-email">Loading...</div>
           <span class="profile-plan-badge" id="profile-plan-badge">Free Plan</span>
-          <div class="founding-member-badge" id="profile-founding-badge" style="display:none">🏆 Founding Member</div>
         </div>
         <div class="profile-sidebar card" style="padding:0.75rem">
           <button class="profile-menu-btn active" onclick="switchProfilePanel('account', this)"><span class="pmb-icon">👤</span> Account Info</button>
@@ -4183,15 +4148,6 @@
         <div class="profile-panel visible card" id="panel-account">
           <div class="profile-section-title" data-en="Account Information" data-es="Información de la Cuenta">Account Information</div>
           <div class="profile-section-desc">Update your display name and email address.</div>
-          <div class="founding-card" id="founding-member-card" style="display:none">
-            <h3>🏆 Founding Member</h3>
-            <p>Thank you for supporting Fintrail early. Your $4.99/month Pro rate is locked in while your subscription remains active.</p>
-            <p>If you cancel, you have a 90-day grace period to re-subscribe and keep your Founding Member price.</p>
-            <div class="founding-meta">
-              <span class="founding-chip">$4.99/mo Locked</span>
-              <span class="founding-chip">90-Day Grace Period</span>
-            </div>
-          </div>
           <div class="profile-field">
             <label>Full Name</label>
             <input class="profile-input" type="text" id="profile-name-input" placeholder="Your name">
@@ -5003,29 +4959,6 @@
   }
 
   let currentUser = null;
-  let isFoundingMember = false;
-  const FOUNDING_MEMBER_CUTOFF = new Date('2027-02-01T00:00:00');
-  const FOUNDING_GRACE_DAYS = 90;
-
-  function isBeforeFoundingCutoff() {
-    return new Date() < FOUNDING_MEMBER_CUTOFF;
-  }
-
-  function activateFoundingMemberIfEligible() {
-    if (isPro && !isFoundingMember && isBeforeFoundingCutoff()) {
-      isFoundingMember = true;
-      if (currentUser?.id) safeSet('fintrail_founding_member_' + currentUser.id, 'true');
-    }
-    updateFoundingMemberUI();
-  }
-
-  function updateFoundingMemberUI() {
-    const show = !!(isPro && isFoundingMember);
-    const badge = document.getElementById('profile-founding-badge');
-    const card = document.getElementById('founding-member-card');
-    if (badge) badge.style.display = show ? 'inline-flex' : 'none';
-    if (card) card.style.display = show ? 'block' : 'none';
-  }
 
   // AUTH INIT — check if already logged in
   async function initAuth() {
@@ -5054,7 +4987,6 @@
     setUserUI(user);
     loadUserData();
     loadProfileUI();
-    updateFoundingMemberUI();
     setTimeout(loadGameData, 500);
     // Apply saved language now that user is logged in
     if (currentLang !== 'en') setTimeout(applyLanguage, 300);
@@ -5077,7 +5009,7 @@
     if (mobileAvatar) mobileAvatar.textContent = initial;
     if (mobileUserName) mobileUserName.textContent = name;
     if (mobileUserPlan) mobileUserPlan.textContent = user.email;
-    if (mobilePlanBadge) mobilePlanBadge.textContent = isPro ? (isFoundingMember ? '🏆 FOUNDING' : '⭐ PRO') : 'FREE';
+    if (mobilePlanBadge) mobilePlanBadge.textContent = isPro ? '⭐ PRO' : 'FREE';
   }
 
   // SIGN IN
@@ -5170,7 +5102,7 @@
 
     if (!sbClient || !currentUser) return;
     try {
-      const payload = { user_id: currentUser.id, transactions, bills, goals, plan_debts: planDebts, nw_assets: nwAssets, nw_liabilities: nwLiabilities, nw_history: nwHistory, game_data: { ...gameData, foundingMember: isFoundingMember, foundingGraceDays: FOUNDING_GRACE_DAYS }, is_pro: isPro, updated_at: new Date().toISOString() };
+      const payload = { user_id: currentUser.id, transactions, bills, goals, plan_debts: planDebts, nw_assets: nwAssets, nw_liabilities: nwLiabilities, nw_history: nwHistory, game_data: gameData, is_pro: isPro, updated_at: new Date().toISOString() };
       await sbClient.from('user_data').upsert(payload, { onConflict: 'user_id' });
     } catch(err) {
       console.log('saveUserData error:', err.message);
@@ -5188,8 +5120,8 @@
   function updateProfileSubscriptionUI() {
     const titleText = currentLang === 'es' ? '⭐ Suscripción' : '⭐ Subscription';
     const proDesc = currentLang === 'es'
-      ? (isFoundingMember ? 'Miembro Fundador: tu precio de $4.99/mes está bloqueado mientras tu suscripción permanezca activa. Si cancelas, tendrás 90 días para volver a suscribirte y conservarlo.' : 'Administrar tu suscripción Pro, facturación o cancelación.')
-      : (isFoundingMember ? 'Founding Member: your $4.99/month price is locked while your subscription stays active. If you cancel, you have 90 days to re-subscribe and keep it.' : 'Manage your Pro subscription, billing, or cancellation.');
+      ? 'Administrar tu suscripción Pro, facturación o cancelación.'
+      : 'Manage your Pro subscription, billing, or cancellation.';
     const freeDesc = currentLang === 'es'
       ? 'Actualiza a Pro para desbloquear funciones ilimitadas.'
       : 'Upgrade to Pro to unlock unlimited features.';
@@ -5226,7 +5158,7 @@
       bar.classList.add('premium');
       badge.textContent = `${level.badge} ${level.name}`;
       badge.classList.add('premium-plan');
-      statusEl.textContent = `${isFoundingMember ? '🏆 Founding Member · ' : ''}⭐ Pro Plan${statusTitle ? ' · ' + statusTitle : ''} · ${currentUser?.email || ''}`;
+      statusEl.textContent = `⭐ Pro Plan${statusTitle ? ' · ' + statusTitle : ''} · ${currentUser?.email || ''}`;
       actionBtn.textContent = currentLang === 'es' ? 'Administrar Suscripción' : 'Manage Subscription';
       actionBtn.onclick = cancelSubscription;
     } else {
@@ -5238,11 +5170,10 @@
       actionBtn.onclick = () => showPaywall('bar');
     }
     updateProfileSubscriptionUI();
-    updateFoundingMemberUI();
     // Update mobile plan badge
     const mobilePlanBadge = document.getElementById('mobile-plan-badge');
     if (mobilePlanBadge) {
-      mobilePlanBadge.textContent = isPro ? (isFoundingMember ? '🏆 FOUNDING' : '⭐ PRO') : 'FREE';
+      mobilePlanBadge.textContent = isPro ? '⭐ PRO' : 'FREE';
       mobilePlanBadge.style.background = isPro ? 'linear-gradient(135deg,#b8860b,#e9c46a)' : 'var(--surface2)';
       mobilePlanBadge.style.color = isPro ? '#1a1a0f' : 'var(--muted)';
     }
@@ -5253,7 +5184,6 @@
     try {
       const { data } = await sbClient.from('user_data').select('*').eq('user_id', currentUser.id).single();
       if (data) {
-        isFoundingMember = !!(data.founding_member || data.game_data?.foundingMember || safeGet('fintrail_founding_member_' + currentUser.id) === 'true');
         transactions = data.transactions || [];
         bills = data.bills || [];
         // Use timestamp to decide: if local is newer than Supabase, keep local
@@ -5301,7 +5231,6 @@
         }
         if (data.is_pro) {
           isPro = true;
-          activateFoundingMemberIfEligible();
           applyProState();
           setProUI();
         }
@@ -5315,8 +5244,6 @@
     try { const lg = safeGet('fintrail_goals_' + _fuid); if (lg) goals = JSON.parse(lg); } catch(e) {}
     try { const lb = safeGet('fintrail_bills_' + _fuid); if (lb) bills = JSON.parse(lb); } catch(e) {}
     try { const lt = safeGet('fintrail_txns_' + _fuid); if (lt) transactions = JSON.parse(lt); } catch(e) {}
-    if (safeGet('fintrail_founding_member_' + _fuid) === 'true') isFoundingMember = true;
-    activateFoundingMemberIfEligible();
     if (!planDebts.length) {
       try { const loc = safeGet('fintrail_debts_' + _fuid); if (loc) planDebts = JSON.parse(loc); } catch(e) {}
     }
@@ -5372,7 +5299,6 @@
         if (currentUser) {
           clearInterval(tryActivate);
           isPro = true;
-          activateFoundingMemberIfEligible();
           applyProState();
           setProUI();
           saveUserData();
@@ -7012,83 +6938,7 @@ Guidelines:
           .summary-label { font-size: 0.72rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.2rem; }
           .footer { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #eee; font-size: 0.72rem; color: #aaa; text-align: center; }
           @media print { body { padding: 1rem; } }
-        
-/* === STABLE MASTER PATCH: Founding Member + preserved mobile fixes === */
-.founding-member-badge {
-  display:inline-flex; align-items:center; gap:0.35rem;
-  background:linear-gradient(135deg,#1a1a2e,#2d1b4e);
-  color:#ffd166; font-size:0.68rem; font-weight:800;
-  padding:0.22rem 0.65rem; border-radius:20px;
-  margin-top:0.5rem; border:1px solid rgba(255,209,102,0.45);
-  text-transform:uppercase; letter-spacing:0.05em;
-}
-.founding-card {
-  background:linear-gradient(135deg,rgba(26,26,46,0.96),rgba(45,27,78,0.96));
-  border:1px solid rgba(255,209,102,0.35);
-  border-radius:14px; padding:1rem; margin:1rem 0; color:#fff;
-  box-shadow:0 10px 26px rgba(26,26,46,0.12);
-}
-.founding-card h3 { font-size:0.95rem; font-weight:800; color:#ffd166; margin-bottom:0.3rem; }
-.founding-card p { font-size:0.8rem; color:rgba(255,255,255,0.72); line-height:1.55; margin-bottom:0.55rem; }
-.founding-card .founding-meta { display:flex; flex-wrap:wrap; gap:0.45rem; margin-top:0.55rem; }
-.founding-card .founding-chip {
-  background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12);
-  color:#ffd166; border-radius:999px; padding:0.25rem 0.6rem;
-  font-size:0.7rem; font-weight:800;
-}
-#founding-paywall-note {
-  margin:0.75rem 0 0;
-  padding:0.75rem;
-  border-radius:10px;
-  background:rgba(255,209,102,0.12);
-  color:#1a1a2e;
-  font-size:0.78rem;
-  line-height:1.45;
-  text-align:center;
-  border:1px solid rgba(255,209,102,0.35);
-}
-@media (max-width:700px) {
-  .founding-card { margin:0.75rem 0; }
-}
-
-/* Preserve mobile debt planner overflow fix */
-@media (max-width:700px) {
-  #tab-debtplan .planner-card { padding:1rem !important; overflow:hidden !important; }
-  #tab-debtplan .planner-inputs,
-  #tab-debtplan .debt-add-grid {
-    display:grid !important; grid-template-columns:1fr !important;
-    gap:0.75rem !important; width:100% !important; max-width:100% !important;
-  }
-  #tab-debtplan .debt-add-grid .form-group,
-  #tab-debtplan .planner-inputs .form-group {
-    width:100% !important; min-width:0 !important;
-  }
-  #tab-debtplan .debt-add-grid input,
-  #tab-debtplan .planner-inputs input {
-    width:100% !important; min-width:0 !important; max-width:100% !important; box-sizing:border-box !important;
-  }
-  #tab-debtplan .debt-add-grid .add-btn {
-    width:100% !important; grid-column:1 / -1 !important; min-height:48px !important;
-  }
-  #tab-debtplan .method-toggle { grid-template-columns:1fr !important; }
-  #tab-debtplan .method-btn { width:100% !important; }
-}
-
-/* Preserve mobile AI Advisor order: chat first, questions below */
-@media (max-width:800px) {
-  #tab-ai .ai-layout { display:flex !important; flex-direction:column !important; }
-  #tab-ai .chat-window { order:1 !important; }
-  #tab-ai .ai-sidebar { order:2 !important; }
-}
-
-/* Preserve mobile Financial Calendar order: calendar first, upcoming below */
-@media (max-width:860px) {
-  #tab-calendar .cal-layout { display:flex !important; flex-direction:column !important; }
-  #tab-calendar .cal-layout > div:first-child { order:1 !important; width:100% !important; }
-  #tab-calendar .cal-upcoming { order:2 !important; width:100% !important; }
-}
-
-</style>
+        </style>
       </head>
       <body>
         <div class="pdf-header">
@@ -7099,125 +6949,107 @@ Guidelines:
         <div class="footer">Generated by Fintrail · fintrail.app · For personal use only · Not financial advice</div>
       
 <script>
-/* === STABLE MASTER PATCH JS: Founding Member UI + limit/report safety helpers === */
+/* === FOUNDING MEMBER PATCH JS — stable working file safe add-on === */
 (function(){
   const FOUNDING_CUTOFF = new Date('2027-02-01T00:00:00');
-  window.FINTRAIL_FOUNDING_CUTOFF_ISO = '2027-01-31';
 
-  window.isFoundingMemberEligible = function(profile){
+  function userIsPro(){
     try {
-      if (profile && profile.founding_member === true) return true;
-      const now = new Date();
-      const pro = (window.isPremium === true) ||
-                  (window.currentUserProfile && (window.currentUserProfile.is_pro === true || window.currentUserProfile.pro === true || window.currentUserProfile.subscription_status === 'active')) ||
-                  (profile && (profile.is_pro === true || profile.pro === true || profile.subscription_status === 'active'));
-      return !!pro && now < FOUNDING_CUTOFF;
-    } catch(e) { return false; }
+      return (typeof isPro !== 'undefined' && isPro === true);
+    } catch(e) {
+      return false;
+    }
+  }
+
+  function withinFoundingWindow(){
+    return new Date() < FOUNDING_CUTOFF;
+  }
+
+  window.fintrailIsFoundingMember = function(){
+    try {
+      const stored = localStorage.getItem('fintrail_founding_member') === 'true';
+      return stored || (userIsPro() && withinFoundingWindow());
+    } catch(e) {
+      return userIsPro() && withinFoundingWindow();
+    }
   };
 
-  window.getFoundingMemberHtml = function(){
+  window.fintrailMarkFoundingMember = function(){
+    try {
+      if (userIsPro() && withinFoundingWindow()) {
+        localStorage.setItem('fintrail_founding_member', 'true');
+      }
+    } catch(e) {}
+  };
+
+  function foundingCardHtml(){
     return `
-      <div class="founding-card" id="founding-member-card">
+      <div class="founding-member-card" id="founding-member-card">
         <h3>🏆 Founding Member</h3>
         <p>Thank you for supporting Fintrail early. Your $4.99/month rate is locked in while your subscription remains active.</p>
         <p>If you cancel, you have a 90-day grace period to re-subscribe and keep your Founding Member price.</p>
-        <div class="founding-meta">
+        <div class="founding-chip-row">
           <span class="founding-chip">$4.99 locked</span>
           <span class="founding-chip">90-day grace</span>
           <span class="founding-chip">Early supporter</span>
         </div>
       </div>`;
-  };
+  }
 
   window.applyFoundingMemberUI = function(){
-    const eligible = window.isFoundingMemberEligible(window.currentUserProfile || {});
-    document.querySelectorAll('.founding-member-badge, #founding-member-card, #founding-paywall-note').forEach(el => el.remove());
-    if (!eligible) return;
-
-    // Profile badge under profile avatar/plan
-    const profileBadge = document.querySelector('.profile-plan-badge.pro') || document.querySelector('.profile-plan-badge');
-    if (profileBadge && !profileBadge.parentElement.querySelector('.founding-member-badge')) {
-      profileBadge.insertAdjacentHTML('afterend', '<div class="founding-member-badge">🏆 Founding Member</div>');
-    }
-
-    // Account bar label
-    const abPlan = document.querySelector('.ab-plan.premium-plan') || document.querySelector('.ab-plan');
-    if (abPlan && !abPlan.textContent.includes('Founding')) {
-      abPlan.innerHTML = '🏆 Founding · Pro';
-    }
-
-    // Profile account info card
-    const accountPanel = document.querySelector('#profile-account') || document.querySelector('.profile-panel.visible') || document.querySelector('#tab-profile .profile-panel');
-    const accountCard = accountPanel || document.querySelector('#tab-profile .card');
-    if (accountCard && !document.getElementById('founding-member-card')) {
-      accountCard.insertAdjacentHTML('beforeend', window.getFoundingMemberHtml());
-    }
-
-    // Paywall founding offer note
-    const priceArea = document.querySelector('.paywall-price');
-    if (priceArea && !document.getElementById('founding-paywall-note')) {
-      priceArea.insertAdjacentHTML('beforeend',
-        '<div id="founding-paywall-note">🏆 Founding Member Offer: subscribe before January 31, 2027 and lock in $4.99/month. If you cancel, you have 90 days to rejoin and keep this price.</div>'
-      );
-    }
-  };
-
-  // Re-apply after common UI changes.
-  const oldNavTo = window.navTo;
-  if (typeof oldNavTo === 'function' && !oldNavTo.__foundingWrapped) {
-    const wrapped = function(){
-      const result = oldNavTo.apply(this, arguments);
-      setTimeout(window.applyFoundingMemberUI, 80);
-      return result;
-    };
-    wrapped.__foundingWrapped = true;
-    window.navTo = wrapped;
-  }
-
-  const oldMobileTab = window.mobileTab;
-  if (typeof oldMobileTab === 'function' && !oldMobileTab.__foundingWrapped) {
-    const wrapped = function(){
-      const result = oldMobileTab.apply(this, arguments);
-      setTimeout(window.applyFoundingMemberUI, 80);
-      return result;
-    };
-    wrapped.__foundingWrapped = true;
-    window.mobileTab = wrapped;
-  }
-
-  const oldShowPaywall = window.showPaywall;
-  if (typeof oldShowPaywall === 'function' && !oldShowPaywall.__foundingWrapped) {
-    const wrapped = function(){
-      const result = oldShowPaywall.apply(this, arguments);
-      setTimeout(window.applyFoundingMemberUI, 80);
-      return result;
-    };
-    wrapped.__foundingWrapped = true;
-    window.showPaywall = wrapped;
-  }
-
-  // Safety: make sure Pro users are treated as founding members in the app before cutoff.
-  window.markCurrentProAsFoundingMemberLocally = function(){
     try {
-      if (window.isFoundingMemberEligible(window.currentUserProfile || {})) {
-        window.currentUserProfile = window.currentUserProfile || {};
-        window.currentUserProfile.founding_member = true;
-        try { localStorage.setItem('fintrail_founding_member', 'true'); } catch(e) {}
-        window.applyFoundingMemberUI();
+      fintrailMarkFoundingMember();
+
+      const isFounding = fintrailIsFoundingMember();
+
+      document.querySelectorAll('.founding-member-badge').forEach(el => el.remove());
+      const existingCard = document.getElementById('founding-member-card');
+      if (existingCard) existingCard.remove();
+
+      if (!isFounding) return;
+
+      const profileBadge = document.getElementById('profile-plan-badge');
+      if (profileBadge) {
+        profileBadge.insertAdjacentHTML('afterend', '<div class="founding-member-badge">🏆 Founding Member</div>');
       }
-    } catch(e) {}
+
+      const abPlan = document.getElementById('ab-plan');
+      if (abPlan && userIsPro()) {
+        abPlan.textContent = '🏆 Founding · Pro';
+        abPlan.classList.add('premium-plan');
+      }
+
+      const mobilePlanBadge = document.getElementById('mobile-plan-badge');
+      if (mobilePlanBadge && userIsPro()) {
+        mobilePlanBadge.textContent = '🏆 Founding';
+      }
+
+      const accountCard = document.getElementById('account-subscription-card');
+      if (accountCard && !document.getElementById('founding-member-card')) {
+        accountCard.insertAdjacentHTML('afterend', foundingCardHtml());
+      }
+    } catch(err) {
+      console.log('Founding Member UI skipped:', err.message);
+    }
   };
 
-  // Safety: preserve free limits if a prior patch overwrote labels/logic.
-  window.FREE_AI_PROMPTS_PER_DAY = window.FREE_AI_PROMPTS_PER_DAY || 5;
-  window.FREE_CREDIT_SIMS_PER_MONTH = window.FREE_CREDIT_SIMS_PER_MONTH || 3;
+  function wrapFunction(name){
+    const original = window[name];
+    if (typeof original !== 'function' || original.__foundingWrapped) return;
+    const wrapped = function(){
+      const result = original.apply(this, arguments);
+      setTimeout(window.applyFoundingMemberUI, 50);
+      setTimeout(window.applyFoundingMemberUI, 400);
+      return result;
+    };
+    wrapped.__foundingWrapped = true;
+    window[name] = wrapped;
+  }
 
-  // Run after page and after Supabase profile loads.
+  ['setProUI','applyProState','loadProfileUI','updateProfileSubscriptionUI','navTo','mobileTab','showPaywall','handleUpgradeReturn'].forEach(wrapFunction);
+
   document.addEventListener('DOMContentLoaded', function(){
-    setTimeout(function(){
-      window.markCurrentProAsFoundingMemberLocally();
-      window.applyFoundingMemberUI();
-    }, 300);
+    setTimeout(window.applyFoundingMemberUI, 300);
     setTimeout(window.applyFoundingMemberUI, 1200);
     setTimeout(window.applyFoundingMemberUI, 2500);
   });
@@ -7991,7 +7823,6 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     usedInvestCalc: false,
     usedCreditSim: false,
     askedAI: false,
-    foundingMember: false,
   };
 
   // Safe storage helper — works in private browsing mode
@@ -9569,132 +9400,5 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   document.getElementById('next-payday').value = savedPayday || todayStr;
   if (savedFreq) document.getElementById('pay-frequency').value = savedFreq;
 </script>
-
-<script>
-/* === STABLE MASTER PATCH JS: Founding Member UI + limit/report safety helpers === */
-(function(){
-  const FOUNDING_CUTOFF = new Date('2027-02-01T00:00:00');
-  window.FINTRAIL_FOUNDING_CUTOFF_ISO = '2027-01-31';
-
-  window.isFoundingMemberEligible = function(profile){
-    try {
-      if (profile && profile.founding_member === true) return true;
-      const now = new Date();
-      const pro = (window.isPremium === true) ||
-                  (window.currentUserProfile && (window.currentUserProfile.is_pro === true || window.currentUserProfile.pro === true || window.currentUserProfile.subscription_status === 'active')) ||
-                  (profile && (profile.is_pro === true || profile.pro === true || profile.subscription_status === 'active'));
-      return !!pro && now < FOUNDING_CUTOFF;
-    } catch(e) { return false; }
-  };
-
-  window.getFoundingMemberHtml = function(){
-    return `
-      <div class="founding-card" id="founding-member-card">
-        <h3>🏆 Founding Member</h3>
-        <p>Thank you for supporting Fintrail early. Your $4.99/month rate is locked in while your subscription remains active.</p>
-        <p>If you cancel, you have a 90-day grace period to re-subscribe and keep your Founding Member price.</p>
-        <div class="founding-meta">
-          <span class="founding-chip">$4.99 locked</span>
-          <span class="founding-chip">90-day grace</span>
-          <span class="founding-chip">Early supporter</span>
-        </div>
-      </div>`;
-  };
-
-  window.applyFoundingMemberUI = function(){
-    const eligible = window.isFoundingMemberEligible(window.currentUserProfile || {});
-    document.querySelectorAll('.founding-member-badge, #founding-member-card, #founding-paywall-note').forEach(el => el.remove());
-    if (!eligible) return;
-
-    // Profile badge under profile avatar/plan
-    const profileBadge = document.querySelector('.profile-plan-badge.pro') || document.querySelector('.profile-plan-badge');
-    if (profileBadge && !profileBadge.parentElement.querySelector('.founding-member-badge')) {
-      profileBadge.insertAdjacentHTML('afterend', '<div class="founding-member-badge">🏆 Founding Member</div>');
-    }
-
-    // Account bar label
-    const abPlan = document.querySelector('.ab-plan.premium-plan') || document.querySelector('.ab-plan');
-    if (abPlan && !abPlan.textContent.includes('Founding')) {
-      abPlan.innerHTML = '🏆 Founding · Pro';
-    }
-
-    // Profile account info card
-    const accountPanel = document.querySelector('#profile-account') || document.querySelector('.profile-panel.visible') || document.querySelector('#tab-profile .profile-panel');
-    const accountCard = accountPanel || document.querySelector('#tab-profile .card');
-    if (accountCard && !document.getElementById('founding-member-card')) {
-      accountCard.insertAdjacentHTML('beforeend', window.getFoundingMemberHtml());
-    }
-
-    // Paywall founding offer note
-    const priceArea = document.querySelector('.paywall-price');
-    if (priceArea && !document.getElementById('founding-paywall-note')) {
-      priceArea.insertAdjacentHTML('beforeend',
-        '<div id="founding-paywall-note">🏆 Founding Member Offer: subscribe before January 31, 2027 and lock in $4.99/month. If you cancel, you have 90 days to rejoin and keep this price.</div>'
-      );
-    }
-  };
-
-  // Re-apply after common UI changes.
-  const oldNavTo = window.navTo;
-  if (typeof oldNavTo === 'function' && !oldNavTo.__foundingWrapped) {
-    const wrapped = function(){
-      const result = oldNavTo.apply(this, arguments);
-      setTimeout(window.applyFoundingMemberUI, 80);
-      return result;
-    };
-    wrapped.__foundingWrapped = true;
-    window.navTo = wrapped;
-  }
-
-  const oldMobileTab = window.mobileTab;
-  if (typeof oldMobileTab === 'function' && !oldMobileTab.__foundingWrapped) {
-    const wrapped = function(){
-      const result = oldMobileTab.apply(this, arguments);
-      setTimeout(window.applyFoundingMemberUI, 80);
-      return result;
-    };
-    wrapped.__foundingWrapped = true;
-    window.mobileTab = wrapped;
-  }
-
-  const oldShowPaywall = window.showPaywall;
-  if (typeof oldShowPaywall === 'function' && !oldShowPaywall.__foundingWrapped) {
-    const wrapped = function(){
-      const result = oldShowPaywall.apply(this, arguments);
-      setTimeout(window.applyFoundingMemberUI, 80);
-      return result;
-    };
-    wrapped.__foundingWrapped = true;
-    window.showPaywall = wrapped;
-  }
-
-  // Safety: make sure Pro users are treated as founding members in the app before cutoff.
-  window.markCurrentProAsFoundingMemberLocally = function(){
-    try {
-      if (window.isFoundingMemberEligible(window.currentUserProfile || {})) {
-        window.currentUserProfile = window.currentUserProfile || {};
-        window.currentUserProfile.founding_member = true;
-        try { localStorage.setItem('fintrail_founding_member', 'true'); } catch(e) {}
-        window.applyFoundingMemberUI();
-      }
-    } catch(e) {}
-  };
-
-  // Safety: preserve free limits if a prior patch overwrote labels/logic.
-  window.FREE_AI_PROMPTS_PER_DAY = window.FREE_AI_PROMPTS_PER_DAY || 5;
-  window.FREE_CREDIT_SIMS_PER_MONTH = window.FREE_CREDIT_SIMS_PER_MONTH || 3;
-
-  // Run after page and after Supabase profile loads.
-  document.addEventListener('DOMContentLoaded', function(){
-    setTimeout(function(){
-      window.markCurrentProAsFoundingMemberLocally();
-      window.applyFoundingMemberUI();
-    }, 300);
-    setTimeout(window.applyFoundingMemberUI, 1200);
-    setTimeout(window.applyFoundingMemberUI, 2500);
-  });
-})();
-</script>
-
 </body>
 </html>
