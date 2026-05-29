@@ -2591,9 +2591,9 @@
           <span class="ndi-icon">📘</span>
           <div class="ndi-info"><span class="ndi-label" data-en="Credit & DTI Guide" data-es="Guía de Crédito & DTI">Credit & DTI Guide <span class="pro-pill">PRO</span></span><span class="ndi-desc" data-en="Improve your credit score" data-es="Mejora tu puntaje de crédito">Improve your credit score</span></div>
         </button>
-        <button class="nav-dropdown-item" onclick="guardedNavTo('creditsim', this)">
+        <button class="nav-dropdown-item" onclick="navTo('creditsim', this)">
           <span class="ndi-icon">📊</span>
-          <div class="ndi-info"><span class="ndi-label" data-en="Credit Score Simulator" data-es="Simulador de Crédito">Credit Score Simulator <span class="pro-pill">PRO</span></span><span class="ndi-desc" data-en="Simulate score changes" data-es="Simula cambios en tu puntaje">Simulate score changes</span></div>
+          <div class="ndi-info"><span class="ndi-label" data-en="Credit Score Simulator" data-es="Simulador de Crédito">Credit Score Simulator</span><span class="ndi-desc" data-en="Simulate score changes" data-es="Simula cambios en tu puntaje">Simulate score changes</span></div>
         </button>
       </div>
     </div>
@@ -2603,9 +2603,9 @@
       <button class="nav-group-btn" id="nav-insights">💡 Insights <span class="nav-arrow">▾</span></button>
       <div class="nav-dropdown">
         <div class="nav-dropdown-section" data-en="Insights" data-es="Análisis">Insights</div>
-        <button class="nav-dropdown-item" onclick="guardedNavTo('ai', this)">
+        <button class="nav-dropdown-item" onclick="navTo('ai', this)">
           <span class="ndi-icon">💬</span>
-          <div class="ndi-info"><span class="ndi-label" data-en="AI Advisor" data-es="Asesor IA">AI Advisor <span class="pro-pill">PRO</span></span><span class="ndi-desc" data-en="Ask any finance question" data-es="Haz cualquier pregunta financiera">Ask any finance question</span></div>
+          <div class="ndi-info"><span class="ndi-label" data-en="AI Advisor" data-es="Asesor IA">AI Advisor</span><span class="ndi-desc" data-en="5 free prompts/day · Pro unlimited" data-es="5 preguntas gratis/día · Pro ilimitado">5 free prompts/day · Pro unlimited</span></div>
         </button>
         <button class="nav-dropdown-item" onclick="guardedNavTo('healthscore', this)">
           <span class="ndi-icon">🏆</span>
@@ -2671,14 +2671,14 @@
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem;padding:0 0.75rem 0.5rem">
     <button class="mobile-nav-tile" onclick="mobileTab('resources')">🔍<span data-en="Resources" data-es="Recursos">Resources</span></button>
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('guide')">📘<span data-en="Credit Guide" data-es="Guía Crédito">Credit Guide</span></button>
-    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('creditsim')">📊<span data-en="Score Sim" data-es="Simulador">Score Sim</span></button>
+    <button class="mobile-nav-tile" onclick="mobileTab('creditsim')">📊<span data-en="Score Sim" data-es="Simulador">Score Sim</span></button>
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('negotiate')">💬<span data-en="Negotiation" data-es="Negociación">Negotiation</span></button>
   </div>
 
   <!-- INSIGHTS -->
   <div style="font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);padding:0.3rem 1rem 0.2rem" data-en="💡 Insights" data-es="💡 Análisis">💡 Insights</div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem;padding:0 0.75rem 0.5rem">
-    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('ai')">💬<span data-en="AI Advisor" data-es="Asesor IA">AI Advisor</span></button>
+    <button class="mobile-nav-tile" onclick="mobileTab('ai')">💬<span data-en="AI Advisor" data-es="Asesor IA">AI Advisor</span></button>
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('healthscore')">🏆<span data-en="Health Score" data-es="Salud">Health Score</span></button>
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('reports')">📈<span data-en="Reports" data-es="Reportes">Reports</span></button>
     <button class="mobile-nav-tile" onclick="mobileTab('streaks');closeMobileNav()">🔥🏅<span data-en="Streaks &amp; Milestones" data-es="Rachas y Logros">Streaks &amp; Milestones</span></button>
@@ -3292,7 +3292,7 @@
       <div class="lock-gate">
         <div class="lg-icon">💬</div>
         <h3>AI Financial Advisor <span class="premium-badge">PRO</span></h3>
-        <p>Chat with your personal AI finance coach — ask about budgeting, credit, debt payoff, investing basics, and more. Unlimited questions, instant answers.</p>
+        <p>Free users get 5 AI prompts per day. Pro users get unlimited AI advisor access.</p>
         <button class="lock-gate-btn" onclick="showPaywall('ai')">Unlock with Pro — $4.99/mo</button>
         <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--muted)" data-en="7-day free trial · Cancel anytime" data-es="Prueba gratis de 7 días · Cancela cuando quieras">7-day free trial · Cancel anytime</div>
       </div>
@@ -4129,6 +4129,7 @@
           <div class="score-input-card">
             <h2 data-en="Simulate Actions" data-es="Simula Acciones">Simulate Actions</h2>
             <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:1rem;line-height:1.6" data-en="Select actions you're considering to see their estimated impact on your score:" data-es="Selecciona las acciones que estás considerando para ver su impacto estimado en tu puntaje:">Select actions you're considering to see their estimated impact on your score:</p>
+            <div id="credit-sim-usage" style="font-size:0.78rem;font-weight:600;color:var(--accent);background:rgba(240,85,85,0.08);border:1px solid rgba(240,85,85,0.18);border-radius:8px;padding:0.55rem 0.75rem;margin-bottom:0.85rem;display:none"></div>
             <div class="action-cards" id="action-cards"></div>
           </div>
         </div>
@@ -5101,8 +5102,9 @@
     const setDisplay = (id, show) => { const el = document.getElementById(id); if (el) el.style.display = show ? 'block' : 'none'; };
     setDisplay('guide-gate',       !isPro);
     setDisplay('guide-content',    isPro);
-    setDisplay('ai-gate',          !isPro);
-    setDisplay('ai-content',       isPro);
+    // AI Advisor uses a soft paywall: free users can open it and use 5 prompts/day; Pro users get unlimited prompts.
+    setDisplay('ai-gate',          false);
+    setDisplay('ai-content',       true);
     setDisplay('affiliate-gate',   !isPro);
     setDisplay('affiliate-content', isPro);
     updatePremiumTab();
@@ -5130,7 +5132,7 @@
     closeMobileNav();
     // Award XP for tool usage
     if (tab === 'invest') awardXPForAction('investCalc');
-    if (tab === 'creditsim') awardXPForAction('creditSim');
+    if (tab === 'creditsim') { awardXPForAction('creditSim'); updateCreditSimTab(); }
     if (tab === 'streaks') renderStreaksTab();
     if (tab === 'calendar') { try { loadCalendarEvents(); renderCalendar(); } catch(e) { console.error('Calendar render failed:', e); } }
     if (tab === 'networth') { setTimeout(initNetWorth, 50); }
@@ -5142,6 +5144,11 @@
 
   function guardedNavTo(tab, btn) {
     if (tab === 'premium') tab = 'healthscore'; // legacy desktop nav safeguard after splitting Debt Planner + Health Score
+
+    // AI Advisor and Credit Simulator use soft paywalls. Free users can open them;
+    // AI allows 5 prompts/day and Credit Simulator allows 3 simulations/month.
+    if (tab === 'ai' || tab === 'creditsim') { navTo(tab, btn); return; }
+
     if (!isPro) { showPaywall(tab); closeMobileNav(); return; }
     navTo(tab, btn);
   }
@@ -5199,6 +5206,10 @@
   }
 
   function mobileGuardedTab(tab) {
+    // AI Advisor and Credit Simulator are soft-paywall features.
+    // Free users get 5 AI prompts/day and 3 credit simulations/month.
+    if (tab === 'ai' || tab === 'creditsim') { mobileTab(tab); return; }
+
     if (!isPro) { showPaywall(tab); closeMobileNav(); return; }
     mobileTab(tab);
   }
@@ -5448,9 +5459,13 @@ Guidelines:
     const typingId = showTyping();
 
     try {
+      const { data: { session } } = await sbClient.auth.getSession();
       const response = await fetch('/.netlify/functions/ai-advisor', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.access_token || ''}`
+        },
         body: JSON.stringify({ messages: chatHistory, system: getSystemPrompt() })
       });
       const data = await response.json();
@@ -5461,7 +5476,11 @@ Guidelines:
       appendMessage('ai', reply);
     } catch (err) {
       removeTyping(typingId);
-      appendMessage('ai', 'Sorry, something went wrong. Please try again in a moment.');
+      const message = err.message || 'Sorry, something went wrong. Please try again in a moment.';
+      appendMessage('ai', message);
+      if (message.includes('Upgrade to Pro')) {
+        showPaywall('ai-limit');
+      }
     }
 
     isTyping = false;
@@ -7008,11 +7027,122 @@ Guidelines:
       </div>`).join('');
   }
 
-  function toggleAction(id) {
+  async function toggleAction(id) {
+    const allowed = await checkCreditSimulationLimit();
+    if (!allowed) return;
+
     if (selectedActions.has(id)) selectedActions.delete(id);
     else selectedActions.add(id);
     renderActionCards();
     updateSimulator();
+  }
+
+  const FREE_MONTHLY_CREDIT_SIM_LIMIT = 3;
+
+  function getCurrentCreditSimMonth() {
+    return new Date().toISOString().slice(0, 7); // YYYY-MM
+  }
+
+  async function getCreditSimulationUsage() {
+    if (isPro) return { unlimited: true };
+
+    const month = getCurrentCreditSimMonth();
+    if (!sbClient || !currentUser) {
+      return { used: 0, limit: FREE_MONTHLY_CREDIT_SIM_LIMIT, remaining: FREE_MONTHLY_CREDIT_SIM_LIMIT, month };
+    }
+
+    const { data, error } = await sbClient
+      .from('user_data')
+      .select('user_id,is_pro,credit_simulations_used,credit_simulation_reset_month')
+      .eq('user_id', currentUser.id)
+      .single();
+
+    if (error && error.code !== 'PGRST116') {
+      console.log('Credit sim usage check failed:', error.message);
+      return { used: 0, limit: FREE_MONTHLY_CREDIT_SIM_LIMIT, remaining: FREE_MONTHLY_CREDIT_SIM_LIMIT, month };
+    }
+
+    if (data?.is_pro) return { unlimited: true };
+
+    if (!data) {
+      await sbClient.from('user_data').upsert({
+        user_id: currentUser.id,
+        is_pro: false,
+        credit_simulations_used: 0,
+        credit_simulation_reset_month: month
+      }, { onConflict: 'user_id' });
+      return { used: 0, limit: FREE_MONTHLY_CREDIT_SIM_LIMIT, remaining: FREE_MONTHLY_CREDIT_SIM_LIMIT, month };
+    }
+
+    let used = data.credit_simulations_used || 0;
+    if (data.credit_simulation_reset_month !== month) {
+      used = 0;
+      await sbClient
+        .from('user_data')
+        .update({ credit_simulations_used: 0, credit_simulation_reset_month: month })
+        .eq('user_id', currentUser.id);
+    }
+
+    return {
+      used,
+      limit: FREE_MONTHLY_CREDIT_SIM_LIMIT,
+      remaining: Math.max(0, FREE_MONTHLY_CREDIT_SIM_LIMIT - used),
+      month
+    };
+  }
+
+  async function updateCreditSimUsageDisplay() {
+    const el = document.getElementById('credit-sim-usage');
+    if (!el) return;
+
+    if (isPro) {
+      el.style.display = 'block';
+      el.textContent = currentLang === 'es'
+        ? '⭐ Pro: simulaciones de crédito ilimitadas'
+        : '⭐ Pro: unlimited credit simulations';
+      return;
+    }
+
+    const usage = await getCreditSimulationUsage();
+    if (usage.unlimited) return updateCreditSimUsageDisplay();
+
+    el.style.display = 'block';
+    el.textContent = currentLang === 'es'
+      ? `${usage.remaining}/${usage.limit} simulaciones gratis restantes este mes`
+      : `${usage.remaining}/${usage.limit} free simulations remaining this month`;
+  }
+
+  async function checkCreditSimulationLimit() {
+    if (isPro) return true;
+
+    const month = getCurrentCreditSimMonth();
+    const usage = await getCreditSimulationUsage();
+
+    if (usage.unlimited) return true;
+
+    if (usage.used >= FREE_MONTHLY_CREDIT_SIM_LIMIT) {
+      alert(currentLang === 'es'
+        ? 'Has usado tus 3 simulaciones de crédito gratis este mes. Hazte Pro para simulaciones ilimitadas.'
+        : 'You’ve used your 3 free credit simulations this month. Upgrade to Pro for unlimited simulations.');
+      showPaywall('creditsim-limit');
+      return false;
+    }
+
+    if (sbClient && currentUser) {
+      const newUsed = usage.used + 1;
+      const { error } = await sbClient
+        .from('user_data')
+        .update({
+          credit_simulations_used: newUsed,
+          credit_simulation_reset_month: month
+        })
+        .eq('user_id', currentUser.id);
+
+      if (error) console.log('Credit sim usage update failed:', error.message);
+    }
+
+    updateCreditSimUsageDisplay();
+    return true;
   }
 
   function syncScoreSlider() {
@@ -7104,9 +7234,13 @@ Guidelines:
     const gate = document.getElementById('creditsim-gate');
     const content = document.getElementById('creditsim-content');
     if (gate && content) {
-      gate.style.display = isPro ? 'none' : 'block';
-      content.style.display = isPro ? 'block' : 'none';
-      if (isPro) { renderActionCards(); updateSimulator(); }
+      // Credit Simulator now uses a soft paywall:
+      // Free users get 3 simulations/month; Pro users get unlimited simulations.
+      gate.style.display = 'none';
+      content.style.display = 'block';
+      renderActionCards();
+      updateSimulator();
+      updateCreditSimUsageDisplay();
     }
   }
 
