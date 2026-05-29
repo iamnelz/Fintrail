@@ -3,6 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
+<meta name="theme-color" content="#f05555">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Fintrail Pro">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="application-name" content="Fintrail Pro">
 <title>Fintrail Pro — Budget Smarter, Live Better</title>
 <!-- BUILD: xp-economy-rebalanced-2026-05-26 -->
 <!-- REPLACE content value below with your actual Google Search Console verification code -->
@@ -2389,61 +2399,88 @@
   #bsub-schedule.visible { display: block !important; }
 }
 
+  /* PWA INSTALL PROMPT */
+  .pwa-install-card {
+    position: fixed;
+    left: 1rem;
+    right: 1rem;
+    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+    z-index: 3000;
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    box-shadow: 0 18px 45px rgba(18,24,40,0.18);
+    padding: 1rem;
+    display: none;
+    align-items: flex-start;
+    gap: 0.85rem;
+    max-width: 520px;
+    margin: 0 auto;
+    animation: slideUp 0.25s ease;
+  }
+  .pwa-install-card.visible { display: flex; }
+  .pwa-install-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: #f05555;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-weight: 800;
+    flex-shrink: 0;
+    box-shadow: 0 8px 18px rgba(240,85,85,0.22);
+  }
+  .pwa-install-copy { flex: 1; min-width: 0; }
+  .pwa-install-copy h3 {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 0.25rem;
+  }
+  .pwa-install-copy p {
+    font-size: 0.8rem;
+    color: var(--text-soft);
+    line-height: 1.5;
+    margin-bottom: 0.65rem;
+  }
+  .pwa-install-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .pwa-install-btn {
+    border: none;
+    border-radius: 10px;
+    padding: 0.58rem 0.85rem;
+    font-family: 'Sora', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .pwa-install-btn.primary { background: var(--accent); color: #fff; }
+  .pwa-install-btn.primary:hover { background: #d94444; transform: translateY(-1px); }
+  .pwa-install-btn.secondary { background: var(--surface2); color: var(--text-soft); }
+  .pwa-install-close {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0.15rem;
+    line-height: 1;
+  }
+  @media (max-width:700px) {
+    .pwa-install-card {
+      bottom: calc(5.25rem + env(safe-area-inset-bottom, 0px));
+      left: 0.75rem;
+      right: 0.75rem;
+      padding: 0.9rem;
+    }
+    .pwa-install-icon { width: 44px; height: 44px; border-radius: 13px; }
+    .pwa-install-copy h3 { font-size: 0.9rem; }
+    .pwa-install-copy p { font-size: 0.76rem; }
+  }
 
-  /* MONTHLY FINANCIAL PROGRESS REPORT */
-  .report-shell { max-width: 1100px; margin: 0 auto; }
-  .report-topline { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1.25rem; flex-wrap:wrap; }
-  .report-back { background:none; border:none; color:var(--text-soft); font-family:'Sora',sans-serif; font-size:0.85rem; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:0.35rem; }
-  .report-month-select { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:0.55rem 0.85rem; font-family:'Sora',sans-serif; font-weight:600; color:var(--text); }
-  .report-title { font-family:'Playfair Display',serif; font-size:clamp(1.55rem,3vw,2.15rem); color:var(--text); margin-bottom:0.25rem; }
-  .report-subtitle { color:var(--text-soft); font-size:0.9rem; margin-bottom:1.5rem; line-height:1.6; }
-  .report-hero-card { background:linear-gradient(135deg, rgba(129,140,248,0.10), rgba(6,214,160,0.07)); border:1px solid rgba(129,140,248,0.22); border-radius:18px; padding:1.4rem; display:grid; grid-template-columns:1fr 180px 1fr; gap:1.25rem; align-items:center; margin-bottom:1.25rem; }
-  .report-hero-card h3 { font-size:1rem; margin-bottom:0.75rem; color:var(--text); }
-  .report-score-shift { font-family:'Playfair Display',serif; font-size:2.1rem; font-weight:700; color:var(--text); }
-  .report-score-shift .good { color:var(--income-color); }
-  .report-score-note { font-size:0.82rem; color:var(--income-color); font-weight:700; margin-top:0.25rem; }
-  .report-gauge { width:150px; height:150px; border-radius:50%; background:conic-gradient(var(--income-color) 0 72%, #e9edf3 72% 100%); display:flex; align-items:center; justify-content:center; margin:auto; position:relative; }
-  .report-gauge::after { content:''; position:absolute; inset:15px; background:var(--surface); border-radius:50%; }
-  .report-gauge-inner { position:relative; z-index:1; text-align:center; }
-  .report-gauge-num { font-family:'Playfair Display',serif; font-size:2.25rem; color:var(--income-color); line-height:1; }
-  .report-gauge-label { font-size:0.75rem; color:var(--muted); margin-top:0.25rem; }
-  .report-hero-text { font-size:0.92rem; color:var(--text); line-height:1.75; }
-  .report-grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-bottom:1rem; }
-  .report-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:1.35rem; box-shadow:0 8px 24px rgba(18,24,40,0.04); }
-  .report-card-icon { width:64px; height:64px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.75rem; margin:0 auto 0.9rem; }
-  .report-card-icon.green { background:#e6f7ee; }
-  .report-card-icon.orange { background:#fff0df; }
-  .report-card-icon.blue { background:#e9f0ff; }
-  .report-card h3 { text-align:center; font-size:1rem; margin-bottom:1.2rem; color:var(--text); }
-  .report-label { font-size:0.78rem; color:var(--text-soft); margin-bottom:0.35rem; }
-  .report-big { font-family:'Playfair Display',serif; font-size:1.45rem; font-weight:700; color:var(--text); }
-  .report-big.green { color:var(--income-color); }
-  .report-big.orange { color:#e85a28; }
-  .report-big.blue { color:#4267d6; }
-  .report-progress { height:10px; background:var(--border); border-radius:99px; overflow:hidden; margin:0.65rem 0 0.45rem; }
-  .report-progress-fill { height:100%; border-radius:99px; background:var(--income-color); width:0%; transition:width .6s ease; }
-  .report-small-row { display:flex; align-items:center; gap:0.55rem; margin-top:0.8rem; font-size:0.82rem; color:var(--text-soft); line-height:1.55; }
-  .report-small-row .round { width:28px; height:28px; border-radius:50%; background:rgba(6,214,160,.12); display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--income-color); font-weight:800; }
-  .report-insight { border-radius:10px; padding:0.9rem; margin-top:1rem; font-size:0.82rem; line-height:1.65; }
-  .report-insight.green { background:#f0fbf5; border:1px solid #c7efd7; }
-  .report-insight.orange { background:#fff8ed; border:1px solid #ffdcae; }
-  .report-insight.blue { background:#eff5ff; border:1px solid #cbdcff; }
-  .report-insight strong { display:block; margin-bottom:0.35rem; color:var(--text); }
-  .report-bottom-grid { display:grid; grid-template-columns:1.2fr .95fr; gap:1rem; margin-bottom:1rem; }
-  .report-ai-card { background:linear-gradient(135deg,rgba(129,91,255,0.10),rgba(255,255,255,0.9)); border-color:rgba(129,91,255,0.18); }
-  .report-ai-list { display:flex; flex-direction:column; gap:0.65rem; margin:0.8rem 0 1rem; }
-  .report-ai-item { display:flex; align-items:flex-start; gap:0.55rem; font-size:0.85rem; color:var(--text-soft); line-height:1.45; }
-  .report-ai-item span { color:#6b46d9; font-weight:800; }
-  .report-achievement { text-align:center; background:linear-gradient(135deg,#fff8ed,#fff); border-color:#ffdcae; }
-  .report-achievement-emoji { width:96px; height:96px; border-radius:50%; background:#ffe5bd; display:flex; align-items:center; justify-content:center; font-size:3rem; margin:0.85rem auto; }
-  .report-achievement h3 { color:#e85a28; font-family:'Playfair Display',serif; font-size:1.45rem; margin:0.25rem 0; }
-  .report-summary { background:linear-gradient(135deg,#edfdf4,#fff); border:1px solid #c7efd7; border-radius:16px; padding:1rem 1.25rem; display:flex; align-items:center; gap:1rem; color:#1f6f3f; font-size:0.95rem; line-height:1.55; margin-bottom:1rem; }
-  .report-summary-icon { width:58px; height:58px; border-radius:50%; background:#bdeccf; display:flex; align-items:center; justify-content:center; font-size:1.7rem; flex-shrink:0; }
-  .report-actions-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
-  .report-action-btn { border-radius:12px; padding:0.85rem 1rem; font-family:'Sora',sans-serif; font-size:0.9rem; font-weight:800; cursor:pointer; transition:all .2s; border:1.5px solid var(--border); background:var(--surface); color:#6b46d9; }
-  .report-action-btn.primary { background:linear-gradient(135deg,#6b46d9,#8b5cf6); color:#fff; border:none; }
-  .report-action-btn:hover { transform:translateY(-1px); box-shadow:0 8px 20px rgba(18,24,40,0.08); }
-  @media(max-width:900px){ .report-hero-card{grid-template-columns:1fr;text-align:center}.report-grid-3,.report-bottom-grid,.report-actions-row{grid-template-columns:1fr}.report-card h3{text-align:left}.report-card-icon{margin:0 0 .9rem} }
 
 </style>
 </head>
@@ -2594,7 +2631,7 @@
         </button>
         <button class="nav-dropdown-item" onclick="guardedNavTo('creditsim', this)">
           <span class="ndi-icon">📊</span>
-          <div class="ndi-info"><span class="ndi-label" data-en="Credit Score Simulator" data-es="Simulador de Crédito">Credit Score Simulator</span><span class="ndi-desc" data-en="Simulate score changes" data-es="Simula cambios en tu puntaje">Simulate score changes</span></div>
+          <div class="ndi-info"><span class="ndi-label" data-en="Credit Score Simulator" data-es="Simulador de Crédito">Credit Score Simulator <span class="pro-pill">PRO</span></span><span class="ndi-desc" data-en="Simulate score changes" data-es="Simula cambios en tu puntaje">Simulate score changes</span></div>
         </button>
       </div>
     </div>
@@ -2604,17 +2641,13 @@
       <button class="nav-group-btn" id="nav-insights">💡 Insights <span class="nav-arrow">▾</span></button>
       <div class="nav-dropdown">
         <div class="nav-dropdown-section" data-en="Insights" data-es="Análisis">Insights</div>
-        <button class="nav-dropdown-item" onclick="navTo('ai', this)">
+        <button class="nav-dropdown-item" onclick="guardedNavTo('ai', this)">
           <span class="ndi-icon">💬</span>
-          <div class="ndi-info"><span class="ndi-label" data-en="AI Advisor" data-es="Asesor IA">AI Advisor</span><span class="ndi-desc" data-en="5 free prompts/day · Pro unlimited" data-es="5 preguntas gratis/día · Pro ilimitado">5 free prompts/day · Pro unlimited</span></div>
+          <div class="ndi-info"><span class="ndi-label" data-en="AI Advisor" data-es="Asesor IA">AI Advisor <span class="pro-pill">PRO</span></span><span class="ndi-desc" data-en="Ask any finance question" data-es="Haz cualquier pregunta financiera">Ask any finance question</span></div>
         </button>
         <button class="nav-dropdown-item" onclick="guardedNavTo('healthscore', this)">
           <span class="ndi-icon">🏆</span>
           <div class="ndi-info"><span class="ndi-label" data-en="Health Score & Alerts" data-es="Puntaje de Salud & Alertas">Health Score & Alerts <span class="pro-pill">PRO</span></span><span class="ndi-desc" data-en="Financial health tracking" data-es="Seguimiento de salud financiera">Financial health tracking</span></div>
-        </button>
-        <button class="nav-dropdown-item" onclick="guardedNavTo('reports', this)">
-          <span class="ndi-icon">📈</span>
-          <div class="ndi-info"><span class="ndi-label" data-en="Monthly Progress Report" data-es="Reporte Mensual">Monthly Progress Report <span class="pro-pill">PRO</span></span><span class="ndi-desc" data-en="Savings, debt, credit & AI insights" data-es="Ahorros, deudas, crédito e IA">Savings, debt, credit & AI insights</span></div>
         </button>
         <button class="nav-dropdown-item" onclick="navTo('streaks', this)">
           <span class="ndi-icon">🔥</span>
@@ -2672,16 +2705,15 @@
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem;padding:0 0.75rem 0.5rem">
     <button class="mobile-nav-tile" onclick="mobileTab('resources')">🔍<span data-en="Resources" data-es="Recursos">Resources</span></button>
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('guide')">📘<span data-en="Credit Guide" data-es="Guía Crédito">Credit Guide</span></button>
-    <button class="mobile-nav-tile" onclick="mobileTab('creditsim')">📊<span data-en="Score Sim" data-es="Simulador">Score Sim</span></button>
+    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('creditsim')">📊<span data-en="Score Sim" data-es="Simulador">Score Sim</span></button>
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('negotiate')">💬<span data-en="Negotiation" data-es="Negociación">Negotiation</span></button>
   </div>
 
   <!-- INSIGHTS -->
   <div style="font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);padding:0.3rem 1rem 0.2rem" data-en="💡 Insights" data-es="💡 Análisis">💡 Insights</div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem;padding:0 0.75rem 0.5rem">
-    <button class="mobile-nav-tile" onclick="mobileTab('ai')">💬<span data-en="AI Advisor" data-es="Asesor IA">AI Advisor</span></button>
+    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('ai')">💬<span data-en="AI Advisor" data-es="Asesor IA">AI Advisor</span></button>
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('healthscore')">🏆<span data-en="Health Score" data-es="Salud">Health Score</span></button>
-    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('reports')">📈<span data-en="Reports" data-es="Reportes">Reports</span></button>
     <button class="mobile-nav-tile" onclick="mobileTab('streaks');closeMobileNav()">🔥🏅<span data-en="Streaks &amp; Milestones" data-es="Rachas y Logros">Streaks &amp; Milestones</span></button>
   </div>
 
@@ -2715,6 +2747,21 @@
   <div style="height:0.75rem"></div>
 </div>
 <div class="mobile-overlay" id="mobile-overlay" onclick="closeMobileNav()"></div>
+
+<!-- PWA INSTALL PROMPT -->
+<div id="pwa-install-card" class="pwa-install-card" role="dialog" aria-live="polite" aria-label="Install Fintrail Pro">
+  <div class="pwa-install-icon">FP</div>
+  <div class="pwa-install-copy">
+    <h3 id="pwa-install-title">Add Fintrail to your Home Screen</h3>
+    <p id="pwa-install-text">Use Fintrail like an app for faster access on your phone.</p>
+    <div class="pwa-install-actions">
+      <button id="pwa-install-btn" class="pwa-install-btn primary" onclick="installFintrailApp()">Install</button>
+      <button class="pwa-install-btn secondary" onclick="dismissPWAInstallPrompt()">Not now</button>
+    </div>
+  </div>
+  <button class="pwa-install-close" onclick="dismissPWAInstallPrompt()" aria-label="Close">✕</button>
+</div>
+
 
 <!-- RECEIPT UPLOAD MODAL -->
 <div id="receipt-modal" style="display:none" class="receipt-modal-overlay" onclick="closeReceiptModal(event)">
@@ -3288,7 +3335,7 @@
   <!-- AI ADVISOR TAB -->
   <div class="tab-section" id="tab-ai">
 
-    <!-- AI SOFT PAYWALL NOTE: gate hidden because free users get 5 prompts/day; Pro users get unlimited. -->
+    <!-- PREMIUM GATE -->
     <div id="ai-gate" style="display:none">
       <div class="lock-gate">
         <div class="lg-icon">💬</div>
@@ -3822,98 +3869,6 @@
   </div>
 
   <!-- PROFILE & SECURITY TAB -->
-
-  <!-- MONTHLY FINANCIAL PROGRESS REPORT TAB -->
-  <div class="tab-section" id="tab-reports">
-    <div class="report-shell">
-      <div class="report-topline">
-        <button class="report-back" onclick="navTo('healthscore')">← Back to Insights</button>
-        <select class="report-month-select" id="report-month-select" onchange="renderMonthlyReport()">
-          <option value="current">Current Month</option>
-        </select>
-      </div>
-      <h1 class="report-title" id="report-title">Your Monthly Financial Progress Report 🎉</h1>
-      <p class="report-subtitle" id="report-subtitle">Personalized progress based on the savings, debt, credit, and AI activity you have entered in Fintrail.</p>
-
-      <div class="report-hero-card">
-        <div>
-          <h3>Financial Health Score</h3>
-          <div class="report-score-shift"><span id="report-score-prev">72</span> → <span class="good" id="report-score-current">78</span></div>
-          <div class="report-score-note" id="report-score-note">+6 points this month</div>
-        </div>
-        <div class="report-gauge" id="report-gauge">
-          <div class="report-gauge-inner"><div class="report-gauge-num" id="report-gauge-num">78</div><div class="report-gauge-label" id="report-gauge-label">Good</div></div>
-        </div>
-        <div class="report-hero-text" id="report-hero-text">Great progress! Your debt reduction and consistent savings improved your overall financial health.</div>
-      </div>
-
-      <div class="report-grid-3">
-        <div class="report-card">
-          <div class="report-card-icon green">🐷</div>
-          <h3>Savings Progress</h3>
-          <div class="report-label" id="report-savings-goal-name">Top Savings Goal</div>
-          <div class="report-big green"><span id="report-savings-saved">$0</span> / <span id="report-savings-target">$0</span></div>
-          <div class="report-progress"><div class="report-progress-fill" id="report-savings-progress"></div></div>
-          <div class="report-label"><strong id="report-savings-pct">0%</strong> complete</div>
-          <div class="report-small-row"><span class="round">↑</span><span id="report-savings-note">Add a savings goal to start tracking progress.</span></div>
-          <div class="report-insight green"><strong>✦ AI Insight</strong><span id="report-savings-insight">Your savings report will become more useful as you update your goals.</span></div>
-        </div>
-
-        <div class="report-card">
-          <div class="report-card-icon orange">💳</div>
-          <h3>Debt Progress</h3>
-          <div class="report-label">Total Debt Tracked</div>
-          <div class="report-big orange" id="report-debt-total">$0</div>
-          <hr style="border:none;border-top:1px solid var(--border);margin:1rem 0">
-          <div class="report-label">Estimated Payoff Focus</div>
-          <div class="report-big orange" id="report-debt-focus">No debt added</div>
-          <div class="report-small-row"><span class="round" style="background:#fff0df;color:#e85a28">↑</span><span id="report-debt-note">Add debts to generate payoff insights.</span></div>
-          <div class="report-insight orange"><strong>✦ AI Insight</strong><span id="report-debt-insight">Your debt report will show your total balances and recommended focus debt.</span></div>
-        </div>
-
-        <div class="report-card">
-          <div class="report-card-icon blue">📊</div>
-          <h3>Credit Progress</h3>
-          <div class="report-label">Simulated Credit Range</div>
-          <div class="report-big blue"><span id="report-credit-current">680</span> → <span id="report-credit-simulated">680</span></div>
-          <div class="report-progress"><div class="report-progress-fill" id="report-credit-progress" style="background:#4267d6"></div></div>
-          <div class="report-label">Biggest Positive Factor</div>
-          <div class="report-small-row"><span class="round" style="background:#e9f0ff;color:#4267d6">✓</span><span id="report-credit-factor">Use the credit simulator to see your biggest positive factor.</span></div>
-          <div class="report-insight blue"><strong>💡 Suggested Next Step</strong><span id="report-credit-insight">Try a credit simulation to receive a personalized next step.</span></div>
-        </div>
-      </div>
-
-      <div class="report-bottom-grid">
-        <div class="report-card report-ai-card">
-          <h3 style="text-align:left;margin-bottom:0.75rem">✦ AI Financial Insights</h3>
-          <div class="report-label">Monthly Highlights</div>
-          <div class="report-ai-list" id="report-ai-list"></div>
-          <hr style="border:none;border-top:1px solid rgba(129,91,255,0.18);margin:1rem 0">
-          <div class="report-label">Suggested Focus For Next Month</div>
-          <div class="report-ai-item"><span>◎</span><div id="report-next-focus">Keep updating your savings, debt, and credit tools so Fintrail can give better monthly guidance.</div></div>
-        </div>
-
-        <div class="report-card report-achievement">
-          <div class="report-label" style="font-weight:800;color:#e85a28">🏆 Monthly Achievement</div>
-          <div class="report-achievement-emoji" id="report-achievement-emoji">🔥</div>
-          <div class="report-label">Achievement Unlocked</div>
-          <h3 id="report-achievement-title">Progress Builder</h3>
-          <p id="report-achievement-desc" style="color:var(--text-soft);font-size:0.9rem;line-height:1.6">You are building better financial habits by using your tools.</p>
-        </div>
-      </div>
-
-      <div class="report-summary">
-        <div class="report-summary-icon">♡</div>
-        <div id="report-summary-text">You made measurable financial progress this month. Small consistent actions are building long-term stability.</div>
-      </div>
-
-      <div class="report-actions-row">
-        <button class="report-action-btn" onclick="downloadMonthlyReportPDF()">⇩ Download Report (PDF)</button>
-        <button class="report-action-btn primary" onclick="alert('Sharing progress will be available soon!')">⇧ Share Your Progress</button>
-      </div>
-    </div>
-  </div>
-
   <div class="tab-section" id="tab-profile">
     <div class="profile-layout">
 
@@ -4131,7 +4086,6 @@
           <div class="score-input-card">
             <h2 data-en="Simulate Actions" data-es="Simula Acciones">Simulate Actions</h2>
             <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:1rem;line-height:1.6" data-en="Select actions you're considering to see their estimated impact on your score:" data-es="Selecciona las acciones que estás considerando para ver su impacto estimado en tu puntaje:">Select actions you're considering to see their estimated impact on your score:</p>
-            <div id="credit-sim-usage" style="font-size:0.78rem;font-weight:600;color:var(--accent);background:rgba(240,85,85,0.08);border:1px solid rgba(240,85,85,0.18);border-radius:8px;padding:0.55rem 0.75rem;margin-bottom:0.85rem;display:none"></div>
             <div class="action-cards" id="action-cards"></div>
           </div>
         </div>
@@ -5020,55 +4974,23 @@
 
   async function activatePro() {
     const btn = document.querySelector('.pw-cta.primary');
-    const originalText = btn ? btn.textContent : 'Start Pro — $4.99/mo';
-
-    if (btn) {
-      btn.disabled = true;
-      btn.textContent = 'Redirecting to checkout...';
-    }
-
+    if (btn) { btn.disabled = true; btn.textContent = 'Redirecting to checkout...'; }
     try {
-      if (!currentUser?.email) {
-        throw new Error('Please sign in before upgrading to Pro.');
-      }
-
       const response = await fetch('/.netlify/functions/create-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: currentUser.email })
+        body: JSON.stringify({ email: currentUser?.email || '' })
       });
-
-      let data = {};
-      try {
-        data = await response.json();
-      } catch (jsonErr) {
-        data = {};
-      }
-
-      if (data.alreadySubscribed) {
-        alert('You already have an active Pro subscription. You will not be charged again.');
-        closePaywall();
-        return;
-      }
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Something went wrong. Please try again.');
-      }
-
+      const data = await response.json();
       if (data.url) {
         window.location.href = data.url;
-        return;
+      } else {
+        alert('Something went wrong. Please try again.');
+        if (btn) { btn.disabled = false; btn.textContent = 'Start Pro — $4.99/mo'; }
       }
-
-      throw new Error('Checkout could not be started. Please try again.');
-
     } catch (err) {
-      alert(err.message || 'Something went wrong. Please try again.');
-    } finally {
-      if (btn) {
-        btn.disabled = false;
-        btn.textContent = originalText || 'Start Pro — $4.99/mo';
-      }
+      alert('Something went wrong. Please try again.');
+      if (btn) { btn.disabled = false; btn.textContent = 'Start Pro — $4.99/mo'; }
     }
   }
 
@@ -5116,9 +5038,8 @@
     const setDisplay = (id, show) => { const el = document.getElementById(id); if (el) el.style.display = show ? 'block' : 'none'; };
     setDisplay('guide-gate',       !isPro);
     setDisplay('guide-content',    isPro);
-    // AI Advisor uses a soft paywall: free users can open it and use 5 prompts/day; Pro users get unlimited prompts.
-    setDisplay('ai-gate',          false);
-    setDisplay('ai-content',       true);
+    setDisplay('ai-gate',          !isPro);
+    setDisplay('ai-content',       isPro);
     setDisplay('affiliate-gate',   !isPro);
     setDisplay('affiliate-content', isPro);
     updatePremiumTab();
@@ -5146,24 +5067,17 @@
     closeMobileNav();
     // Award XP for tool usage
     if (tab === 'invest') awardXPForAction('investCalc');
-    if (tab === 'creditsim') { awardXPForAction('creditSim'); updateCreditSimTab(); }
+    if (tab === 'creditsim') awardXPForAction('creditSim');
     if (tab === 'streaks') renderStreaksTab();
     if (tab === 'calendar') { try { loadCalendarEvents(); renderCalendar(); } catch(e) { console.error('Calendar render failed:', e); } }
     if (tab === 'networth') { setTimeout(initNetWorth, 50); }
     if (tab === 'healthscore') { try { calculateHealthScore(); } catch(e) { console.error('Health score render failed:', e); } }
-    if (tab === 'reports') { try { renderMonthlyReport(); } catch(e) { console.error('Monthly report render failed:', e); } }
-    if (tab === 'reports') { try { renderMonthlyReport(); } catch(e) { console.error('Monthly report render failed:', e); } }
     if (tab === 'debtplan') { try { renderDebtList(); runPayoffPlan(); } catch(e) { console.error('Debt planner render failed:', e); } }
     if (currentLang !== 'en') setTimeout(applyLanguage, 30);
   }
 
   function guardedNavTo(tab, btn) {
     if (tab === 'premium') tab = 'healthscore'; // legacy desktop nav safeguard after splitting Debt Planner + Health Score
-
-    // AI Advisor and Credit Simulator use soft paywalls. Free users can open them;
-    // AI allows 5 prompts/day and Credit Simulator allows 3 simulations/month.
-    if (tab === 'ai' || tab === 'creditsim') { navTo(tab, btn); return; }
-
     if (!isPro) { showPaywall(tab); closeMobileNav(); return; }
     navTo(tab, btn);
   }
@@ -5214,7 +5128,6 @@
     closeMobileNav();
     if (tab === 'networth') setTimeout(initNetWorth, 50);
     if (tab === 'streaks') renderStreaksTab();
-    if (tab === 'creditsim') updateCreditSimTab();
     if (tab === 'calendar') { loadCalendarEvents(); renderCalendar(); }
     if (tab === 'healthscore') { try { calculateHealthScore(); } catch(e) { console.error('Health score render failed:', e); } }
     if (tab === 'debtplan') { try { renderDebtList(); runPayoffPlan(); } catch(e) { console.error('Debt planner render failed:', e); } }
@@ -5222,10 +5135,6 @@
   }
 
   function mobileGuardedTab(tab) {
-    // AI Advisor and Credit Simulator are soft-paywall features.
-    // Free users get 5 AI prompts/day and 3 credit simulations/month.
-    if (tab === 'ai' || tab === 'creditsim') { mobileTab(tab); return; }
-
     if (!isPro) { showPaywall(tab); closeMobileNav(); return; }
     mobileTab(tab);
   }
@@ -5475,13 +5384,9 @@ Guidelines:
     const typingId = showTyping();
 
     try {
-      const { data: { session } } = await sbClient.auth.getSession();
       const response = await fetch('/.netlify/functions/ai-advisor', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session?.access_token || ''}`
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages: chatHistory, system: getSystemPrompt() })
       });
       const data = await response.json();
@@ -5492,11 +5397,7 @@ Guidelines:
       appendMessage('ai', reply);
     } catch (err) {
       removeTyping(typingId);
-      const message = err.message || 'Sorry, something went wrong. Please try again in a moment.';
-      appendMessage('ai', message);
-      if (message.includes('Upgrade to Pro')) {
-        showPaywall('ai-limit');
-      }
+      appendMessage('ai', 'Sorry, something went wrong. Please try again in a moment.');
     }
 
     isTyping = false;
@@ -6864,146 +6765,6 @@ Guidelines:
     generatePDF('Fintrail - Debt Payoff Plan', html);
   }
 
-
-  // MONTHLY FINANCIAL PROGRESS REPORT
-  function money0(n) {
-    return '$' + Math.round(Number(n || 0)).toLocaleString('en-US');
-  }
-
-  function getReportMonthLabel() {
-    const now = new Date();
-    return now.toLocaleString('en-US', { month: 'long', year: 'numeric' });
-  }
-
-  function getEstimatedHealthScoreForReport() {
-    let score = 60;
-    try {
-      const totalSaved = goals.reduce((s,g)=>s + Number(g.saved || 0), 0);
-      const totalTarget = goals.reduce((s,g)=>s + Number(g.target || 0), 0);
-      const savingsPct = totalTarget > 0 ? Math.min(100, (totalSaved / totalTarget) * 100) : 0;
-      const totalDebt = planDebts.reduce((s,d)=>s + Number(d.balance || 0), 0);
-      const onTrackGoals = goals.filter(g => Number(g.saved || 0) >= Number(g.target || 0) * 0.5).length;
-      score += Math.min(14, Math.round(savingsPct / 7));
-      score += Math.min(8, goals.length * 2 + onTrackGoals);
-      score += totalDebt > 0 ? Math.max(-10, 8 - Math.round(totalDebt / 5000)) : 5;
-      score += selectedActions.size ? 4 : 0;
-      return Math.max(35, Math.min(95, score));
-    } catch(e) { return 72; }
-  }
-
-  function renderMonthlyReport() {
-    const reportTab = document.getElementById('tab-reports');
-    if (!reportTab) return;
-
-    const monthLabel = getReportMonthLabel();
-    const title = document.getElementById('report-title');
-    const subtitle = document.getElementById('report-subtitle');
-    if (title) title.textContent = `Your ${monthLabel} Financial Progress Report 🎉`;
-    if (subtitle) subtitle.textContent = `Personalized progress based on the savings, debt, credit, and AI activity you have entered in Fintrail.`;
-
-    const score = getEstimatedHealthScoreForReport();
-    const prevScore = Math.max(35, score - Math.min(8, Math.max(3, goals.length + selectedActions.size + (planDebts.length ? 2 : 0))));
-    const scoreDelta = score - prevScore;
-    const rating = score >= 80 ? 'Excellent' : score >= 70 ? 'Good' : score >= 55 ? 'Building' : 'Needs Focus';
-    const gaugePct = Math.max(5, Math.min(100, score));
-
-    const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-    const setHTML = (id, val) => { const el = document.getElementById(id); if (el) el.innerHTML = val; };
-
-    setText('report-score-prev', prevScore);
-    setText('report-score-current', score);
-    setText('report-gauge-num', score);
-    setText('report-gauge-label', rating);
-    setText('report-score-note', `${scoreDelta >= 0 ? '+' : ''}${scoreDelta} points this month`);
-    const gauge = document.getElementById('report-gauge');
-    if (gauge) gauge.style.background = `conic-gradient(var(--income-color) 0 ${gaugePct}%, #e9edf3 ${gaugePct}% 100%)`;
-
-    // Savings
-    const topGoal = goals.length ? [...goals].sort((a,b) => (Number(b.saved||0)/Math.max(1,Number(b.target||1))) - (Number(a.saved||0)/Math.max(1,Number(a.target||1))))[0] : null;
-    if (topGoal) {
-      const saved = Number(topGoal.saved || 0), target = Number(topGoal.target || 0);
-      const pct = target > 0 ? Math.min(100, Math.round((saved/target)*100)) : 0;
-      setText('report-savings-goal-name', topGoal.name || 'Top Savings Goal');
-      setText('report-savings-saved', money0(saved));
-      setText('report-savings-target', money0(target));
-      setText('report-savings-pct', pct + '%');
-      const bar = document.getElementById('report-savings-progress'); if (bar) bar.style.width = pct + '%';
-      setText('report-savings-note', pct >= 100 ? 'Goal completed — amazing progress.' : `You are ${pct}% toward this goal.`);
-      setText('report-savings-insight', pct >= 60 ? 'You are building strong savings momentum. Keep making consistent deposits.' : 'Small recurring deposits can help this goal grow faster next month.');
-    } else {
-      setText('report-savings-goal-name', 'No savings goal yet');
-      setText('report-savings-saved', '$0'); setText('report-savings-target', '$0'); setText('report-savings-pct', '0%');
-      const bar = document.getElementById('report-savings-progress'); if (bar) bar.style.width = '0%';
-    }
-
-    // Debt
-    const totalDebt = planDebts.reduce((s,d)=>s + Number(d.balance || 0), 0);
-    const focusDebt = planDebts.length ? [...planDebts].sort((a,b)=> (payoffMethod === 'avalanche' ? Number(b.apr||0)-Number(a.apr||0) : Number(a.balance||0)-Number(b.balance||0)))[0] : null;
-    setText('report-debt-total', money0(totalDebt));
-    setText('report-debt-focus', focusDebt ? focusDebt.name : 'No debt added');
-    setText('report-debt-note', focusDebt ? `Focus on ${focusDebt.name} using the ${payoffMethod === 'avalanche' ? 'avalanche' : 'snowball'} method.` : 'Add debts to generate payoff insights.');
-    setText('report-debt-insight', focusDebt ? `Your current payoff strategy points to ${focusDebt.name} as the next priority debt.` : 'Your debt report will show your total balances and recommended focus debt.');
-
-    // Credit
-    const baseInput = document.getElementById('base-score');
-    const baseScore = baseInput ? parseInt(baseInput.value || '680') : 680;
-    let simulatedScore = baseScore;
-    let bestPositive = null;
-    selectedActions.forEach(id => {
-      const action = creditActions.find(a => a.id === id);
-      if (action) {
-        simulatedScore += action.impact;
-        if (action.impact > 0 && (!bestPositive || action.impact > bestPositive.impact)) bestPositive = action;
-      }
-    });
-    simulatedScore = Math.max(300, Math.min(850, simulatedScore));
-    setText('report-credit-current', baseScore);
-    setText('report-credit-simulated', simulatedScore);
-    const creditBar = document.getElementById('report-credit-progress'); if (creditBar) creditBar.style.width = Math.max(5, Math.min(100, ((simulatedScore-300)/550)*100)) + '%';
-    setText('report-credit-factor', bestPositive ? bestPositive.label : 'Use the credit simulator to see your biggest positive factor.');
-    setText('report-credit-insight', simulatedScore > baseScore ? 'Your simulated actions show positive credit momentum. Keep prioritizing high-impact behaviors.' : 'Try selecting a positive credit action to see which next step could help your projected score.');
-
-    // Hero + AI insights
-    const heroPieces = [];
-    if (topGoal) heroPieces.push('savings progress');
-    if (planDebts.length) heroPieces.push('debt planning');
-    if (selectedActions.size) heroPieces.push('credit simulation activity');
-    setText('report-hero-text', heroPieces.length ? `Great progress! Your ${heroPieces.join(', ')} helped shape this month’s financial picture.` : 'Add savings goals, debts, and credit simulations to make this report more personalized.');
-
-    const insights = [];
-    insights.push(topGoal ? `Your top savings goal is ${topGoal.name}, currently at ${Math.round((Number(topGoal.saved||0)/Math.max(1,Number(topGoal.target||1)))*100)}%.` : 'Add a savings goal to start tracking monthly progress.');
-    insights.push(planDebts.length ? `You are tracking ${planDebts.length} debt${planDebts.length>1?'s':''} with ${money0(totalDebt)} remaining.` : 'Add debts to unlock payoff progress insights.');
-    insights.push(selectedActions.size ? `You tested ${selectedActions.size} credit scenario${selectedActions.size>1?'s':''} this month.` : 'Use the credit simulator to receive credit progress insights.');
-    insights.push('Your report is based on the information you enter, so keeping your goals and debts updated improves accuracy.');
-    setHTML('report-ai-list', insights.map(x => `<div class="report-ai-item"><span>✓</span><div>${escHtml(x)}</div></div>`).join(''));
-
-    let focus = 'Keep updating your savings, debt, and credit tools so Fintrail can give better monthly guidance.';
-    if (!topGoal) focus = 'Create one savings goal so next month’s report can show clear progress.';
-    else if (planDebts.length && focusDebt) focus = `Focus extra payments on ${focusDebt.name} while maintaining consistent savings.`;
-    else if (topGoal && Number(topGoal.saved||0) < Number(topGoal.target||0)) focus = `Add a recurring deposit toward ${topGoal.name} to build stronger momentum.`;
-    setText('report-next-focus', focus);
-
-    // Achievement
-    let achEmoji = '🔥', achTitle = 'Progress Builder', achDesc = 'You are building better financial habits by using your tools.';
-    if (topGoal && Number(topGoal.saved||0) >= Number(topGoal.target||0)) { achEmoji='🎯'; achTitle='Goal Crusher'; achDesc='You completed a savings goal — excellent progress.'; }
-    else if (topGoal && Number(topGoal.saved||0) > 0) { achEmoji='🐷'; achTitle='Consistent Saver'; achDesc='You are actively building savings momentum.'; }
-    else if (planDebts.length) { achEmoji='💳'; achTitle='Debt Strategist'; achDesc='You created a clearer payoff path by tracking your debts.'; }
-    else if (selectedActions.size) { achEmoji='📊'; achTitle='Credit Explorer'; achDesc='You used simulations to understand credit decisions before taking action.'; }
-    setText('report-achievement-emoji', achEmoji); setText('report-achievement-title', achTitle); setText('report-achievement-desc', achDesc);
-    setText('report-summary-text', heroPieces.length ? 'You made measurable financial progress this month. Small consistent actions are building long-term stability.' : 'This report will become more personalized as you add savings goals, debt details, and credit simulations.');
-  }
-
-  function downloadMonthlyReportPDF() {
-    try {
-      renderMonthlyReport();
-      const monthLabel = getReportMonthLabel();
-      const html = document.getElementById('tab-reports')?.innerHTML || '';
-      generatePDF('Fintrail - ' + monthLabel + ' Progress Report', html);
-    } catch(e) {
-      alert('Report download is unavailable right now. Please try again later.');
-    }
-  }
-
   // CREDIT SCORE SIMULATOR
   const creditActions = [
     { id: 'payoff_cc', icon: '💳', label: 'Pay Off Credit Card Balance', labelEs: 'Pagar Saldo de Tarjeta', desc: 'Reduce utilization to 0%', descEs: 'Reduce la utilización a 0%', impact: +45, type: 'positive', detail: 'Credit utilization is 30% of your score — paying off balances has the fastest impact.', detailEs: 'La utilización de crédito representa el 30% de tu puntaje — pagar saldos suele tener el impacto más rápido.' },
@@ -7045,122 +6806,11 @@ Guidelines:
       </div>`).join('');
   }
 
-  async function toggleAction(id) {
-    const allowed = await checkCreditSimulationLimit();
-    if (!allowed) return;
-
+  function toggleAction(id) {
     if (selectedActions.has(id)) selectedActions.delete(id);
     else selectedActions.add(id);
     renderActionCards();
     updateSimulator();
-  }
-
-  const FREE_MONTHLY_CREDIT_SIM_LIMIT = 3;
-
-  function getCurrentCreditSimMonth() {
-    return new Date().toISOString().slice(0, 7); // YYYY-MM
-  }
-
-  async function getCreditSimulationUsage() {
-    if (isPro) return { unlimited: true };
-
-    const month = getCurrentCreditSimMonth();
-    if (!sbClient || !currentUser) {
-      return { used: 0, limit: FREE_MONTHLY_CREDIT_SIM_LIMIT, remaining: FREE_MONTHLY_CREDIT_SIM_LIMIT, month };
-    }
-
-    const { data, error } = await sbClient
-      .from('user_data')
-      .select('user_id,is_pro,credit_simulations_used,credit_simulation_reset_month')
-      .eq('user_id', currentUser.id)
-      .single();
-
-    if (error && error.code !== 'PGRST116') {
-      console.log('Credit sim usage check failed:', error.message);
-      return { used: 0, limit: FREE_MONTHLY_CREDIT_SIM_LIMIT, remaining: FREE_MONTHLY_CREDIT_SIM_LIMIT, month };
-    }
-
-    if (data?.is_pro) return { unlimited: true };
-
-    if (!data) {
-      await sbClient.from('user_data').upsert({
-        user_id: currentUser.id,
-        is_pro: false,
-        credit_simulations_used: 0,
-        credit_simulation_reset_month: month
-      }, { onConflict: 'user_id' });
-      return { used: 0, limit: FREE_MONTHLY_CREDIT_SIM_LIMIT, remaining: FREE_MONTHLY_CREDIT_SIM_LIMIT, month };
-    }
-
-    let used = data.credit_simulations_used || 0;
-    if (data.credit_simulation_reset_month !== month) {
-      used = 0;
-      await sbClient
-        .from('user_data')
-        .update({ credit_simulations_used: 0, credit_simulation_reset_month: month })
-        .eq('user_id', currentUser.id);
-    }
-
-    return {
-      used,
-      limit: FREE_MONTHLY_CREDIT_SIM_LIMIT,
-      remaining: Math.max(0, FREE_MONTHLY_CREDIT_SIM_LIMIT - used),
-      month
-    };
-  }
-
-  async function updateCreditSimUsageDisplay() {
-    const el = document.getElementById('credit-sim-usage');
-    if (!el) return;
-
-    if (isPro) {
-      el.style.display = 'block';
-      el.textContent = currentLang === 'es'
-        ? '⭐ Pro: simulaciones de crédito ilimitadas'
-        : '⭐ Pro: unlimited credit simulations';
-      return;
-    }
-
-    const usage = await getCreditSimulationUsage();
-    if (usage.unlimited) return updateCreditSimUsageDisplay();
-
-    el.style.display = 'block';
-    el.textContent = currentLang === 'es'
-      ? `${usage.remaining}/${usage.limit} simulaciones gratis restantes este mes`
-      : `${usage.remaining}/${usage.limit} free simulations remaining this month`;
-  }
-
-  async function checkCreditSimulationLimit() {
-    if (isPro) return true;
-
-    const month = getCurrentCreditSimMonth();
-    const usage = await getCreditSimulationUsage();
-
-    if (usage.unlimited) return true;
-
-    if (usage.used >= FREE_MONTHLY_CREDIT_SIM_LIMIT) {
-      alert(currentLang === 'es'
-        ? 'Has usado tus 3 simulaciones de crédito gratis este mes. Hazte Pro para simulaciones ilimitadas.'
-        : 'You’ve used your 3 free credit simulations this month. Upgrade to Pro for unlimited simulations.');
-      showPaywall('creditsim-limit');
-      return false;
-    }
-
-    if (sbClient && currentUser) {
-      const newUsed = usage.used + 1;
-      const { error } = await sbClient
-        .from('user_data')
-        .update({
-          credit_simulations_used: newUsed,
-          credit_simulation_reset_month: month
-        })
-        .eq('user_id', currentUser.id);
-
-      if (error) console.log('Credit sim usage update failed:', error.message);
-    }
-
-    updateCreditSimUsageDisplay();
-    return true;
   }
 
   function syncScoreSlider() {
@@ -7252,13 +6902,9 @@ Guidelines:
     const gate = document.getElementById('creditsim-gate');
     const content = document.getElementById('creditsim-content');
     if (gate && content) {
-      // Credit Simulator now uses a soft paywall:
-      // Free users get 3 simulations/month; Pro users get unlimited simulations.
-      gate.style.display = 'none';
-      content.style.display = 'block';
-      renderActionCards();
-      updateSimulator();
-      updateCreditSimUsageDisplay();
+      gate.style.display = isPro ? 'none' : 'block';
+      content.style.display = isPro ? 'block' : 'none';
+      if (isPro) { renderActionCards(); updateSimulator(); }
     }
   }
 
@@ -7324,13 +6970,9 @@ Return this exact JSON structure (no markdown, no backticks, just raw JSON):
 
 Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. Be specific and realistic.`
     try {
-      const { data: { session } } = await sbClient.auth.getSession();
       const response = await fetch('/.netlify/functions/ai-advisor', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session?.access_token || ''}`
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           messages: [{ role: 'user', content: prompt }],
           system: currentLang === 'es' ? 'Eres una experta asesora en negociación de deudas. DEBES responder solo con JSON válido en español — sin otro texto, sin markdown. Devuelve exactamente: {"before":"...","opening":"...","main":"...","rebuttal":"...","closing":"...","tips":"..."}' : 'You are an expert debt negotiation coach. You MUST respond with valid JSON only — no other text, no markdown. Return exactly: {"before":"...","opening":"...","main":"...","rebuttal":"...","closing":"...","tips":"..."}'
@@ -8977,7 +8619,113 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     awardXPForAction('calendarEvent');
   }
 
+
+  // =============================================
+  // PWA / HOME SCREEN INSTALL SUPPORT
+  // =============================================
+  let deferredPWAInstallPrompt = null;
+
+  function isRunningStandalone() {
+    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  }
+
+  function isIOSDevice() {
+    return /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+  }
+
+  function shouldShowPWAInstallPrompt() {
+    if (isRunningStandalone()) return false;
+    const dismissedAt = parseInt(localStorage.getItem('fintrail_pwa_prompt_dismissed_at') || '0', 10);
+    const sevenDays = 7 * 24 * 60 * 60 * 1000;
+    return !dismissedAt || (Date.now() - dismissedAt) > sevenDays;
+  }
+
+  function showPWAInstallPrompt(force = false) {
+    const card = document.getElementById('pwa-install-card');
+    if (!card) return;
+    if (!force && !shouldShowPWAInstallPrompt()) return;
+
+    const title = document.getElementById('pwa-install-title');
+    const text = document.getElementById('pwa-install-text');
+    const btn = document.getElementById('pwa-install-btn');
+
+    if (isIOSDevice() && !deferredPWAInstallPrompt) {
+      title.textContent = currentLang === 'es' ? 'Agrega Fintrail a tu pantalla de inicio' : 'Add Fintrail to your Home Screen';
+      text.textContent = currentLang === 'es'
+        ? 'En iPhone: toca Compartir, luego “Agregar a pantalla de inicio”.'
+        : 'On iPhone: tap Share, then “Add to Home Screen.”';
+      btn.textContent = currentLang === 'es' ? 'Entendido' : 'Got it';
+    } else {
+      title.textContent = currentLang === 'es' ? 'Instala Fintrail como app' : 'Install Fintrail like an app';
+      text.textContent = currentLang === 'es'
+        ? 'Accede más rápido desde tu teléfono con una experiencia tipo app.'
+        : 'Get faster access from your phone with an app-like experience.';
+      btn.textContent = currentLang === 'es' ? 'Instalar' : 'Install';
+    }
+
+    card.classList.add('visible');
+  }
+
+  function dismissPWAInstallPrompt() {
+    localStorage.setItem('fintrail_pwa_prompt_dismissed_at', Date.now().toString());
+    const card = document.getElementById('pwa-install-card');
+    if (card) card.classList.remove('visible');
+  }
+
+  async function installFintrailApp() {
+    if (isIOSDevice() && !deferredPWAInstallPrompt) {
+      dismissPWAInstallPrompt();
+      return;
+    }
+
+    if (!deferredPWAInstallPrompt) {
+      showPWAInstallPrompt(true);
+      return;
+    }
+
+    deferredPWAInstallPrompt.prompt();
+    const choice = await deferredPWAInstallPrompt.userChoice;
+    deferredPWAInstallPrompt = null;
+
+    if (choice && choice.outcome === 'accepted') {
+      localStorage.setItem('fintrail_pwa_installed', 'true');
+    }
+    dismissPWAInstallPrompt();
+  }
+
+  function initPWAInstallPrompt() {
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPWAInstallPrompt = e;
+      setTimeout(() => showPWAInstallPrompt(), 2500);
+    });
+
+    window.addEventListener('appinstalled', () => {
+      localStorage.setItem('fintrail_pwa_installed', 'true');
+      const card = document.getElementById('pwa-install-card');
+      if (card) card.classList.remove('visible');
+    });
+
+    // iPhone/iPad Safari does not support beforeinstallprompt, so show helpful instructions.
+    if (isIOSDevice() && shouldShowPWAInstallPrompt()) {
+      setTimeout(() => showPWAInstallPrompt(), 3500);
+    }
+  }
+
+  function registerServiceWorker() {
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {
+          // Keep the app working even if the service worker is unavailable.
+        });
+      });
+    }
+  }
+
+
   // INIT
+  initPWAInstallPrompt();
+  registerServiceWorker();
   loadConfig();
   loadLanguagePreference();
   applyProState();
