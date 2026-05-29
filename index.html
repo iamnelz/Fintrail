@@ -2437,6 +2437,22 @@
   }
 
 
+
+
+/* MOBILE AI ADVISOR ORDER FIX: chat first, suggested questions below */
+@media (max-width: 800px) {
+  #tab-ai .ai-layout {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  #tab-ai .chat-window {
+    order: 1 !important;
+  }
+  #tab-ai .ai-sidebar {
+    order: 2 !important;
+  }
+}
+
 </style>
 </head>
 <body>
