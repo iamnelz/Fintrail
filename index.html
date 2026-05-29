@@ -2506,6 +2506,23 @@
   }
 }
 
+
+/* MOBILE FINANCIAL CALENDAR ORDER FIX: calendar first, upcoming events below */
+@media (max-width: 860px) {
+  #tab-calendar .cal-layout {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  #tab-calendar .cal-layout > div:first-child {
+    order: 1 !important;
+    width: 100% !important;
+  }
+  #tab-calendar .cal-upcoming {
+    order: 2 !important;
+    width: 100% !important;
+  }
+}
+
 </style>
 </head>
 <body>
