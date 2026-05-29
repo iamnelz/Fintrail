@@ -4935,7 +4935,10 @@
           if (supaXP >= localXP) {
             gameData = { ...gameData, ...data.game_data };
             safeSet('fintrail_game_' + currentUser.id, JSON.stringify(gameData));
+          } else if (data.game_data.creditScore || data.game_data.credit_score) {
+            gameData.creditScore = data.game_data.creditScore || data.game_data.credit_score;
           }
+          if (gameData.creditScore) safeSet('fintrail_credit_score_' + currentUser.id, String(gameData.creditScore));
         }
         if (data.is_pro) {
           isPro = true;
@@ -4956,6 +4959,8 @@
       try { const loc = safeGet('fintrail_debts_' + _fuid); if (loc) planDebts = JSON.parse(loc); } catch(e) {}
     }
     render(); renderBillList(); renderSchedule(); renderGoals();
+    applySavedCreditScore();
+    if (typeof updateSimulator === 'function' && document.getElementById('base-score')) updateSimulator();
     if (planDebts.length) { renderDebtList(); runPayoffPlan(); }
     // Mark NW as pre-loaded from Supabase so initNetWorth uses this data directly
     if (nwAssets.length || nwLiabilities.length) nwLoaded = true;
@@ -6816,6 +6821,46 @@ Guidelines:
     updateSimulator();
   }
 
+  function getSavedCreditScore() {
+    const uid = currentUser?.id || 'demo';
+    const fromGame = parseInt(gameData?.creditScore || gameData?.credit_score || 0);
+    if (!isNaN(fromGame) && fromGame >= 300 && fromGame <= 850) return fromGame;
+    const saved = parseInt(safeGet('fintrail_credit_score_' + uid) || safeGet('fintrail_credit_score_local') || '0');
+    if (!isNaN(saved) && saved >= 300 && saved <= 850) return saved;
+    return 680;
+  }
+
+  function applySavedCreditScore() {
+    const score = getSavedCreditScore();
+    const slider = document.getElementById('base-score');
+    const input = document.getElementById('base-score-num');
+    if (slider) slider.value = score;
+    if (input) input.value = score;
+    if (document.getElementById('base-score-display')) document.getElementById('base-score-display').textContent = score;
+  }
+
+  let creditScoreSaveTimer = null;
+  function persistCreditScore(score) {
+    const val = Math.min(850, Math.max(300, parseInt(score) || 680));
+    const uid = currentUser?.id || 'demo';
+    gameData.creditScore = val;
+    safeSet('fintrail_credit_score_' + uid, String(val));
+    safeSet('fintrail_credit_score_local', String(val));
+    if (creditScoreSaveTimer) clearTimeout(creditScoreSaveTimer);
+    creditScoreSaveTimer = setTimeout(async () => {
+      if (!sbClient || !currentUser) return;
+      try {
+        await sbClient.from('user_data').upsert({
+          user_id: currentUser.id,
+          game_data: gameData,
+          updated_at: new Date().toISOString()
+        }, { onConflict: 'user_id' });
+      } catch (e) {
+        console.log('credit score sync err:', e.message);
+      }
+    }, 450);
+  }
+
   function syncScoreSlider() {
     const input = document.getElementById('base-score-num');
     const raw = parseInt(input.value);
@@ -6823,6 +6868,7 @@ Guidelines:
     const val = Math.min(850, Math.max(300, raw));
     input.value = val;
     document.getElementById('base-score').value = val;
+    persistCreditScore(val);
     updateSimulator();
   }
 
@@ -6830,6 +6876,7 @@ Guidelines:
     const base = parseInt(document.getElementById('base-score').value);
     document.getElementById('base-score-num').value = base;
     document.getElementById('base-score-display').textContent = base;
+    persistCreditScore(base);
 
     // Calculate total impact from selected actions
     let totalImpact = 0;
@@ -6907,7 +6954,7 @@ Guidelines:
     if (gate && content) {
       gate.style.display = isPro ? 'none' : 'block';
       content.style.display = isPro ? 'block' : 'none';
-      if (isPro) { renderActionCards(); updateSimulator(); }
+      if (isPro) { applySavedCreditScore(); renderActionCards(); updateSimulator(); }
     }
   }
 
