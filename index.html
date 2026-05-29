@@ -2640,6 +2640,60 @@
   text-align:center;
 }
 
+
+/* === TABLET NAVIGATION FIX ===
+   On iPad/tablet widths, use the hamburger menu instead of the crowded desktop dropdown nav.
+   This prevents the feature tabs/dropdowns from being cut off or hidden behind the hero/header. */
+@media (min-width:701px) and (max-width:1100px) {
+  header {
+    height:72px !important;
+    min-height:72px !important;
+    flex-wrap:nowrap !important;
+    padding:0 1.25rem !important;
+  }
+
+  header nav {
+    display:none !important;
+  }
+
+  .hamburger {
+    display:flex !important;
+  }
+
+  #mobile-profile-btn {
+    display:flex !important;
+  }
+
+  .mobile-nav {
+    top:72px !important;
+    max-height:calc(100vh - 72px) !important;
+    overflow-y:auto !important;
+    -webkit-overflow-scrolling:touch !important;
+  }
+
+  .mobile-overlay {
+    top:72px !important;
+  }
+
+  .mobile-nav-grid,
+  .mobile-nav > div[style*="grid-template-columns"] {
+    grid-template-columns:repeat(3,1fr) !important;
+  }
+
+  .hero {
+    padding-top:2.5rem !important;
+  }
+
+  main {
+    padding-top:1.75rem !important;
+  }
+
+  .account-bar {
+    position:relative !important;
+    z-index:80 !important;
+  }
+}
+
 </style>
 </head>
 <body>
