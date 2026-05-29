@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fintrail Pro — Budget Smarter, Live Better</title>
-<!-- BUILD: xp-economy-rebalanced-2026-05-26 -->
+<!-- BUILD: affiliate-copy-clean-safe-2026-05-29 -->
 <!-- REPLACE content value below with your actual Google Search Console verification code -->
 <meta name="google-site-verification" content="PASTE_YOUR_VERIFICATION_CODE_HERE" />
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -361,7 +361,7 @@
   .rc-cta.secondary { background:none; color:var(--accent); border:1.5px solid var(--accent); }
   .rc-cta.secondary:hover { background:rgba(240,85,85,0.08); }
   .rc-fine { font-size:0.72rem; color:var(--muted); line-height:1.5; margin-top:0.5rem; }
-  .partner details-note { font-size:0.72rem; font-weight:600; color:var(--income-color); background:rgba(6,214,160,0.1); border-radius:6px; padding:0.3rem 0.7rem; margin-top:0.6rem; display:inline-block; }
+  .commission-note { font-size:0.72rem; font-weight:600; color:var(--income-color); background:rgba(6,214,160,0.1); border-radius:6px; padding:0.3rem 0.7rem; margin-top:0.6rem; display:inline-block; }
 
   /* RATE BANNER CHIPS */
   .rate-chip { background:var(--surface2); border:1px solid var(--border); border-radius:12px; padding:1rem 1.25rem; text-align:center; }
@@ -884,7 +884,7 @@
   }
   .rc-cta.secondary:hover { background:#e8f5ee; transform:translateY(-1px); }
   .rc-fine { font-size:0.68rem; color:var(--muted); text-align:center; line-height:1.4; }
-  .resource-card .partner details-note {
+  .resource-card .commission-note {
     font-size:0.68rem; color:var(--muted); margin-top:0.4rem;
     padding-top:0.4rem; border-top:1px solid var(--border); text-align:center;
   }
@@ -2580,32 +2580,119 @@
 
 
 
-  /* FOUNDING MEMBER BADGE */
-  .founding-member-badge {
-    display:inline-flex; align-items:center; gap:0.35rem;
-    background:linear-gradient(135deg,#1a1a2e,#2d1b4e);
-    color:#ffd166; font-size:0.68rem; font-weight:800;
-    padding:0.22rem 0.65rem; border-radius:20px;
-    margin-top:0.5rem; border:1px solid rgba(255,209,102,0.45);
-    text-transform:uppercase; letter-spacing:0.05em;
-  }
-  .founding-card {
-    background:linear-gradient(135deg,rgba(26,26,46,0.96),rgba(45,27,78,0.96));
-    border:1px solid rgba(255,209,102,0.35);
-    border-radius:14px; padding:1rem; margin:1rem 0; color:#fff;
-    box-shadow:0 10px 26px rgba(26,26,46,0.12);
-  }
-  .founding-card h3 { font-size:0.95rem; font-weight:800; color:#ffd166; margin-bottom:0.3rem; }
-  .founding-card p { font-size:0.8rem; color:rgba(255,255,255,0.72); line-height:1.55; margin-bottom:0.55rem; }
-  .founding-card .founding-meta {
-    display:flex; flex-wrap:wrap; gap:0.45rem; margin-top:0.55rem;
-  }
-  .founding-card .founding-chip {
-    background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12);
-    color:#ffd166; border-radius:999px; padding:0.25rem 0.6rem;
-    font-size:0.7rem; font-weight:800;
+/* === MINIMAL FOUNDING MEMBER UI ONLY === */
+.founding-member-badge {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:0.35rem;
+  background:linear-gradient(135deg,#1a1a2e,#2d1b4e);
+  color:#ffd166;
+  font-size:0.68rem;
+  font-weight:800;
+  padding:0.25rem 0.7rem;
+  border-radius:999px;
+  margin-top:0.55rem;
+  border:1px solid rgba(255,209,102,0.45);
+  text-transform:uppercase;
+  letter-spacing:0.04em;
+}
+.founding-member-card {
+  background:linear-gradient(135deg,rgba(26,26,46,0.97),rgba(45,27,78,0.97));
+  border:1px solid rgba(255,209,102,0.38);
+  border-radius:14px;
+  padding:1rem;
+  margin-top:1rem;
+  color:#fff;
+}
+.founding-member-card h3 {
+  font-size:0.98rem;
+  font-weight:800;
+  color:#ffd166;
+  margin-bottom:0.35rem;
+}
+.founding-member-card p {
+  font-size:0.8rem;
+  color:rgba(255,255,255,0.75);
+  line-height:1.55;
+  margin-bottom:0.55rem;
+}
+.founding-member-card .founding-chip-row {
+  display:flex;
+  flex-wrap:wrap;
+  gap:0.45rem;
+  margin-top:0.6rem;
+}
+.founding-member-card .founding-chip {
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.13);
+  color:#ffd166;
+  border-radius:999px;
+  padding:0.25rem 0.6rem;
+  font-size:0.68rem;
+  font-weight:800;
+}
+.founding-paywall-note {
+  margin-top:0.6rem;
+  font-size:0.72rem;
+  line-height:1.45;
+  color:var(--muted);
+  text-align:center;
+}
+
+
+/* === TABLET NAVIGATION FIX ===
+   On iPad/tablet widths, use the hamburger menu instead of the crowded desktop dropdown nav.
+   This prevents the feature tabs/dropdowns from being cut off or hidden behind the hero/header. */
+@media (min-width:701px) and (max-width:1100px) {
+  header {
+    height:72px !important;
+    min-height:72px !important;
+    flex-wrap:nowrap !important;
+    padding:0 1.25rem !important;
   }
 
+  header nav {
+    display:none !important;
+  }
+
+  .hamburger {
+    display:flex !important;
+  }
+
+  #mobile-profile-btn {
+    display:flex !important;
+  }
+
+  .mobile-nav {
+    top:72px !important;
+    max-height:calc(100vh - 72px) !important;
+    overflow-y:auto !important;
+    -webkit-overflow-scrolling:touch !important;
+  }
+
+  .mobile-overlay {
+    top:72px !important;
+  }
+
+  .mobile-nav-grid,
+  .mobile-nav > div[style*="grid-template-columns"] {
+    grid-template-columns:repeat(3,1fr) !important;
+  }
+
+  .hero {
+    padding-top:2.5rem !important;
+  }
+
+  main {
+    padding-top:1.75rem !important;
+  }
+
+  .account-bar {
+    position:relative !important;
+    z-index:80 !important;
+  }
+}
 
 </style>
 </head>
@@ -2943,7 +3030,7 @@
     </div>
     <div class="paywall-actions">
       <button class="pw-cta primary" onclick="activatePro()">Start Pro — $4.99/mo</button>
-      <div class="pw-trial">🎉 First 7 days free · then $4.99/mo</div>
+      <div class="pw-trial">🎉 Founding price: first 7 days free · then $4.99/mo</div>
       <button class="pw-cta secondary" onclick="closePaywall()">Maybe later</button>
     </div>
   </div>
@@ -3229,7 +3316,7 @@
       <div id="rate-banner" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1.75rem;"></div>
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0.65rem 1rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:0.6rem;">
         <span style="font-size:1rem;">ℹ️</span>
-        <p style="font-size:0.75rem;color:var(--muted);line-height:1.5;"><strong style="color:var(--dark);" data-en="Affiliate Disclosure:" data-es="Divulgación de Afiliados:">Affiliate Disclosure:</strong> <span data-en="Fintrail may earn a partner details when you apply through our partner links, at no extra cost to you. Rates shown are representative and subject to change. Always verify current rates directly with the lender." data-es="Fintrail puede ganar una comisión cuando aplicas a través de nuestros enlaces de socios, sin costo adicional para ti. Las tasas mostradas son representativas y sujetas a cambio. Siempre verifica las tasas actuales directamente con el prestamista.">Fintrail may earn a partner details when you apply through our partner links, at no extra cost to you. Rates shown are representative and subject to change. Always verify current rates directly with the lender.</span></p>
+        <p style="font-size:0.75rem;color:var(--muted);line-height:1.5;"><strong style="color:var(--dark);" data-en="Affiliate Disclosure:" data-es="Divulgación de Afiliados:">Affiliate Disclosure:</strong> <span data-en="Fintrail may earn a commission when you apply through our partner links, at no extra cost to you. Rates shown are representative and subject to change. Always verify current rates directly with the lender." data-es="Fintrail puede ganar una comisión cuando aplicas a través de nuestros enlaces de socios, sin costo adicional para ti. Las tasas mostradas son representativas y sujetas a cambio. Siempre verifica las tasas actuales directamente con el prestamista.">Fintrail may earn a commission when you apply through our partner links, at no extra cost to you. Rates shown are representative and subject to change. Always verify current rates directly with the lender.</span></p>
       </div>
     </div>
 
@@ -4085,7 +4172,6 @@
           <div class="profile-name" id="profile-display-name">User</div>
           <div class="profile-email" id="profile-display-email">Loading...</div>
           <span class="profile-plan-badge" id="profile-plan-badge">Free Plan</span>
-          <div class="founding-member-badge" id="profile-founding-badge" style="display:none">🏆 Founding Member</div>
         </div>
         <div class="profile-sidebar card" style="padding:0.75rem">
           <button class="profile-menu-btn active" onclick="switchProfilePanel('account', this)"><span class="pmb-icon">👤</span> Account Info</button>
@@ -4106,15 +4192,6 @@
         <div class="profile-panel visible card" id="panel-account">
           <div class="profile-section-title" data-en="Account Information" data-es="Información de la Cuenta">Account Information</div>
           <div class="profile-section-desc">Update your display name and email address.</div>
-          <div class="founding-card" id="founding-member-card" style="display:none">
-            <h3>🏆 Founding Member</h3>
-            <p>Thank you for supporting Fintrail early. Your $4.99/month Pro rate is locked in while your subscription remains active.</p>
-            <p>If you cancel, you have a 90-day grace period to re-subscribe and keep your Founding Member price.</p>
-            <div class="founding-meta">
-              <span class="founding-chip">$4.99/mo Locked</span>
-              <span class="founding-chip">90-Day Grace Period</span>
-            </div>
-          </div>
           <div class="profile-field">
             <label>Full Name</label>
             <input class="profile-input" type="text" id="profile-name-input" placeholder="Your name">
@@ -4736,10 +4813,10 @@
       title: 'Better Mortgage', logo: '🏠',
       badges: ['badge-featured|⭐ Featured', 'badge-low|Low Rates', 'badge-fast|100% Online'],
       rates: [{ val:'6.49%', label:'30-yr Fixed' }, { val:'6.12%', label:'15-yr Fixed' }, { val:'5.89%', label:'5/1 ARM' }],
-      desc: 'Partner Details-free mortgage lender with an entirely online process. Pre-approval in as little as 3 minutes.',
+      desc: 'Commission-free mortgage lender with an entirely online process. Pre-approval in as little as 3 minutes.',
       cta: 'Check Your Rate', url: 'https://www.better.com', ctaStyle: '',
       fine: 'Rates shown are representative APRs. Your rate depends on credit score, down payment & loan amount.',
-      partner details: '💰 Earn $150–$300 per funded loan referral'
+      commission: '💰 Earn $150–$300 per funded loan referral'
     },
     {
       tag: 'mortgage',
@@ -4749,7 +4826,7 @@
       desc: 'America\'s largest mortgage lender. Easy online application, verified approval in minutes.',
       cta: 'Get Pre-Approved', url: 'https://www.rocketmortgage.com', ctaStyle: '',
       fine: 'Rates change daily. Rate shown is sample APR for illustrative purposes.',
-      partner details: '💰 Earn $200–$400 per closed referral'
+      commission: '💰 Earn $200–$400 per closed referral'
     },
     {
       tag: 'mortgage',
@@ -4759,7 +4836,7 @@
       desc: 'One of the nation\'s largest non-bank lenders. Offers FHA, VA, jumbo, and conventional loans.',
       cta: 'Get a Quote', url: 'https://www.loandepot.com', ctaStyle: '',
       fine: 'Advertised rates are for well-qualified borrowers. Verify current rates on their site.',
-      partner details: '💰 Earn $150–$250 per lead'
+      commission: '💰 Earn $150–$250 per lead'
     },
     // PERSONAL LOANS
     {
@@ -4770,7 +4847,7 @@
       desc: 'No origination fees, no prepayment penalties. Borrow $5K–$100K with same-day funding available.',
       cta: 'Check Your Rate', url: 'https://www.sofi.com/personal-loans/', ctaStyle: '',
       fine: 'APR range: 8.99%–29.99%. Rate depends on creditworthiness. Soft credit check for pre-qualification.',
-      partner details: '💰 Earn $100–$150 per funded loan'
+      commission: '💰 Earn $100–$150 per funded loan'
     },
     {
       tag: 'personal',
@@ -4780,7 +4857,7 @@
       desc: 'Truist\'s online lending division. Offers the lowest rates for excellent credit borrowers.',
       cta: 'Apply Now', url: 'https://www.lightstream.com', ctaStyle: '',
       fine: 'Rates start at 7.49% APR with AutoPay. Requires good to excellent credit.',
-      partner details: '💰 Earn $80–$120 per funded loan'
+      commission: '💰 Earn $80–$120 per funded loan'
     },
     {
       tag: 'personal',
@@ -4790,7 +4867,7 @@
       desc: 'Uses AI and education/employment data — not just credit score — to offer better rates to more people.',
       cta: 'Check Rate', url: 'https://www.upstart.com', ctaStyle: '',
       fine: 'Average APR 21.97%. Available to borrowers with limited credit history.',
-      partner details: '💰 Earn $60–$100 per funded loan'
+      commission: '💰 Earn $60–$100 per funded loan'
     },
     // AUTO LOANS
     {
@@ -4801,7 +4878,7 @@
       desc: 'Pentagon Federal Credit Union offers some of the lowest auto loan rates nationwide. Open to everyone.',
       cta: 'Apply for Auto Loan', url: 'https://www.penfed.org/auto-loans', ctaStyle: '',
       fine: 'Rates as low as 4.74% APR for new autos with excellent credit. Membership required.',
-      partner details: '💰 Earn $50–$100 per funded auto loan'
+      commission: '💰 Earn $50–$100 per funded auto loan'
     },
     {
       tag: 'auto',
@@ -4811,7 +4888,7 @@
       desc: 'Finance any vehicle — new, used, or private party. No restrictions on age or mileage.',
       cta: 'Get Auto Loan', url: 'https://www.lightstream.com/auto-loans', ctaStyle: '',
       fine: 'Rate with AutoPay discount. Subject to credit approval.',
-      partner details: '💰 Earn $75–$120 per funded loan'
+      commission: '💰 Earn $75–$120 per funded loan'
     },
     {
       tag: 'auto',
@@ -4821,7 +4898,7 @@
       desc: 'Get up to 4 competing loan offers from lenders in minutes. Best for comparison shopping.',
       cta: 'Compare Offers', url: 'https://www.myautoloan.com', ctaStyle: '',
       fine: 'Rates vary by lender, credit score, and vehicle. Soft pull for initial offers.',
-      partner details: '💰 Earn $40–$80 per qualified lead'
+      commission: '💰 Earn $40–$80 per qualified lead'
     },
     // REFINANCE
     {
@@ -4832,7 +4909,7 @@
       desc: 'Compare real pre-qualified refinance rates from 10+ lenders in 2 minutes. No hard credit pull.',
       cta: 'Compare Refi Rates', url: 'https://www.credible.com/refinance-mortgage', ctaStyle: '',
       fine: 'Rates shown are lowest available. Your rate depends on credit, LTV, and loan term.',
-      partner details: '💰 Earn $150–$350 per closed refi'
+      commission: '💰 Earn $150–$350 per closed refi'
     },
     {
       tag: 'refi',
@@ -4842,26 +4919,26 @@
       desc: 'Refinance federal or private student loans. No origination fees, career coaching included.',
       cta: 'Refinance Student Loans', url: 'https://www.sofi.com/refinance-student-loan/', ctaStyle: '',
       fine: 'Refinancing federal loans removes federal protections. Consider carefully before refinancing.',
-      partner details: '💰 Earn $100–$200 per funded refi'
+      commission: '💰 Earn $100–$200 per funded refi'
     },
     // GRANTS
-    { tag: 'grants', tagLabel: 'Grant', title: 'Grants.gov', logo: '🎁', badges: ['badge-low|Free'], rates: [], desc: 'The official U.S. government site listing thousands of federal grant opportunities across all sectors.', cta: 'Browse Grants', url: 'https://www.grants.gov', ctaStyle: 'secondary', fine: '', partner details: '' },
-    { tag: 'grants', tagLabel: 'Grant', title: 'CDFI Fund', logo: '🏘️', badges: ['badge-low|Community Focus'], rates: [], desc: 'Grants for low-income and underserved communities from the U.S. Treasury Department.', cta: 'Learn More', url: 'https://www.cdfifund.gov', ctaStyle: 'secondary', fine: '', partner details: '' },
-    { tag: 'grants', tagLabel: 'Grant', title: 'SBA Grants', logo: '💼', badges: ['badge-low|Small Business'], rates: [], desc: 'Small Business Administration grant programs for qualifying businesses and entrepreneurs.', cta: 'Find Grants', url: 'https://www.sba.gov/funding-programs/grants', ctaStyle: 'secondary', fine: '', partner details: '' },
+    { tag: 'grants', tagLabel: 'Grant', title: 'Grants.gov', logo: '🎁', badges: ['badge-low|Free'], rates: [], desc: 'The official U.S. government site listing thousands of federal grant opportunities across all sectors.', cta: 'Browse Grants', url: 'https://www.grants.gov', ctaStyle: 'secondary', fine: '', commission: '' },
+    { tag: 'grants', tagLabel: 'Grant', title: 'CDFI Fund', logo: '🏘️', badges: ['badge-low|Community Focus'], rates: [], desc: 'Grants for low-income and underserved communities from the U.S. Treasury Department.', cta: 'Learn More', url: 'https://www.cdfifund.gov', ctaStyle: 'secondary', fine: '', commission: '' },
+    { tag: 'grants', tagLabel: 'Grant', title: 'SBA Grants', logo: '💼', badges: ['badge-low|Small Business'], rates: [], desc: 'Small Business Administration grant programs for qualifying businesses and entrepreneurs.', cta: 'Find Grants', url: 'https://www.sba.gov/funding-programs/grants', ctaStyle: 'secondary', fine: '', commission: '' },
     // TOOLS
-    { tag: 'tools', title: 'Credit Karma', logo: '📊', badges: ['badge-nofe|Free Forever'], rates: [], desc: 'Free credit score monitoring, personalized recommendations, and financial insights.', cta: 'Check Score Free', url: 'https://www.creditkarma.com', ctaStyle: 'secondary', fine: '', partner details: '💰 Earn $2–$10 per signup' },
-    { tag: 'tools', title: 'YNAB', logo: '📋', badges: ['badge-fast|Best Budgeting App'], rates: [], desc: 'Proactive budgeting software. Average user saves $600 in the first 2 months.', cta: 'Try Free 34 Days', url: 'https://www.youneedabudget.com', ctaStyle: 'secondary', fine: '', partner details: '💰 Earn $10–$20 per subscription' },
+    { tag: 'tools', title: 'Credit Karma', logo: '📊', badges: ['badge-nofe|Free Forever'], rates: [], desc: 'Free credit score monitoring, personalized recommendations, and financial insights.', cta: 'Check Score Free', url: 'https://www.creditkarma.com', ctaStyle: 'secondary', fine: '', commission: '💰 Earn $2–$10 per signup' },
+    { tag: 'tools', title: 'YNAB', logo: '📋', badges: ['badge-fast|Best Budgeting App'], rates: [], desc: 'Proactive budgeting software. Average user saves $600 in the first 2 months.', cta: 'Try Free 34 Days', url: 'https://www.youneedabudget.com', ctaStyle: 'secondary', fine: '', commission: '💰 Earn $10–$20 per subscription' },
     // EDUCATION
-    { tag: 'education', title: 'Khan Academy Finance', logo: '📚', badges: ['badge-nofe|100% Free'], rates: [], desc: 'World-class finance and economics courses from basic budgeting to advanced investing.', cta: 'Start Learning', url: 'https://www.khanacademy.org/economics-finance-domain', ctaStyle: 'secondary', fine: '', partner details: '' },
-    { tag: 'education', title: 'NerdWallet', logo: '🤓', badges: ['badge-fast|Expert Guides'], rates: [], desc: 'Expert personal finance advice, product comparisons, and guides for every financial decision.', cta: 'Read Guides', url: 'https://www.nerdwallet.com', ctaStyle: 'secondary', fine: '', partner details: '💰 Earn via product referrals' },
+    { tag: 'education', title: 'Khan Academy Finance', logo: '📚', badges: ['badge-nofe|100% Free'], rates: [], desc: 'World-class finance and economics courses from basic budgeting to advanced investing.', cta: 'Start Learning', url: 'https://www.khanacademy.org/economics-finance-domain', ctaStyle: 'secondary', fine: '', commission: '' },
+    { tag: 'education', title: 'NerdWallet', logo: '🤓', badges: ['badge-fast|Expert Guides'], rates: [], desc: 'Expert personal finance advice, product comparisons, and guides for every financial decision.', cta: 'Read Guides', url: 'https://www.nerdwallet.com', ctaStyle: 'secondary', fine: '', commission: '💰 Earn via product referrals' },
 
     // CREDIT SCORES
-    { tag: 'credit', featured: true, title: 'Experian', logo: '📊', badges: ['badge-featured|⭐ Official Bureau', 'badge-nofe|Free Score'], rates: [], desc: 'One of the three major credit bureaus. Get your official Experian credit report and FICO score for free. Includes score monitoring and alerts.', cta: 'Get Free Score', url: 'https://www.experian.com/consumer-products/free-credit-report.html', ctaStyle: '', fine: 'Free basic score available. Premium monitoring plans available separately.', partner details: '💰 Earn per signup referral' },
-    { tag: 'credit', title: 'Equifax', logo: '📋', badges: ['badge-nofe|Official Bureau'], rates: [], desc: 'One of the three major credit bureaus. Access your Equifax credit report and monitor for changes that could indicate identity theft.', cta: 'Check Your Report', url: 'https://www.equifax.com/personal/products/credit/free-credit-report/', ctaStyle: 'secondary', fine: 'Free annual report available at AnnualCreditReport.com.', partner details: '' },
-    { tag: 'credit', title: 'TransUnion', logo: '🔐', badges: ['badge-nofe|Official Bureau'], rates: [], desc: 'The third major credit bureau. View your TransUnion credit report, monitor your score, and get alerts for suspicious activity.', cta: 'View Report', url: 'https://www.transunion.com/free-credit-report', ctaStyle: 'secondary', fine: 'Free report available. Paid monitoring plans available.', partner details: '' },
-    { tag: 'credit', title: 'AnnualCreditReport.com', logo: '🏛️', badges: ['badge-nofe|100% Free', 'badge-featured|Official Gov Site'], rates: [], desc: 'The only federally authorized source for free credit reports from all three bureaus — Equifax, Experian, and TransUnion. You are entitled by law to one free report per bureau per year.', cta: 'Get Free Reports', url: 'https://www.annualcreditreport.com', ctaStyle: '', fine: 'This is the official government-mandated free credit report site.', partner details: '' },
-    { tag: 'credit', title: 'Credit Karma', logo: '💚', badges: ['badge-nofe|Always Free', 'badge-fast|Instant Score'], rates: [], desc: 'Free credit scores and reports from TransUnion and Equifax. Updated weekly with personalized recommendations for credit cards and loans.', cta: 'Check for Free', url: 'https://www.creditkarma.com', ctaStyle: 'secondary', fine: 'Shows TransUnion and Equifax scores. Does not include Experian.', partner details: '💰 Earn per product referral' },
-    { tag: 'credit', title: 'myFICO', logo: '🎯', badges: ['badge-fast|All 3 Bureaus'], rates: [], desc: 'Get your official FICO scores from all three bureaus — the exact scores most lenders use. Includes score simulators and monitoring alerts.', cta: 'See All 3 Scores', url: 'https://www.myfico.com', ctaStyle: 'secondary', fine: 'Paid service. Prices start around $19.95/mo for all three bureau scores.', partner details: '💰 Earn per subscription referral' },
+    { tag: 'credit', featured: true, title: 'Experian', logo: '📊', badges: ['badge-featured|⭐ Official Bureau', 'badge-nofe|Free Score'], rates: [], desc: 'One of the three major credit bureaus. Get your official Experian credit report and FICO score for free. Includes score monitoring and alerts.', cta: 'Get Free Score', url: 'https://www.experian.com/consumer-products/free-credit-report.html', ctaStyle: '', fine: 'Free basic score available. Premium monitoring plans available separately.', commission: '💰 Earn per signup referral' },
+    { tag: 'credit', title: 'Equifax', logo: '📋', badges: ['badge-nofe|Official Bureau'], rates: [], desc: 'One of the three major credit bureaus. Access your Equifax credit report and monitor for changes that could indicate identity theft.', cta: 'Check Your Report', url: 'https://www.equifax.com/personal/products/credit/free-credit-report/', ctaStyle: 'secondary', fine: 'Free annual report available at AnnualCreditReport.com.', commission: '' },
+    { tag: 'credit', title: 'TransUnion', logo: '🔐', badges: ['badge-nofe|Official Bureau'], rates: [], desc: 'The third major credit bureau. View your TransUnion credit report, monitor your score, and get alerts for suspicious activity.', cta: 'View Report', url: 'https://www.transunion.com/free-credit-report', ctaStyle: 'secondary', fine: 'Free report available. Paid monitoring plans available.', commission: '' },
+    { tag: 'credit', title: 'AnnualCreditReport.com', logo: '🏛️', badges: ['badge-nofe|100% Free', 'badge-featured|Official Gov Site'], rates: [], desc: 'The only federally authorized source for free credit reports from all three bureaus — Equifax, Experian, and TransUnion. You are entitled by law to one free report per bureau per year.', cta: 'Get Free Reports', url: 'https://www.annualcreditreport.com', ctaStyle: '', fine: 'This is the official government-mandated free credit report site.', commission: '' },
+    { tag: 'credit', title: 'Credit Karma', logo: '💚', badges: ['badge-nofe|Always Free', 'badge-fast|Instant Score'], rates: [], desc: 'Free credit scores and reports from TransUnion and Equifax. Updated weekly with personalized recommendations for credit cards and loans.', cta: 'Check for Free', url: 'https://www.creditkarma.com', ctaStyle: 'secondary', fine: 'Shows TransUnion and Equifax scores. Does not include Experian.', commission: '💰 Earn per product referral' },
+    { tag: 'credit', title: 'myFICO', logo: '🎯', badges: ['badge-fast|All 3 Bureaus'], rates: [], desc: 'Get your official FICO scores from all three bureaus — the exact scores most lenders use. Includes score simulators and monitoring alerts.', cta: 'See All 3 Scores', url: 'https://www.myfico.com', ctaStyle: 'secondary', fine: 'Paid service. Prices start around $19.95/mo for all three bureau scores.', commission: '💰 Earn per subscription referral' },
   ];
 
   function getRateBannerData() {
@@ -4926,29 +5003,6 @@
   }
 
   let currentUser = null;
-  let isFoundingMember = false;
-  const FOUNDING_MEMBER_CUTOFF = new Date('2027-02-01T00:00:00');
-  const FOUNDING_GRACE_DAYS = 90;
-
-  function isBeforeFoundingCutoff() {
-    return new Date() < FOUNDING_MEMBER_CUTOFF;
-  }
-
-  function activateFoundingMemberIfEligible() {
-    if (isPro && !isFoundingMember && isBeforeFoundingCutoff()) {
-      isFoundingMember = true;
-      if (currentUser?.id) safeSet('fintrail_founding_member_' + currentUser.id, 'true');
-    }
-    updateFoundingMemberUI();
-  }
-
-  function updateFoundingMemberUI() {
-    const show = !!(isPro && isFoundingMember);
-    const badge = document.getElementById('profile-founding-badge');
-    const card = document.getElementById('founding-member-card');
-    if (badge) badge.style.display = show ? 'inline-flex' : 'none';
-    if (card) card.style.display = show ? 'block' : 'none';
-  }
 
   // AUTH INIT — check if already logged in
   async function initAuth() {
@@ -4977,7 +5031,6 @@
     setUserUI(user);
     loadUserData();
     loadProfileUI();
-    updateFoundingMemberUI();
     setTimeout(loadGameData, 500);
     // Apply saved language now that user is logged in
     if (currentLang !== 'en') setTimeout(applyLanguage, 300);
@@ -5000,7 +5053,7 @@
     if (mobileAvatar) mobileAvatar.textContent = initial;
     if (mobileUserName) mobileUserName.textContent = name;
     if (mobileUserPlan) mobileUserPlan.textContent = user.email;
-    if (mobilePlanBadge) mobilePlanBadge.textContent = isPro ? (isFoundingMember ? '🏆 FOUNDING' : '⭐ PRO') : 'FREE';
+    if (mobilePlanBadge) mobilePlanBadge.textContent = isPro ? '⭐ PRO' : 'FREE';
   }
 
   // SIGN IN
@@ -5093,7 +5146,7 @@
 
     if (!sbClient || !currentUser) return;
     try {
-      const payload = { user_id: currentUser.id, transactions, bills, goals, plan_debts: planDebts, nw_assets: nwAssets, nw_liabilities: nwLiabilities, nw_history: nwHistory, game_data: { ...gameData, foundingMember: isFoundingMember, foundingGraceDays: FOUNDING_GRACE_DAYS }, is_pro: isPro, updated_at: new Date().toISOString() };
+      const payload = { user_id: currentUser.id, transactions, bills, goals, plan_debts: planDebts, nw_assets: nwAssets, nw_liabilities: nwLiabilities, nw_history: nwHistory, game_data: gameData, is_pro: isPro, updated_at: new Date().toISOString() };
       await sbClient.from('user_data').upsert(payload, { onConflict: 'user_id' });
     } catch(err) {
       console.log('saveUserData error:', err.message);
@@ -5111,8 +5164,8 @@
   function updateProfileSubscriptionUI() {
     const titleText = currentLang === 'es' ? '⭐ Suscripción' : '⭐ Subscription';
     const proDesc = currentLang === 'es'
-      ? (isFoundingMember ? 'Miembro Fundador: tu precio de $4.99/mes está bloqueado mientras tu suscripción permanezca activa. Si cancelas, tendrás 90 días para volver a suscribirte y conservarlo.' : 'Administrar tu suscripción Pro, facturación o cancelación.')
-      : (isFoundingMember ? 'Founding Member: your $4.99/month price is locked while your subscription stays active. If you cancel, you have 90 days to re-subscribe and keep it.' : 'Manage your Pro subscription, billing, or cancellation.');
+      ? 'Administrar tu suscripción Pro, facturación o cancelación.'
+      : 'Manage your Pro subscription, billing, or cancellation.';
     const freeDesc = currentLang === 'es'
       ? 'Actualiza a Pro para desbloquear funciones ilimitadas.'
       : 'Upgrade to Pro to unlock unlimited features.';
@@ -5149,7 +5202,7 @@
       bar.classList.add('premium');
       badge.textContent = `${level.badge} ${level.name}`;
       badge.classList.add('premium-plan');
-      statusEl.textContent = `${isFoundingMember ? '🏆 Founding Member · ' : ''}⭐ Pro Plan${statusTitle ? ' · ' + statusTitle : ''} · ${currentUser?.email || ''}`;
+      statusEl.textContent = `⭐ Pro Plan${statusTitle ? ' · ' + statusTitle : ''} · ${currentUser?.email || ''}`;
       actionBtn.textContent = currentLang === 'es' ? 'Administrar Suscripción' : 'Manage Subscription';
       actionBtn.onclick = cancelSubscription;
     } else {
@@ -5161,11 +5214,10 @@
       actionBtn.onclick = () => showPaywall('bar');
     }
     updateProfileSubscriptionUI();
-    updateFoundingMemberUI();
     // Update mobile plan badge
     const mobilePlanBadge = document.getElementById('mobile-plan-badge');
     if (mobilePlanBadge) {
-      mobilePlanBadge.textContent = isPro ? (isFoundingMember ? '🏆 FOUNDING' : '⭐ PRO') : 'FREE';
+      mobilePlanBadge.textContent = isPro ? '⭐ PRO' : 'FREE';
       mobilePlanBadge.style.background = isPro ? 'linear-gradient(135deg,#b8860b,#e9c46a)' : 'var(--surface2)';
       mobilePlanBadge.style.color = isPro ? '#1a1a0f' : 'var(--muted)';
     }
@@ -5176,7 +5228,6 @@
     try {
       const { data } = await sbClient.from('user_data').select('*').eq('user_id', currentUser.id).single();
       if (data) {
-        isFoundingMember = !!(data.founding_member || data.game_data?.foundingMember || safeGet('fintrail_founding_member_' + currentUser.id) === 'true');
         transactions = data.transactions || [];
         bills = data.bills || [];
         // Use timestamp to decide: if local is newer than Supabase, keep local
@@ -5224,7 +5275,6 @@
         }
         if (data.is_pro) {
           isPro = true;
-          activateFoundingMemberIfEligible();
           applyProState();
           setProUI();
         }
@@ -5238,8 +5288,6 @@
     try { const lg = safeGet('fintrail_goals_' + _fuid); if (lg) goals = JSON.parse(lg); } catch(e) {}
     try { const lb = safeGet('fintrail_bills_' + _fuid); if (lb) bills = JSON.parse(lb); } catch(e) {}
     try { const lt = safeGet('fintrail_txns_' + _fuid); if (lt) transactions = JSON.parse(lt); } catch(e) {}
-    if (safeGet('fintrail_founding_member_' + _fuid) === 'true') isFoundingMember = true;
-    activateFoundingMemberIfEligible();
     if (!planDebts.length) {
       try { const loc = safeGet('fintrail_debts_' + _fuid); if (loc) planDebts = JSON.parse(loc); } catch(e) {}
     }
@@ -5295,7 +5343,6 @@
         if (currentUser) {
           clearInterval(tryActivate);
           isPro = true;
-          activateFoundingMemberIfEligible();
           applyProState();
           setProUI();
           saveUserData();
@@ -5596,7 +5643,7 @@
         <p>${r.desc}</p>
         ${r.fine ? `<p class="rc-fine" style="margin-bottom:0.6rem">${r.fine}</p>` : ''}
         <a class="rc-cta ${r.ctaStyle||''}" href="${r.url}" target="_blank" rel="noopener noreferrer">${r.cta} →</a>
-        ${r.partner details ? `<div class="partner details-note">${r.partner details}</div>` : ''}
+        ${r.commission ? `<div class="commission-note">Partner details will be added as agreements are finalized.</div>` : ''}
       </div>`;
     }).join('');
   }
@@ -6944,7 +6991,10 @@ Guidelines:
         </div>
         ${htmlContent}
         <div class="footer">Generated by Fintrail · fintrail.app · For personal use only · Not financial advice</div>
-      </body>
+      
+
+
+</body>
       </html>
     `);
     printWindow.document.close();
@@ -7711,7 +7761,6 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     usedInvestCalc: false,
     usedCreditSim: false,
     askedAI: false,
-    foundingMember: false,
   };
 
   // Safe storage helper — works in private browsing mode
