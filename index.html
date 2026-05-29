@@ -2453,6 +2453,59 @@
   }
 }
 
+
+
+/* MOBILE DEBT PAYOFF PLANNER OVERFLOW FIX */
+@media (max-width: 700px) {
+  #tab-debtplan .planner-card {
+    padding: 1rem !important;
+    overflow: hidden !important;
+  }
+
+  #tab-debtplan .planner-inputs,
+  #tab-debtplan .debt-add-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  #tab-debtplan .debt-add-grid .form-group,
+  #tab-debtplan .planner-inputs .form-group {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  #tab-debtplan .debt-add-grid input,
+  #tab-debtplan .planner-inputs input {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  #tab-debtplan .debt-add-grid .add-btn {
+    width: 100% !important;
+    grid-column: 1 / -1 !important;
+    min-height: 48px !important;
+  }
+
+  #tab-debtplan .method-toggle {
+    grid-template-columns: 1fr !important;
+  }
+
+  #tab-debtplan .method-btn {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 390px) {
+  #tab-debtplan .planner-card {
+    padding: 0.85rem !important;
+  }
+}
+
 </style>
 </head>
 <body>
