@@ -8735,6 +8735,181 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   }
 
 
+  // MONTHLY REPORT — live data sync
+  // Pulls the same in-memory/Supabase-loaded data used by Debt Planner and Credit Simulator.
+  function getReportDebts() {
+    const uid = currentUser?.id || 'demo';
+    if (!Array.isArray(planDebts)) planDebts = [];
+    if (!planDebts.length) {
+      try {
+        const raw = safeGet('fintrail_debts_' + uid) || safeGet('fintrail_debts_demo');
+        if (raw) planDebts = JSON.parse(raw) || [];
+      } catch(e) {}
+    }
+    return (planDebts || []).map(d => ({
+      ...d,
+      balance: parseFloat(d.balance) || 0,
+      apr: parseFloat(d.apr) || 0,
+      minPayment: parseFloat(d.minPayment || d.monthlyMin || 0) || 0
+    })).filter(d => d.balance > 0);
+  }
+
+  function getReportCreditScore() {
+    // Prefer the credit simulator's saved score helper if available.
+    try {
+      if (typeof getSavedCreditScore === 'function') {
+        const saved = parseInt(getSavedCreditScore());
+        if (!isNaN(saved) && saved >= 300 && saved <= 850) return saved;
+      }
+    } catch(e) {}
+
+    const uid = currentUser?.id || 'demo';
+    const candidates = [
+      document.getElementById('base-score-num')?.value,
+      document.getElementById('base-score')?.value,
+      document.getElementById('base-score-display')?.textContent,
+      gameData?.creditScore,
+      gameData?.credit_score,
+      safeGet('fintrail_credit_score_' + uid),
+      safeGet('fintrail_credit_score_local')
+    ];
+    for (const c of candidates) {
+      const n = parseInt(c);
+      if (!isNaN(n) && n >= 300 && n <= 850) return n;
+    }
+    return 680;
+  }
+
+  function getReportSimulatedCreditScore(base) {
+    let impact = 0;
+    try {
+      if (Array.isArray(selectedActions) && Array.isArray(creditActions)) {
+        selectedActions.forEach(id => {
+          const action = creditActions.find(a => a.id === id);
+          if (action) impact += parseInt(action.impact) || 0;
+        });
+      }
+    } catch(e) {}
+    return Math.min(850, Math.max(300, base + impact));
+  }
+
+  function getReportHealthScore() {
+    const income = (transactions || []).filter(t => t.type === 'income').reduce((s,t) => s + (parseFloat(t.amount)||0), 0);
+    const expenses = (transactions || []).filter(t => t.type === 'expense').reduce((s,t) => s + (parseFloat(t.amount)||0), 0);
+    const balance = income - expenses;
+    const totalGoalTarget = (goals || []).reduce((s,g) => s + (parseFloat(g.target)||0), 0);
+    const totalGoalSaved = (goals || []).reduce((s,g) => s + (parseFloat(g.saved)||0), 0);
+    const totalDebt = getReportDebts().reduce((s,d) => s + (parseFloat(d.balance)||0), 0);
+
+    const budgetScore = income > 0 ? Math.min(25, Math.max(0, Math.round((balance / income) * 25))) : 10;
+    const savingsScore = totalGoalTarget > 0 ? Math.min(25, Math.round((totalGoalSaved / totalGoalTarget) * 25)) : 8;
+    const debtScore = income > 0 ? Math.max(0, 25 - Math.round((totalDebt / Math.max(income * 12, 1)) * 10)) : (totalDebt > 0 ? 12 : 25);
+    const billScore = (bills || []).length > 0 ? 25 : 10;
+    return Math.min(100, Math.max(0, budgetScore + savingsScore + debtScore + billScore));
+  }
+
+  function reportSetText(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+  }
+  function reportSetHTML(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = value;
+  }
+
+  function renderMonthlyReport() {
+    // Refresh the same arrays the rest of the app uses, in case the report tab loads first.
+    const uid = currentUser?.id || 'demo';
+    try { const raw = safeGet('fintrail_goals_' + uid); if (raw && (!goals || !goals.length)) goals = JSON.parse(raw) || []; } catch(e) {}
+    try { const raw = safeGet('fintrail_debts_' + uid); if (raw && (!planDebts || !planDebts.length)) planDebts = JSON.parse(raw) || []; } catch(e) {}
+    try { const raw = safeGet('fintrail_txns_' + uid); if (raw && (!transactions || !transactions.length)) transactions = JSON.parse(raw) || []; } catch(e) {}
+    try { const raw = safeGet('fintrail_bills_' + uid); if (raw && (!bills || !bills.length)) bills = JSON.parse(raw) || []; } catch(e) {}
+
+    const monthName = new Date().toLocaleDateString(currentLang === 'es' ? 'es-US' : 'en-US', { month:'long', year:'numeric' });
+    reportSetText('report-title', currentLang === 'es' ? `Tu Reporte Financiero de ${monthName} 🎉` : `Your ${monthName} Financial Progress Report 🎉`);
+
+    // Health score
+    const health = getReportHealthScore();
+    const prev = Math.max(0, health - 6);
+    reportSetText('report-score-prev', prev);
+    reportSetText('report-score-current', health);
+    reportSetText('report-score-note', `${health >= prev ? '+' : ''}${health - prev} points this month`);
+    reportSetText('report-gauge-num', health);
+    reportSetText('report-gauge-label', health >= 80 ? 'Excellent' : health >= 65 ? 'Good' : health >= 50 ? 'Fair' : 'Needs Work');
+    const gauge = document.getElementById('report-gauge');
+    if (gauge) gauge.style.background = `conic-gradient(${health >= 70 ? 'var(--income-color)' : health >= 50 ? 'var(--accent2)' : 'var(--accent)'} 0 ${health}%, #e9edf3 ${health}% 100%)`;
+
+    // Savings
+    const sortedGoals = [...(goals || [])].sort((a,b) => ((parseFloat(b.saved)||0)/(parseFloat(b.target)||1)) - ((parseFloat(a.saved)||0)/(parseFloat(a.target)||1)));
+    const topGoal = sortedGoals[0];
+    if (topGoal) {
+      const saved = parseFloat(topGoal.saved) || 0;
+      const target = parseFloat(topGoal.target) || 0;
+      const pct = target > 0 ? Math.min(100, Math.round((saved / target) * 100)) : 0;
+      reportSetText('report-savings-goal-name', topGoal.name || 'Top Savings Goal');
+      reportSetText('report-savings-saved', '$' + saved.toLocaleString(undefined,{maximumFractionDigits:0}));
+      reportSetText('report-savings-target', '$' + target.toLocaleString(undefined,{maximumFractionDigits:0}));
+      reportSetText('report-savings-pct', pct + '%');
+      const fill = document.getElementById('report-savings-progress');
+      if (fill) fill.style.width = pct + '%';
+      reportSetText('report-savings-note', pct >= 100 ? 'Goal completed — great job!' : `You are ${pct}% of the way to this goal.`);
+      reportSetText('report-savings-insight', pct >= 50 ? 'Your savings momentum is building. Keep contributing consistently.' : 'Small consistent deposits will help this goal start moving faster.');
+    }
+
+    // Debt — live from Debt Payoff Planner
+    const debts = getReportDebts();
+    const totalDebt = debts.reduce((s,d) => s + d.balance, 0);
+    const sortedDebts = [...debts].sort((a,b) => payoffMethod === 'snowball' ? a.balance - b.balance : b.apr - a.apr);
+    const focusDebt = sortedDebts[0];
+    reportSetText('report-debt-total', '$' + totalDebt.toLocaleString(undefined,{maximumFractionDigits:0}));
+    if (focusDebt) {
+      reportSetText('report-debt-focus', focusDebt.name || 'Focus debt');
+      reportSetText('report-debt-note', `${payoffMethod === 'snowball' ? 'Snowball' : 'Avalanche'} focus: ${focusDebt.name} — $${focusDebt.balance.toLocaleString(undefined,{maximumFractionDigits:0})} at ${focusDebt.apr}% APR.`);
+      reportSetText('report-debt-insight', `You are tracking ${debts.length} debt${debts.length === 1 ? '' : 's'} totaling $${totalDebt.toLocaleString(undefined,{maximumFractionDigits:0})}. Focus extra payments on ${focusDebt.name} first.`);
+    } else {
+      reportSetText('report-debt-focus', 'No debt added');
+      reportSetText('report-debt-note', 'Add debts to generate payoff insights.');
+      reportSetText('report-debt-insight', 'Your debt report will show your total balances and recommended focus debt.');
+    }
+
+    // Credit — live from Credit Simulator saved score
+    const credit = getReportCreditScore();
+    const simulated = getReportSimulatedCreditScore(credit);
+    reportSetText('report-credit-current', credit);
+    reportSetText('report-credit-simulated', simulated);
+    const creditFill = document.getElementById('report-credit-progress');
+    if (creditFill) creditFill.style.width = Math.max(0, Math.min(100, ((credit - 300) / 550) * 100)) + '%';
+    let factor = 'Use the credit simulator to see your biggest positive factor.';
+    try {
+      if (Array.isArray(selectedActions) && selectedActions.length && Array.isArray(creditActions)) {
+        const best = selectedActions.map(id => creditActions.find(a => a.id === id)).filter(Boolean).sort((a,b) => b.impact - a.impact)[0];
+        if (best) factor = `${best.label}: ${best.impact > 0 ? '+' : ''}${best.impact} points estimated impact.`;
+      }
+    } catch(e) {}
+    reportSetText('report-credit-factor', factor);
+    reportSetText('report-credit-insight', simulated > credit ? `Your selected simulations could move your score from ${credit} to about ${simulated}.` : `Your saved credit score is ${credit}. Try a credit simulation to identify your strongest next step.`);
+
+    // AI highlights
+    const highlights = [];
+    if (topGoal) highlights.push(`Your top savings goal is ${topGoal.name}.`);
+    if (focusDebt) highlights.push(`Your current payoff focus is ${focusDebt.name}.`);
+    highlights.push(`Your saved credit score is ${credit}.`);
+    if ((gameData?.askedAI || gameData?.usedCreditSim || gameData?.usedInvestCalc)) highlights.push('You are actively using Fintrail tools to build financial momentum.');
+    const aiList = document.getElementById('report-ai-list');
+    if (aiList) aiList.innerHTML = highlights.map(h => `<div class="report-ai-item"><span>✦</span><div>${escHtml(h)}</div></div>`).join('');
+
+    reportSetText('report-next-focus', focusDebt ? `Focus on ${focusDebt.name} while keeping your credit score and savings goals updated.` : 'Keep updating your savings, debt, and credit tools so Fintrail can give better monthly guidance.');
+    reportSetText('report-achievement-title', focusDebt ? 'Debt Strategist' : (topGoal ? 'Progress Builder' : 'Fresh Start'));
+    reportSetText('report-achievement-desc', focusDebt ? 'You created a real debt payoff plan and are tracking your next focus debt.' : 'You are building better financial habits by using your tools.');
+    reportSetText('report-summary-text', `This report is now using your live Fintrail data: ${debts.length} debt${debts.length===1?'':'s'} tracked, credit score ${credit}, and ${goals.length} savings goal${goals.length===1?'':'s'}.`);
+  }
+
+  function downloadMonthlyReportPDF() {
+    try { renderMonthlyReport(); } catch(e) {}
+    window.print();
+  }
+
+
   // FINANCIAL CALENDAR
   let calCurrentDate = new Date();
   let calView = 'month';
