@@ -2523,6 +2523,62 @@
   }
 }
 
+  /* MONTHLY FINANCIAL PROGRESS REPORT */
+  .report-shell { max-width: 1100px; margin: 0 auto; }
+  .report-topline { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1.25rem; flex-wrap:wrap; }
+  .report-back { background:none; border:none; color:var(--text-soft); font-family:'Sora',sans-serif; font-size:0.85rem; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:0.35rem; }
+  .report-month-select { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:0.55rem 0.85rem; font-family:'Sora',sans-serif; font-weight:600; color:var(--text); }
+  .report-title { font-family:'Playfair Display',serif; font-size:clamp(1.55rem,3vw,2.15rem); color:var(--text); margin-bottom:0.25rem; }
+  .report-subtitle { color:var(--text-soft); font-size:0.9rem; margin-bottom:1.5rem; line-height:1.6; }
+  .report-hero-card { background:linear-gradient(135deg, rgba(129,140,248,0.10), rgba(6,214,160,0.07)); border:1px solid rgba(129,140,248,0.22); border-radius:18px; padding:1.4rem; display:grid; grid-template-columns:1fr 180px 1fr; gap:1.25rem; align-items:center; margin-bottom:1.25rem; }
+  .report-hero-card h3 { font-size:1rem; margin-bottom:0.75rem; color:var(--text); }
+  .report-score-shift { font-family:'Playfair Display',serif; font-size:2.1rem; font-weight:700; color:var(--text); }
+  .report-score-shift .good { color:var(--income-color); }
+  .report-score-note { font-size:0.82rem; color:var(--income-color); font-weight:700; margin-top:0.25rem; }
+  .report-gauge { width:150px; height:150px; border-radius:50%; background:conic-gradient(var(--income-color) 0 72%, #e9edf3 72% 100%); display:flex; align-items:center; justify-content:center; margin:auto; position:relative; }
+  .report-gauge::after { content:''; position:absolute; inset:15px; background:var(--surface); border-radius:50%; }
+  .report-gauge-inner { position:relative; z-index:1; text-align:center; }
+  .report-gauge-num { font-family:'Playfair Display',serif; font-size:2.25rem; color:var(--income-color); line-height:1; }
+  .report-gauge-label { font-size:0.75rem; color:var(--muted); margin-top:0.25rem; }
+  .report-hero-text { font-size:0.92rem; color:var(--text); line-height:1.75; }
+  .report-grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-bottom:1rem; }
+  .report-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:1.35rem; box-shadow:0 8px 24px rgba(18,24,40,0.04); }
+  .report-card-icon { width:64px; height:64px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.75rem; margin:0 auto 0.9rem; }
+  .report-card-icon.green { background:#e6f7ee; }
+  .report-card-icon.orange { background:#fff0df; }
+  .report-card-icon.blue { background:#e9f0ff; }
+  .report-card h3 { text-align:center; font-size:1rem; margin-bottom:1.2rem; color:var(--text); }
+  .report-label { font-size:0.78rem; color:var(--text-soft); margin-bottom:0.35rem; }
+  .report-big { font-family:'Playfair Display',serif; font-size:1.45rem; font-weight:700; color:var(--text); }
+  .report-big.green { color:var(--income-color); }
+  .report-big.orange { color:#e85a28; }
+  .report-big.blue { color:#4267d6; }
+  .report-progress { height:10px; background:var(--border); border-radius:99px; overflow:hidden; margin:0.65rem 0 0.45rem; }
+  .report-progress-fill { height:100%; border-radius:99px; background:var(--income-color); width:0%; transition:width .6s ease; }
+  .report-small-row { display:flex; align-items:center; gap:0.55rem; margin-top:0.8rem; font-size:0.82rem; color:var(--text-soft); line-height:1.55; }
+  .report-small-row .round { width:28px; height:28px; border-radius:50%; background:rgba(6,214,160,.12); display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--income-color); font-weight:800; }
+  .report-insight { border-radius:10px; padding:0.9rem; margin-top:1rem; font-size:0.82rem; line-height:1.65; }
+  .report-insight.green { background:#f0fbf5; border:1px solid #c7efd7; }
+  .report-insight.orange { background:#fff8ed; border:1px solid #ffdcae; }
+  .report-insight.blue { background:#eff5ff; border:1px solid #cbdcff; }
+  .report-insight strong { display:block; margin-bottom:0.35rem; color:var(--text); }
+  .report-bottom-grid { display:grid; grid-template-columns:1.2fr .95fr; gap:1rem; margin-bottom:1rem; }
+  .report-ai-card { background:linear-gradient(135deg,rgba(129,91,255,0.10),rgba(255,255,255,0.9)); border-color:rgba(129,91,255,0.18); }
+  .report-ai-list { display:flex; flex-direction:column; gap:0.65rem; margin:0.8rem 0 1rem; }
+  .report-ai-item { display:flex; align-items:flex-start; gap:0.55rem; font-size:0.85rem; color:var(--text-soft); line-height:1.45; }
+  .report-ai-item span { color:#6b46d9; font-weight:800; }
+  .report-achievement { text-align:center; background:linear-gradient(135deg,#fff8ed,#fff); border-color:#ffdcae; }
+  .report-achievement-emoji { width:96px; height:96px; border-radius:50%; background:#ffe5bd; display:flex; align-items:center; justify-content:center; font-size:3rem; margin:0.85rem auto; }
+  .report-achievement h3 { color:#e85a28; font-family:'Playfair Display',serif; font-size:1.45rem; margin:0.25rem 0; }
+  .report-summary { background:linear-gradient(135deg,#edfdf4,#fff); border:1px solid #c7efd7; border-radius:16px; padding:1rem 1.25rem; display:flex; align-items:center; gap:1rem; color:#1f6f3f; font-size:0.95rem; line-height:1.55; margin-bottom:1rem; }
+  .report-summary-icon { width:58px; height:58px; border-radius:50%; background:#bdeccf; display:flex; align-items:center; justify-content:center; font-size:1.7rem; flex-shrink:0; }
+  .report-actions-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  .report-action-btn { border-radius:12px; padding:0.85rem 1rem; font-family:'Sora',sans-serif; font-size:0.9rem; font-weight:800; cursor:pointer; transition:all .2s; border:1.5px solid var(--border); background:var(--surface); color:#6b46d9; }
+  .report-action-btn.primary { background:linear-gradient(135deg,#6b46d9,#8b5cf6); color:#fff; border:none; }
+  .report-action-btn:hover { transform:translateY(-1px); box-shadow:0 8px 20px rgba(18,24,40,0.08); }
+  @media(max-width:900px){ .report-hero-card{grid-template-columns:1fr;text-align:center}.report-grid-3,.report-bottom-grid,.report-actions-row{grid-template-columns:1fr}.report-card h3{text-align:left}.report-card-icon{margin:0 0 .9rem} }
+
+
 </style>
 </head>
 <body>
@@ -2684,11 +2740,15 @@
         <div class="nav-dropdown-section" data-en="Insights" data-es="Análisis">Insights</div>
         <button class="nav-dropdown-item" onclick="guardedNavTo('ai', this)">
           <span class="ndi-icon">💬</span>
-          <div class="ndi-info"><span class="ndi-label" data-en="AI Advisor" data-es="Asesor IA">AI Advisor <span class="pro-pill">PRO</span></span><span class="ndi-desc" data-en="Ask any finance question" data-es="Haz cualquier pregunta financiera">Ask any finance question</span></div>
+          <div class="ndi-info"><span class="ndi-label" data-en="AI Advisor" data-es="Asesor IA">AI Advisor <span class="pro-pill">PRO</span></span><span class="ndi-desc" data-en="5 free prompts/day · Pro unlimited" data-es="5 preguntas gratis/día · Pro ilimitado">5 free prompts/day · Pro unlimited</span></div>
         </button>
         <button class="nav-dropdown-item" onclick="guardedNavTo('healthscore', this)">
           <span class="ndi-icon">🏆</span>
           <div class="ndi-info"><span class="ndi-label" data-en="Health Score & Alerts" data-es="Puntaje de Salud & Alertas">Health Score & Alerts <span class="pro-pill">PRO</span></span><span class="ndi-desc" data-en="Financial health tracking" data-es="Seguimiento de salud financiera">Financial health tracking</span></div>
+        </button>
+        <button class="nav-dropdown-item" onclick="guardedNavTo('reports', this)">
+          <span class="ndi-icon">📈</span>
+          <div class="ndi-info"><span class="ndi-label" data-en="Monthly Progress Report" data-es="Reporte Mensual">Monthly Progress Report <span class="pro-pill">PRO</span></span><span class="ndi-desc" data-en="Savings, debt, credit & AI insights" data-es="Ahorros, deudas, crédito e IA">Savings, debt, credit & AI insights</span></div>
         </button>
         <button class="nav-dropdown-item" onclick="navTo('streaks', this)">
           <span class="ndi-icon">🔥</span>
@@ -2755,6 +2815,7 @@
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem;padding:0 0.75rem 0.5rem">
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('ai')">💬<span data-en="AI Advisor" data-es="Asesor IA">AI Advisor</span></button>
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('healthscore')">🏆<span data-en="Health Score" data-es="Salud">Health Score</span></button>
+    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('reports')">📈<span data-en="Reports" data-es="Reportes">Reports</span></button>
     <button class="mobile-nav-tile" onclick="mobileTab('streaks');closeMobileNav()">🔥🏅<span data-en="Streaks &amp; Milestones" data-es="Rachas y Logros">Streaks &amp; Milestones</span></button>
   </div>
 
@@ -3366,7 +3427,7 @@
       <div class="lock-gate">
         <div class="lg-icon">💬</div>
         <h3>AI Financial Advisor <span class="premium-badge">PRO</span></h3>
-        <p>Chat with your personal AI finance coach — ask about budgeting, credit, debt payoff, investing basics, and more. Unlimited questions, instant answers.</p>
+        <p>Free users get 5 AI prompts per day. Pro users get unlimited AI advisor access.</p>
         <button class="lock-gate-btn" onclick="showPaywall('ai')">Unlock with Pro — $4.99/mo</button>
         <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--muted)" data-en="7-day free trial · Cancel anytime" data-es="Prueba gratis de 7 días · Cancela cuando quieras">7-day free trial · Cancel anytime</div>
       </div>
@@ -3895,6 +3956,97 @@
   </div>
 
   <!-- PROFILE & SECURITY TAB -->
+  <!-- MONTHLY FINANCIAL PROGRESS REPORT TAB -->
+  <div class="tab-section" id="tab-reports">
+    <div class="report-shell">
+      <div class="report-topline">
+        <button class="report-back" onclick="navTo('healthscore')">← Back to Insights</button>
+        <select class="report-month-select" id="report-month-select" onchange="renderMonthlyReport()">
+          <option value="current">Current Month</option>
+        </select>
+      </div>
+      <h1 class="report-title" id="report-title">Your Monthly Financial Progress Report 🎉</h1>
+      <p class="report-subtitle" id="report-subtitle">Personalized progress based on the savings, debt, credit, and AI activity you have entered in Fintrail.</p>
+
+      <div class="report-hero-card">
+        <div>
+          <h3>Financial Health Score</h3>
+          <div class="report-score-shift"><span id="report-score-prev">72</span> → <span class="good" id="report-score-current">78</span></div>
+          <div class="report-score-note" id="report-score-note">+6 points this month</div>
+        </div>
+        <div class="report-gauge" id="report-gauge">
+          <div class="report-gauge-inner"><div class="report-gauge-num" id="report-gauge-num">78</div><div class="report-gauge-label" id="report-gauge-label">Good</div></div>
+        </div>
+        <div class="report-hero-text" id="report-hero-text">Great progress! Your debt reduction and consistent savings improved your overall financial health.</div>
+      </div>
+
+      <div class="report-grid-3">
+        <div class="report-card">
+          <div class="report-card-icon green">🐷</div>
+          <h3>Savings Progress</h3>
+          <div class="report-label" id="report-savings-goal-name">Top Savings Goal</div>
+          <div class="report-big green"><span id="report-savings-saved">$0</span> / <span id="report-savings-target">$0</span></div>
+          <div class="report-progress"><div class="report-progress-fill" id="report-savings-progress"></div></div>
+          <div class="report-label"><strong id="report-savings-pct">0%</strong> complete</div>
+          <div class="report-small-row"><span class="round">↑</span><span id="report-savings-note">Add a savings goal to start tracking progress.</span></div>
+          <div class="report-insight green"><strong>✦ AI Insight</strong><span id="report-savings-insight">Your savings report will become more useful as you update your goals.</span></div>
+        </div>
+
+        <div class="report-card">
+          <div class="report-card-icon orange">💳</div>
+          <h3>Debt Progress</h3>
+          <div class="report-label">Total Debt Tracked</div>
+          <div class="report-big orange" id="report-debt-total">$0</div>
+          <hr style="border:none;border-top:1px solid var(--border);margin:1rem 0">
+          <div class="report-label">Estimated Payoff Focus</div>
+          <div class="report-big orange" id="report-debt-focus">No debt added</div>
+          <div class="report-small-row"><span class="round" style="background:#fff0df;color:#e85a28">↑</span><span id="report-debt-note">Add debts to generate payoff insights.</span></div>
+          <div class="report-insight orange"><strong>✦ AI Insight</strong><span id="report-debt-insight">Your debt report will show your total balances and recommended focus debt.</span></div>
+        </div>
+
+        <div class="report-card">
+          <div class="report-card-icon blue">📊</div>
+          <h3>Credit Progress</h3>
+          <div class="report-label">Simulated Credit Range</div>
+          <div class="report-big blue"><span id="report-credit-current">680</span> → <span id="report-credit-simulated">680</span></div>
+          <div class="report-progress"><div class="report-progress-fill" id="report-credit-progress" style="background:#4267d6"></div></div>
+          <div class="report-label">Biggest Positive Factor</div>
+          <div class="report-small-row"><span class="round" style="background:#e9f0ff;color:#4267d6">✓</span><span id="report-credit-factor">Use the credit simulator to see your biggest positive factor.</span></div>
+          <div class="report-insight blue"><strong>💡 Suggested Next Step</strong><span id="report-credit-insight">Try a credit simulation to receive a personalized next step.</span></div>
+        </div>
+      </div>
+
+      <div class="report-bottom-grid">
+        <div class="report-card report-ai-card">
+          <h3 style="text-align:left;margin-bottom:0.75rem">✦ AI Financial Insights</h3>
+          <div class="report-label">Monthly Highlights</div>
+          <div class="report-ai-list" id="report-ai-list"></div>
+          <hr style="border:none;border-top:1px solid rgba(129,91,255,0.18);margin:1rem 0">
+          <div class="report-label">Suggested Focus For Next Month</div>
+          <div class="report-ai-item"><span>◎</span><div id="report-next-focus">Keep updating your savings, debt, and credit tools so Fintrail can give better monthly guidance.</div></div>
+        </div>
+
+        <div class="report-card report-achievement">
+          <div class="report-label" style="font-weight:800;color:#e85a28">🏆 Monthly Achievement</div>
+          <div class="report-achievement-emoji" id="report-achievement-emoji">🔥</div>
+          <div class="report-label">Achievement Unlocked</div>
+          <h3 id="report-achievement-title">Progress Builder</h3>
+          <p id="report-achievement-desc" style="color:var(--text-soft);font-size:0.9rem;line-height:1.6">You are building better financial habits by using your tools.</p>
+        </div>
+      </div>
+
+      <div class="report-summary">
+        <div class="report-summary-icon">♡</div>
+        <div id="report-summary-text">You made measurable financial progress this month. Small consistent actions are building long-term stability.</div>
+      </div>
+
+      <div class="report-actions-row">
+        <button class="report-action-btn" onclick="downloadMonthlyReportPDF()">⇩ Download Report (PDF)</button>
+        <button class="report-action-btn primary" onclick="alert('Sharing progress will be available soon!')">⇧ Share Your Progress</button>
+      </div>
+    </div>
+  </div>
+
   <div class="tab-section" id="tab-profile">
     <div class="profile-layout">
 
@@ -4123,6 +4275,7 @@
           <div class="score-input-card">
             <h2 data-en="Simulate Actions" data-es="Simula Acciones">Simulate Actions</h2>
             <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:1rem;line-height:1.6" data-en="Select actions you're considering to see their estimated impact on your score:" data-es="Selecciona las acciones que estás considerando para ver su impacto estimado en tu puntaje:">Select actions you're considering to see their estimated impact on your score:</p>
+            <div id="credit-sim-usage" style="font-size:0.78rem;font-weight:600;color:var(--accent);background:rgba(240,85,85,0.08);border:1px solid rgba(240,85,85,0.18);border-radius:8px;padding:0.55rem 0.75rem;margin-bottom:0.85rem;display:none"></div>
             <div class="action-cards" id="action-cards"></div>
           </div>
         </div>
@@ -5116,8 +5269,9 @@
     const setDisplay = (id, show) => { const el = document.getElementById(id); if (el) el.style.display = show ? 'block' : 'none'; };
     setDisplay('guide-gate',       !isPro);
     setDisplay('guide-content',    isPro);
-    setDisplay('ai-gate',          !isPro);
-    setDisplay('ai-content',       isPro);
+    // AI Advisor uses a soft paywall: free users can open it and use 5 prompts/day; Pro users get unlimited prompts.
+    setDisplay('ai-gate',          false);
+    setDisplay('ai-content',       true);
     setDisplay('affiliate-gate',   !isPro);
     setDisplay('affiliate-content', isPro);
     updatePremiumTab();
@@ -5145,17 +5299,24 @@
     closeMobileNav();
     // Award XP for tool usage
     if (tab === 'invest') awardXPForAction('investCalc');
-    if (tab === 'creditsim') awardXPForAction('creditSim');
+    if (tab === 'creditsim') { awardXPForAction('creditSim'); updateCreditSimTab(); }
     if (tab === 'streaks') renderStreaksTab();
+    if (tab === 'creditsim') { updateCreditSimTab(); }
     if (tab === 'calendar') { try { loadCalendarEvents(); renderCalendar(); } catch(e) { console.error('Calendar render failed:', e); } }
     if (tab === 'networth') { setTimeout(initNetWorth, 50); }
     if (tab === 'healthscore') { try { calculateHealthScore(); } catch(e) { console.error('Health score render failed:', e); } }
+    if (tab === 'reports') { try { renderMonthlyReport(); } catch(e) { console.error('Monthly report render failed:', e); } }
     if (tab === 'debtplan') { try { renderDebtList(); runPayoffPlan(); } catch(e) { console.error('Debt planner render failed:', e); } }
     if (currentLang !== 'en') setTimeout(applyLanguage, 30);
   }
 
   function guardedNavTo(tab, btn) {
     if (tab === 'premium') tab = 'healthscore'; // legacy desktop nav safeguard after splitting Debt Planner + Health Score
+
+    // AI Advisor and Credit Simulator use soft paywalls. Free users can open them;
+    // AI allows 5 prompts/day and Credit Simulator allows 3 simulations/month.
+    if (tab === 'ai' || tab === 'creditsim') { navTo(tab, btn); return; }
+
     if (!isPro) { showPaywall(tab); closeMobileNav(); return; }
     navTo(tab, btn);
   }
@@ -5206,13 +5367,19 @@
     closeMobileNav();
     if (tab === 'networth') setTimeout(initNetWorth, 50);
     if (tab === 'streaks') renderStreaksTab();
+    if (tab === 'creditsim') { updateCreditSimTab(); }
     if (tab === 'calendar') { loadCalendarEvents(); renderCalendar(); }
     if (tab === 'healthscore') { try { calculateHealthScore(); } catch(e) { console.error('Health score render failed:', e); } }
+    if (tab === 'reports') { try { renderMonthlyReport(); } catch(e) { console.error('Monthly report render failed:', e); } }
     if (tab === 'debtplan') { try { renderDebtList(); runPayoffPlan(); } catch(e) { console.error('Debt planner render failed:', e); } }
     if (currentLang !== 'en') setTimeout(applyLanguage, 30);
   }
 
   function mobileGuardedTab(tab) {
+    // AI Advisor and Credit Simulator are soft-paywall features.
+    // Free users get 5 AI prompts/day and 3 credit simulations/month.
+    if (tab === 'ai' || tab === 'creditsim') { mobileTab(tab); return; }
+
     if (!isPro) { showPaywall(tab); closeMobileNav(); return; }
     mobileTab(tab);
   }
@@ -5462,9 +5629,13 @@ Guidelines:
     const typingId = showTyping();
 
     try {
+      const { data: { session } } = await sbClient.auth.getSession();
       const response = await fetch('/.netlify/functions/ai-advisor', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.access_token || ''}`
+        },
         body: JSON.stringify({ messages: chatHistory, system: getSystemPrompt() })
       });
       const data = await response.json();
@@ -5475,7 +5646,11 @@ Guidelines:
       appendMessage('ai', reply);
     } catch (err) {
       removeTyping(typingId);
-      appendMessage('ai', 'Sorry, something went wrong. Please try again in a moment.');
+      const message = err.message || 'Sorry, something went wrong. Please try again in a moment.';
+      appendMessage('ai', message);
+      if (message.includes('Upgrade to Pro')) {
+        showPaywall('ai-limit');
+      }
     }
 
     isTyping = false;
@@ -6884,12 +7059,124 @@ Guidelines:
       </div>`).join('');
   }
 
-  function toggleAction(id) {
+  async function toggleAction(id) {
+    const allowed = await checkCreditSimulationLimit();
+    if (!allowed) return;
+
     if (selectedActions.has(id)) selectedActions.delete(id);
     else selectedActions.add(id);
     renderActionCards();
     updateSimulator();
   }
+
+  const FREE_MONTHLY_CREDIT_SIM_LIMIT = 3;
+
+  function getCurrentCreditSimMonth() {
+    return new Date().toISOString().slice(0, 7); // YYYY-MM
+  }
+
+  async function getCreditSimulationUsage() {
+    if (isPro) return { unlimited: true };
+
+    const month = getCurrentCreditSimMonth();
+    if (!sbClient || !currentUser) {
+      return { used: 0, limit: FREE_MONTHLY_CREDIT_SIM_LIMIT, remaining: FREE_MONTHLY_CREDIT_SIM_LIMIT, month };
+    }
+
+    const { data, error } = await sbClient
+      .from('user_data')
+      .select('user_id,is_pro,credit_simulations_used,credit_simulation_reset_month')
+      .eq('user_id', currentUser.id)
+      .single();
+
+    if (error && error.code !== 'PGRST116') {
+      console.log('Credit sim usage check failed:', error.message);
+      return { used: 0, limit: FREE_MONTHLY_CREDIT_SIM_LIMIT, remaining: FREE_MONTHLY_CREDIT_SIM_LIMIT, month };
+    }
+
+    if (data?.is_pro) return { unlimited: true };
+
+    if (!data) {
+      await sbClient.from('user_data').upsert({
+        user_id: currentUser.id,
+        is_pro: false,
+        credit_simulations_used: 0,
+        credit_simulation_reset_month: month
+      }, { onConflict: 'user_id' });
+      return { used: 0, limit: FREE_MONTHLY_CREDIT_SIM_LIMIT, remaining: FREE_MONTHLY_CREDIT_SIM_LIMIT, month };
+    }
+
+    let used = data.credit_simulations_used || 0;
+    if (data.credit_simulation_reset_month !== month) {
+      used = 0;
+      await sbClient
+        .from('user_data')
+        .update({ credit_simulations_used: 0, credit_simulation_reset_month: month })
+        .eq('user_id', currentUser.id);
+    }
+
+    return {
+      used,
+      limit: FREE_MONTHLY_CREDIT_SIM_LIMIT,
+      remaining: Math.max(0, FREE_MONTHLY_CREDIT_SIM_LIMIT - used),
+      month
+    };
+  }
+
+  async function updateCreditSimUsageDisplay() {
+    const el = document.getElementById('credit-sim-usage');
+    if (!el) return;
+
+    if (isPro) {
+      el.style.display = 'block';
+      el.textContent = currentLang === 'es'
+        ? '⭐ Pro: simulaciones de crédito ilimitadas'
+        : '⭐ Pro: unlimited credit simulations';
+      return;
+    }
+
+    const usage = await getCreditSimulationUsage();
+    if (usage.unlimited) return updateCreditSimUsageDisplay();
+
+    el.style.display = 'block';
+    el.textContent = currentLang === 'es'
+      ? `${usage.remaining}/${usage.limit} simulaciones gratis restantes este mes`
+      : `${usage.remaining}/${usage.limit} free simulations remaining this month`;
+  }
+
+  async function checkCreditSimulationLimit() {
+    if (isPro) return true;
+
+    const month = getCurrentCreditSimMonth();
+    const usage = await getCreditSimulationUsage();
+
+    if (usage.unlimited) return true;
+
+    if (usage.used >= FREE_MONTHLY_CREDIT_SIM_LIMIT) {
+      alert(currentLang === 'es'
+        ? 'Has usado tus 3 simulaciones de crédito gratis este mes. Hazte Pro para simulaciones ilimitadas.'
+        : 'You’ve used your 3 free credit simulations this month. Upgrade to Pro for unlimited simulations.');
+      showPaywall('creditsim-limit');
+      return false;
+    }
+
+    if (sbClient && currentUser) {
+      const newUsed = usage.used + 1;
+      const { error } = await sbClient
+        .from('user_data')
+        .update({
+          credit_simulations_used: newUsed,
+          credit_simulation_reset_month: month
+        })
+        .eq('user_id', currentUser.id);
+
+      if (error) console.log('Credit sim usage update failed:', error.message);
+    }
+
+    updateCreditSimUsageDisplay();
+    return true;
+  }
+
 
   function getSavedCreditScore() {
     const uid = currentUser?.id || 'demo';
@@ -7022,9 +7309,14 @@ Guidelines:
     const gate = document.getElementById('creditsim-gate');
     const content = document.getElementById('creditsim-content');
     if (gate && content) {
-      gate.style.display = isPro ? 'none' : 'block';
-      content.style.display = isPro ? 'block' : 'none';
-      if (isPro) { applySavedCreditScore(); renderActionCards(); updateSimulator(); }
+      // Credit Simulator now uses a soft paywall:
+      // Free users get 3 simulations/month; Pro users get unlimited simulations.
+      gate.style.display = 'none';
+      content.style.display = 'block';
+      applySavedCreditScore();
+      renderActionCards();
+      updateSimulator();
+      updateCreditSimUsageDisplay();
     }
   }
 
