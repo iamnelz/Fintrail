@@ -10788,5 +10788,103 @@ window.addEventListener('load', function(){
 })();
 </script>
 
+
+<script>
+/* === STREAKS RECENT ACTIVITY SPANISH FIX === */
+(function(){
+  function isSpanish(){
+    try { return currentLang === 'es'; } catch(e) { return false; }
+  }
+
+  function translateActivityText(value){
+    var text = String(value || '');
+
+    if (isSpanish()) {
+      text = text.replace('Recent Activity', 'Actividad Reciente');
+      text = text.replace('Used investment calculator', 'Usó la calculadora de inversiones');
+      text = text.replace('Used credit score simulator', 'Usó el simulador de puntaje de crédito');
+      text = text.replace('Created a savings goal', 'Creó una meta de ahorro');
+      text = text.replace('Added a transaction', 'Agregó una transacción');
+      text = text.replace('Added income', 'Agregó ingreso');
+      text = text.replace('Added expense', 'Agregó gasto');
+      text = text.replace('Used debt payoff planner', 'Usó el planificador de pago de deudas');
+      text = text.replace('Generated debt negotiation script', 'Generó un guion de negociación de deudas');
+      text = text.replace('Used DTI calculator', 'Usó la calculadora DTI');
+      text = text.replace('Updated health score', 'Actualizó el puntaje de salud');
+      text = text.replace(/Login streak of (\d+) days!/g, '¡Racha de inicio de $1 días!');
+      text = text.replace(/Budget streak of (\d+) days!/g, '¡Racha de presupuesto de $1 días!');
+      text = text.replace(/(\d+) day streak!/g, '¡Racha de $1 días!');
+    } else {
+      text = text.replace('Actividad Reciente', 'Recent Activity');
+      text = text.replace('Usó la calculadora de inversiones', 'Used investment calculator');
+      text = text.replace('Usó el simulador de puntaje de crédito', 'Used credit score simulator');
+      text = text.replace('Creó una meta de ahorro', 'Created a savings goal');
+      text = text.replace('Agregó una transacción', 'Added a transaction');
+      text = text.replace('Agregó ingreso', 'Added income');
+      text = text.replace('Agregó gasto', 'Added expense');
+      text = text.replace('Usó el planificador de pago de deudas', 'Used debt payoff planner');
+      text = text.replace('Generó un guion de negociación de deudas', 'Generated debt negotiation script');
+      text = text.replace('Usó la calculadora DTI', 'Used DTI calculator');
+      text = text.replace('Actualizó el puntaje de salud', 'Updated health score');
+      text = text.replace(/¡Racha de inicio de (\d+) días!/g, 'Login streak of $1 days!');
+      text = text.replace(/¡Racha de presupuesto de (\d+) días!/g, 'Budget streak of $1 days!');
+      text = text.replace(/¡Racha de (\d+) días!/g, '$1 day streak!');
+    }
+
+    return text;
+  }
+
+  function applyStreaksSpanishFix(){
+    try {
+      var root = document.getElementById('tab-streaks');
+      if (!root) return;
+
+      root.querySelectorAll('h2, h3, h4, p, span, div').forEach(function(el){
+        if (!el || !el.textContent) return;
+
+        if (el.classList && (
+          el.classList.contains('activity-text') ||
+          el.classList.contains('activity-item') ||
+          el.classList.contains('activity-feed') ||
+          el.textContent.indexOf('Recent Activity') !== -1 ||
+          el.textContent.indexOf('Used credit score simulator') !== -1 ||
+          el.textContent.indexOf('Used investment calculator') !== -1 ||
+          el.textContent.indexOf('Created a savings goal') !== -1 ||
+          el.textContent.indexOf('Login streak of') !== -1 ||
+          el.textContent.indexOf('Budget streak of') !== -1
+        )) {
+          if (el.children && el.children.length > 0 && !el.classList.contains('activity-text')) {
+            Array.prototype.forEach.call(el.childNodes, function(node){
+              if (node.nodeType === 3) node.textContent = translateActivityText(node.textContent);
+            });
+          } else {
+            el.textContent = translateActivityText(el.textContent);
+          }
+        }
+
+        if (el.children && el.children.length === 0) {
+          var translated = translateActivityText(el.textContent);
+          if (translated !== el.textContent) el.textContent = translated;
+        }
+      });
+    } catch(e) {
+      console.log('Streaks Spanish fix skipped:', e.message);
+    }
+  }
+
+  window.fintrailStreaksSpanishFix = applyStreaksSpanishFix;
+
+  window.addEventListener('load', function(){
+    setTimeout(applyStreaksSpanishFix, 900);
+    setTimeout(applyStreaksSpanishFix, 2200);
+  });
+
+  document.addEventListener('click', function(){
+    setTimeout(applyStreaksSpanishFix, 120);
+    setTimeout(applyStreaksSpanishFix, 650);
+  });
+})();
+</script>
+
 </body>
 </html>
