@@ -11926,5 +11926,179 @@ window.addEventListener('load', function(){
 })();
 </script>
 
+
+<script>
+/* === SAVINGS GOALS SPANISH FIX === */
+(function(){
+  var savingsTimer = null;
+
+  function isSpanish(){
+    try { return currentLang === 'es'; } catch(e) { return false; }
+  }
+
+  var enToEs = [
+    ['Emergency Fund', 'Fondo de Emergencia'],
+    ['Home', 'Casa'],
+    ['Vehicle', 'Vehículo'],
+    ['Travel', 'Viaje'],
+    ['Education', 'Educación'],
+    ['Wedding', 'Boda'],
+    ['Family', 'Familia'],
+    ['Tech', 'Tecnología'],
+    ['Health', 'Salud'],
+    ['Retirement', 'Jubilación'],
+    ['Other', 'Otro'],
+    ['Add savings...', 'Agregar ahorro...'],
+    ['+ Add Goal', '+ Agregar Meta'],
+    ['+ Add', '+ Agregar'],
+    ['of $', 'de $'],
+    ['complete', 'completado'],
+    ['Save $', 'Ahorra $'],
+    ['/mo', '/mes'],
+    ['to reach your goal in', 'para alcanzar tu meta en'],
+    ['months', 'meses'],
+    ['month', 'mes'],
+    ['e.g. Emergency Fund, Vacation', 'ej. Fondo de Emergencia, Vacaciones'],
+    ['e.g. 5000', 'ej. 5000']
+  ];
+  var esToEn = enToEs.map(function(pair){ return [pair[1], pair[0]]; });
+
+  function applyPairs(value){
+    var text = String(value || '');
+    var pairs = isSpanish() ? enToEs : esToEn;
+
+    pairs.forEach(function(pair){
+      text = text.split(pair[0]).join(pair[1]);
+    });
+
+    if (isSpanish()) {
+      text = text.replace(/(\d+)% complete/g, '$1% completado');
+      text = text.replace(/Save \$([0-9,.]+)\/mo to reach your goal in (\d+) months/g, 'Ahorra $$$1/mes para alcanzar tu meta en $2 meses');
+      text = text.replace(/Save \$([0-9,.]+)\/mo to reach your goal in (\d+) month/g, 'Ahorra $$$1/mes para alcanzar tu meta en $2 mes');
+      text = text.replace(/of \$([0-9,.]+)/g, 'de $$$1');
+    } else {
+      text = text.replace(/(\d+)% completado/g, '$1% complete');
+      text = text.replace(/Ahorra \$([0-9,.]+)\/mes para alcanzar tu meta en (\d+) meses/g, 'Save $$$1/mo to reach your goal in $2 months');
+      text = text.replace(/Ahorra \$([0-9,.]+)\/mes para alcanzar tu meta en (\d+) mes/g, 'Save $$$1/mo to reach your goal in $2 month');
+      text = text.replace(/de \$([0-9,.]+)/g, 'of $$$1');
+    }
+
+    return text;
+  }
+
+  function translateSelect(select){
+    if (!select) return;
+    var selected = select.value;
+
+    Array.prototype.forEach.call(select.options || [], function(opt){
+      var nextText = applyPairs(opt.textContent);
+      var nextValue = applyPairs(opt.value);
+      if (nextText !== opt.textContent) opt.textContent = nextText;
+      if (nextValue !== opt.value) opt.value = nextValue;
+    });
+
+    try { select.value = applyPairs(selected); } catch(e) {}
+  }
+
+  function walk(node){
+    if (!node) return;
+
+    if (node.nodeType === 3) {
+      var next = applyPairs(node.textContent);
+      if (next !== node.textContent) node.textContent = next;
+      return;
+    }
+
+    if (node.nodeType !== 1) return;
+    if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE') return;
+
+    if (node.placeholder) {
+      var nextPh = applyPairs(node.placeholder);
+      if (nextPh !== node.placeholder) node.placeholder = nextPh;
+    }
+
+    if (node.tagName === 'OPTION') {
+      var nextOption = applyPairs(node.textContent);
+      var nextValue = applyPairs(node.value);
+      if (nextOption !== node.textContent) node.textContent = nextOption;
+      if (nextValue !== node.value) node.value = nextValue;
+    }
+
+    Array.prototype.forEach.call(node.childNodes || [], walk);
+  }
+
+  function applySavingsGoalsSpanishFix(){
+    try {
+      var root = document.getElementById('tab-goals');
+      if (!root) return;
+
+      root.querySelectorAll('select').forEach(function(select){
+        var allText = (
+          String(select.id || '') + ' ' +
+          String(select.name || '') + ' ' +
+          String(select.closest('.form-group') ? select.closest('.form-group').textContent : '')
+        ).toLowerCase();
+
+        var hasGoalCategories = Array.prototype.some.call(select.options || [], function(opt){
+          return /Emergency Fund|Home|Vehicle|Travel|Education|Wedding|Family|Tech|Health|Retirement|Other|Fondo de Emergencia|Casa|Vehículo|Viaje|Educación|Boda|Familia|Tecnología|Salud|Jubilación|Otro/.test(opt.textContent || opt.value || '');
+        });
+
+        if (allText.indexOf('categor') !== -1 || hasGoalCategories) {
+          translateSelect(select);
+        }
+      });
+
+      root.querySelectorAll('input, textarea').forEach(function(input){
+        if (input.placeholder) input.placeholder = applyPairs(input.placeholder);
+      });
+
+      walk(root);
+    } catch(e) {
+      console.log('Savings goals Spanish fix skipped:', e.message);
+    }
+  }
+
+  function scheduleSavingsGoalsSpanishFix(){
+    clearTimeout(savingsTimer);
+    savingsTimer = setTimeout(applySavingsGoalsSpanishFix, 120);
+  }
+
+  window.fintrailSavingsGoalsSpanishFix = scheduleSavingsGoalsSpanishFix;
+
+  window.addEventListener('load', function(){
+    setTimeout(applySavingsGoalsSpanishFix, 900);
+    setTimeout(applySavingsGoalsSpanishFix, 1800);
+  });
+
+  document.addEventListener('click', function(e){
+    var target = e.target;
+    if (!target) return;
+    if (
+      (target.closest && target.closest('#tab-goals')) ||
+      String(target.textContent || '').indexOf('English') !== -1 ||
+      String(target.textContent || '').indexOf('Español') !== -1 ||
+      String(target.textContent || '').indexOf('Spanish') !== -1 ||
+      String(target.textContent || '').indexOf('EN') === 0 ||
+      String(target.textContent || '').indexOf('ES') === 0
+    ) {
+      scheduleSavingsGoalsSpanishFix();
+      setTimeout(applySavingsGoalsSpanishFix, 500);
+    }
+  });
+
+  document.addEventListener('change', function(e){
+    if (e.target && e.target.closest && e.target.closest('#tab-goals')) {
+      scheduleSavingsGoalsSpanishFix();
+    }
+  });
+
+  document.addEventListener('input', function(e){
+    if (e.target && e.target.closest && e.target.closest('#tab-goals')) {
+      scheduleSavingsGoalsSpanishFix();
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
