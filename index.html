@@ -12272,5 +12272,181 @@ window.addEventListener('load', function(){
 })();
 </script>
 
+
+<script>
+/* === SAVINGS GOAL CARD SPANISH FIX === */
+(function(){
+  var goalCardTimer = null;
+
+  function isSpanish(){
+    try { return currentLang === 'es'; } catch(e) { return false; }
+  }
+
+  var goalPairsEnEs = [
+    ['Emergency Fund', 'Fondo de Emergencia'],
+    ['Home', 'Casa'],
+    ['Vehicle', 'Vehículo'],
+    ['Travel', 'Viaje'],
+    ['Education', 'Educación'],
+    ['Wedding', 'Boda'],
+    ['Family', 'Familia'],
+    ['Tech', 'Tecnología'],
+    ['Health', 'Salud'],
+    ['Retirement', 'Jubilación'],
+    ['Other', 'Otro'],
+    ['Add savings...', 'Agregar ahorro...'],
+    ['+ Add Goal', '+ Agregar Meta'],
+    ['+ Add', '+ Agregar'],
+    ['of $', 'de $'],
+    ['complete', 'completado'],
+    ['Save $', 'Ahorra $'],
+    ['/mo', '/mes'],
+    ['to reach your goal in', 'para alcanzar tu meta en'],
+    ['months', 'meses'],
+    ['month', 'mes'],
+    ['Nov', 'nov'],
+    ['Dec', 'dic'],
+    ['Jan', 'ene'],
+    ['Feb', 'feb'],
+    ['Mar', 'mar'],
+    ['Apr', 'abr'],
+    ['May', 'may'],
+    ['Jun', 'jun'],
+    ['Jul', 'jul'],
+    ['Aug', 'ago'],
+    ['Sep', 'sep'],
+    ['Oct', 'oct'],
+    ['e.g. Emergency Fund, Vacation', 'ej. Fondo de Emergencia, Vacaciones']
+  ];
+
+  var goalPairsEsEn = goalPairsEnEs.map(function(pair){ return [pair[1], pair[0]]; });
+
+  function applyPairs(value){
+    var text = String(value || '');
+    var pairs = isSpanish() ? goalPairsEnEs : goalPairsEsEn;
+
+    pairs.forEach(function(pair){
+      text = text.split(pair[0]).join(pair[1]);
+    });
+
+    if (isSpanish()) {
+      text = text.replace(/(\d+)% complete/g, '$1% completado');
+      text = text.replace(/Save \$([0-9,.]+)\/mo to reach your goal in (\d+) months/g, 'Ahorra $$$1/mes para alcanzar tu meta en $2 meses');
+      text = text.replace(/Save \$([0-9,.]+)\/mo to reach your goal in (\d+) month/g, 'Ahorra $$$1/mes para alcanzar tu meta en $2 mes');
+      text = text.replace(/of \$([0-9,.]+)/g, 'de $$$1');
+    } else {
+      text = text.replace(/(\d+)% completado/g, '$1% complete');
+      text = text.replace(/Ahorra \$([0-9,.]+)\/mes para alcanzar tu meta en (\d+) meses/g, 'Save $$$1/mo to reach your goal in $2 months');
+      text = text.replace(/Ahorra \$([0-9,.]+)\/mes para alcanzar tu meta en (\d+) mes/g, 'Save $$$1/mo to reach your goal in $2 month');
+      text = text.replace(/de \$([0-9,.]+)/g, 'of $$$1');
+    }
+
+    return text;
+  }
+
+  function translateNode(node){
+    if (!node) return;
+
+    if (node.nodeType === 3) {
+      var next = applyPairs(node.textContent);
+      if (next !== node.textContent) node.textContent = next;
+      return;
+    }
+
+    if (node.nodeType !== 1) return;
+    if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE') return;
+
+    if (node.placeholder) {
+      var nextPh = applyPairs(node.placeholder);
+      if (nextPh !== node.placeholder) node.placeholder = nextPh;
+    }
+
+    if (node.value && (node.tagName === 'OPTION')) {
+      var nextVal = applyPairs(node.value);
+      if (nextVal !== node.value) node.value = nextVal;
+    }
+
+    Array.prototype.forEach.call(node.childNodes || [], translateNode);
+  }
+
+  function translateGoalSelects(root){
+    root.querySelectorAll('select').forEach(function(select){
+      var selected = select.value;
+      Array.prototype.forEach.call(select.options || [], function(opt){
+        var nextText = applyPairs(opt.textContent);
+        var nextValue = applyPairs(opt.value);
+        if (nextText !== opt.textContent) opt.textContent = nextText;
+        if (nextValue !== opt.value) opt.value = nextValue;
+      });
+      try { select.value = applyPairs(selected); } catch(e) {}
+    });
+  }
+
+  function applySavingsGoalCardSpanishFix(){
+    try {
+      var root = document.getElementById('tab-goals');
+      if (!root) return;
+
+      translateGoalSelects(root);
+
+      root.querySelectorAll('input, textarea').forEach(function(input){
+        if (input.placeholder) input.placeholder = applyPairs(input.placeholder);
+      });
+
+      root.querySelectorAll(
+        '.goal-card, .goal-category, .goal-target, .goal-pct, .goal-deadline, .goal-monthly, .deposit-input, .deposit-btn, .new-goal-form, button, input, select'
+      ).forEach(function(el){
+        translateNode(el);
+      });
+
+      // Fallback: translate the full goals tab, but only text nodes.
+      translateNode(root);
+    } catch(e) {
+      console.log('Savings goal card Spanish fix skipped:', e.message);
+    }
+  }
+
+  function scheduleSavingsGoalCardSpanishFix(){
+    clearTimeout(goalCardTimer);
+    goalCardTimer = setTimeout(applySavingsGoalCardSpanishFix, 120);
+  }
+
+  window.fintrailSavingsGoalCardSpanishFix = scheduleSavingsGoalCardSpanishFix;
+
+  window.addEventListener('load', function(){
+    setTimeout(applySavingsGoalCardSpanishFix, 900);
+    setTimeout(applySavingsGoalCardSpanishFix, 1800);
+  });
+
+  document.addEventListener('click', function(e){
+    var t = e.target;
+    if (!t) return;
+    if (
+      (t.closest && t.closest('#tab-goals')) ||
+      String(t.textContent || '').indexOf('English') !== -1 ||
+      String(t.textContent || '').indexOf('Español') !== -1 ||
+      String(t.textContent || '').indexOf('Spanish') !== -1 ||
+      String(t.textContent || '').indexOf('EN') === 0 ||
+      String(t.textContent || '').indexOf('ES') === 0
+    ) {
+      scheduleSavingsGoalCardSpanishFix();
+      setTimeout(applySavingsGoalCardSpanishFix, 500);
+    }
+  });
+
+  document.addEventListener('input', function(e){
+    if (e.target && e.target.closest && e.target.closest('#tab-goals')) {
+      scheduleSavingsGoalCardSpanishFix();
+    }
+  });
+
+  document.addEventListener('change', function(e){
+    if (e.target && e.target.closest && e.target.closest('#tab-goals')) {
+      scheduleSavingsGoalCardSpanishFix();
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
