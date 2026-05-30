@@ -4446,9 +4446,9 @@
   <div class="tab-section" id="tab-reports">
     <div class="report-shell">
       <div class="report-topline">
-        <button class="report-back" onclick="navTo('healthscore')">← Back to Insights</button>
+        <button class="report-back" id="report-back-btn" onclick="navTo('healthscore')">← Back to Insights</button>
         <select class="report-month-select" id="report-month-select" onchange="renderMonthlyReport()">
-          <option value="current">Current Month</option>
+          <option value="current" id="report-current-month-option">Current Month</option>
         </select>
       </div>
       <h1 class="report-title" id="report-title">Your Monthly Financial Progress Report 🎉</h1>
@@ -4456,7 +4456,7 @@
 
       <div class="report-hero-card">
         <div>
-          <h3>Financial Health Score</h3>
+          <h3 id="report-health-heading">Financial Health Score</h3>
           <div class="report-score-shift"><span id="report-score-prev">72</span> → <span class="good" id="report-score-current">78</span></div>
           <div class="report-score-note" id="report-score-note">+6 points this month</div>
         </div>
@@ -4469,53 +4469,53 @@
       <div class="report-grid-3">
         <div class="report-card">
           <div class="report-card-icon green">🐷</div>
-          <h3>Savings Progress</h3>
+          <h3 id="report-savings-heading">Savings Progress</h3>
           <div class="report-label" id="report-savings-goal-name">Top Savings Goal</div>
           <div class="report-big green"><span id="report-savings-saved">$0</span> / <span id="report-savings-target">$0</span></div>
           <div class="report-progress"><div class="report-progress-fill" id="report-savings-progress"></div></div>
-          <div class="report-label"><strong id="report-savings-pct">0%</strong> complete</div>
+          <div class="report-label"><strong id="report-savings-pct">0%</strong> <span id="report-complete-label">complete</span></div>
           <div class="report-small-row"><span class="round">↑</span><span id="report-savings-note">Add a savings goal to start tracking progress.</span></div>
-          <div class="report-insight green"><strong>✦ AI Insight</strong><span id="report-savings-insight">Your savings report will become more useful as you update your goals.</span></div>
+          <div class="report-insight green"><strong id="report-savings-ai-label">✦ AI Insight</strong><span id="report-savings-insight">Your savings report will become more useful as you update your goals.</span></div>
         </div>
 
         <div class="report-card">
           <div class="report-card-icon orange">💳</div>
-          <h3>Debt Progress</h3>
-          <div class="report-label">Total Debt Tracked</div>
+          <h3 id="report-debt-heading">Debt Progress</h3>
+          <div class="report-label" id="report-total-debt-label">Total Debt Tracked</div>
           <div class="report-big orange" id="report-debt-total">$0</div>
           <hr style="border:none;border-top:1px solid var(--border);margin:1rem 0">
-          <div class="report-label">Estimated Payoff Focus</div>
+          <div class="report-label" id="report-payoff-focus-label">Estimated Payoff Focus</div>
           <div class="report-big orange" id="report-debt-focus">No debt added</div>
           <div class="report-small-row"><span class="round" style="background:#fff0df;color:#e85a28">↑</span><span id="report-debt-note">Add debts to generate payoff insights.</span></div>
-          <div class="report-insight orange"><strong>✦ AI Insight</strong><span id="report-debt-insight">Your debt report will show your total balances and recommended focus debt.</span></div>
+          <div class="report-insight orange"><strong id="report-debt-ai-label">✦ AI Insight</strong><span id="report-debt-insight">Your debt report will show your total balances and recommended focus debt.</span></div>
         </div>
 
         <div class="report-card">
           <div class="report-card-icon blue">📊</div>
-          <h3>Credit Progress</h3>
-          <div class="report-label">Simulated Credit Range</div>
+          <h3 id="report-credit-heading">Credit Progress</h3>
+          <div class="report-label" id="report-credit-range-label">Simulated Credit Range</div>
           <div class="report-big blue"><span id="report-credit-current">680</span> → <span id="report-credit-simulated">680</span></div>
           <div class="report-progress"><div class="report-progress-fill" id="report-credit-progress" style="background:#4267d6"></div></div>
-          <div class="report-label">Biggest Positive Factor</div>
+          <div class="report-label" id="report-credit-factor-label">Biggest Positive Factor</div>
           <div class="report-small-row"><span class="round" style="background:#e9f0ff;color:#4267d6">✓</span><span id="report-credit-factor">Use the credit simulator to see your biggest positive factor.</span></div>
-          <div class="report-insight blue"><strong>💡 Suggested Next Step</strong><span id="report-credit-insight">Try a credit simulation to receive a personalized next step.</span></div>
+          <div class="report-insight blue"><strong id="report-credit-next-label">💡 Suggested Next Step</strong><span id="report-credit-insight">Try a credit simulation to receive a personalized next step.</span></div>
         </div>
       </div>
 
       <div class="report-bottom-grid">
         <div class="report-card report-ai-card">
-          <h3 style="text-align:left;margin-bottom:0.75rem">✦ AI Financial Insights</h3>
-          <div class="report-label">Monthly Highlights</div>
+          <h3 id="report-ai-heading" style="text-align:left;margin-bottom:0.75rem">✦ AI Financial Insights</h3>
+          <div class="report-label" id="report-monthly-highlights-label">Monthly Highlights</div>
           <div class="report-ai-list" id="report-ai-list"></div>
           <hr style="border:none;border-top:1px solid rgba(129,91,255,0.18);margin:1rem 0">
-          <div class="report-label">Suggested Focus For Next Month</div>
+          <div class="report-label" id="report-next-focus-label">Suggested Focus For Next Month</div>
           <div class="report-ai-item"><span>◎</span><div id="report-next-focus">Keep updating your savings, debt, and credit tools so Fintrail can give better monthly guidance.</div></div>
         </div>
 
         <div class="report-card report-achievement">
-          <div class="report-label" style="font-weight:800;color:#e85a28">🏆 Monthly Achievement</div>
+          <div class="report-label" id="report-monthly-achievement-label" style="font-weight:800;color:#e85a28">🏆 Monthly Achievement</div>
           <div class="report-achievement-emoji" id="report-achievement-emoji">🔥</div>
-          <div class="report-label">Achievement Unlocked</div>
+          <div class="report-label" id="report-achievement-unlocked-label">Achievement Unlocked</div>
           <h3 id="report-achievement-title">Progress Builder</h3>
           <p id="report-achievement-desc" style="color:var(--text-soft);font-size:0.9rem;line-height:1.6">You are building better financial habits by using your tools.</p>
         </div>
@@ -4527,8 +4527,8 @@
       </div>
 
       <div class="report-actions-row">
-        <button class="report-action-btn" onclick="downloadMonthlyReportPDF()">⇩ Download Report (PDF)</button>
-        <button class="report-action-btn primary" onclick="alert('Sharing progress will be available soon!')">⇧ Share Your Progress</button>
+        <button class="report-action-btn" id="report-download-btn" onclick="downloadMonthlyReportPDF()">⇩ Download Report (PDF)</button>
+        <button class="report-action-btn primary" id="report-share-btn" onclick="alert(currentLang === 'es' ? '¡Compartir tu progreso estará disponible pronto!' : 'Sharing progress will be available soon!')">⇧ Share Your Progress</button>
       </div>
     </div>
   </div>
@@ -9628,24 +9628,67 @@ function showOnboardingIfNeeded() {
   function renderMonthlyReport() {
     // Refresh the same arrays the rest of the app uses, in case the report tab loads first.
     const uid = currentUser?.id || 'demo';
+    const isEs = currentLang === 'es';
+    const t = (en, es) => isEs ? es : en;
+
     try { const raw = safeGet('fintrail_goals_' + uid); if (raw && (!goals || !goals.length)) goals = JSON.parse(raw) || []; } catch(e) {}
     try { const raw = safeGet('fintrail_debts_' + uid); if (raw && (!planDebts || !planDebts.length)) planDebts = JSON.parse(raw) || []; } catch(e) {}
     try { const raw = safeGet('fintrail_txns_' + uid); if (raw && (!transactions || !transactions.length)) transactions = JSON.parse(raw) || []; } catch(e) {}
     try { const raw = safeGet('fintrail_bills_' + uid); if (raw && (!bills || !bills.length)) bills = JSON.parse(raw) || []; } catch(e) {}
 
-    const monthName = new Date().toLocaleDateString(currentLang === 'es' ? 'es-US' : 'en-US', { month:'long', year:'numeric' });
-    reportSetText('report-title', currentLang === 'es' ? `Tu Reporte Financiero de ${monthName} 🎉` : `Your ${monthName} Financial Progress Report 🎉`);
+    // Static monthly report labels
+    reportSetText('report-back-btn', t('← Back to Insights', '← Volver a Informes'));
+    reportSetText('report-current-month-option', t('Current Month', 'Mes Actual'));
+    reportSetText('report-subtitle', t(
+      'Personalized progress based on the savings, debt, credit, and AI activity you have entered in Fintrail.',
+      'Progreso personalizado basado en los ahorros, deudas, crédito y actividad de IA que has ingresado en Fintrail.'
+    ));
+    reportSetText('report-health-heading', t('Financial Health Score', 'Puntaje de Salud Financiera'));
+    reportSetText('report-savings-heading', t('Savings Progress', 'Progreso de Ahorros'));
+    reportSetText('report-complete-label', t('complete', 'completo'));
+    reportSetText('report-savings-ai-label', t('✦ AI Insight', '✦ Consejo de IA'));
+    reportSetText('report-debt-heading', t('Debt Progress', 'Progreso de Deudas'));
+    reportSetText('report-total-debt-label', t('Total Debt Tracked', 'Total de Deuda Registrada'));
+    reportSetText('report-payoff-focus-label', t('Estimated Payoff Focus', 'Enfoque de Pago Estimado'));
+    reportSetText('report-debt-ai-label', t('✦ AI Insight', '✦ Consejo de IA'));
+    reportSetText('report-credit-heading', t('Credit Progress', 'Progreso de Crédito'));
+    reportSetText('report-credit-range-label', t('Simulated Credit Range', 'Rango de Crédito Simulado'));
+    reportSetText('report-credit-factor-label', t('Biggest Positive Factor', 'Factor Positivo Principal'));
+    reportSetText('report-credit-next-label', t('💡 Suggested Next Step', '💡 Próximo Paso Sugerido'));
+    reportSetText('report-ai-heading', t('✦ AI Financial Insights', '✦ Consejos Financieros de IA'));
+    reportSetText('report-monthly-highlights-label', t('Monthly Highlights', 'Resumen del Mes'));
+    reportSetText('report-next-focus-label', t('Suggested Focus For Next Month', 'Enfoque Sugerido Para el Próximo Mes'));
+    reportSetText('report-monthly-achievement-label', t('🏆 Monthly Achievement', '🏆 Logro del Mes'));
+    reportSetText('report-achievement-unlocked-label', t('Achievement Unlocked', 'Logro Desbloqueado'));
+    reportSetText('report-download-btn', t('⇩ Download Report (PDF)', '⇩ Descargar Reporte (PDF)'));
+    reportSetText('report-share-btn', t('⇧ Share Your Progress', '⇧ Comparte Tu Progreso'));
+
+    const monthName = new Date().toLocaleDateString(isEs ? 'es-US' : 'en-US', { month:'long', year:'numeric' });
+    reportSetText('report-title', isEs ? `Tu Reporte Financiero de ${monthName} 🎉` : `Your ${monthName} Financial Progress Report 🎉`);
 
     // Health score
     const health = getReportHealthScore();
     const prev = Math.max(0, health - 6);
     reportSetText('report-score-prev', prev);
     reportSetText('report-score-current', health);
-    reportSetText('report-score-note', `${health >= prev ? '+' : ''}${health - prev} points this month`);
+    const pointDelta = health - prev;
+    reportSetText('report-score-note', t(
+      `${pointDelta >= 0 ? '+' : ''}${pointDelta} points this month`,
+      `${pointDelta >= 0 ? '+' : ''}${pointDelta} puntos este mes`
+    ));
     reportSetText('report-gauge-num', health);
-    reportSetText('report-gauge-label', health >= 80 ? 'Excellent' : health >= 65 ? 'Good' : health >= 50 ? 'Fair' : 'Needs Work');
+    reportSetText('report-gauge-label',
+      health >= 80 ? t('Excellent', 'Excelente') :
+      health >= 65 ? t('Good', 'Bueno') :
+      health >= 50 ? t('Fair', 'Regular') :
+      t('Needs Work', 'Necesita Mejorar')
+    );
     const gauge = document.getElementById('report-gauge');
     if (gauge) gauge.style.background = `conic-gradient(${health >= 70 ? 'var(--income-color)' : health >= 50 ? 'var(--accent2)' : 'var(--accent)'} 0 ${health}%, #e9edf3 ${health}% 100%)`;
+    reportSetText('report-hero-text', t(
+      'Great progress! Your debt reduction and consistent savings improved your overall financial health.',
+      '¡Gran progreso! La reducción de tus deudas y tus ahorros constantes mejoraron tu salud financiera general.'
+    ));
 
     // Savings
     const sortedGoals = [...(goals || [])].sort((a,b) => ((parseFloat(b.saved)||0)/(parseFloat(b.target)||1)) - ((parseFloat(a.saved)||0)/(parseFloat(a.target)||1)));
@@ -9654,14 +9697,29 @@ function showOnboardingIfNeeded() {
       const saved = parseFloat(topGoal.saved) || 0;
       const target = parseFloat(topGoal.target) || 0;
       const pct = target > 0 ? Math.min(100, Math.round((saved / target) * 100)) : 0;
-      reportSetText('report-savings-goal-name', topGoal.name || 'Top Savings Goal');
+      reportSetText('report-savings-goal-name', topGoal.name || t('Top Savings Goal', 'Meta Principal de Ahorro'));
       reportSetText('report-savings-saved', '$' + saved.toLocaleString(undefined,{maximumFractionDigits:0}));
       reportSetText('report-savings-target', '$' + target.toLocaleString(undefined,{maximumFractionDigits:0}));
       reportSetText('report-savings-pct', pct + '%');
       const fill = document.getElementById('report-savings-progress');
       if (fill) fill.style.width = pct + '%';
-      reportSetText('report-savings-note', pct >= 100 ? 'Goal completed — great job!' : `You are ${pct}% of the way to this goal.`);
-      reportSetText('report-savings-insight', pct >= 50 ? 'Your savings momentum is building. Keep contributing consistently.' : 'Small consistent deposits will help this goal start moving faster.');
+      reportSetText('report-savings-note', pct >= 100
+        ? t('Goal completed — great job!', 'Meta completada — ¡excelente trabajo!')
+        : t(`You are ${pct}% of the way to this goal.`, `Has completado el ${pct}% de esta meta.`)
+      );
+      reportSetText('report-savings-insight', pct >= 50
+        ? t('Your savings momentum is building. Keep contributing consistently.', 'Tu impulso de ahorro está creciendo. Sigue aportando de manera constante.')
+        : t('Small consistent deposits will help this goal start moving faster.', 'Pequeños depósitos constantes ayudarán a que esta meta avance más rápido.')
+      );
+    } else {
+      reportSetText('report-savings-goal-name', t('Top Savings Goal', 'Meta Principal de Ahorro'));
+      reportSetText('report-savings-saved', '$0');
+      reportSetText('report-savings-target', '$0');
+      reportSetText('report-savings-pct', '0%');
+      const fill = document.getElementById('report-savings-progress');
+      if (fill) fill.style.width = '0%';
+      reportSetText('report-savings-note', t('Add a savings goal to start tracking progress.', 'Agrega una meta de ahorro para comenzar a registrar tu progreso.'));
+      reportSetText('report-savings-insight', t('Your savings report will become more useful as you update your goals.', 'Tu reporte de ahorros será más útil a medida que actualices tus metas.'));
     }
 
     // Debt — live from Debt Payoff Planner
@@ -9671,13 +9729,19 @@ function showOnboardingIfNeeded() {
     const focusDebt = sortedDebts[0];
     reportSetText('report-debt-total', '$' + totalDebt.toLocaleString(undefined,{maximumFractionDigits:0}));
     if (focusDebt) {
-      reportSetText('report-debt-focus', focusDebt.name || 'Focus debt');
-      reportSetText('report-debt-note', `${payoffMethod === 'snowball' ? 'Snowball' : 'Avalanche'} focus: ${focusDebt.name} — $${focusDebt.balance.toLocaleString(undefined,{maximumFractionDigits:0})} at ${focusDebt.apr}% APR.`);
-      reportSetText('report-debt-insight', `You are tracking ${debts.length} debt${debts.length === 1 ? '' : 's'} totaling $${totalDebt.toLocaleString(undefined,{maximumFractionDigits:0})}. Focus extra payments on ${focusDebt.name} first.`);
+      reportSetText('report-debt-focus', focusDebt.name || t('Focus debt', 'Deuda de enfoque'));
+      reportSetText('report-debt-note', t(
+        `${payoffMethod === 'snowball' ? 'Snowball' : 'Avalanche'} focus: ${focusDebt.name} — $${focusDebt.balance.toLocaleString(undefined,{maximumFractionDigits:0})} at ${focusDebt.apr}% APR.`,
+        `Enfoque ${payoffMethod === 'snowball' ? 'bola de nieve' : 'avalancha'}: ${focusDebt.name} — $${focusDebt.balance.toLocaleString(undefined,{maximumFractionDigits:0})} al ${focusDebt.apr}% APR.`
+      ));
+      reportSetText('report-debt-insight', t(
+        `You are tracking ${debts.length} debt${debts.length === 1 ? '' : 's'} totaling $${totalDebt.toLocaleString(undefined,{maximumFractionDigits:0})}. Focus extra payments on ${focusDebt.name} first.`,
+        `Estás registrando ${debts.length} deuda${debts.length === 1 ? '' : 's'} con un total de $${totalDebt.toLocaleString(undefined,{maximumFractionDigits:0})}. Enfoca los pagos extra primero en ${focusDebt.name}.`
+      ));
     } else {
-      reportSetText('report-debt-focus', 'No debt added');
-      reportSetText('report-debt-note', 'Add debts to generate payoff insights.');
-      reportSetText('report-debt-insight', 'Your debt report will show your total balances and recommended focus debt.');
+      reportSetText('report-debt-focus', t('No debt added', 'No hay deudas agregadas'));
+      reportSetText('report-debt-note', t('Add debts to generate payoff insights.', 'Agrega deudas para generar consejos de pago.'));
+      reportSetText('report-debt-insight', t('Your debt report will show your total balances and recommended focus debt.', 'Tu reporte de deudas mostrará tus saldos totales y la deuda recomendada para enfocarte.'));
     }
 
     // Credit — live from Credit Simulator saved score
@@ -9687,31 +9751,44 @@ function showOnboardingIfNeeded() {
     reportSetText('report-credit-simulated', simulated);
     const creditFill = document.getElementById('report-credit-progress');
     if (creditFill) creditFill.style.width = Math.max(0, Math.min(100, ((credit - 300) / 550) * 100)) + '%';
-    let factor = 'Use the credit simulator to see your biggest positive factor.';
+    let factor = t('Use the credit simulator to see your biggest positive factor.', 'Usa el simulador de crédito para ver tu factor positivo principal.');
     try {
       if (Array.isArray(selectedActions) && selectedActions.length && Array.isArray(creditActions)) {
         const best = selectedActions.map(id => creditActions.find(a => a.id === id)).filter(Boolean).sort((a,b) => b.impact - a.impact)[0];
-        if (best) factor = `${best.label}: ${best.impact > 0 ? '+' : ''}${best.impact} points estimated impact.`;
+        if (best) factor = `${best.label}: ${best.impact > 0 ? '+' : ''}${best.impact} ${t('points estimated impact.', 'puntos de impacto estimado.')}`;
       }
     } catch(e) {}
     reportSetText('report-credit-factor', factor);
-    reportSetText('report-credit-insight', simulated > credit ? `Your selected simulations could move your score from ${credit} to about ${simulated}.` : `Your saved credit score is ${credit}. Try a credit simulation to identify your strongest next step.`);
+    reportSetText('report-credit-insight', simulated > credit
+      ? t(`Your selected simulations could move your score from ${credit} to about ${simulated}.`, `Tus simulaciones seleccionadas podrían mover tu puntaje de ${credit} a aproximadamente ${simulated}.`)
+      : t(`Your saved credit score is ${credit}. Try a credit simulation to identify your strongest next step.`, `Tu puntaje de crédito guardado es ${credit}. Prueba una simulación de crédito para identificar tu próximo paso más fuerte.`)
+    );
 
     // AI highlights
     const highlights = [];
-    if (topGoal) highlights.push(`Your top savings goal is ${topGoal.name}.`);
-    if (focusDebt) highlights.push(`Your current payoff focus is ${focusDebt.name}.`);
-    highlights.push(`Your saved credit score is ${credit}.`);
-    if ((gameData?.askedAI || gameData?.usedCreditSim || gameData?.usedInvestCalc)) highlights.push('You are actively using Fintrail tools to build financial momentum.');
+    if (topGoal) highlights.push(t(`Your top savings goal is ${topGoal.name}.`, `Tu meta principal de ahorro es ${topGoal.name}.`));
+    if (focusDebt) highlights.push(t(`Your current payoff focus is ${focusDebt.name}.`, `Tu enfoque actual de pago es ${focusDebt.name}.`));
+    highlights.push(t(`Your saved credit score is ${credit}.`, `Tu puntaje de crédito guardado es ${credit}.`));
+    if ((gameData?.askedAI || gameData?.usedCreditSim || gameData?.usedInvestCalc)) {
+      highlights.push(t('You are actively using Fintrail tools to build financial momentum.', 'Estás usando activamente las herramientas de Fintrail para crear impulso financiero.'));
+    }
     const aiList = document.getElementById('report-ai-list');
     if (aiList) aiList.innerHTML = highlights.map(h => `<div class="report-ai-item"><span>✦</span><div>${escHtml(h)}</div></div>`).join('');
 
-    reportSetText('report-next-focus', focusDebt ? `Focus on ${focusDebt.name} while keeping your credit score and savings goals updated.` : 'Keep updating your savings, debt, and credit tools so Fintrail can give better monthly guidance.');
-    reportSetText('report-achievement-title', focusDebt ? 'Debt Strategist' : (topGoal ? 'Progress Builder' : 'Fresh Start'));
-    reportSetText('report-achievement-desc', focusDebt ? 'You created a real debt payoff plan and are tracking your next focus debt.' : 'You are building better financial habits by using your tools.');
-    reportSetText('report-summary-text', `This report is now using your live Fintrail data: ${debts.length} debt${debts.length===1?'':'s'} tracked, credit score ${credit}, and ${goals.length} savings goal${goals.length===1?'':'s'}.`);
+    reportSetText('report-next-focus', focusDebt
+      ? t(`Focus on ${focusDebt.name} while keeping your credit score and savings goals updated.`, `Enfócate en ${focusDebt.name} mientras mantienes actualizado tu puntaje de crédito y tus metas de ahorro.`)
+      : t('Keep updating your savings, debt, and credit tools so Fintrail can give better monthly guidance.', 'Sigue actualizando tus herramientas de ahorro, deuda y crédito para que Fintrail pueda darte una mejor guía mensual.')
+    );
+    reportSetText('report-achievement-title', focusDebt ? t('Debt Strategist', 'Estratega de Deudas') : (topGoal ? t('Progress Builder', 'Constructor de Progreso') : t('Fresh Start', 'Nuevo Comienzo')));
+    reportSetText('report-achievement-desc', focusDebt
+      ? t('You created a real debt payoff plan and are tracking your next focus debt.', 'Creaste un plan real para pagar deudas y estás registrando tu próxima deuda de enfoque.')
+      : t('You are building better financial habits by using your tools.', 'Estás construyendo mejores hábitos financieros usando tus herramientas.')
+    );
+    reportSetText('report-summary-text', t(
+      `This report is now using your live Fintrail data: ${debts.length} debt${debts.length===1?'':'s'} tracked, credit score ${credit}, and ${goals.length} savings goal${goals.length===1?'':'s'}.`,
+      `Este reporte ahora usa tus datos activos de Fintrail: ${debts.length} deuda${debts.length===1?'':'s'} registrada${debts.length===1?'':'s'}, puntaje de crédito ${credit} y ${goals.length} meta${goals.length===1?'':'s'} de ahorro.`
+    ));
   }
-
   function downloadMonthlyReportPDF() {
     try { renderMonthlyReport(); } catch(e) {}
     window.print();
