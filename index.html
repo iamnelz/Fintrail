@@ -11569,5 +11569,190 @@ window.addEventListener('load', function(){
 }
 </style>
 
+
+<script>
+/* === BILL SCHEDULE DUE DATE SPANISH FIX === */
+(function(){
+  var billDateTimer = null;
+
+  function isSpanish(){
+    try { return currentLang === 'es'; } catch(e) { return false; }
+  }
+
+  function ordinalEn(day){
+    var n = Number(day);
+    var suffix = 'th';
+    if (n % 100 < 11 || n % 100 > 13) {
+      if (n % 10 === 1) suffix = 'st';
+      else if (n % 10 === 2) suffix = 'nd';
+      else if (n % 10 === 3) suffix = 'rd';
+    }
+    return n + suffix + ' of each month';
+  }
+
+  function ordinalEs(day){
+    var n = Number(day);
+    return n + (n === 1 ? 'ro' : '') + ' de cada mes';
+  }
+
+  function parseDay(value){
+    var text = String(value || '');
+    var m = text.match(/^(\d{1,2})(?:st|nd|rd|th|ro)?\s+(?:of each month|de cada mes)$/i);
+    if (m) return Number(m[1]);
+    m = text.match(/^(\d{1,2})$/);
+    if (m) return Number(m[1]);
+    return null;
+  }
+
+  function updateDueDateSelect(select){
+    if (!select) return;
+
+    var selectedDay = parseDay(select.value);
+    if (!selectedDay && select.selectedIndex >= 0 && select.options[select.selectedIndex]) {
+      selectedDay = parseDay(select.options[select.selectedIndex].textContent);
+    }
+    if (!selectedDay) selectedDay = 1;
+
+    Array.prototype.forEach.call(select.options || [], function(opt, idx){
+      var day = parseDay(opt.value) || parseDay(opt.textContent) || (idx + 1);
+      if (day >= 1 && day <= 31) {
+        opt.value = isSpanish() ? ordinalEs(day) : ordinalEn(day);
+        opt.textContent = isSpanish() ? ordinalEs(day) : ordinalEn(day);
+      }
+    });
+
+    select.value = isSpanish() ? ordinalEs(selectedDay) : ordinalEn(selectedDay);
+  }
+
+  function translateBillScheduleText(value){
+    var text = String(value || '');
+    if (!text.trim()) return text;
+
+    if (isSpanish()) {
+      text = text.replace(/Due (\d{1,2})(?:st|nd|rd|th)/g, 'Vence el $1');
+      text = text.replace(/Due on the (\d{1,2})(?:st|nd|rd|th)/g, 'Vence el $1');
+      text = text.replace(/(\d{1,2})(?:st|nd|rd|th) of each month/g, function(_, d){ return ordinalEs(d); });
+      text = text.replace(/Enter less than the full amount to split/g, 'Ingresa menos que el monto total para dividirlo');
+      text = text.replace(/How much you pay each payday/g, 'Cuánto pagas cada día de pago');
+      text = text.replace(/e\.g\. Rent, Netflix, Car Payment/g, 'ej. Renta, Netflix, Pago del Auto');
+      text = text.replace(/Housing/g, 'Vivienda');
+      text = text.replace(/Auto/g, 'Auto');
+      text = text.replace(/Utilities/g, 'Servicios');
+      text = text.replace(/Insurance/g, 'Seguro');
+      text = text.replace(/Subscriptions/g, 'Suscripciones');
+      text = text.replace(/Other/g, 'Otro');
+    } else {
+      text = text.replace(/Vence el (\d{1,2})/g, function(_, d){ return 'Due ' + ordinalEn(d).split(' ')[0]; });
+      text = text.replace(/(\d{1,2})(?:ro)? de cada mes/g, function(_, d){ return ordinalEn(d); });
+      text = text.replace(/Ingresa menos que el monto total para dividirlo/g, 'Enter less than the full amount to split');
+      text = text.replace(/Cuánto pagas cada día de pago/g, 'How much you pay each payday');
+      text = text.replace(/ej\. Renta, Netflix, Pago del Auto/g, 'e.g. Rent, Netflix, Car Payment');
+      text = text.replace(/Vivienda/g, 'Housing');
+      text = text.replace(/Servicios/g, 'Utilities');
+      text = text.replace(/Seguro/g, 'Insurance');
+      text = text.replace(/Suscripciones/g, 'Subscriptions');
+      text = text.replace(/Otro/g, 'Other');
+    }
+
+    return text;
+  }
+
+  function walk(node){
+    if (!node) return;
+
+    if (node.nodeType === 3) {
+      var next = translateBillScheduleText(node.textContent);
+      if (next !== node.textContent) node.textContent = next;
+      return;
+    }
+
+    if (node.nodeType !== 1) return;
+    if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE') return;
+
+    if (node.placeholder) {
+      var ph = translateBillScheduleText(node.placeholder);
+      if (ph !== node.placeholder) node.placeholder = ph;
+    }
+
+    Array.prototype.forEach.call(node.childNodes || [], walk);
+  }
+
+  function applyBillScheduleDueDateSpanishFix(){
+    try {
+      var roots = [
+        document.getElementById('bsub-schedule'),
+        document.getElementById('tab-budget'),
+        document.getElementById('tab-calendar')
+      ].filter(Boolean);
+
+      roots.forEach(function(root){
+        root.querySelectorAll('select').forEach(function(select){
+          var labelText = '';
+          var group = select.closest('.form-group');
+          if (group) labelText = String(group.textContent || '');
+          var idName = String(select.id || '') + ' ' + String(select.name || '');
+          var allText = (labelText + ' ' + idName).toLowerCase();
+
+          if (
+            allText.indexOf('vencimiento') !== -1 ||
+            allText.indexOf('due') !== -1 ||
+            Array.prototype.some.call(select.options || [], function(opt){
+              return /of each month|de cada mes/i.test(opt.textContent || opt.value || '');
+            })
+          ) {
+            updateDueDateSelect(select);
+          }
+
+          Array.prototype.forEach.call(select.options || [], function(opt){
+            var next = translateBillScheduleText(opt.textContent);
+            if (next !== opt.textContent) opt.textContent = next;
+            var nextVal = translateBillScheduleText(opt.value);
+            if (nextVal !== opt.value) opt.value = nextVal;
+          });
+        });
+
+        walk(root);
+      });
+    } catch(e) {
+      console.log('Bill schedule due date Spanish fix skipped:', e.message);
+    }
+  }
+
+  function scheduleBillScheduleDueDateSpanishFix(){
+    clearTimeout(billDateTimer);
+    billDateTimer = setTimeout(applyBillScheduleDueDateSpanishFix, 120);
+  }
+
+  window.fintrailBillScheduleDueDateSpanishFix = scheduleBillScheduleDueDateSpanishFix;
+
+  window.addEventListener('load', function(){
+    setTimeout(applyBillScheduleDueDateSpanishFix, 900);
+    setTimeout(applyBillScheduleDueDateSpanishFix, 1800);
+  });
+
+  document.addEventListener('click', function(e){
+    var target = e.target;
+    if (!target) return;
+    if (
+      (target.closest && (target.closest('#bsub-schedule') || target.closest('#tab-budget'))) ||
+      String(target.textContent || '').indexOf('English') !== -1 ||
+      String(target.textContent || '').indexOf('Español') !== -1 ||
+      String(target.textContent || '').indexOf('Spanish') !== -1 ||
+      String(target.textContent || '').indexOf('EN') === 0 ||
+      String(target.textContent || '').indexOf('ES') === 0
+    ) {
+      scheduleBillScheduleDueDateSpanishFix();
+      setTimeout(applyBillScheduleDueDateSpanishFix, 500);
+    }
+  });
+
+  document.addEventListener('change', function(e){
+    if (e.target && e.target.closest && e.target.closest('#bsub-schedule')) {
+      scheduleBillScheduleDueDateSpanishFix();
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
