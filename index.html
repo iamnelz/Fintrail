@@ -2694,6 +2694,112 @@
   }
 }
 
+
+
+/* === BILINGUAL ONBOARDING FLOW === */
+.onboarding-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2100;
+  background: linear-gradient(160deg, rgba(26,26,46,0.96), rgba(45,27,78,0.94), rgba(26,42,62,0.96));
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  overflow-y: auto;
+}
+.onboarding-overlay.visible { display: flex; }
+.onboarding-card {
+  width: 100%;
+  max-width: 470px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 28px 80px rgba(0,0,0,0.42);
+  overflow: hidden;
+  animation: slideUp 0.28s ease;
+}
+.onboarding-progress-wrap { padding: 1.15rem 1.35rem 0; }
+.onboarding-topline { display:flex; align-items:center; justify-content:space-between; gap:0.75rem; margin-bottom:0.75rem; }
+.onboarding-back {
+  background:none; border:none; color:var(--text-soft); cursor:pointer;
+  font-size:1rem; width:34px; height:34px; border-radius:50%;
+}
+.onboarding-back:hover { background:var(--surface2); color:var(--text); }
+.onboarding-count { font-size:0.74rem; font-weight:800; color:var(--text-soft); }
+.onboarding-progress { height:7px; background:var(--surface2); border-radius:999px; overflow:hidden; }
+.onboarding-progress-fill { height:100%; width:14%; background:linear-gradient(90deg,var(--accent),var(--accent2)); border-radius:999px; transition:width .25s ease; }
+.onboarding-body { padding: 1.25rem 1.35rem 1.35rem; }
+.onboarding-brand { display:flex; align-items:center; justify-content:center; gap:0.65rem; margin-bottom:1.1rem; }
+.onboarding-brand-mark { width:42px; height:42px; border-radius:50%; background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-weight:800; }
+.onboarding-brand-name { font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:800; color:var(--dark); }
+.onboarding-hero-visual {
+  background:linear-gradient(135deg, rgba(6,214,160,0.10), rgba(240,85,85,0.06));
+  border:1px solid var(--border); border-radius:16px; min-height:128px; margin:1.1rem 0;
+  display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; padding:1rem; align-items:center;
+}
+.onboarding-mini-phone { background:#fff; border:1px solid var(--border); border-radius:14px; padding:0.9rem; box-shadow:0 8px 20px rgba(18,24,40,0.08); }
+.onboarding-mini-score { font-family:'Playfair Display',serif; font-size:2rem; color:var(--dark); line-height:1; }
+.onboarding-mini-bars { display:flex; align-items:flex-end; gap:0.25rem; height:48px; }
+.onboarding-mini-bars span { flex:1; border-radius:4px 4px 0 0; background:var(--income-color); opacity:.85; }
+.onboarding-title { font-size:1.35rem; line-height:1.22; text-align:center; color:var(--text); margin-bottom:0.45rem; }
+.onboarding-subtitle { font-size:0.86rem; color:var(--text-soft); line-height:1.6; text-align:center; margin-bottom:1rem; }
+.onboarding-language-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.65rem; margin:1rem 0; }
+.onboarding-lang-btn, .onboarding-option, .onboarding-tool-card {
+  border:1.5px solid var(--border); background:#fff; border-radius:13px; padding:0.85rem 0.95rem;
+  font-family:'Sora',sans-serif; cursor:pointer; transition:all .18s; color:var(--text); text-align:left;
+}
+.onboarding-lang-btn { text-align:center; font-weight:800; font-size:0.95rem; }
+.onboarding-lang-btn.active, .onboarding-option.selected {
+  border-color:var(--accent); background:rgba(240,85,85,0.06); box-shadow:0 0 0 3px var(--glow-red);
+}
+.onboarding-option { display:flex; align-items:center; justify-content:space-between; gap:0.7rem; margin-bottom:0.55rem; }
+.onboarding-option-left { display:flex; align-items:center; gap:0.7rem; }
+.onboarding-option-icon { width:34px; height:34px; border-radius:10px; background:var(--surface2); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.onboarding-option-label { font-size:0.86rem; font-weight:700; }
+.onboarding-check { color:var(--income-color); font-weight:900; }
+.onboarding-form { display:flex; flex-direction:column; gap:0.85rem; }
+.onboarding-input-row label { display:block; font-size:0.72rem; font-weight:800; color:var(--text-soft); margin-bottom:0.35rem; text-transform:uppercase; letter-spacing:.06em; }
+.onboarding-input-row input, .onboarding-input-row select {
+  width:100%; border:1.5px solid var(--border); border-radius:10px; padding:0.75rem 0.85rem; font-family:'Sora',sans-serif; font-size:16px; outline:none; background:#fff;
+}
+.onboarding-input-row input:focus, .onboarding-input-row select:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--glow-red); }
+.onboarding-note { display:flex; gap:0.6rem; background:rgba(6,214,160,0.08); border:1px solid rgba(6,214,160,0.18); border-radius:12px; padding:0.8rem; color:var(--text-soft); font-size:0.78rem; line-height:1.5; }
+.onboarding-score-wrap { display:grid; grid-template-columns:150px 1fr; gap:1rem; align-items:center; margin:1rem 0; }
+.onboarding-score-ring { width:140px; height:140px; border-radius:50%; background:conic-gradient(var(--income-color) 0 72%, var(--surface2) 72% 100%); display:flex; align-items:center; justify-content:center; position:relative; margin:auto; }
+.onboarding-score-ring::after { content:''; position:absolute; inset:14px; border-radius:50%; background:#fff; }
+.onboarding-score-inner { position:relative; z-index:1; text-align:center; }
+.onboarding-score-num { font-family:'Playfair Display',serif; font-size:2.6rem; color:var(--dark); line-height:1; }
+.onboarding-score-denom { font-size:0.76rem; color:var(--muted); }
+.onboarding-score-message { border:1px solid var(--border); border-radius:12px; padding:1rem; font-size:0.86rem; line-height:1.55; color:var(--text-soft); }
+.onboarding-split { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; }
+.onboarding-list-card { border:1px solid var(--border); border-radius:12px; padding:0.9rem; }
+.onboarding-list-card h4 { font-size:0.85rem; margin-bottom:0.65rem; color:var(--text); }
+.onboarding-list-card p { font-size:0.74rem; color:var(--text-soft); line-height:1.45; margin-bottom:0.4rem; }
+.onboarding-tool-card { display:flex; align-items:center; gap:0.75rem; margin-bottom:0.55rem; }
+.onboarding-tool-icon { width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center; background:rgba(240,85,85,0.08); flex-shrink:0; }
+.onboarding-tool-title { font-size:0.86rem; font-weight:800; }
+.onboarding-tool-sub { font-size:0.74rem; color:var(--muted); margin-top:0.15rem; }
+.onboarding-founder-box { background:linear-gradient(135deg,#fff8e7,#fff); border:1px solid #f1d48a; border-radius:14px; padding:1rem; margin:1rem 0; }
+.onboarding-founder-box h4 { text-align:center; margin-bottom:0.75rem; color:var(--dark); }
+.onboarding-founder-box p { font-size:0.82rem; color:var(--text-soft); margin-bottom:0.55rem; display:flex; gap:0.45rem; align-items:flex-start; }
+.onboarding-actions { padding:0 1.35rem 1.35rem; display:flex; flex-direction:column; gap:0.65rem; }
+.onboarding-primary, .onboarding-secondary {
+  width:100%; min-height:48px; border-radius:11px; font-family:'Sora',sans-serif; font-size:0.9rem; font-weight:800; cursor:pointer; transition:all .2s;
+}
+.onboarding-primary { background:linear-gradient(135deg,var(--accent),#d94444); color:#fff; border:none; }
+.onboarding-primary:hover { transform:translateY(-1px); box-shadow:0 8px 20px var(--glow-red); }
+.onboarding-primary:disabled { background:var(--border); color:var(--muted); box-shadow:none; transform:none; cursor:not-allowed; }
+.onboarding-secondary { background:none; color:var(--text-soft); border:1.5px solid var(--border); }
+.onboarding-secondary:hover { color:var(--accent); border-color:var(--accent); }
+@media(max-width:560px){
+  .onboarding-overlay { padding:0.7rem; align-items:flex-start; }
+  .onboarding-card { border-radius:18px; margin:0.5rem 0; }
+  .onboarding-score-wrap, .onboarding-split { grid-template-columns:1fr; }
+  .onboarding-language-grid { grid-template-columns:1fr; }
+  .onboarding-title { font-size:1.18rem; }
+}
+
 </style>
 </head>
 <body>
@@ -2766,6 +2872,26 @@
         </div>
       </div>
 
+    </div>
+  </div>
+</div>
+
+
+
+<!-- BILINGUAL ONBOARDING FLOW -->
+<div id="onboarding-overlay" class="onboarding-overlay" aria-modal="true" role="dialog" aria-labelledby="onboarding-title">
+  <div class="onboarding-card">
+    <div class="onboarding-progress-wrap">
+      <div class="onboarding-topline">
+        <button class="onboarding-back" id="onboarding-back" onclick="onboardingBack()" aria-label="Back">←</button>
+        <div class="onboarding-count" id="onboarding-count">1 of 8</div>
+      </div>
+      <div class="onboarding-progress"><div class="onboarding-progress-fill" id="onboarding-progress-fill"></div></div>
+    </div>
+    <div class="onboarding-body" id="onboarding-body"></div>
+    <div class="onboarding-actions">
+      <button class="onboarding-primary" id="onboarding-primary" onclick="onboardingNext()">Get Started</button>
+      <button class="onboarding-secondary" id="onboarding-secondary" onclick="skipOnboarding()">Skip for now</button>
     </div>
   </div>
 </div>
@@ -5011,6 +5137,8 @@
       document.getElementById('auth-screen').style.display = 'none';
       document.getElementById('setup-banner').style.display = 'flex';
       setUserUI({ email: 'demo@fintrail.app', user_metadata: { full_name: 'Demo User' } });
+      currentUser = { id: 'demo', email: 'demo@fintrail.app', user_metadata: { full_name: 'Demo User' } };
+      setTimeout(showOnboardingIfNeeded, 700);
       return;
     }
     const { data: { session } } = await sbClient.auth.getSession();
@@ -5034,6 +5162,7 @@
     setTimeout(loadGameData, 500);
     // Apply saved language now that user is logged in
     if (currentLang !== 'en') setTimeout(applyLanguage, 300);
+    setTimeout(showOnboardingIfNeeded, 700);
   }
 
   function setUserUI(user) {
@@ -8539,8 +8668,260 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     }
   }
 
+
+
+  // ======================================================
+  // BILINGUAL ONBOARDING FLOW
+  // ======================================================
+  const onboardingState = {
+    step: 0,
+    lang: 'en',
+    persona: '',
+    goal: '',
+    income: '',
+    debt: '',
+    savings: '',
+    source: ''
+  };
+
+  const onboardingCopy = {
+    en: {
+      count: (n,total) => `${n} of ${total}`,
+      back: 'Back',
+      next: 'Continue',
+      skip: 'Skip for now',
+      finish: 'Enter Fintrail',
+      getStarted: 'Get Started',
+      steps: [
+        {
+          title: 'Take control of your finances with Fintrail',
+          subtitle: 'Track your financial health, plan goals, and make smarter money decisions in one place.'
+        },
+        {
+          title: 'Choose your language',
+          subtitle: 'Pick the language you want to use for your Fintrail onboarding.'
+        },
+        {
+          title: 'What best describes you?',
+          subtitle: 'This helps us personalize your first Fintrail experience.'
+        },
+        {
+          title: 'What would you like to accomplish first?',
+          subtitle: 'Choose one goal so Fintrail can guide you to the right tools.'
+        },
+        {
+          title: 'Let’s get a quick snapshot',
+          subtitle: 'Just three quick numbers to estimate your Fintrail Health Score.'
+        },
+        {
+          title: 'Here’s your Fintrail Health Score',
+          subtitle: 'Based on your snapshot, here’s where you stand today.'
+        },
+        {
+          title: 'Recommended tools for you',
+          subtitle: 'Start with the tools that match your goal.'
+        },
+        {
+          title: 'Welcome to Fintrail!',
+          subtitle: 'You’re one of our earliest users. Help shape what Fintrail becomes.'
+        }
+      ],
+      personas: [
+        ['emergency','🐷','Building an emergency fund'], ['debt','💳','Paying off debt'], ['credit','📊','Improving credit'],
+        ['retirement','🌴','Planning for retirement'], ['home','🏠','Buying a home'], ['organized','✅','Just getting organized']
+      ],
+      goals: [
+        ['save1000','🐷','Save $1,000 emergency fund'], ['paycards','💳','Pay off credit cards'], ['credit','📈','Improve credit score'],
+        ['budget','🧾','Build a monthly budget'], ['spending','🔎','Track spending']
+      ],
+      fields: { income:'Monthly income', debt:'Monthly debt payments', savings:'Savings amount', source:'How did you hear about Fintrail?' },
+      note: 'This is only used to estimate your Fintrail Health Score. You can update these anytime.',
+      strengths: 'Strengths', opportunities: 'Opportunities', onTrack: 'You’re on the right track!',
+      scoreMsg: 'Keep building positive habits to improve your financial health.',
+      strength1: 'Positive savings balance', strength2: 'Financial awareness started', opp1: 'Increase emergency fund', opp2: 'Lower debt-to-income ratio',
+      tools: { savings:['🎯','Savings Goal Tracker','Track your progress and stay motivated'], budget:['🧾','Budget Planner','Build a budget that works for you'], invest:['📈','Investment Calculator','See how your money can grow'], debt:['💳','Debt Payoff Planner','Compare payoff strategies'], credit:['📊','Credit Score Simulator','See what actions may change your score'], resources:['🔍','Resources','Find helpful financial tools and guides'] },
+      founderTitle:'Founding Member Benefits', founderBenefits:['Lifetime Founding Member badge','Early access to new features','Help shape the future of Fintrail'], founderBtn:'Become a Founding Member', maybeLater:'Maybe later',
+      sources:['Friend or family','Social media','Online search','Referral link','Other'], choose:'Choose one to continue'
+    },
+    es: {
+      count: (n,total) => `${n} de ${total}`,
+      back: 'Atrás',
+      next: 'Continuar',
+      skip: 'Omitir por ahora',
+      finish: 'Entrar a Fintrail',
+      getStarted: 'Comenzar',
+      steps: [
+        {
+          title: 'Toma control de tus finanzas con Fintrail',
+          subtitle: 'Rastrea tu salud financiera, planifica metas y toma mejores decisiones en un solo lugar.'
+        },
+        {
+          title: 'Elige tu idioma',
+          subtitle: 'Selecciona el idioma que quieres usar durante la bienvenida de Fintrail.'
+        },
+        {
+          title: '¿Cuál de estas opciones te describe mejor?',
+          subtitle: 'Esto nos ayuda a personalizar tu primera experiencia en Fintrail.'
+        },
+        {
+          title: '¿Qué te gustaría lograr primero?',
+          subtitle: 'Elige una meta para que Fintrail te guíe a las herramientas correctas.'
+        },
+        {
+          title: 'Hagamos una revisión rápida',
+          subtitle: 'Solo tres números para estimar tu Puntaje de Salud Financiera.'
+        },
+        {
+          title: 'Tu Puntaje de Salud Financiera de Fintrail',
+          subtitle: 'Según tu información, aquí está tu punto de partida.'
+        },
+        {
+          title: 'Herramientas recomendadas para ti',
+          subtitle: 'Comienza con las herramientas que van con tu meta.'
+        },
+        {
+          title: '¡Bienvenido a Fintrail!',
+          subtitle: 'Eres uno de nuestros primeros usuarios. Ayuda a construir el futuro de Fintrail.'
+        }
+      ],
+      personas: [
+        ['emergency','🐷','Crear un fondo de emergencia'], ['debt','💳','Pagar deudas'], ['credit','📊','Mejorar el crédito'],
+        ['retirement','🌴','Planificar la jubilación'], ['home','🏠','Comprar una vivienda'], ['organized','✅','Organizar mis finanzas']
+      ],
+      goals: [
+        ['save1000','🐷','Ahorrar $1,000 para emergencias'], ['paycards','💳','Pagar tarjetas de crédito'], ['credit','📈','Mejorar mi puntaje de crédito'],
+        ['budget','🧾','Crear un presupuesto mensual'], ['spending','🔎','Rastrear mis gastos']
+      ],
+      fields: { income:'Ingreso mensual', debt:'Pagos mensuales de deuda', savings:'Cantidad ahorrada', source:'¿Cómo conociste Fintrail?' },
+      note: 'Esto solo se usa para estimar tu Puntaje de Salud Financiera. Puedes actualizarlo cuando quieras.',
+      strengths: 'Fortalezas', opportunities: 'Oportunidades', onTrack: '¡Vas por buen camino!',
+      scoreMsg: 'Sigue creando hábitos positivos para mejorar tu salud financiera.',
+      strength1: 'Saldo positivo de ahorros', strength2: 'Ya empezaste a organizarte', opp1: 'Aumentar el fondo de emergencia', opp2: 'Reducir la relación deuda-ingresos',
+      tools: { savings:['🎯','Rastreador de Metas de Ahorro','Rastrea tu progreso y mantente motivado/a'], budget:['🧾','Planificador de Presupuesto','Crea un presupuesto que funcione para ti'], invest:['📈','Calculadora de Inversión','Mira cómo tu dinero puede crecer'], debt:['💳','Planificador de Deudas','Compara estrategias de pago'], credit:['📊','Simulador de Crédito','Mira qué acciones podrían cambiar tu puntaje'], resources:['🔍','Recursos','Encuentra herramientas y guías financieras'] },
+      founderTitle:'Beneficios de Miembro Fundador', founderBenefits:['Insignia permanente de Miembro Fundador','Acceso anticipado a nuevas funciones','Ayuda a construir el futuro de Fintrail'], founderBtn:'Convertirme en Miembro Fundador', maybeLater:'Tal vez después',
+      sources:['Amigo o familiar','Redes sociales','Búsqueda en internet','Enlace de referido','Otro'], choose:'Elige una opción para continuar'
+    }
+  };
+
+  function getOnboardingKey() {
+    const uid = currentUser?.id || currentUser?.email || 'demo';
+    return 'fintrail_onboarding_complete_' + uid;
+  }
+  function hasCompletedOnboarding() { return safeGet(getOnboardingKey()) === 'true'; }
+  function markOnboardingComplete() {
+    safeSet(getOnboardingKey(), 'true');
+    safeSet('fintrail_onboarding_answers_' + (currentUser?.id || currentUser?.email || 'demo'), JSON.stringify(onboardingState));
+  }
+  function showOnboardingIfNeeded() {
+    const overlay = document.getElementById('onboarding-overlay');
+    if (!overlay || hasCompletedOnboarding()) return;
+    onboardingState.lang = currentLang || 'en';
+    onboardingState.step = 0;
+    renderOnboarding();
+    overlay.classList.add('visible');
+  }
+  function closeOnboarding() {
+    const overlay = document.getElementById('onboarding-overlay');
+    if (overlay) overlay.classList.remove('visible');
+  }
+  function skipOnboarding() { markOnboardingComplete(); closeOnboarding(); }
+  function onboardingBack() { if (onboardingState.step > 0) { onboardingState.step--; renderOnboarding(); } }
+  function selectOnboardingLang(lang) {
+    onboardingState.lang = lang;
+    currentLang = lang;
+    applyLanguage();
+    renderOnboarding();
+  }
+  function selectOnboarding(field, value) { onboardingState[field] = value; renderOnboarding(); }
+  function updateOnboardingField(field, value) { onboardingState[field] = value; }
+  function onboardingScore() {
+    const income = parseFloat(onboardingState.income || '0') || 0;
+    const debt = parseFloat(onboardingState.debt || '0') || 0;
+    const savings = parseFloat(onboardingState.savings || '0') || 0;
+    const dti = income > 0 ? debt / income : 0;
+    const savingsMonths = income > 0 ? savings / income : 0;
+    let score = 55;
+    if (income > 0) score += 8;
+    if (savings > 0) score += 10;
+    if (savingsMonths >= 1) score += 8;
+    if (savingsMonths >= 3) score += 8;
+    if (dti <= 0.20) score += 10;
+    else if (dti <= 0.36) score += 5;
+    else if (dti > 0.50) score -= 12;
+    return Math.max(20, Math.min(95, Math.round(score)));
+  }
+  function recommendedToolKeys() {
+    const g = onboardingState.goal || onboardingState.persona;
+    if (g === 'paycards' || g === 'debt') return ['debt','budget','resources'];
+    if (g === 'credit') return ['credit','resources','budget'];
+    if (g === 'budget' || g === 'spending' || g === 'organized') return ['budget','savings','resources'];
+    if (g === 'retirement') return ['invest','budget','savings'];
+    return ['savings','budget','invest'];
+  }
+  function onboardingNeedsSelection() {
+    const s = onboardingState.step;
+    if (s === 2) return !!onboardingState.persona;
+    if (s === 3) return !!onboardingState.goal;
+    if (s === 4) return true;
+    return true;
+  }
+  function onboardingNext() {
+    const total = onboardingCopy[onboardingState.lang].steps.length;
+    if (!onboardingNeedsSelection()) return;
+    if (onboardingState.step < total - 1) {
+      onboardingState.step++;
+      renderOnboarding();
+    } else {
+      markOnboardingComplete();
+      closeOnboarding();
+    }
+  }
+  function renderOnboarding() {
+    const copy = onboardingCopy[onboardingState.lang] || onboardingCopy.en;
+    const step = onboardingState.step;
+    const total = copy.steps.length;
+    const body = document.getElementById('onboarding-body');
+    const count = document.getElementById('onboarding-count');
+    const fill = document.getElementById('onboarding-progress-fill');
+    const back = document.getElementById('onboarding-back');
+    const primary = document.getElementById('onboarding-primary');
+    const secondary = document.getElementById('onboarding-secondary');
+    if (!body) return;
+    count.textContent = copy.count(step + 1, total);
+    fill.style.width = (((step + 1) / total) * 100) + '%';
+    back.style.visibility = step === 0 ? 'hidden' : 'visible';
+    back.title = copy.back;
+    primary.textContent = step === 0 ? copy.getStarted : (step === total - 1 ? copy.finish : copy.next);
+    primary.disabled = !onboardingNeedsSelection();
+    secondary.textContent = step === total - 1 ? copy.maybeLater : copy.skip;
+    const head = `<h2 class="onboarding-title" id="onboarding-title">${copy.steps[step].title}</h2><p class="onboarding-subtitle">${copy.steps[step].subtitle}</p>`;
+    if (step === 0) {
+      body.innerHTML = `<div class="onboarding-brand"><div class="onboarding-brand-mark">FP</div><div class="onboarding-brand-name">Fin<span style="color:var(--accent)">trail</span></div></div>${head}<div class="onboarding-hero-visual"><div class="onboarding-mini-phone"><div style="font-size:.65rem;color:var(--muted);font-weight:800;text-transform:uppercase">Health Score</div><div class="onboarding-mini-score">72<span style="font-size:.65rem;color:var(--muted)">/100</span></div><div style="height:7px;background:var(--surface2);border-radius:999px;margin-top:.6rem"></div><div style="height:7px;background:var(--surface2);border-radius:999px;margin-top:.35rem;width:78%"></div></div><div class="onboarding-mini-bars"><span style="height:35%"></span><span style="height:56%"></span><span style="height:72%"></span><span style="height:90%"></span></div></div>`;
+    } else if (step === 1) {
+      body.innerHTML = `${head}<div class="onboarding-language-grid"><button class="onboarding-lang-btn ${onboardingState.lang==='en'?'active':''}" onclick="selectOnboardingLang('en')">🇺🇸 English</button><button class="onboarding-lang-btn ${onboardingState.lang==='es'?'active':''}" onclick="selectOnboardingLang('es')">🇪🇸 Español</button></div>`;
+    } else if (step === 2) {
+      body.innerHTML = head + copy.personas.map(p => optionHtml('persona', p)).join('');
+    } else if (step === 3) {
+      body.innerHTML = head + copy.goals.map(g => optionHtml('goal', g)).join('');
+    } else if (step === 4) {
+      body.innerHTML = `${head}<div class="onboarding-form"><div class="onboarding-input-row"><label>${copy.fields.income}</label><input type="number" inputmode="decimal" value="${onboardingState.income}" oninput="updateOnboardingField('income', this.value)" placeholder="$ 4,500"></div><div class="onboarding-input-row"><label>${copy.fields.debt}</label><input type="number" inputmode="decimal" value="${onboardingState.debt}" oninput="updateOnboardingField('debt', this.value)" placeholder="$ 1,200"></div><div class="onboarding-input-row"><label>${copy.fields.savings}</label><input type="number" inputmode="decimal" value="${onboardingState.savings}" oninput="updateOnboardingField('savings', this.value)" placeholder="$ 3,500"></div><div class="onboarding-note">🔒 <span>${copy.note}</span></div></div>`;
+    } else if (step === 5) {
+      const score = onboardingScore();
+      body.innerHTML = `${head}<div class="onboarding-score-wrap"><div class="onboarding-score-ring" style="background:conic-gradient(var(--income-color) 0 ${score}%, var(--surface2) ${score}% 100%)"><div class="onboarding-score-inner"><div class="onboarding-score-num">${score}</div><div class="onboarding-score-denom">/100</div></div></div><div class="onboarding-score-message"><strong style="color:var(--text)">${copy.onTrack}</strong><br>${copy.scoreMsg}</div></div><div class="onboarding-split"><div class="onboarding-list-card"><h4 style="color:var(--income-color)">${copy.strengths}</h4><p>✓ ${copy.strength1}</p><p>✓ ${copy.strength2}</p></div><div class="onboarding-list-card"><h4 style="color:var(--accent2)">${copy.opportunities}</h4><p>• ${copy.opp1}</p><p>• ${copy.opp2}</p></div></div>`;
+    } else if (step === 6) {
+      body.innerHTML = head + recommendedToolKeys().map(k => { const tool = copy.tools[k]; return `<div class="onboarding-tool-card"><div class="onboarding-tool-icon">${tool[0]}</div><div><div class="onboarding-tool-title">${tool[1]}</div><div class="onboarding-tool-sub">${tool[2]}</div></div></div>`; }).join('');
+    } else {
+      body.innerHTML = `${head}<div class="onboarding-founder-box"><h4>⭐ ${copy.founderTitle}</h4>${copy.founderBenefits.map(b => `<p><span style="color:var(--accent2);font-weight:900">✓</span><span>${b}</span></p>`).join('')}</div><div class="onboarding-input-row"><label>${copy.fields.source}</label><select onchange="updateOnboardingField('source', this.value)"><option value="">${copy.choose}</option>${copy.sources.map(s => `<option ${onboardingState.source===s?'selected':''}>${s}</option>`).join('')}</select></div>`;
+      primary.textContent = copy.founderBtn;
+    }
+  }
+  function optionHtml(field, item) {
+    const selected = onboardingState[field] === item[0];
+    return `<button class="onboarding-option ${selected?'selected':''}" onclick="selectOnboarding('${field}','${item[0]}')"><span class="onboarding-option-left"><span class="onboarding-option-icon">${item[1]}</span><span class="onboarding-option-label">${item[2]}</span></span><span class="onboarding-check">${selected ? '✓' : '›'}</span></button>`;
+  }
+
   // LANGUAGE SYSTEM
-  let currentLang = 'en';
+  let currentLang = safeGet('fintrail_lang') || 'en';
 
   const translations = {
     en: {
@@ -8659,6 +9040,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
 
   function toggleLanguage() {
     currentLang = currentLang === 'en' ? 'es' : 'en';
+    safeSet('fintrail_lang', currentLang);
     applyLanguage();
     if (typeof updateProfileSubscriptionUI === 'function') updateProfileSubscriptionUI();
   }
