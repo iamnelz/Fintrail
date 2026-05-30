@@ -10527,10 +10527,12 @@ window.addEventListener('load', function(){
 
 </script>
 
+
+
+
 <script>
-/* === SAFE PROFILE MONTHLY REPORT SPANISH CLEANUP V4 === */
+/* === PROFILE MENU SPANISH FIX V5 === */
 (function(){
-  function ftIsEs(){ try { return currentLang === 'es'; } catch(e) { return false; } }
   var enToEs = {
     'Account Info':'Información de la Cuenta',
     'Change Password':'Cambiar Contraseña',
@@ -10560,45 +10562,80 @@ window.addEventListener('load', function(){
     'Personalized progress based on the savings, debt, credit, and AI activity you have entered in Fintrail.':'Progreso personalizado basado en los ahorros, deudas, crédito y actividad de IA que has ingresado en Fintrail.',
     'Great progress! Your debt reduction and consistent savings improved your overall financial health.':'¡Gran progreso! Tu reducción de deuda y ahorros constantes mejoraron tu salud financiera general.'
   };
+
   var esToEn = {};
   Object.keys(enToEs).forEach(function(k){ esToEn[enToEs[k]] = k; });
-  function ftClean(s){ return String(s || '').replace(/\s+/g,' ').trim(); }
-  function ftSwap(el){
-    if (!el || !el.textContent) return;
-    if (el.children && el.children.length > 0 && el.tagName !== 'BUTTON') return;
-    var t = ftClean(el.textContent);
-    if (!t || t.length > 190) return;
-    if (ftIsEs()) {
-      if (enToEs[t]) el.textContent = enToEs[t];
-      else if (t.indexOf('Free Plan') !== -1) el.textContent = t.replace('Free Plan','Plan Gratis');
-      else if (t.indexOf('points this month') !== -1) el.textContent = t.replace('points this month','puntos este mes');
-      else if (t.indexOf('complete') !== -1) el.textContent = t.replace('complete','completo');
+
+  function isEs(){
+    try { return currentLang === 'es'; } catch(e) { return false; }
+  }
+
+  function replacePhrasesInText(value){
+    var out = String(value || '');
+    var map = isEs() ? enToEs : esToEn;
+    Object.keys(map).forEach(function(k){
+      if (out.indexOf(k) !== -1) out = out.split(k).join(map[k]);
+    });
+    if (isEs()) {
+      out = out.split('Free Plan').join('Plan Gratis');
+      out = out.split('points this month').join('puntos este mes');
+      out = out.split('complete').join('completo');
     } else {
-      if (esToEn[t]) el.textContent = esToEn[t];
-      else if (t.indexOf('Plan Gratis') !== -1) el.textContent = t.replace('Plan Gratis','Free Plan');
-      else if (t.indexOf('puntos este mes') !== -1) el.textContent = t.replace('puntos este mes','points this month');
-      else if (t.indexOf('completo') !== -1) el.textContent = t.replace('completo','complete');
+      out = out.split('Plan Gratis').join('Free Plan');
+      out = out.split('puntos este mes').join('points this month');
+      out = out.split('completo').join('complete');
+    }
+    return out;
+  }
+
+  function replaceTextNodes(el){
+    if (!el) return;
+    if (el.nodeType === 3) {
+      el.textContent = replacePhrasesInText(el.textContent);
+      return;
+    }
+    if (el.nodeType !== 1) return;
+    if (el.tagName === 'SCRIPT' || el.tagName === 'STYLE') return;
+    Array.prototype.forEach.call(el.childNodes, replaceTextNodes);
+  }
+
+  function directReplace(el){
+    if (!el || !el.textContent) return;
+    if (el.children && el.children.length > 0) {
+      replaceTextNodes(el);
+    } else {
+      el.textContent = replacePhrasesInText(el.textContent);
     }
   }
-  window.fintrailSafeSpanishCleanupV4 = function(){
+
+  window.fintrailProfileMenuSpanishFixV5 = function(){
     try {
-      var roots = [];
-      var p = document.getElementById('tab-profile');
-      var r = document.querySelector('.report-shell');
-      if (p) roots.push(p);
-      if (r) roots.push(r);
-      roots.forEach(function(root){
-        root.querySelectorAll('button,a,label,span,h1,h2,h3,h4,p,option').forEach(ftSwap);
-      });
-    } catch(e) { console.log('Spanish cleanup skipped:', e.message); }
+      var profile = document.getElementById('tab-profile');
+      if (profile) {
+        profile.querySelectorAll('.profile-menu-btn, .profile-section-desc, .profile-field label, .profile-save-btn, .profile-subscription-card h3, .profile-subscription-card p, .profile-subscription-btn, .danger-zone h3, .danger-zone p, a, button, span').forEach(directReplace);
+        var planBadge = document.getElementById('profile-plan-badge');
+        if (planBadge) directReplace(planBadge);
+      }
+
+      var report = document.querySelector('.report-shell');
+      if (report) {
+        report.querySelectorAll('button, option, h1, h2, h3, h4, p, span, label').forEach(directReplace);
+      }
+    } catch(e) {
+      console.log('Profile menu Spanish fix skipped:', e.message);
+    }
   };
+
   window.addEventListener('load', function(){
-    setTimeout(window.fintrailSafeSpanishCleanupV4, 1200);
-    setTimeout(window.fintrailSafeSpanishCleanupV4, 2500);
+    setTimeout(window.fintrailProfileMenuSpanishFixV5, 800);
+    setTimeout(window.fintrailProfileMenuSpanishFixV5, 1800);
+    setTimeout(window.fintrailProfileMenuSpanishFixV5, 3200);
   });
+
   document.addEventListener('click', function(){
-    setTimeout(window.fintrailSafeSpanishCleanupV4, 200);
-    setTimeout(window.fintrailSafeSpanishCleanupV4, 800);
+    setTimeout(window.fintrailProfileMenuSpanishFixV5, 80);
+    setTimeout(window.fintrailProfileMenuSpanishFixV5, 350);
+    setTimeout(window.fintrailProfileMenuSpanishFixV5, 900);
   });
 })();
 </script>
