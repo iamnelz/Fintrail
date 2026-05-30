@@ -7370,84 +7370,7 @@ Guidelines:
           .footer { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #eee; font-size: 0.72rem; color: #aaa; text-align: center; }
           @media print { body { padding: 1rem; } }
         </style>
-      
-<style>
-/* === TABLET SPLIT LAYOUT RESTORE ===
-   Keeps phones stacked, but restores tablet split-screen layout.
-   Tablet: AI Advisor left sidebar + right chat.
-   Tablet: Debt Negotiator left form + right script.
-*/
-@media (min-width: 701px) and (max-width: 1100px) {
-  #tab-ai .ai-layout {
-    display: grid !important;
-    grid-template-columns: 280px minmax(0, 1fr) !important;
-    gap: 1.5rem !important;
-    align-items: start !important;
-  }
-
-  #tab-ai .ai-sidebar {
-    order: initial !important;
-    width: auto !important;
-  }
-
-  #tab-ai .chat-window {
-    order: initial !important;
-    width: auto !important;
-    height: min(620px, 72vh) !important;
-  }
-
-  #tab-negotiate .negotiate-layout {
-    display: grid !important;
-    grid-template-columns: 340px minmax(0, 1fr) !important;
-    gap: 1.5rem !important;
-    align-items: start !important;
-  }
-
-  #tab-negotiate .script-output-card {
-    order: initial !important;
-    width: auto !important;
-  }
-
-  #tab-negotiate .negotiate-layout > .card,
-  #tab-negotiate .negotiate-layout > div:not(.script-output-card) {
-    order: initial !important;
-    width: auto !important;
-  }
-
-  #tab-negotiate .script-type-grid,
-  #tab-negotiate .debt-type-grid {
-    grid-template-columns: 1fr 1fr !important;
-  }
-}
-
-/* Phone remains stacked */
-@media (max-width: 700px) {
-  #tab-ai .ai-layout,
-  #tab-negotiate .negotiate-layout {
-    display: flex !important;
-    flex-direction: column !important;
-  }
-
-  #tab-ai .chat-window {
-    order: 1 !important;
-  }
-
-  #tab-ai .ai-sidebar {
-    order: 2 !important;
-  }
-
-  #tab-negotiate .script-output-card {
-    order: 1 !important;
-  }
-
-  #tab-negotiate .negotiate-layout > .card,
-  #tab-negotiate .negotiate-layout > div:not(.script-output-card) {
-    order: 2 !important;
-  }
-}
-</style>
-
-</head>
+      </head>
       <body>
         <div class="pdf-header">
           <div class="pdf-logo">Fin<span>trail Pro</span></div>
@@ -11558,6 +11481,93 @@ window.addEventListener('load', function(){
   });
 })();
 </script>
+
+
+<style id="tablet-split-layout-stronger-fix">
+/* === STRONGER TABLET SPLIT LAYOUT RESTORE ===
+   iPad/tablet widths should use side-by-side layout.
+   Phones stay stacked.
+*/
+@media (min-width: 701px) and (max-width: 1180px) {
+  body #tab-ai .ai-layout {
+    display: grid !important;
+    grid-template-columns: minmax(260px, 32%) minmax(0, 1fr) !important;
+    gap: 1.5rem !important;
+    align-items: start !important;
+  }
+
+  body #tab-ai .ai-sidebar {
+    order: 1 !important;
+    width: auto !important;
+    max-width: none !important;
+  }
+
+  body #tab-ai .chat-window {
+    order: 2 !important;
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    height: min(620px, 72vh) !important;
+  }
+
+  body #tab-ai .ai-sidebar .card {
+    width: 100% !important;
+  }
+
+  body #tab-negotiate .negotiate-layout {
+    display: grid !important;
+    grid-template-columns: minmax(320px, 34%) minmax(0, 1fr) !important;
+    gap: 1.5rem !important;
+    align-items: start !important;
+  }
+
+  body #tab-negotiate .negotiate-layout > .card,
+  body #tab-negotiate .negotiate-layout > div:not(.script-output-card) {
+    order: 1 !important;
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+  }
+
+  body #tab-negotiate .script-output-card {
+    order: 2 !important;
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+  }
+
+  body #tab-negotiate .script-type-grid,
+  body #tab-negotiate .debt-type-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+
+/* True phones remain stacked */
+@media (max-width: 700px) {
+  body #tab-ai .ai-layout,
+  body #tab-negotiate .negotiate-layout {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  body #tab-ai .chat-window {
+    order: 1 !important;
+  }
+
+  body #tab-ai .ai-sidebar {
+    order: 2 !important;
+  }
+
+  body #tab-negotiate .script-output-card {
+    order: 1 !important;
+  }
+
+  body #tab-negotiate .negotiate-layout > .card,
+  body #tab-negotiate .negotiate-layout > div:not(.script-output-card) {
+    order: 2 !important;
+  }
+}
+</style>
 
 </body>
 </html>
