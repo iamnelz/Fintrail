@@ -3160,11 +3160,11 @@
       <button class="nav-group-btn" id="nav-budget">📊 Budget <span class="nav-arrow">▾</span></button>
       <div class="nav-dropdown">
         <div class="nav-dropdown-section" data-en="Budget" data-es="Presupuesto">Budget</div>
-        <button class="nav-dropdown-item" onclick="navTo('budget', this)" data-en="Danger Zone" data-es="Zona de Peligro">
+        <button class="nav-dropdown-item" onclick="navTo('budget', this)">
           <span class="ndi-icon">📊</span>
           <div class="ndi-info"><span class="ndi-label" data-en="Budget Tracker" data-es="Rastreador de Presupuesto">Budget Tracker</span><span class="ndi-desc" data-en="Track income & expenses" data-es="Rastrear ingresos y gastos">Track income & expenses</span></div>
         </button>
-        <button class="nav-dropdown-item" onclick="navTo('budget-schedule', this)" data-en="Change Password" data-es="Cambiar Contraseña">
+        <button class="nav-dropdown-item" onclick="navTo('budget-schedule', this)">
           <span class="ndi-icon">📅</span>
           <div class="ndi-info"><span class="ndi-label" data-en="Bill Schedule" data-es="Horario de Facturas">Bill Schedule</span><span class="ndi-desc" data-en="6-month payment planner" data-es="Planificador de pagos a 6 meses">6-month payment planner</span></div>
         </button>
@@ -3176,19 +3176,19 @@
       <button class="nav-group-btn" id="nav-planning">🎯 Planning <span class="nav-arrow">▾</span></button>
       <div class="nav-dropdown">
         <div class="nav-dropdown-section" data-en="Planning" data-es="Planificación">Planning</div>
-        <button class="nav-dropdown-item" onclick="navTo('savings', this)" data-en="Account Info" data-es="Información de la Cuenta">
+        <button class="nav-dropdown-item" onclick="navTo('savings', this)">
           <span class="ndi-icon">🎯</span>
           <div class="ndi-info"><span class="ndi-label" data-en="Savings Goals" data-es="Metas de Ahorro" data-en="Savings Goals" data-es="Metas de Ahorro">Savings Goals</span><span class="ndi-desc" data-en="Track your goals" data-es="Rastrea tus metas">Track your goals</span></div>
         </button>
-        <button class="nav-dropdown-item" onclick="navTo('invest', this)" data-en="Security & 2FA" data-es="Seguridad y 2FA">
+        <button class="nav-dropdown-item" onclick="navTo('invest', this)">
           <span class="ndi-icon">📈</span>
           <div class="ndi-info"><span class="ndi-label" data-en="Investment Calculator" data-es="Calculadora de Inversión">Investment Calculator</span><span class="ndi-desc" data-en="Compound interest planner" data-es="Planificador de interés compuesto">Compound interest planner</span></div>
         </button>
-        <button class="nav-dropdown-item" onclick="navTo('networth', this)" data-en="Sign Out" data-es="Cerrar Sesión">
+        <button class="nav-dropdown-item" onclick="navTo('networth', this)">
           <span class="ndi-icon">💎</span>
           <div class="ndi-info"><span class="ndi-label" data-en="Net Worth Tracker" data-es="Rastreador de Patrimonio">Net Worth Tracker</span><span class="ndi-desc" data-en="Assets minus liabilities" data-es="Activos menos pasivos">Assets minus liabilities</span></div>
         </button>
-        <button class="nav-dropdown-item" onclick="guardedNavTo('debtplan', this)" data-en="Notifications" data-es="Notificaciones">
+        <button class="nav-dropdown-item" onclick="guardedNavTo('debtplan', this)">
           <span class="ndi-icon">💳</span>
           <div class="ndi-info"><span class="ndi-label" data-en="Debt Payoff Planner" data-es="Planificador de Deudas">Debt Payoff Planner <span class="pro-pill">PRO</span></span><span class="ndi-desc" data-en="Avalanche & snowball method" data-es="Método avalancha y bola de nieve">Avalanche & snowball method</span></div>
         </button>
@@ -4602,7 +4602,7 @@
           <div class="profile-subscription-card" id="account-subscription-card">
             <h3 id="account-subscription-title">⭐ Subscription</h3>
             <p id="account-subscription-desc">Manage your Fintrail Pro subscription, billing, or upgrade status.</p>
-            <button class="profile-subscription-btn" id="account-subscription-btn" onclick="handleProfileSubscriptionAction()" data-en="Manage Subscription" data-es="Administrar Suscripción">Manage Subscription</button>
+            <button class="profile-subscription-btn" id="account-subscription-btn" onclick="handleProfileSubscriptionAction()">Manage Subscription</button>
           </div>
         </div>
 
@@ -5144,7 +5144,7 @@
     <div class="form-group" style="margin-bottom:0.75rem"><label>APR (%)</label><input class="profile-input" style="font-size:16px;width:100%" type="number" id="edit-debt-apr" placeholder="e.g. 19.99" min="0" step="0.01"></div>
     <div class="form-group" style="margin-bottom:1.25rem"><label>Minimum Payment ($)</label><input class="profile-input" style="font-size:16px;width:100%" type="number" id="edit-debt-min" placeholder="e.g. 35.00" min="0" step="0.01"></div>
     <div style="display:flex;gap:0.75rem">
-      <button onclick="saveDebtEdit()" style="flex:1;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:0.75rem;font-family:'Sora',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer" data-en="Save Changes" data-es="Guardar Cambios">Save Changes</button>
+      <button onclick="saveDebtEdit()" style="flex:1;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:0.75rem;font-family:'Sora',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer">Save Changes</button>
       <button onclick="closeDebtModal()" style="background:none;border:1.5px solid var(--border);color:var(--muted);border-radius:10px;padding:0.75rem 1rem;font-family:'Sora',sans-serif;font-size:0.9rem;cursor:pointer">Cancel</button>
     </div>
   </div>
@@ -7383,9 +7383,9 @@ Guidelines:
 
 
 <script>
-/* === PROFILE + MONTHLY REPORT SPANISH TRANSLATION FIX === */
+/* === SAFE PROFILE + MONTHLY REPORT SPANISH TRANSLATION FIX === */
 (function(){
-  const profileText = {
+  const profileMap = {
     "Account Info": "Información de la Cuenta",
     "Change Password": "Cambiar Contraseña",
     "Security & 2FA": "Seguridad y 2FA",
@@ -7404,22 +7404,15 @@ Guidelines:
     "New Password": "Nueva Contraseña",
     "Confirm Password": "Confirmar Contraseña",
     "Update Password": "Actualizar Contraseña",
-    "Two-Factor Authentication": "Autenticación de Dos Factores",
-    "Add an extra layer of security to your account.": "Agrega una capa adicional de seguridad a tu cuenta.",
-    "Email Notifications": "Notificaciones por Correo",
-    "Receive important updates about your account.": "Recibe actualizaciones importantes sobre tu cuenta.",
     "Delete Account": "Eliminar Cuenta",
     "Delete My Account": "Eliminar Mi Cuenta",
     "Clear All Data": "Borrar Todos los Datos",
-    "Permanently delete your Fintrail account and all associated data including transactions, bills, goals and subscription. This action cannot be undone.": "Elimina permanentemente tu cuenta de Fintrail y todos los datos asociados, incluyendo transacciones, facturas, metas y suscripción. Esta acción no se puede deshacer.",
-    "Remove all your transactions, bills, and goals while keeping your account active.": "Elimina todas tus transacciones, facturas y metas mientras mantienes tu cuenta activa.",
     "Privacy Policy": "Política de Privacidad",
     "Terms of Service": "Términos de Servicio",
-    "Questions?": "¿Preguntas?",
     "Free Plan": "Plan Gratis"
   };
 
-  const reportText = {
+  const reportMap = {
     "← Back to Insights": "← Volver a Informes",
     "Back to Insights": "Volver a Informes",
     "Current Month": "Mes Actual",
@@ -7440,120 +7433,119 @@ Guidelines:
     "Excellent": "Excelente",
     "Fair": "Regular",
     "Poor": "Bajo",
-    "complete": "completo",
-    "points this month": "puntos este mes",
     "Share Report": "Compartir Reporte",
     "Print Report": "Imprimir Reporte",
     "View AI Advisor": "Ver Asesor de IA",
-    "Set Next Month Goal": "Establecer Meta del Próximo Mes",
-    "No savings goal yet": "Aún no hay meta de ahorro",
-    "No debt tracked yet": "Aún no hay deuda registrada",
-    "No credit activity yet": "Aún no hay actividad de crédito"
+    "Set Next Month Goal": "Establecer Meta del Próximo Mes"
   };
 
-  function isEs(){
-    return (typeof currentLang !== "undefined" && currentLang === "es");
+  const reverseProfile = {};
+  const reverseReport = {};
+  Object.keys(profileMap).forEach(k => reverseProfile[profileMap[k]] = k);
+  Object.keys(reportMap).forEach(k => reverseReport[reportMap[k]] = k);
+
+  function isSpanish(){
+    return typeof currentLang !== "undefined" && currentLang === "es";
   }
 
-  function norm(s){
-    return String(s || "").replace(/\s+/g, " ").trim();
+  function cleanText(value){
+    return String(value || "").replace(/\s+/g, " ").trim();
   }
 
-  function translateExact(el, map){
+  function swapText(el, map, reverseMap){
     if (!el) return;
-    const clean = norm(el.textContent);
-    if (!clean) return;
+    const current = cleanText(el.textContent);
+    if (!current || current.length > 180) return;
 
-    if (isEs()) {
-      if (map[clean]) el.textContent = map[clean];
-      else if (clean.includes("Free Plan")) el.textContent = clean.replace("Free Plan", "Plan Gratis");
-      else if (clean.includes("points this month")) el.textContent = clean.replace("points this month", "puntos este mes");
-      else if (clean.includes("complete")) el.textContent = clean.replace("complete", "completo");
+    if (isSpanish()) {
+      if (map[current]) {
+        el.textContent = map[current];
+      } else if (current.indexOf("Free Plan") !== -1) {
+        el.textContent = current.replace("Free Plan", "Plan Gratis");
+      } else if (current.indexOf("points this month") !== -1) {
+        el.textContent = current.replace("points this month", "puntos este mes");
+      } else if (current.indexOf("complete") !== -1) {
+        el.textContent = current.replace("complete", "completo");
+      }
     } else {
-      Object.entries(map).forEach(([en, es]) => {
-        if (clean === es) el.textContent = en;
-      });
-      const updated = norm(el.textContent);
-      if (updated.includes("Plan Gratis")) el.textContent = updated.replace("Plan Gratis", "Free Plan");
-      if (updated.includes("puntos este mes")) el.textContent = updated.replace("puntos este mes", "points this month");
-      if (updated.includes("completo")) el.textContent = updated.replace("completo", "complete");
+      if (reverseMap[current]) {
+        el.textContent = reverseMap[current];
+      } else if (current.indexOf("Plan Gratis") !== -1) {
+        el.textContent = current.replace("Plan Gratis", "Free Plan");
+      } else if (current.indexOf("puntos este mes") !== -1) {
+        el.textContent = current.replace("puntos este mes", "points this month");
+      } else if (current.indexOf("completo") !== -1) {
+        el.textContent = current.replace("completo", "complete");
+      }
     }
   }
 
   function translateProfile(){
-    const profileRoot = document.getElementById("tab-profile");
-    if (!profileRoot) return;
-
-    profileRoot.querySelectorAll(".profile-menu-btn, .profile-section-desc, .profile-field label, .profile-save-btn, .profile-subscription-card h3, .profile-subscription-card p, .profile-subscription-btn, .danger-zone h3, .danger-zone p, a, button, span").forEach(el => {
-      translateExact(el, profileText);
+    const root = document.getElementById("tab-profile");
+    if (!root) return;
+    root.querySelectorAll(".profile-menu-btn, .profile-section-desc, .profile-field label, .profile-save-btn, .profile-subscription-card h3, .profile-subscription-card p, .profile-subscription-btn, .danger-zone h3, .danger-zone p, a, button, span").forEach(function(el){
+      if (el.children && el.children.length > 0 && !el.classList.contains("profile-menu-btn")) return;
+      swapText(el, profileMap, reverseProfile);
     });
 
-    const planBadge = document.getElementById("profile-plan-badge");
-    if (planBadge) translateExact(planBadge, profileText);
+    const badge = document.getElementById("profile-plan-badge");
+    if (badge) swapText(badge, profileMap, reverseProfile);
   }
 
   function translateMonthlyReport(){
-    const reportRoot =
-      document.querySelector(".report-shell") ||
-      document.getElementById("monthly-report-view") ||
-      document.getElementById("tab-report") ||
-      document.getElementById("tab-insights");
-
-    if (!reportRoot) return;
-
-    reportRoot.querySelectorAll("button, select option, h1, h2, h3, h4, p, span, div, label").forEach(el => {
-      if (el.children.length > 0 && !["BUTTON","OPTION","SPAN","LABEL","H1","H2","H3","H4","P"].includes(el.tagName)) return;
-      translateExact(el, reportText);
+    const root = document.querySelector(".report-shell");
+    if (!root) return;
+    root.querySelectorAll("button, option, h1, h2, h3, h4, p, span, label").forEach(function(el){
+      swapText(el, reportMap, reverseReport);
     });
 
-    // Dynamic report title like "Tu Reporte Financiero de mayo de 2026 🎉" is already partly Spanish.
-    // Keep it Spanish, but ensure English month-selector and labels are corrected.
-    const monthSelect = reportRoot.querySelector(".report-month-select");
-    if (monthSelect) monthSelect.querySelectorAll("option").forEach(opt => translateExact(opt, reportText));
+    const subtitle = root.querySelector(".report-subtitle");
+    if (subtitle) swapText(subtitle, reportMap, reverseReport);
 
-    const subtitle = reportRoot.querySelector(".report-subtitle");
-    if (subtitle) translateExact(subtitle, reportText);
+    const back = root.querySelector(".report-back");
+    if (back) swapText(back, reportMap, reverseReport);
 
-    const back = reportRoot.querySelector(".report-back");
-    if (back) translateExact(back, reportText);
+    const note = root.querySelector(".report-score-note");
+    if (note) swapText(note, reportMap, reverseReport);
 
-    const gaugeLabel = reportRoot.querySelector(".report-gauge-label");
-    if (gaugeLabel) translateExact(gaugeLabel, reportText);
-
-    const note = reportRoot.querySelector(".report-score-note");
-    if (note) translateExact(note, reportText);
+    const gauge = root.querySelector(".report-gauge-label");
+    if (gauge) swapText(gauge, reportMap, reverseReport);
   }
 
-  window.fintrailProfileReportSpanishFix = function(){
-    translateProfile();
-    translateMonthlyReport();
-  };
-
-  const wrapApplyLanguage = function(){
-    const original = window.applyLanguage;
-    if (typeof original === "function" && !original.__profileReportSpanishFix) {
-      window.applyLanguage = function(){
-        const result = original.apply(this, arguments);
-        setTimeout(window.fintrailProfileReportSpanishFix, 0);
-        setTimeout(window.fintrailProfileReportSpanishFix, 250);
-        setTimeout(window.fintrailProfileReportSpanishFix, 900);
-        return result;
-      };
-      window.applyLanguage.__profileReportSpanishFix = true;
+  window.fintrailSafeProfileReportTranslationFix = function(){
+    try {
+      translateProfile();
+      translateMonthlyReport();
+    } catch(e) {
+      console.log("Profile/report translation fix skipped:", e.message);
     }
   };
 
-  wrapApplyLanguage();
+  function installWrapper(){
+    const original = window.applyLanguage;
+    if (typeof original === "function" && !original.__safeProfileReportTranslationFix) {
+      window.applyLanguage = function(){
+        const result = original.apply(this, arguments);
+        setTimeout(window.fintrailSafeProfileReportTranslationFix, 0);
+        setTimeout(window.fintrailSafeProfileReportTranslationFix, 300);
+        setTimeout(window.fintrailSafeProfileReportTranslationFix, 900);
+        return result;
+      };
+      window.applyLanguage.__safeProfileReportTranslationFix = true;
+    }
+  }
+
+  installWrapper();
 
   window.addEventListener("load", function(){
-    wrapApplyLanguage();
-    setTimeout(window.fintrailProfileReportSpanishFix, 900);
-    setTimeout(window.fintrailProfileReportSpanishFix, 2200);
+    installWrapper();
+    setTimeout(window.fintrailSafeProfileReportTranslationFix, 900);
+    setTimeout(window.fintrailSafeProfileReportTranslationFix, 2200);
   });
 
   document.addEventListener("click", function(){
-    setTimeout(window.fintrailProfileReportSpanishFix, 120);
-    setTimeout(window.fintrailProfileReportSpanishFix, 650);
+    setTimeout(window.fintrailSafeProfileReportTranslationFix, 150);
+    setTimeout(window.fintrailSafeProfileReportTranslationFix, 700);
   });
 })();
 </script>
