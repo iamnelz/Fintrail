@@ -9066,11 +9066,14 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     return 'fintrail_onboarding_complete_' + uid;
   }
   function hasCompletedOnboarding() {
-    return safeGet(getOnboardingKey()) === 'true' || (typeof isFintrailOnboardingComplete === 'function' && isFintrailOnboardingComplete());
+    return (typeof fintrailIsOnboardingCompleteSynced === 'function')
+      ? fintrailIsOnboardingCompleteSynced()
+      : safeGet(getOnboardingKey()) === 'true';
   }
   function markOnboardingComplete() {
     safeSet(getOnboardingKey(), 'true');
     if (typeof setFintrailOnboardingComplete === 'function') setFintrailOnboardingComplete();
+    if (typeof fintrailMarkOnboardingCompleteSynced === 'function') fintrailMarkOnboardingCompleteSynced();
     safeSet('fintrail_onboarding_answers_' + (currentUser?.id || currentUser?.email || 'demo'), JSON.stringify(onboardingState));
   }
   
@@ -10035,9 +10038,13 @@ function getFoundingMemberKey(){
   const uid = (typeof currentUser !== 'undefined' && currentUser && (currentUser.id || currentUser.email)) || 'demo';
   return 'fintrail_founding_member_' + uid;
 }
-function isFoundingMemberActive(){ return safeGet(getFoundingMemberKey()) === 'true'; }
-function becomeFoundingMemberFromProfile(){
-  safeSet(getFoundingMemberKey(), 'true');
+function isFoundingMemberActive(){
+  if (typeof fintrailIsFoundingMemberSynced === 'function') return fintrailIsFoundingMemberSynced();
+  return safeGet(getFoundingMemberKey()) === 'true';
+}
+async function becomeFoundingMemberFromProfile(){
+  if (typeof fintrailMarkFoundingMemberSynced === 'function') await fintrailMarkFoundingMemberSynced();
+  else safeSet(getFoundingMemberKey(), 'true');
   updateFoundingMemberUI();
   openFoundingFeedback();
 }
@@ -10317,6 +10324,204 @@ window.addEventListener('load', function(){
   window.addEventListener("load", function(){
     setTimeout(window.fintrailTranslateLooseButtons, 800);
     setTimeout(window.fintrailTranslateLooseButtons, 2200);
+  });
+})();
+
+
+
+/* === CROSS-DEVICE ONBOARDING + FOUNDING MEMBER SYNC FIX ===
+   Uses Supabase user_metadata so the same account does not have to complete
+   onboarding again on another device. Also keeps localStorage as a fallback. */
+(function(){
+  function getActiveUser(){
+    try {
+      return (typeof currentUser !== "undefined" && currentUser) ? currentUser : null;
+    } catch(e) {
+      return null;
+    }
+  }
+
+  function getUserMeta(){
+    const user = getActiveUser();
+    return (user && user.user_metadata) ? user.user_metadata : {};
+  }
+
+  function getUserStorageId(){
+    const user = getActiveUser();
+    return (user && (user.id || user.email)) || "demo";
+  }
+
+  function localOnboardingKey(){
+    return "fintrail_onboarding_complete_" + getUserStorageId();
+  }
+
+  function localFoundingKey(){
+    return "fintrail_founding_member_" + getUserStorageId();
+  }
+
+  function metaOnboardingComplete(){
+    const meta = getUserMeta();
+    return meta.fintrail_onboarding_complete === true ||
+           meta.onboarding_complete === true ||
+           meta.fintrail_pro_onboarding_complete === true;
+  }
+
+  function metaFoundingMember(){
+    const meta = getUserMeta();
+    return meta.fintrail_founding_member === true ||
+           meta.founding_member === true ||
+           meta.fintrail_pro_founding_member === true;
+  }
+
+  async function saveUserMetadataPatch(update){
+    try {
+      if (typeof sbClient === "undefined" || !sbClient || !getActiveUser()) return false;
+      const existing = getUserMeta();
+      const merged = Object.assign({}, existing, update);
+      const { data, error } = await sbClient.auth.updateUser({ data: merged });
+      if (error) throw error;
+      if (data && data.user) currentUser = data.user;
+      else if (currentUser) currentUser.user_metadata = merged;
+      return true;
+    } catch(err) {
+      console.log("Fintrail metadata sync skipped:", err.message);
+      return false;
+    }
+  }
+
+  window.fintrailIsOnboardingCompleteSynced = function(){
+    try {
+      return metaOnboardingComplete() ||
+             localStorage.getItem(localOnboardingKey()) === "true" ||
+             localStorage.getItem("fintrail_onboarding_complete") === "true" ||
+             localStorage.getItem("fintrail_pro_onboarding_complete") === "true";
+    } catch(e) {
+      return metaOnboardingComplete();
+    }
+  };
+
+  window.fintrailMarkOnboardingCompleteSynced = async function(){
+    try {
+      localStorage.setItem(localOnboardingKey(), "true");
+      localStorage.setItem("fintrail_onboarding_complete", "true");
+      localStorage.setItem("fintrail_pro_onboarding_complete", "true");
+    } catch(e) {}
+    await saveUserMetadataPatch({
+      fintrail_onboarding_complete: true,
+      fintrail_pro_onboarding_complete: true,
+      onboarding_completed_at: new Date().toISOString()
+    });
+  };
+
+  window.fintrailIsFoundingMemberSynced = function(){
+    try {
+      return metaFoundingMember() ||
+             localStorage.getItem(localFoundingKey()) === "true";
+    } catch(e) {
+      return metaFoundingMember();
+    }
+  };
+
+  window.fintrailMarkFoundingMemberSynced = async function(){
+    try {
+      localStorage.setItem(localFoundingKey(), "true");
+    } catch(e) {}
+    await saveUserMetadataPatch({
+      fintrail_founding_member: true,
+      fintrail_pro_founding_member: true,
+      founding_member_joined_at: new Date().toISOString()
+    });
+  };
+
+  // Override onboarding checks so they use synced account metadata when available.
+  if (typeof window.hasCompletedOnboarding === "function") {
+    window.hasCompletedOnboarding = function(){
+      return window.fintrailIsOnboardingCompleteSynced();
+    };
+  }
+
+  if (typeof window.isFintrailOnboardingComplete === "function") {
+    window.isFintrailOnboardingComplete = function(){
+      return window.fintrailIsOnboardingCompleteSynced();
+    };
+  }
+
+  if (typeof window.markOnboardingComplete === "function") {
+    window.markOnboardingComplete = function(){
+      try {
+        if (typeof safeSet === "function" && typeof getOnboardingKey === "function") {
+          safeSet(getOnboardingKey(), "true");
+          if (typeof onboardingState !== "undefined") {
+            safeSet("fintrail_onboarding_answers_" + getUserStorageId(), JSON.stringify(onboardingState));
+          }
+        }
+      } catch(e) {}
+      window.fintrailMarkOnboardingCompleteSynced();
+    };
+  }
+
+  if (typeof window.setFintrailOnboardingComplete === "function") {
+    window.setFintrailOnboardingComplete = function(){
+      window.fintrailMarkOnboardingCompleteSynced();
+    };
+  }
+
+  // Override founding member status so it syncs across devices too.
+  if (typeof window.isFoundingMemberActive === "function") {
+    window.isFoundingMemberActive = function(){
+      return window.fintrailIsFoundingMemberSynced();
+    };
+  }
+
+  if (typeof window.isFoundingMember === "function") {
+    window.isFoundingMember = function(){
+      return window.fintrailIsFoundingMemberSynced();
+    };
+  }
+
+  if (typeof window.becomeFoundingMemberFromProfile === "function") {
+    window.becomeFoundingMemberFromProfile = async function(){
+      await window.fintrailMarkFoundingMemberSynced();
+      if (typeof updateFoundingMemberUI === "function") updateFoundingMemberUI();
+      if (typeof openFoundingFeedback === "function") openFoundingFeedback();
+    };
+  }
+
+  if (typeof window.becomeFoundingMember === "function") {
+    window.becomeFoundingMember = async function(){
+      if (typeof markOnboardingComplete === "function") markOnboardingComplete();
+      await window.fintrailMarkFoundingMemberSynced();
+      if (typeof closeOnboarding === "function") closeOnboarding();
+      if (typeof updateFoundingMemberUI === "function") updateFoundingMemberUI();
+      if (typeof openFoundingFeedback === "function") openFoundingFeedback();
+    };
+  }
+
+  // When a user logs in on a new device, pull metadata and immediately hide onboarding if already complete.
+  const originalShowApp = (typeof window.showApp === "function") ? window.showApp : null;
+  if (originalShowApp && !originalShowApp.__fintrailCrossDevicePatch) {
+    window.showApp = function(user){
+      const result = originalShowApp.apply(this, arguments);
+      setTimeout(function(){
+        if (window.fintrailIsOnboardingCompleteSynced()) {
+          const overlay = document.getElementById("onboarding-overlay");
+          if (overlay) overlay.classList.remove("visible");
+        }
+        if (typeof updateFoundingMemberUI === "function") updateFoundingMemberUI();
+      }, 850);
+      return result;
+    };
+    window.showApp.__fintrailCrossDevicePatch = true;
+  }
+
+  window.addEventListener("load", function(){
+    setTimeout(function(){
+      if (window.fintrailIsOnboardingCompleteSynced()) {
+        const overlay = document.getElementById("onboarding-overlay");
+        if (overlay) overlay.classList.remove("visible");
+      }
+      if (typeof updateFoundingMemberUI === "function") updateFoundingMemberUI();
+    }, 1200);
   });
 })();
 
