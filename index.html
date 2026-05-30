@@ -2983,6 +2983,17 @@
   .fm-feedback-card { border-radius:18px; }
 }
 
+
+/* === FOUNDING MEMBER VISIBLE PROFILE + FEEDBACK FIX === */
+.fm-visible-card{background:linear-gradient(135deg,rgba(26,26,46,.98),rgba(45,27,78,.98));border:1px solid rgba(255,209,102,.45);border-radius:14px;padding:1rem;margin:1rem 0;color:#fff}
+.fm-visible-card h3{color:#ffd166;font-size:1rem;font-weight:900;margin-bottom:.35rem}
+.fm-visible-card p{color:rgba(255,255,255,.75);font-size:.82rem;line-height:1.55;margin-bottom:.8rem}
+.fm-visible-actions{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.fm-visible-btn{min-height:42px;border-radius:10px;border:1.5px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:#fff;font-family:'Sora',sans-serif;font-size:.78rem;font-weight:800;cursor:pointer}
+.fm-visible-btn.primary{background:linear-gradient(135deg,#b8860b,#ffd166);color:#1a1a0f;border:none}
+.fm-visible-badge{display:inline-flex;align-items:center;justify-content:center;gap:.35rem;background:linear-gradient(135deg,#1a1a2e,#2d1b4e);color:#ffd166;font-size:.68rem;font-weight:900;padding:.25rem .7rem;border-radius:999px;margin-top:.55rem;border:1px solid rgba(255,209,102,.45);text-transform:uppercase;letter-spacing:.04em}
+@media(max-width:520px){.fm-visible-actions{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -4532,8 +4543,19 @@
           <div class="profile-name" id="profile-display-name">User</div>
           <div class="profile-email" id="profile-display-email">Loading...</div>
           <span class="profile-plan-badge" id="profile-plan-badge">Free Plan</span>
+          <div id="fm-profile-badge-area"></div>
           <div id="fm-profile-area" style="display:none"></div>
         </div>
+        
+        <div id="fm-profile-card" class="fm-visible-card">
+          <h3 id="fm-profile-card-title">⭐ Become a Founding Member</h3>
+          <p id="fm-profile-card-text">Join as one of Fintrail Pro’s earliest supporters and share feedback that helps us improve.</p>
+          <div class="fm-visible-actions">
+            <button class="fm-visible-btn primary" id="fm-join-profile-btn" onclick="becomeFoundingMemberFromProfile()">Become Founding Member</button>
+            <button class="fm-visible-btn" id="fm-open-feedback-btn" onclick="openFoundingFeedback()">Submit Feedback</button>
+          </div>
+        </div>
+
         <div class="profile-sidebar card" style="padding:0.75rem">
           <button class="profile-menu-btn active" onclick="switchProfilePanel('account', this)"><span class="pmb-icon">👤</span> Account Info</button>
           <button class="profile-menu-btn" onclick="switchProfilePanel('password', this)"><span class="pmb-icon">🔑</span> Change Password</button>
@@ -10002,6 +10024,125 @@ function showOnboardingIfNeeded() {
   const todayStr = new Date().toISOString().split('T')[0];
   document.getElementById('next-payday').value = savedPayday || todayStr;
   if (savedFreq) document.getElementById('pay-frequency').value = savedFreq;
+
+
+// ======================================================
+// FOUNDING MEMBER + FEEDBACK — VISIBLE PROFILE FIX
+// ======================================================
+let foundingRating = 0;
+
+function getFoundingMemberKey(){
+  const uid = (typeof currentUser !== 'undefined' && currentUser && (currentUser.id || currentUser.email)) || 'demo';
+  return 'fintrail_founding_member_' + uid;
+}
+function isFoundingMemberActive(){ return safeGet(getFoundingMemberKey()) === 'true'; }
+function becomeFoundingMemberFromProfile(){
+  safeSet(getFoundingMemberKey(), 'true');
+  updateFoundingMemberUI();
+  openFoundingFeedback();
+}
+function becomeFoundingMember(){
+  if (typeof markOnboardingComplete === 'function') markOnboardingComplete();
+  safeSet(getFoundingMemberKey(), 'true');
+  if (typeof closeOnboarding === 'function') closeOnboarding();
+  updateFoundingMemberUI();
+  openFoundingFeedback();
+}
+function updateFoundingMemberUI(){
+  const es = (typeof currentLang !== 'undefined' && currentLang === 'es');
+  const active = isFoundingMemberActive();
+  const badgeArea = document.getElementById('fm-profile-badge-area');
+  if (badgeArea) badgeArea.innerHTML = active ? `<div class="fm-visible-badge">${es ? '⭐ Miembro Fundador' : '⭐ Founding Member'}</div>` : '';
+  const card = document.getElementById('fm-profile-card');
+  if (card){
+    const title = document.getElementById('fm-profile-card-title');
+    const text = document.getElementById('fm-profile-card-text');
+    const join = document.getElementById('fm-join-profile-btn');
+    const feedback = document.getElementById('fm-open-feedback-btn');
+    if (title) title.textContent = active ? (es ? '⭐ Miembro Fundador' : '⭐ Founding Member') : (es ? '⭐ Únete como Miembro Fundador' : '⭐ Become a Founding Member');
+    if (text) text.textContent = active ? (es ? 'Gracias por ayudar a construir el futuro de Fintrail Pro. Puedes enviar comentarios cuando quieras.' : 'Thank you for helping shape the future of Fintrail Pro. You can submit feedback anytime.') : (es ? 'Únete como una de las primeras personas en apoyar Fintrail Pro y comparte comentarios para ayudarnos a mejorar.' : 'Join as one of Fintrail Pro’s earliest supporters and share feedback that helps us improve.');
+    if (join){ join.style.display = active ? 'none' : 'block'; join.textContent = es ? 'Convertirme en Miembro Fundador' : 'Become Founding Member'; }
+    if (feedback) feedback.textContent = es ? 'Enviar comentarios' : 'Submit Feedback';
+  }
+}
+function applyFoundingFeedbackLanguage(){
+  const es = (typeof currentLang !== 'undefined' && currentLang === 'es');
+  const labels = {
+    'fm-modal-title': es ? '🎉 ¡Eres Miembro Fundador!' : '🎉 You’re a Founding Member!',
+    'fm-modal-subtitle': es ? 'Tus comentarios ayudan a construir el futuro de Fintrail Pro.' : 'Your feedback helps shape the future of Fintrail Pro.',
+    'fm-badge-large': es ? '⭐ Miembro Fundador' : '⭐ Founding Member',
+    'fm-rating-label': es ? '¿Cómo calificarías tu experiencia hasta ahora?' : 'How would you rate your experience so far?',
+    'fm-feature-label': es ? '¿Qué función te gustaría ver próximamente?' : 'What feature would you like to see next?',
+    'fm-feedback-label': es ? '¿Qué podemos mejorar?' : 'What can we improve?',
+    'fm-later-btn': es ? 'Tal vez después' : 'Maybe Later',
+    'fm-submit-btn': es ? 'Enviar Comentarios' : 'Submit Feedback'
+  };
+  Object.entries(labels).forEach(([id,val]) => { const el = document.getElementById(id); if (el) el.textContent = val; });
+  const sel = document.getElementById('fm-feature-request');
+  if (sel){
+    const value = sel.value;
+    sel.innerHTML = es
+      ? `<option value="">Elige una opción</option><option value="Budgeting Tools">Herramientas de presupuesto</option><option value="Debt Payoff Planning">Planificación de deudas</option><option value="Credit Improvement">Mejorar crédito</option><option value="Savings Goals">Metas de ahorro</option><option value="Investing Tools">Herramientas de inversión</option><option value="Other">Otro</option>`
+      : `<option value="">Choose one</option><option value="Budgeting Tools">Budgeting Tools</option><option value="Debt Payoff Planning">Debt Payoff Planning</option><option value="Credit Improvement">Credit Improvement</option><option value="Savings Goals">Savings Goals</option><option value="Investing Tools">Investing Tools</option><option value="Other">Other</option>`;
+    sel.value = value;
+  }
+  const ta = document.getElementById('fm-feedback-text');
+  if (ta) ta.placeholder = es ? 'Comparte tus ideas, sugerencias, errores o comentarios...' : 'Share your ideas, suggestions, bugs, or feedback...';
+}
+function openFoundingFeedback(){
+  if (!isFoundingMemberActive()){ safeSet(getFoundingMemberKey(), 'true'); updateFoundingMemberUI(); }
+  applyFoundingFeedbackLanguage();
+  const status = document.getElementById('fm-status');
+  if (status){ status.className = 'fm-status'; status.textContent = ''; }
+  const overlay = document.getElementById('fm-feedback-overlay');
+  if (overlay) overlay.classList.add('visible');
+}
+function closeFoundingFeedback(){
+  const overlay = document.getElementById('fm-feedback-overlay');
+  if (overlay) overlay.classList.remove('visible');
+}
+function setFoundingRating(rating){
+  foundingRating = rating;
+  document.querySelectorAll('#fm-rating-row .fm-star').forEach((btn, idx) => btn.classList.toggle('active', idx < rating));
+}
+async function submitFoundingFeedback(){
+  const status = document.getElementById('fm-status');
+  const btn = document.getElementById('fm-submit-btn');
+  const feature = document.getElementById('fm-feature-request')?.value || '';
+  const feedback = document.getElementById('fm-feedback-text')?.value || '';
+  const es = (typeof currentLang !== 'undefined' && currentLang === 'es');
+  if (!foundingRating && !feature && !feedback.trim()){
+    if (status){ status.className = 'fm-status error'; status.textContent = es ? 'Agrega una calificación, una función o un comentario antes de enviar.' : 'Please add a rating, feature request, or comment before submitting.'; }
+    return;
+  }
+  if (btn) btn.disabled = true;
+  const payload = {
+    email: (typeof currentUser !== 'undefined' && currentUser && currentUser.email) || 'demo@fintrail.app',
+    rating: foundingRating || null,
+    feature_request: feature || null,
+    feedback: feedback.trim() || null,
+    language: (typeof currentLang !== 'undefined' && currentLang) || 'en'
+  };
+  try {
+    safeSet('fintrail_founding_feedback_last_' + (((typeof currentUser !== 'undefined' && currentUser) && (currentUser.id || currentUser.email)) || 'demo'), JSON.stringify({ ...payload, created_at: new Date().toISOString() }));
+    if (typeof sbClient !== 'undefined' && sbClient && typeof currentUser !== 'undefined' && currentUser){
+      const { error } = await sbClient.from('founding_member_feedback').insert(payload);
+      if (error) throw error;
+    }
+    if (status){ status.className = 'fm-status success'; status.textContent = es ? '¡Gracias! Tus comentarios fueron enviados.' : 'Thank you! Your feedback was submitted.'; }
+    setTimeout(closeFoundingFeedback, 1200);
+  } catch(err){
+    console.log('submitFoundingFeedback error:', err.message);
+    if (status){ status.className = 'fm-status error'; status.textContent = es ? 'No se pudo enviar a Supabase, pero se guardó localmente para no perderlo.' : 'Could not submit to Supabase, but it was saved locally so it is not lost.'; }
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+window.addEventListener('load', function(){
+  setTimeout(updateFoundingMemberUI, 700);
+  setTimeout(updateFoundingMemberUI, 2200);
+});
+
 </script>
 </body>
 </html>
