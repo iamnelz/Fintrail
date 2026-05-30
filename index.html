@@ -10886,5 +10886,180 @@ window.addEventListener('load', function(){
 })();
 </script>
 
+
+<script>
+/* === DEBT NEGOTIATION SCRIPT CONTENT FIX === */
+(function(){
+  function isSpanish(){
+    try { return currentLang === 'es'; } catch(e) { return false; }
+  }
+
+  function val(id, fallback){
+    var el = document.getElementById(id);
+    if (!el) return fallback || '';
+    return (el.value || el.textContent || fallback || '').trim();
+  }
+
+  function getCreditorName(){
+    return val('script-creditor', '') ||
+           val('neg-creditor', '') ||
+           val('debt-creditor', '') ||
+           val('creditor-name', '') ||
+           'Chase';
+  }
+
+  function getDebtAmount(){
+    return val('script-balance', '') ||
+           val('neg-balance', '') ||
+           val('debt-balance', '') ||
+           val('creditor-balance', '') ||
+           '';
+  }
+
+  function getPaymentOffer(){
+    return val('script-offer', '') ||
+           val('neg-offer', '') ||
+           val('settlement-offer', '') ||
+           '';
+  }
+
+  function scriptContent(){
+    var es = isSpanish();
+    var creditor = getCreditorName();
+    var amount = getDebtAmount();
+    var offer = getPaymentOffer();
+
+    if (es) {
+      return {
+        before: 'Ten tu número de cuenta, saldo actual, ingresos mensuales y una oferta realista antes de llamar. Mantén la calma, toma notas y pide cualquier acuerdo por escrito antes de pagar.',
+        opening: 'Hola, mi nombre es [tu nombre]. Estoy llamando sobre mi cuenta con ' + creditor + '. Quiero resolver esta deuda y revisar qué opciones hay disponibles para reducir el pago, crear un plan accesible o llegar a un acuerdo.',
+        request: 'Actualmente estoy trabajando en organizar mis finanzas. ' + (amount ? 'El saldo que tengo registrado es de ' + amount + '. ' : '') + '¿Pueden ofrecer una reducción del saldo, eliminar cargos, bajar la tasa de interés o aceptar un plan de pagos más manejable?' + (offer ? ' Puedo ofrecer ' + offer + ' si el acuerdo queda confirmado por escrito.' : ''),
+        response: 'Entiendo. ¿Hay otra opción disponible, un supervisor que pueda revisar la cuenta o un programa de dificultad financiera? Antes de aceptar algo, necesito recibir los términos por escrito, incluyendo el monto, fechas de pago y confirmación de cómo se reportará la cuenta.',
+        closing: 'Gracias por su ayuda. Por favor envíeme la confirmación del acuerdo por escrito antes de que realice cualquier pago. También anotaré la fecha, hora, nombre del representante y número de confirmación de esta llamada.',
+        tips: 'Consejos: no compartas acceso directo a tu cuenta bancaria, no aceptes presión para pagar de inmediato sin confirmación escrita y guarda capturas o copias de todo acuerdo.'
+      };
+    }
+
+    return {
+      before: 'Have your account number, current balance, monthly income, and a realistic offer ready before you call. Stay calm, take notes, and ask for every agreement in writing before paying.',
+      opening: 'Hello, my name is [your name]. I am calling about my account with ' + creditor + '. I want to resolve this debt and review what options are available to reduce the payment, create an affordable plan, or reach a settlement.',
+      request: 'I am currently working on getting my finances organized. ' + (amount ? 'The balance I have recorded is ' + amount + '. ' : '') + 'Can you offer a balance reduction, waive fees, lower the interest rate, or accept a more manageable payment plan?' + (offer ? ' I can offer ' + offer + ' if the agreement is confirmed in writing.' : ''),
+      response: 'I understand. Is there another option available, a supervisor who can review the account, or a hardship program? Before I accept anything, I need to receive the terms in writing, including the amount, payment dates, and confirmation of how the account will be reported.',
+      closing: 'Thank you for your help. Please send me confirmation of the agreement in writing before I make any payment. I will also note the date, time, representative name, and confirmation number for this call.',
+      tips: 'Tips: do not share direct bank access, do not accept pressure to pay immediately without written confirmation, and save screenshots or copies of every agreement.'
+    };
+  }
+
+  function setBoxByHeading(root, headingMatch, content){
+    var sections = root.querySelectorAll('.script-section, div');
+    for (var i = 0; i < sections.length; i++) {
+      var section = sections[i];
+      var heading = section.querySelector('.script-section-title, h3, h4, strong');
+      if (!heading) continue;
+      var headingText = String(heading.textContent || '').toLowerCase();
+      if (headingText.indexOf(headingMatch) === -1) continue;
+
+      var box = section.querySelector('.script-text, .script-box');
+      if (box) {
+        var copyBtn = box.querySelector('.script-copy-btn');
+        box.textContent = content;
+        if (copyBtn) box.appendChild(copyBtn);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function fillVisibleScriptBoxes(){
+    try {
+      var root = document.getElementById('tab-negotiate') ||
+                 document.getElementById('tab-debtnegotiation') ||
+                 document.getElementById('tab-scripts') ||
+                 document.querySelector('.negotiate-layout') ||
+                 document.querySelector('.script-output-card');
+      if (!root) return;
+
+      var c = scriptContent();
+
+      setBoxByHeading(root, 'antes', c.before);
+      setBoxByHeading(root, 'before', c.before);
+
+      setBoxByHeading(root, 'inicio', c.opening);
+      setBoxByHeading(root, 'opening', c.opening);
+
+      setBoxByHeading(root, 'solicitud', c.request);
+      setBoxByHeading(root, 'request', c.request);
+      setBoxByHeading(root, 'negociación', c.request);
+      setBoxByHeading(root, 'negotiation', c.request);
+
+      setBoxByHeading(root, 'respuesta', c.response);
+      setBoxByHeading(root, 'response', c.response);
+      setBoxByHeading(root, 'dicen que no', c.response);
+
+      setBoxByHeading(root, 'cierre', c.closing);
+      setBoxByHeading(root, 'closing', c.closing);
+
+      setBoxByHeading(root, 'consejos', c.tips);
+      setBoxByHeading(root, 'tips', c.tips);
+
+      // Fallback: if boxes are still empty, fill them in visual order.
+      var boxes = root.querySelectorAll('.script-text, .script-box');
+      var ordered = [c.before, c.opening, c.request, c.response, c.closing, c.tips];
+      for (var i = 0; i < boxes.length && i < ordered.length; i++) {
+        var box = boxes[i];
+        var current = String(box.textContent || '').replace(/\s+/g, ' ').trim();
+        if (!current || current === 'Copiar' || current === 'Copy') {
+          var btn = box.querySelector('.script-copy-btn');
+          box.textContent = ordered[i];
+          if (btn) box.appendChild(btn);
+        }
+      }
+
+      // Translate fixed buttons/title if needed.
+      root.querySelectorAll('button, h3, p, span').forEach(function(el){
+        if (!el || !el.textContent) return;
+        var t = String(el.textContent || '').trim();
+        if (isSpanish()) {
+          if (t === 'Copy') el.textContent = 'Copiar';
+          if (t === 'Regenerate Script') el.textContent = 'Regenerar Guion';
+          if (t === 'Your Negotiation Script') el.textContent = 'Tu Guion de Negociación';
+        } else {
+          if (t === 'Copiar') el.textContent = 'Copy';
+          if (t === 'Regenerar Guion') el.textContent = 'Regenerate Script';
+          if (t === 'Tu Guion de Negociación') el.textContent = 'Your Negotiation Script';
+        }
+      });
+    } catch(e) {
+      console.log('Debt negotiation script fix skipped:', e.message);
+    }
+  }
+
+  window.fintrailDebtNegotiationScriptFix = fillVisibleScriptBoxes;
+
+  var oldGenerate = window.generateNegotiationScript || window.generateScript;
+  if (typeof oldGenerate === 'function' && !oldGenerate.__fintrailDebtScriptFix) {
+    var wrapped = function(){
+      var result = oldGenerate.apply(this, arguments);
+      setTimeout(fillVisibleScriptBoxes, 80);
+      setTimeout(fillVisibleScriptBoxes, 400);
+      return result;
+    };
+    wrapped.__fintrailDebtScriptFix = true;
+    if (window.generateNegotiationScript) window.generateNegotiationScript = wrapped;
+    if (window.generateScript) window.generateScript = wrapped;
+  }
+
+  window.addEventListener('load', function(){
+    setTimeout(fillVisibleScriptBoxes, 1200);
+    setTimeout(fillVisibleScriptBoxes, 2500);
+  });
+
+  document.addEventListener('click', function(){
+    setTimeout(fillVisibleScriptBoxes, 120);
+    setTimeout(fillVisibleScriptBoxes, 650);
+  });
+})();
+</script>
+
 </body>
 </html>
