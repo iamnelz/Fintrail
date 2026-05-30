@@ -3019,15 +3019,15 @@
       <!-- SIGN IN FORM -->
       <div id="form-signin" class="auth-form">
         <div class="auth-input-group">
-          <label data-en="Email" data-es="Correo electrónico">Email</label>
+          <label>Email</label>
           <input class="auth-input" type="email" id="si-email" placeholder="you@email.com" autocomplete="email">
         </div>
         <div class="auth-input-group">
-          <label data-en="Password" data-es="Contraseña">Password</label>
+          <label>Password</label>
           <input class="auth-input" type="password" id="si-password" placeholder="••••••••" autocomplete="current-password">
         </div>
         <button class="auth-submit" id="si-btn" onclick="signIn()" data-en="Sign In" data-es="Iniciar Sesión">Sign In</button>
-        <div class="auth-divider"><span data-en="or" data-es="o">or</span></div>
+        <div class="auth-divider"><span>or</span></div>
         <button class="auth-google" onclick="signInGoogle()">
           <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
           Continue with Google
@@ -3044,11 +3044,11 @@
           <input class="auth-input" type="text" id="su-name" placeholder="Jane Smith" autocomplete="name">
         </div>
         <div class="auth-input-group">
-          <label data-en="Email" data-es="Correo electrónico">Email</label>
+          <label>Email</label>
           <input class="auth-input" type="email" id="su-email" placeholder="you@email.com" autocomplete="email">
         </div>
         <div class="auth-input-group">
-          <label data-en="Password" data-es="Contraseña">Password</label>
+          <label>Password</label>
           <input class="auth-input" type="password" id="su-password" placeholder="At least 8 characters" autocomplete="new-password">
         </div>
         <div class="auth-input-group">
@@ -3056,7 +3056,7 @@
           <input class="auth-input" type="password" id="su-confirm" placeholder="••••••••" autocomplete="new-password">
         </div>
         <button class="auth-submit" id="su-btn" onclick="signUp()">Create Free Account</button>
-        <div class="auth-divider"><span data-en="or" data-es="o">or</span></div>
+        <div class="auth-divider"><span>or</span></div>
         <button class="auth-google" onclick="signInGoogle()">
           <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
           Continue with Google
@@ -7381,175 +7381,6 @@ Guidelines:
       
 
 
-
-<script>
-/* === SAFE PROFILE + MONTHLY REPORT SPANISH TRANSLATION FIX === */
-(function(){
-  const profileMap = {
-    "Account Info": "Información de la Cuenta",
-    "Change Password": "Cambiar Contraseña",
-    "Security & 2FA": "Seguridad y 2FA",
-    "Notifications": "Notificaciones",
-    "Danger Zone": "Zona de Peligro",
-    "Sign Out": "Cerrar Sesión",
-    "Update your display name and email address.": "Actualiza tu nombre para mostrar y dirección de correo electrónico.",
-    "FULL NAME": "NOMBRE COMPLETO",
-    "EMAIL ADDRESS": "CORREO ELECTRÓNICO",
-    "PROFILE COLOR": "COLOR DE PERFIL",
-    "Save Changes": "Guardar Cambios",
-    "Subscription": "Suscripción",
-    "Manage your Pro subscription, billing, or cancellation.": "Administra tu suscripción Pro, facturación o cancelación.",
-    "Manage Subscription": "Administrar Suscripción",
-    "Current Password": "Contraseña Actual",
-    "New Password": "Nueva Contraseña",
-    "Confirm Password": "Confirmar Contraseña",
-    "Update Password": "Actualizar Contraseña",
-    "Delete Account": "Eliminar Cuenta",
-    "Delete My Account": "Eliminar Mi Cuenta",
-    "Clear All Data": "Borrar Todos los Datos",
-    "Privacy Policy": "Política de Privacidad",
-    "Terms of Service": "Términos de Servicio",
-    "Free Plan": "Plan Gratis"
-  };
-
-  const reportMap = {
-    "← Back to Insights": "← Volver a Informes",
-    "Back to Insights": "Volver a Informes",
-    "Current Month": "Mes Actual",
-    "Financial Health Score": "Puntaje de Salud Financiera",
-    "Savings Progress": "Progreso de Ahorros",
-    "Debt Progress": "Progreso de Deudas",
-    "Credit Progress": "Progreso de Crédito",
-    "Emergency Fund": "Fondo de Emergencia",
-    "Total Debt Tracked": "Deuda Total Registrada",
-    "Simulated Credit Range": "Rango de Crédito Simulado",
-    "Biggest Positive Factor": "Mayor Factor Positivo",
-    "Estimated Payoff Focus": "Enfoque Estimado de Pago",
-    "AI Financial Activity": "Actividad Financiera con IA",
-    "Monthly Achievement": "Logro Mensual",
-    "Personalized progress based on the savings, debt, credit, and AI activity you have entered in Fintrail.": "Progreso personalizado basado en los ahorros, deudas, crédito y actividad de IA que has ingresado en Fintrail.",
-    "Great progress! Your debt reduction and consistent savings improved your overall financial health.": "¡Gran progreso! Tu reducción de deuda y ahorros constantes mejoraron tu salud financiera general.",
-    "Good": "Bueno",
-    "Excellent": "Excelente",
-    "Fair": "Regular",
-    "Poor": "Bajo",
-    "Share Report": "Compartir Reporte",
-    "Print Report": "Imprimir Reporte",
-    "View AI Advisor": "Ver Asesor de IA",
-    "Set Next Month Goal": "Establecer Meta del Próximo Mes"
-  };
-
-  const reverseProfile = {};
-  const reverseReport = {};
-  Object.keys(profileMap).forEach(k => reverseProfile[profileMap[k]] = k);
-  Object.keys(reportMap).forEach(k => reverseReport[reportMap[k]] = k);
-
-  function isSpanish(){
-    return typeof currentLang !== "undefined" && currentLang === "es";
-  }
-
-  function cleanText(value){
-    return String(value || "").replace(/\s+/g, " ").trim();
-  }
-
-  function swapText(el, map, reverseMap){
-    if (!el) return;
-    const current = cleanText(el.textContent);
-    if (!current || current.length > 180) return;
-
-    if (isSpanish()) {
-      if (map[current]) {
-        el.textContent = map[current];
-      } else if (current.indexOf("Free Plan") !== -1) {
-        el.textContent = current.replace("Free Plan", "Plan Gratis");
-      } else if (current.indexOf("points this month") !== -1) {
-        el.textContent = current.replace("points this month", "puntos este mes");
-      } else if (current.indexOf("complete") !== -1) {
-        el.textContent = current.replace("complete", "completo");
-      }
-    } else {
-      if (reverseMap[current]) {
-        el.textContent = reverseMap[current];
-      } else if (current.indexOf("Plan Gratis") !== -1) {
-        el.textContent = current.replace("Plan Gratis", "Free Plan");
-      } else if (current.indexOf("puntos este mes") !== -1) {
-        el.textContent = current.replace("puntos este mes", "points this month");
-      } else if (current.indexOf("completo") !== -1) {
-        el.textContent = current.replace("completo", "complete");
-      }
-    }
-  }
-
-  function translateProfile(){
-    const root = document.getElementById("tab-profile");
-    if (!root) return;
-    root.querySelectorAll(".profile-menu-btn, .profile-section-desc, .profile-field label, .profile-save-btn, .profile-subscription-card h3, .profile-subscription-card p, .profile-subscription-btn, .danger-zone h3, .danger-zone p, a, button, span").forEach(function(el){
-      if (el.children && el.children.length > 0 && !el.classList.contains("profile-menu-btn")) return;
-      swapText(el, profileMap, reverseProfile);
-    });
-
-    const badge = document.getElementById("profile-plan-badge");
-    if (badge) swapText(badge, profileMap, reverseProfile);
-  }
-
-  function translateMonthlyReport(){
-    const root = document.querySelector(".report-shell");
-    if (!root) return;
-    root.querySelectorAll("button, option, h1, h2, h3, h4, p, span, label").forEach(function(el){
-      swapText(el, reportMap, reverseReport);
-    });
-
-    const subtitle = root.querySelector(".report-subtitle");
-    if (subtitle) swapText(subtitle, reportMap, reverseReport);
-
-    const back = root.querySelector(".report-back");
-    if (back) swapText(back, reportMap, reverseReport);
-
-    const note = root.querySelector(".report-score-note");
-    if (note) swapText(note, reportMap, reverseReport);
-
-    const gauge = root.querySelector(".report-gauge-label");
-    if (gauge) swapText(gauge, reportMap, reverseReport);
-  }
-
-  window.fintrailSafeProfileReportTranslationFix = function(){
-    try {
-      translateProfile();
-      translateMonthlyReport();
-    } catch(e) {
-      console.log("Profile/report translation fix skipped:", e.message);
-    }
-  };
-
-  function installWrapper(){
-    const original = window.applyLanguage;
-    if (typeof original === "function" && !original.__safeProfileReportTranslationFix) {
-      window.applyLanguage = function(){
-        const result = original.apply(this, arguments);
-        setTimeout(window.fintrailSafeProfileReportTranslationFix, 0);
-        setTimeout(window.fintrailSafeProfileReportTranslationFix, 300);
-        setTimeout(window.fintrailSafeProfileReportTranslationFix, 900);
-        return result;
-      };
-      window.applyLanguage.__safeProfileReportTranslationFix = true;
-    }
-  }
-
-  installWrapper();
-
-  window.addEventListener("load", function(){
-    installWrapper();
-    setTimeout(window.fintrailSafeProfileReportTranslationFix, 900);
-    setTimeout(window.fintrailSafeProfileReportTranslationFix, 2200);
-  });
-
-  document.addEventListener("click", function(){
-    setTimeout(window.fintrailSafeProfileReportTranslationFix, 150);
-    setTimeout(window.fintrailSafeProfileReportTranslationFix, 700);
-  });
-})();
-</script>
-
 </body>
       </html>
     `);
@@ -10694,277 +10525,83 @@ window.addEventListener('load', function(){
   });
 })();
 
+</script>
 
-
-/* === FULL TRANSLATION QA PATCH ===
-   Final runtime pass for English/Spanish consistency across buttons, labels,
-   placeholders, generated cards, badges, modal text, and profile/subscription UI. */
+<script>
+/* === SAFE PROFILE MONTHLY REPORT SPANISH CLEANUP V4 === */
 (function(){
-  const phraseMap = {
-    "Budget Smarter, Live Better.": "Presupuesta Mejor, Vive Mejor.",
-    "Sign In": "Iniciar Sesión",
-    "Create Account": "Crear Cuenta",
-    "Continue with Google": "Continuar con Google",
-    "or": "o",
-    "Forgot your password?": "¿Olvidaste tu contraseña?",
-    "Email": "Correo electrónico",
-    "Password": "Contraseña",
-    "Full Name": "Nombre completo",
-    "Confirm Password": "Confirmar contraseña",
-    "Save Changes": "Guardar Cambios",
-    "Saving...": "Guardando...",
-    "Update Password": "Actualizar Contraseña",
-    "Updating...": "Actualizando...",
-    "Send Verification Code": "Enviar Código de Verificación",
-    "Sending...": "Enviando...",
-    "Verify Code": "Verificar Código",
-    "Disable 2FA": "Desactivar 2FA",
-    "Enable 2FA": "Activar 2FA",
-    "Delete My Account": "Eliminar Mi Cuenta",
-    "Clear All Data": "Borrar Todos los Datos",
-    "Sign Out": "Cerrar Sesión",
-    "Free Plan": "Plan Gratis",
-    "Manage Subscription": "Administrar Suscripción",
-    "Upgrade to Pro": "Actualizar a Pro",
-    "Add Transaction": "Agregar Transacción",
-    "Transactions": "Transacciones",
-    "Income": "Ingreso",
-    "Expense": "Gasto",
-    "Description": "Descripción",
-    "Amount": "Monto",
-    "Category": "Categoría",
-    "Total Income": "Ingresos Totales",
-    "Total Expenses": "Gastos Totales",
-    "Net Balance": "Saldo Neto",
-    "Spending by Category": "Gastos por Categoría",
-    "Export CSV": "Exportar CSV",
-    "Budget Tracker": "Control de Presupuesto",
-    "Bill Schedule": "Calendario de Facturas",
-    "Add Bill": "Agregar Factura",
-    "Add Goal": "Agregar Meta",
-    "Add Deposit": "Agregar Depósito",
-    "Calculate": "Calcular",
-    "Reset": "Restablecer",
-    "Copy": "Copiar",
-    "Copied!": "¡Copiado!",
-    "Generate Script": "Generar Guion",
-    "Regenerate": "Regenerar",
-    "Add Event": "Agregar Evento",
-    "Submit Feedback": "Enviar Comentarios",
-    "Become Founding Member": "Convertirme en Miembro Fundador",
-    "Become a Founding Member": "Convertirme en Miembro Fundador",
-    "Founding Member": "Miembro Fundador",
-    "Maybe Later": "Tal vez Después",
-    "Get Started": "Comenzar",
-    "Continue": "Continuar",
-    "Back": "Atrás",
-    "Skip for now": "Omitir por ahora",
-    "Enter Fintrail": "Entrar a Fintrail",
-    "Submit": "Enviar",
-    "Cancel": "Cancelar",
-    "Close": "Cerrar",
-    "Edit": "Editar",
-    "Delete": "Eliminar",
-    "Remove": "Eliminar",
-    "Done": "Listo",
-    "Next": "Siguiente",
-    "Previous": "Anterior",
-    "Monthly Financial Progress Report": "Reporte Mensual de Progreso Financiero",
-    "Profile": "Perfil",
-    "Account": "Cuenta",
-    "Security": "Seguridad",
-    "Subscription": "Suscripción",
-    "Language": "Idioma",
-    "Account Info": "Información de la Cuenta",
-    "Privacy": "Privacidad",
-    "Notifications": "Notificaciones",
-    "Submit Feedback": "Enviar Comentarios",
-    "What can we improve?": "¿Qué podemos mejorar?",
-    "What feature would you like to see next?": "¿Qué función te gustaría ver próximamente?",
-    "How would you rate your experience so far?": "¿Cómo calificarías tu experiencia hasta ahora?",
-    "Choose one": "Elige una opción",
-    "Budgeting Tools": "Herramientas de presupuesto",
-    "Debt Payoff Planning": "Planificación de deudas",
-    "Credit Improvement": "Mejorar crédito",
-    "Savings Goals": "Metas de ahorro",
-    "Investing Tools": "Herramientas de inversión",
-    "Other": "Otro",
-    "Thank you! Your feedback was submitted.": "¡Gracias! Tus comentarios fueron enviados.",
-    "Please add a rating, feature request, or comment before submitting.": "Agrega una calificación, una función o un comentario antes de enviar.",
-    "Could not submit to Supabase, but it was saved locally so it is not lost.": "No se pudo enviar a Supabase, pero se guardó localmente para no perderlo.",
-    "You’re a Founding Member!": "¡Eres Miembro Fundador!",
-    "You're a Founding Member!": "¡Eres Miembro Fundador!",
-    "Your feedback helps shape the future of Fintrail Pro.": "Tus comentarios ayudan a construir el futuro de Fintrail Pro.",
-    "Thank you for helping shape the future of Fintrail Pro. You can submit feedback anytime.": "Gracias por ayudar a construir el futuro de Fintrail Pro. Puedes enviar comentarios cuando quieras.",
-    "Join as one of Fintrail Pro’s earliest supporters and share feedback that helps us improve.": "Únete como una de las primeras personas en apoyar Fintrail Pro y comparte comentarios para ayudarnos a mejorar.",
-    "Share your ideas, suggestions, bugs, or feedback...": "Comparte tus ideas, sugerencias, errores o comentarios...",
-    "you@email.com": "tu@email.com",
-    "New Password": "Nueva Contraseña",
-    "Current Password": "Contraseña Actual"
+  function ftIsEs(){ try { return currentLang === 'es'; } catch(e) { return false; } }
+  var enToEs = {
+    'Account Info':'Información de la Cuenta',
+    'Change Password':'Cambiar Contraseña',
+    'Security & 2FA':'Seguridad y 2FA',
+    'Notifications':'Notificaciones',
+    'Danger Zone':'Zona de Peligro',
+    'Sign Out':'Cerrar Sesión',
+    'Update your display name and email address.':'Actualiza tu nombre para mostrar y dirección de correo electrónico.',
+    'FULL NAME':'NOMBRE COMPLETO',
+    'EMAIL ADDRESS':'CORREO ELECTRÓNICO',
+    'PROFILE COLOR':'COLOR DE PERFIL',
+    'Save Changes':'Guardar Cambios',
+    'Subscription':'Suscripción',
+    'Manage your Pro subscription, billing, or cancellation.':'Administra tu suscripción Pro, facturación o cancelación.',
+    'Manage Subscription':'Administrar Suscripción',
+    'Back to Insights':'Volver a Informes',
+    '← Back to Insights':'← Volver a Informes',
+    'Current Month':'Mes Actual',
+    'Financial Health Score':'Puntaje de Salud Financiera',
+    'Savings Progress':'Progreso de Ahorros',
+    'Debt Progress':'Progreso de Deudas',
+    'Credit Progress':'Progreso de Crédito',
+    'Emergency Fund':'Fondo de Emergencia',
+    'Total Debt Tracked':'Deuda Total Registrada',
+    'Simulated Credit Range':'Rango de Crédito Simulado',
+    'Good':'Bueno',
+    'Personalized progress based on the savings, debt, credit, and AI activity you have entered in Fintrail.':'Progreso personalizado basado en los ahorros, deudas, crédito y actividad de IA que has ingresado en Fintrail.',
+    'Great progress! Your debt reduction and consistent savings improved your overall financial health.':'¡Gran progreso! Tu reducción de deuda y ahorros constantes mejoraron tu salud financiera general.'
   };
-
-  const reverseMap = {};
-  Object.entries(phraseMap).forEach(([en, es]) => reverseMap[es] = en);
-
-  const placeholders = {
-    "you@email.com": "tu@email.com",
-    "Full name": "Nombre completo",
-    "Share your ideas, suggestions, bugs, or feedback...": "Comparte tus ideas, sugerencias, errores o comentarios...",
-    "Search": "Buscar",
-    "Search resources...": "Buscar recursos...",
-    "Description": "Descripción",
-    "Amount": "Monto",
-    "Name": "Nombre",
-    "Email": "Correo electrónico"
-  };
-
-  function isSpanish(){
-    return (typeof currentLang !== "undefined" && currentLang === "es");
-  }
-
-  function norm(s){
-    return String(s || "").replace(/\s+/g, " ").trim();
-  }
-
-  function translateTextValue(value, toEs){
-    const clean = norm(value);
-    if (!clean) return value;
-
-    if (toEs) {
-      if (phraseMap[clean]) return phraseMap[clean];
-      // handle plan suffixes like "Bronze · Free Plan"
-      if (clean.includes("Free Plan")) return clean.replace("Free Plan", "Plan Gratis");
-      if (clean.includes("Submit Feedback")) return clean.replace("Submit Feedback", "Enviar Comentarios");
-      if (clean.includes("Founding Member")) return clean.replace("Founding Member", "Miembro Fundador");
+  var esToEn = {};
+  Object.keys(enToEs).forEach(function(k){ esToEn[enToEs[k]] = k; });
+  function ftClean(s){ return String(s || '').replace(/\s+/g,' ').trim(); }
+  function ftSwap(el){
+    if (!el || !el.textContent) return;
+    if (el.children && el.children.length > 0 && el.tagName !== 'BUTTON') return;
+    var t = ftClean(el.textContent);
+    if (!t || t.length > 190) return;
+    if (ftIsEs()) {
+      if (enToEs[t]) el.textContent = enToEs[t];
+      else if (t.indexOf('Free Plan') !== -1) el.textContent = t.replace('Free Plan','Plan Gratis');
+      else if (t.indexOf('points this month') !== -1) el.textContent = t.replace('points this month','puntos este mes');
+      else if (t.indexOf('complete') !== -1) el.textContent = t.replace('complete','completo');
     } else {
-      if (reverseMap[clean]) return reverseMap[clean];
-      if (clean.includes("Plan Gratis")) return clean.replace("Plan Gratis", "Free Plan");
-      if (clean.includes("Enviar Comentarios")) return clean.replace("Enviar Comentarios", "Submit Feedback");
-      if (clean.includes("Miembro Fundador")) return clean.replace("Miembro Fundador", "Founding Member");
-    }
-    return value;
-  }
-
-  function translateDirectElement(el, toEs){
-    if (!el || el.closest("script, style")) return;
-    if (el.hasAttribute("data-no-translate")) return;
-
-    // Prefer explicit attributes when available.
-    if (el.hasAttribute("data-en") && el.hasAttribute("data-es")) {
-      const value = toEs ? el.getAttribute("data-es") : el.getAttribute("data-en");
-      if (value && el.children.length === 0) el.textContent = value;
-      return;
-    }
-
-    // Avoid rewriting large content containers. Only small UI text.
-    const tags = ["BUTTON","A","LABEL","SPAN","OPTION","H1","H2","H3","H4","P","DIV"];
-    if (!tags.includes(el.tagName)) return;
-
-    const text = norm(el.textContent);
-    if (!text || text.length > 140) return;
-
-    const translated = translateTextValue(text, toEs);
-    if (translated !== text) {
-      if (el.children.length === 0) {
-        el.textContent = translated;
-      } else {
-        let did = false;
-        el.childNodes.forEach(node => {
-          if (node.nodeType === 3 && norm(node.textContent)) {
-            const newVal = translateTextValue(node.textContent, toEs);
-            if (newVal !== node.textContent) {
-              node.textContent = newVal + (node.textContent.endsWith(" ") ? " " : "");
-              did = true;
-            }
-          }
-        });
-      }
+      if (esToEn[t]) el.textContent = esToEn[t];
+      else if (t.indexOf('Plan Gratis') !== -1) el.textContent = t.replace('Plan Gratis','Free Plan');
+      else if (t.indexOf('puntos este mes') !== -1) el.textContent = t.replace('puntos este mes','points this month');
+      else if (t.indexOf('completo') !== -1) el.textContent = t.replace('completo','complete');
     }
   }
-
-  function translatePlaceholders(toEs){
-    document.querySelectorAll("input[placeholder], textarea[placeholder]").forEach(el => {
-      const current = el.getAttribute("placeholder") || "";
-      const clean = norm(current);
-      if (!clean) return;
-
-      if (!el.getAttribute("data-ft-placeholder-en")) {
-        const en = reverseMap[clean] || Object.keys(placeholders).find(k => norm(placeholders[k]) === clean) || clean;
-        el.setAttribute("data-ft-placeholder-en", en);
-      }
-
-      const en = el.getAttribute("data-ft-placeholder-en");
-      if (toEs) {
-        el.setAttribute("placeholder", placeholders[en] || phraseMap[en] || en);
-      } else {
-        el.setAttribute("placeholder", en);
-      }
-    });
-  }
-
-  function translateOptions(toEs){
-    document.querySelectorAll("option").forEach(opt => {
-      if (!opt.getAttribute("data-ft-option-en")) {
-        const clean = norm(opt.textContent);
-        const en = reverseMap[clean] || clean;
-        opt.setAttribute("data-ft-option-en", en);
-      }
-      const en = opt.getAttribute("data-ft-option-en");
-      opt.textContent = toEs ? (phraseMap[en] || en) : en;
-    });
-  }
-
-  window.fintrailFullTranslationQA = function(){
-    const toEs = isSpanish();
-
-    // Buttons, labels, menu buttons, pills, small cards, modal fields.
-    document.querySelectorAll("button, a, label, span, option, .profile-menu-btn, .sched-tab-btn, .guide-tab-btn, .filter-btn, .method-btn, .script-tab-btn, .cal-view-btn, .fm-visible-card h3, .fm-visible-card p, .fm-visible-badge, .fm-profile-badge, .fm-profile-feedback-btn, .profile-plan-badge, .ab-plan").forEach(el => {
-      translateDirectElement(el, toEs);
-    });
-
-    translatePlaceholders(toEs);
-    translateOptions(toEs);
-
-    // Known dynamic areas that rebuild themselves.
-    if (typeof updateFoundingMemberUI === "function") updateFoundingMemberUI();
-    if (typeof applyFoundingFeedbackLanguage === "function") applyFoundingFeedbackLanguage();
-
-    // Account status line, e.g. "Name · Free Plan".
-    const ab = document.getElementById("ab-status");
-    if (ab) ab.textContent = translateTextValue(ab.textContent, toEs);
-
-    const planBadge = document.getElementById("profile-plan-badge");
-    if (planBadge) planBadge.textContent = translateTextValue(planBadge.textContent, toEs);
+  window.fintrailSafeSpanishCleanupV4 = function(){
+    try {
+      var roots = [];
+      var p = document.getElementById('tab-profile');
+      var r = document.querySelector('.report-shell');
+      if (p) roots.push(p);
+      if (r) roots.push(r);
+      roots.forEach(function(root){
+        root.querySelectorAll('button,a,label,span,h1,h2,h3,h4,p,option').forEach(ftSwap);
+      });
+    } catch(e) { console.log('Spanish cleanup skipped:', e.message); }
   };
-
-  const wrap = function(){
-    const original = window.applyLanguage;
-    if (typeof original === "function" && !original.__fullTranslationQAPatch) {
-      window.applyLanguage = function(){
-        const result = original.apply(this, arguments);
-        setTimeout(window.fintrailFullTranslationQA, 0);
-        setTimeout(window.fintrailFullTranslationQA, 250);
-        setTimeout(window.fintrailFullTranslationQA, 900);
-        return result;
-      };
-      window.applyLanguage.__fullTranslationQAPatch = true;
-    }
-  };
-
-  wrap();
-  window.addEventListener("load", function(){
-    wrap();
-    setTimeout(window.fintrailFullTranslationQA, 900);
-    setTimeout(window.fintrailFullTranslationQA, 2400);
+  window.addEventListener('load', function(){
+    setTimeout(window.fintrailSafeSpanishCleanupV4, 1200);
+    setTimeout(window.fintrailSafeSpanishCleanupV4, 2500);
   });
-
-  // Re-apply after dynamic tab rendering/clicks.
-  document.addEventListener("click", function(){
-    setTimeout(window.fintrailFullTranslationQA, 120);
-    setTimeout(window.fintrailFullTranslationQA, 600);
+  document.addEventListener('click', function(){
+    setTimeout(window.fintrailSafeSpanishCleanupV4, 200);
+    setTimeout(window.fintrailSafeSpanishCleanupV4, 800);
   });
 })();
-
 </script>
+
 </body>
 </html>
