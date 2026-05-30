@@ -11189,5 +11189,163 @@ window.addEventListener('load', function(){
 })();
 </script>
 
+
+<script>
+/* === DEBT PAYOFF PLANNER SPANISH FIX === */
+(function(){
+  var debtPlanTimer = null;
+
+  function isSpanish(){
+    try { return currentLang === 'es'; } catch(e) { return false; }
+  }
+
+  function replaceAllSafe(text, from, to){
+    return String(text || '').split(from).join(to);
+  }
+
+  function translateDebtPlanText(value){
+    var text = String(value || '');
+    if (!text.trim()) return text;
+
+    if (isSpanish()) {
+      text = replaceAllSafe(text, 'Save PDF', 'Guardar PDF');
+      text = replaceAllSafe(text, 'Avalanche Method:', 'Método Avalancha:');
+      text = replaceAllSafe(text, 'Pay minimums on all debts, then put ALL extra money toward the highest interest rate debt first. Mathematically saves the most money in interest.', 'Paga los mínimos en todas las deudas y luego aplica TODO el dinero extra a la deuda con la tasa de interés más alta primero. Matemáticamente ahorra más dinero en intereses.');
+      text = replaceAllSafe(text, 'This extra amount gets focused on one debt at a time', 'Este monto extra se enfoca en una deuda a la vez');
+      text = replaceAllSafe(text, '+ Add a Debt', '+ Agregar Deuda');
+      text = replaceAllSafe(text, 'Add a Debt', 'Agregar Deuda');
+      text = replaceAllSafe(text, 'e.g. Visa Card', 'ej. Tarjeta Visa');
+      text = replaceAllSafe(text, 'Focus', 'Prioridad');
+      text = replaceAllSafe(text, 'Edit', 'Editar');
+      text = replaceAllSafe(text, "THIS MONTH'S PAYMENT PLAN", 'PLAN DE PAGO DE ESTE MES');
+      text = replaceAllSafe(text, 'This Month\'s Payment Plan', 'Plan de Pago de Este Mes');
+      text = replaceAllSafe(text, 'Payment Plan', 'Plan de Pago');
+      text = replaceAllSafe(text, 'Snowball Method:', 'Método Bola de Nieve:');
+      text = replaceAllSafe(text, 'Pay minimums on all debts, then put ALL extra money toward the smallest balance debt first. Builds quick wins and motivation.', 'Paga los mínimos en todas las deudas y luego aplica TODO el dinero extra a la deuda con el saldo más pequeño primero. Crea victorias rápidas y motivación.');
+      text = replaceAllSafe(text, 'Avalanche — Save More', 'Avalancha — Ahorra Más');
+      text = replaceAllSafe(text, 'Snowball — Quick Wins', 'Bola de Nieve — Victorias Rápidas');
+      text = replaceAllSafe(text, 'Min ', 'Mín ');
+      text = replaceAllSafe(text, 'APR', 'TNA');
+      text = replaceAllSafe(text, 'mo', 'mes');
+      text = replaceAllSafe(text, 'Minimum Payment', 'Pago Mínimo');
+      text = replaceAllSafe(text, 'Extra Payment', 'Pago Extra');
+      text = replaceAllSafe(text, 'Total Interest', 'Interés Total');
+      text = replaceAllSafe(text, 'Payoff Time', 'Tiempo para Pagar');
+      text = replaceAllSafe(text, 'Total Paid', 'Total Pagado');
+      text = replaceAllSafe(text, 'You will pay off', 'Pagarás');
+      text = replaceAllSafe(text, 'in', 'en');
+      text = replaceAllSafe(text, 'months', 'meses');
+      text = replaceAllSafe(text, 'month', 'mes');
+      text = replaceAllSafe(text, 'Remaining Balance', 'Saldo Restante');
+      text = replaceAllSafe(text, 'Highest Interest First', 'Interés Más Alto Primero');
+      text = replaceAllSafe(text, 'Smallest Balance First', 'Saldo Más Pequeño Primero');
+    } else {
+      text = replaceAllSafe(text, 'Guardar PDF', 'Save PDF');
+      text = replaceAllSafe(text, 'Método Avalancha:', 'Avalanche Method:');
+      text = replaceAllSafe(text, 'Paga los mínimos en todas las deudas y luego aplica TODO el dinero extra a la deuda con la tasa de interés más alta primero. Matemáticamente ahorra más dinero en intereses.', 'Pay minimums on all debts, then put ALL extra money toward the highest interest rate debt first. Mathematically saves the most money in interest.');
+      text = replaceAllSafe(text, 'Este monto extra se enfoca en una deuda a la vez', 'This extra amount gets focused on one debt at a time');
+      text = replaceAllSafe(text, '+ Agregar Deuda', '+ Add a Debt');
+      text = replaceAllSafe(text, 'Agregar Deuda', 'Add a Debt');
+      text = replaceAllSafe(text, 'ej. Tarjeta Visa', 'e.g. Visa Card');
+      text = replaceAllSafe(text, 'Prioridad', 'Focus');
+      text = replaceAllSafe(text, 'Editar', 'Edit');
+      text = replaceAllSafe(text, 'PLAN DE PAGO DE ESTE MES', "THIS MONTH'S PAYMENT PLAN");
+      text = replaceAllSafe(text, 'Plan de Pago de Este Mes', "This Month's Payment Plan");
+      text = replaceAllSafe(text, 'Plan de Pago', 'Payment Plan');
+      text = replaceAllSafe(text, 'Método Bola de Nieve:', 'Snowball Method:');
+      text = replaceAllSafe(text, 'Paga los mínimos en todas las deudas y luego aplica TODO el dinero extra a la deuda con el saldo más pequeño primero. Crea victorias rápidas y motivación.', 'Pay minimums on all debts, then put ALL extra money toward the smallest balance debt first. Builds quick wins and motivation.');
+      text = replaceAllSafe(text, 'Avalancha — Ahorra Más', 'Avalanche — Save More');
+      text = replaceAllSafe(text, 'Bola de Nieve — Victorias Rápidas', 'Snowball — Quick Wins');
+      text = replaceAllSafe(text, 'Mín ', 'Min ');
+      text = replaceAllSafe(text, 'TNA', 'APR');
+      text = replaceAllSafe(text, 'mes', 'mo');
+      text = replaceAllSafe(text, 'Pago Mínimo', 'Minimum Payment');
+      text = replaceAllSafe(text, 'Pago Extra', 'Extra Payment');
+      text = replaceAllSafe(text, 'Interés Total', 'Total Interest');
+      text = replaceAllSafe(text, 'Tiempo para Pagar', 'Payoff Time');
+      text = replaceAllSafe(text, 'Total Pagado', 'Total Paid');
+      text = replaceAllSafe(text, 'Pagarás', 'You will pay off');
+      text = replaceAllSafe(text, 'Saldo Restante', 'Remaining Balance');
+      text = replaceAllSafe(text, 'Interés Más Alto Primero', 'Highest Interest First');
+      text = replaceAllSafe(text, 'Saldo Más Pequeño Primero', 'Smallest Balance First');
+    }
+
+    return text;
+  }
+
+  function translateTextNode(node){
+    if (!node || node.nodeType !== 3) return;
+    var next = translateDebtPlanText(node.textContent);
+    if (next !== node.textContent) node.textContent = next;
+  }
+
+  function translateElement(el){
+    if (!el) return;
+
+    if (el.placeholder) {
+      var nextPh = translateDebtPlanText(el.placeholder);
+      if (nextPh !== el.placeholder) el.placeholder = nextPh;
+    }
+
+    Array.prototype.forEach.call(el.childNodes || [], function(node){
+      if (node.nodeType === 3) translateTextNode(node);
+      else if (node.nodeType === 1 && node.tagName !== 'SCRIPT' && node.tagName !== 'STYLE') translateElement(node);
+    });
+  }
+
+  function applyDebtPlanSpanishFix(){
+    try {
+      var root = document.getElementById('tab-debtplan');
+      if (!root) return;
+
+      root.querySelectorAll('[data-en][data-es]').forEach(function(el){
+        var html = isSpanish() ? el.getAttribute('data-es-html') : el.getAttribute('data-en-html');
+        var txt = isSpanish() ? el.getAttribute('data-es') : el.getAttribute('data-en');
+        if (html) el.innerHTML = html;
+        else if (txt) el.textContent = txt;
+      });
+
+      translateElement(root);
+
+      root.querySelectorAll('input[placeholder]').forEach(function(input){
+        input.placeholder = translateDebtPlanText(input.placeholder);
+      });
+    } catch(e) {
+      console.log('Debt payoff Spanish fix skipped:', e.message);
+    }
+  }
+
+  function scheduleDebtPlanFix(){
+    clearTimeout(debtPlanTimer);
+    debtPlanTimer = setTimeout(applyDebtPlanSpanishFix, 180);
+  }
+
+  window.fintrailDebtPayoffSpanishFix = scheduleDebtPlanFix;
+
+  window.addEventListener('load', function(){
+    setTimeout(applyDebtPlanSpanishFix, 900);
+    setTimeout(applyDebtPlanSpanishFix, 1800);
+  });
+
+  document.addEventListener('click', function(e){
+    var target = e.target;
+    if (!target) return;
+    var relevant = (target.closest && target.closest('#tab-debtplan')) ||
+      String(target.textContent || '').indexOf('English') !== -1 ||
+      String(target.textContent || '').indexOf('Español') !== -1 ||
+      String(target.textContent || '').indexOf('Spanish') !== -1 ||
+      String(target.textContent || '').indexOf('EN') === 0 ||
+      String(target.textContent || '').indexOf('ES') === 0;
+    if (relevant) scheduleDebtPlanFix();
+  });
+
+  document.addEventListener('input', function(e){
+    if (e.target && e.target.closest && e.target.closest('#tab-debtplan')) {
+      scheduleDebtPlanFix();
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
