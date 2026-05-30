@@ -12100,5 +12100,177 @@ window.addEventListener('load', function(){
 })();
 </script>
 
+
+<script>
+/* === BILL SCHEDULE DUE DATE 31 + PLACEHOLDER FIX === */
+(function(){
+  var bill31Timer = null;
+
+  function isSpanish(){
+    try { return currentLang === 'es'; } catch(e) { return false; }
+  }
+
+  function enDay(n){
+    n = Number(n);
+    var suffix = 'th';
+    if (n % 100 < 11 || n % 100 > 13) {
+      if (n % 10 === 1) suffix = 'st';
+      else if (n % 10 === 2) suffix = 'nd';
+      else if (n % 10 === 3) suffix = 'rd';
+    }
+    return n + suffix + ' of each month';
+  }
+
+  function esDay(n){
+    n = Number(n);
+    return (n === 1 ? '1ro' : String(n)) + ' de cada mes';
+  }
+
+  function parseDay(v){
+    var s = String(v || '').trim();
+    var m = s.match(/^(\d{1,2})(?:st|nd|rd|th|ro)?\s+(?:of each month|de cada mes)$/i);
+    if (m) return Number(m[1]);
+    m = s.match(/^(\d{1,2})$/);
+    if (m) return Number(m[1]);
+    return null;
+  }
+
+  function translateText(value){
+    var text = String(value || '');
+
+    if (isSpanish()) {
+      text = text.replace(/How much you pay each paychec?k?/gi, 'Cuánto pagas en cada período de pago');
+      text = text.replace(/How much you pay each payday/gi, 'Cuánto pagas en cada período de pago');
+      text = text.replace(/Enter less than the full amount to split\s*across paychecks/gi, 'Ingresa menos que el monto total para dividirlo entre períodos de pago');
+      text = text.replace(/Enter less than the full amount to split/gi, 'Ingresa menos que el monto total para dividirlo entre períodos de pago');
+      text = text.replace(/e\.g\. Rent, Netflix, Car Payment/gi, 'ej. Renta, Netflix, Pago del Auto');
+      text = text.replace(/Due (\d{1,2})(st|nd|rd|th)/gi, 'Vence el $1');
+      text = text.replace(/\/paycheck/gi, '/período');
+    } else {
+      text = text.replace(/Cuánto pagas en cada período de pago/gi, 'How much you pay each paycheck');
+      text = text.replace(/Ingresa menos que el monto total para dividirlo entre períodos de pago/gi, 'Enter less than the full amount to split across paychecks');
+      text = text.replace(/ej\. Renta, Netflix, Pago del Auto/gi, 'e.g. Rent, Netflix, Car Payment');
+      text = text.replace(/Vence el (\d{1,2})/gi, function(_, d){
+        return 'Due ' + enDay(d).split(' ')[0];
+      });
+      text = text.replace(/\/período/gi, '/paycheck');
+    }
+
+    return text;
+  }
+
+  function looksLikeDueDateSelect(select){
+    if (!select) return false;
+    var combined = (
+      String(select.id || '') + ' ' +
+      String(select.name || '') + ' ' +
+      String(select.getAttribute('aria-label') || '') + ' ' +
+      String(select.closest('.form-group') ? select.closest('.form-group').textContent : '')
+    ).toLowerCase();
+
+    if (combined.indexOf('vencimiento') !== -1 || combined.indexOf('due') !== -1) return true;
+
+    return Array.prototype.some.call(select.options || [], function(opt){
+      return /of each month|de cada mes/i.test(String(opt.textContent || opt.value || ''));
+    });
+  }
+
+  function rebuildDueDateSelect(select){
+    var selectedDay = parseDay(select.value);
+    if (!selectedDay && select.selectedIndex >= 0 && select.options[select.selectedIndex]) {
+      selectedDay = parseDay(select.options[select.selectedIndex].textContent) || parseDay(select.options[select.selectedIndex].value);
+    }
+    if (!selectedDay || selectedDay < 1 || selectedDay > 31) selectedDay = 1;
+
+    select.innerHTML = '';
+    for (var i = 1; i <= 31; i++) {
+      var opt = document.createElement('option');
+      opt.value = isSpanish() ? esDay(i) : enDay(i);
+      opt.textContent = isSpanish() ? esDay(i) : enDay(i);
+      select.appendChild(opt);
+    }
+
+    select.value = isSpanish() ? esDay(selectedDay) : enDay(selectedDay);
+  }
+
+  function walk(node){
+    if (!node) return;
+
+    if (node.nodeType === 3) {
+      var next = translateText(node.textContent);
+      if (next !== node.textContent) node.textContent = next;
+      return;
+    }
+
+    if (node.nodeType !== 1) return;
+    if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE') return;
+
+    if (node.placeholder) {
+      var ph = translateText(node.placeholder);
+      if (ph !== node.placeholder) node.placeholder = ph;
+    }
+
+    Array.prototype.forEach.call(node.childNodes || [], walk);
+  }
+
+  function applyBillScheduleDue31PlaceholderFix(){
+    try {
+      var roots = [
+        document.getElementById('bsub-schedule'),
+        document.getElementById('tab-budget')
+      ].filter(Boolean);
+
+      roots.forEach(function(root){
+        root.querySelectorAll('select').forEach(function(select){
+          if (looksLikeDueDateSelect(select)) rebuildDueDateSelect(select);
+        });
+
+        root.querySelectorAll('input, textarea').forEach(function(input){
+          if (input.placeholder) input.placeholder = translateText(input.placeholder);
+        });
+
+        walk(root);
+      });
+    } catch(e) {
+      console.log('Bill schedule due 31 placeholder fix skipped:', e.message);
+    }
+  }
+
+  function scheduleBillScheduleDue31PlaceholderFix(){
+    clearTimeout(bill31Timer);
+    bill31Timer = setTimeout(applyBillScheduleDue31PlaceholderFix, 120);
+  }
+
+  window.fintrailBillScheduleDue31PlaceholderFix = scheduleBillScheduleDue31PlaceholderFix;
+
+  window.addEventListener('load', function(){
+    setTimeout(applyBillScheduleDue31PlaceholderFix, 900);
+    setTimeout(applyBillScheduleDue31PlaceholderFix, 1800);
+  });
+
+  document.addEventListener('click', function(e){
+    var t = e.target;
+    if (!t) return;
+    if (
+      (t.closest && (t.closest('#bsub-schedule') || t.closest('#tab-budget'))) ||
+      String(t.textContent || '').indexOf('English') !== -1 ||
+      String(t.textContent || '').indexOf('Español') !== -1 ||
+      String(t.textContent || '').indexOf('Spanish') !== -1 ||
+      String(t.textContent || '').indexOf('EN') === 0 ||
+      String(t.textContent || '').indexOf('ES') === 0
+    ) {
+      scheduleBillScheduleDue31PlaceholderFix();
+      setTimeout(applyBillScheduleDue31PlaceholderFix, 500);
+    }
+  });
+
+  document.addEventListener('change', function(e){
+    if (e.target && e.target.closest && e.target.closest('#bsub-schedule')) {
+      scheduleBillScheduleDue31PlaceholderFix();
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
