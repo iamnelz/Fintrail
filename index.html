@@ -2800,6 +2800,189 @@
   .onboarding-title { font-size:1.18rem; }
 }
 
+
+/* === FOUNDING MEMBER + FEEDBACK MODAL === */
+.fm-feedback-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(26,26,46,0.78);
+  backdrop-filter: blur(8px);
+  overflow-y: auto;
+}
+.fm-feedback-overlay.visible { display: flex; }
+.fm-feedback-card {
+  width: 100%;
+  max-width: 520px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 28px 80px rgba(0,0,0,0.45);
+  overflow: hidden;
+  animation: slideUp 0.25s ease;
+}
+.fm-feedback-top {
+  background: linear-gradient(135deg, #1a1a2e, #2d1b4e);
+  padding: 1.45rem 1.35rem;
+  color: #fff;
+  position: relative;
+}
+.fm-feedback-close {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  cursor: pointer;
+}
+.fm-feedback-top h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;
+  margin-bottom: 0.35rem;
+  color: #fff;
+  padding-right: 2rem;
+}
+.fm-feedback-top p {
+  font-size: 0.86rem;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.55;
+}
+.fm-feedback-body { padding: 1.35rem; }
+.fm-badge-large {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: linear-gradient(135deg,#b8860b,#ffd166);
+  color: #1a1a0f;
+  font-size: 0.75rem;
+  font-weight: 900;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.fm-rating-row {
+  display: flex;
+  gap: 0.35rem;
+  margin: 0.5rem 0 1rem;
+}
+.fm-star {
+  border: 1.5px solid var(--border);
+  background: var(--surface2);
+  color: var(--muted);
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all 0.15s;
+}
+.fm-star.active {
+  background: rgba(255,209,102,0.22);
+  border-color: #ffd166;
+  color: #b8860b;
+}
+.fm-field { margin-bottom: 1rem; }
+.fm-field label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.4rem;
+}
+.fm-field select,
+.fm-field textarea {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.75rem 0.85rem;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.9rem;
+  color: var(--text);
+  outline: none;
+}
+.fm-field textarea { min-height: 110px; resize: vertical; line-height: 1.55; }
+.fm-field select:focus,
+.fm-field textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--glow-red);
+}
+.fm-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+}
+.fm-btn {
+  min-height: 46px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border);
+  font-family: 'Sora', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+.fm-btn.primary {
+  background: linear-gradient(135deg,var(--accent),#d94444);
+  border: none;
+  color: #fff;
+}
+.fm-btn.secondary { background: none; color: var(--text-soft); }
+.fm-status {
+  display: none;
+  margin-top: 0.85rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+.fm-status.success { display: block; background: rgba(6,214,160,0.10); color: var(--income-color); }
+.fm-status.error { display: block; background: rgba(240,85,85,0.10); color: var(--danger); }
+.fm-profile-badge {
+  display:inline-flex;
+  align-items:center;
+  gap:0.35rem;
+  margin-top:0.55rem;
+  background:linear-gradient(135deg,#1a1a2e,#2d1b4e);
+  color:#ffd166;
+  border:1px solid rgba(255,209,102,0.45);
+  border-radius:999px;
+  padding:0.25rem 0.7rem;
+  font-size:0.68rem;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:0.04em;
+}
+.fm-profile-feedback-btn {
+  display:block;
+  margin:0.65rem auto 0;
+  background:none;
+  border:1.5px solid var(--border);
+  color:var(--text-soft);
+  border-radius:8px;
+  padding:0.42rem 0.75rem;
+  font-family:'Sora',sans-serif;
+  font-size:0.74rem;
+  font-weight:800;
+  cursor:pointer;
+}
+.fm-profile-feedback-btn:hover { border-color:var(--accent); color:var(--accent); }
+@media(max-width:520px){
+  .fm-actions { grid-template-columns:1fr; }
+  .fm-feedback-card { border-radius:18px; }
+}
+
 </style>
 </head>
 <body>
@@ -2895,6 +3078,57 @@
     </div>
   </div>
 </div>
+
+
+<!-- FOUNDING MEMBER FEEDBACK MODAL -->
+<div id="fm-feedback-overlay" class="fm-feedback-overlay" aria-modal="true" role="dialog">
+  <div class="fm-feedback-card">
+    <div class="fm-feedback-top">
+      <button class="fm-feedback-close" onclick="closeFoundingFeedback()" aria-label="Close">×</button>
+      <h2 id="fm-modal-title">🎉 You’re a Founding Member!</h2>
+      <p id="fm-modal-subtitle">Your feedback helps shape the future of Fintrail Pro.</p>
+    </div>
+    <div class="fm-feedback-body">
+      <div class="fm-badge-large" id="fm-badge-large">⭐ Founding Member</div>
+
+      <div class="fm-field">
+        <label id="fm-rating-label">How would you rate your experience so far?</label>
+        <div class="fm-rating-row" id="fm-rating-row">
+          <button type="button" class="fm-star" onclick="setFoundingRating(1)">★</button>
+          <button type="button" class="fm-star" onclick="setFoundingRating(2)">★</button>
+          <button type="button" class="fm-star" onclick="setFoundingRating(3)">★</button>
+          <button type="button" class="fm-star" onclick="setFoundingRating(4)">★</button>
+          <button type="button" class="fm-star" onclick="setFoundingRating(5)">★</button>
+        </div>
+      </div>
+
+      <div class="fm-field">
+        <label id="fm-feature-label">What feature would you like to see next?</label>
+        <select id="fm-feature-request">
+          <option value="">Choose one</option>
+          <option value="Budgeting Tools">Budgeting Tools</option>
+          <option value="Debt Payoff Planning">Debt Payoff Planning</option>
+          <option value="Credit Improvement">Credit Improvement</option>
+          <option value="Savings Goals">Savings Goals</option>
+          <option value="Investing Tools">Investing Tools</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="fm-field">
+        <label id="fm-feedback-label">What can we improve?</label>
+        <textarea id="fm-feedback-text" placeholder="Share your ideas, suggestions, bugs, or feedback..."></textarea>
+      </div>
+
+      <div class="fm-actions">
+        <button class="fm-btn secondary" id="fm-later-btn" onclick="closeFoundingFeedback()">Maybe Later</button>
+        <button class="fm-btn primary" id="fm-submit-btn" onclick="submitFoundingFeedback()">Submit Feedback</button>
+      </div>
+      <div id="fm-status" class="fm-status"></div>
+    </div>
+  </div>
+</div>
+
 
 <!-- SETUP BANNER (shown after first signup) -->
 <div class="setup-banner" id="setup-banner" style="display:none">
@@ -4298,6 +4532,7 @@
           <div class="profile-name" id="profile-display-name">User</div>
           <div class="profile-email" id="profile-display-email">Loading...</div>
           <span class="profile-plan-badge" id="profile-plan-badge">Free Plan</span>
+          <div id="fm-profile-area" style="display:none"></div>
         </div>
         <div class="profile-sidebar card" style="padding:0.75rem">
           <button class="profile-menu-btn active" onclick="switchProfilePanel('account', this)"><span class="pmb-icon">👤</span> Account Info</button>
@@ -5183,6 +5418,7 @@
     if (mobileUserName) mobileUserName.textContent = name;
     if (mobileUserPlan) mobileUserPlan.textContent = user.email;
     if (mobilePlanBadge) mobilePlanBadge.textContent = isPro ? '⭐ PRO' : 'FREE';
+    if (typeof updateFoundingMemberUI === 'function') updateFoundingMemberUI();
   }
 
   // SIGN IN
@@ -8694,7 +8930,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       getStarted: 'Get Started',
       steps: [
         {
-          title: 'Take control of your finances with Fintrail',
+          title: 'Take control of your finances with Fintrail Pro',
           subtitle: 'Track your financial health, plan goals, and make smarter money decisions in one place.'
         },
         {
@@ -8722,8 +8958,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
           subtitle: 'Start with the tools that match your goal.'
         },
         {
-          title: 'Welcome to Fintrail!',
-          subtitle: 'You’re one of our earliest users. Help shape what Fintrail becomes.'
+          title: 'Welcome to Fintrail Pro!',
+          subtitle: 'You’re one of our earliest users. Help shape what Fintrail Pro becomes.'
         }
       ],
       personas: [
@@ -8740,7 +8976,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       scoreMsg: 'Keep building positive habits to improve your financial health.',
       strength1: 'Positive savings balance', strength2: 'Financial awareness started', opp1: 'Increase emergency fund', opp2: 'Lower debt-to-income ratio',
       tools: { savings:['🎯','Savings Goal Tracker','Track your progress and stay motivated'], budget:['🧾','Budget Planner','Build a budget that works for you'], invest:['📈','Investment Calculator','See how your money can grow'], debt:['💳','Debt Payoff Planner','Compare payoff strategies'], credit:['📊','Credit Score Simulator','See what actions may change your score'], resources:['🔍','Resources','Find helpful financial tools and guides'] },
-      founderTitle:'Founding Member Benefits', founderBenefits:['Lifetime Founding Member badge','Early access to new features','Help shape the future of Fintrail'], founderBtn:'Become a Founding Member', maybeLater:'Maybe later',
+      founderTitle:'Founding Member Benefits', founderBenefits:['Lifetime Founding Member badge','Early access to new features','Help shape the future of Fintrail Pro'], founderBtn:'Become a Founding Member', maybeLater:'Maybe later',
       sources:['Friend or family','Social media','Online search','Referral link','Other'], choose:'Choose one to continue'
     },
     es: {
@@ -8781,7 +9017,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
         },
         {
           title: '¡Bienvenido a Fintrail!',
-          subtitle: 'Eres uno de nuestros primeros usuarios. Ayuda a construir el futuro de Fintrail.'
+          subtitle: 'Eres uno de nuestros primeros usuarios. Ayuda a construir el futuro de Fintrail Pro.'
         }
       ],
       personas: [
@@ -8798,7 +9034,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       scoreMsg: 'Sigue creando hábitos positivos para mejorar tu salud financiera.',
       strength1: 'Saldo positivo de ahorros', strength2: 'Ya empezaste a organizarte', opp1: 'Aumentar el fondo de emergencia', opp2: 'Reducir la relación deuda-ingresos',
       tools: { savings:['🎯','Rastreador de Metas de Ahorro','Rastrea tu progreso y mantente motivado/a'], budget:['🧾','Planificador de Presupuesto','Crea un presupuesto que funcione para ti'], invest:['📈','Calculadora de Inversión','Mira cómo tu dinero puede crecer'], debt:['💳','Planificador de Deudas','Compara estrategias de pago'], credit:['📊','Simulador de Crédito','Mira qué acciones podrían cambiar tu puntaje'], resources:['🔍','Recursos','Encuentra herramientas y guías financieras'] },
-      founderTitle:'Beneficios de Miembro Fundador', founderBenefits:['Insignia permanente de Miembro Fundador','Acceso anticipado a nuevas funciones','Ayuda a construir el futuro de Fintrail'], founderBtn:'Convertirme en Miembro Fundador', maybeLater:'Tal vez después',
+      founderTitle:'Beneficios de Miembro Fundador', founderBenefits:['Insignia permanente de Miembro Fundador','Acceso anticipado a nuevas funciones','Ayuda a construir el futuro de Fintrail Pro'], founderBtn:'Convertirme en Miembro Fundador', maybeLater:'Tal vez después',
       sources:['Amigo o familiar','Redes sociales','Búsqueda en internet','Enlace de referido','Otro'], choose:'Elige una opción para continuar'
     }
   };
@@ -8807,9 +9043,12 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const uid = currentUser?.id || currentUser?.email || 'demo';
     return 'fintrail_onboarding_complete_' + uid;
   }
-  function hasCompletedOnboarding() { return safeGet(getOnboardingKey()) === 'true'; }
+  function hasCompletedOnboarding() {
+    return safeGet(getOnboardingKey()) === 'true' || (typeof isFintrailOnboardingComplete === 'function' && isFintrailOnboardingComplete());
+  }
   function markOnboardingComplete() {
     safeSet(getOnboardingKey(), 'true');
+    if (typeof setFintrailOnboardingComplete === 'function') setFintrailOnboardingComplete();
     safeSet('fintrail_onboarding_answers_' + (currentUser?.id || currentUser?.email || 'demo'), JSON.stringify(onboardingState));
   }
   
@@ -8839,9 +9078,10 @@ function isFintrailOnboardingComplete(){
 
 function setFintrailOnboardingComplete(){
   try {
-    localStorage.setItem(getFintrailOnboardingKey(), 'true');
-    setFintrailOnboardingComplete();
-    setFintrailOnboardingComplete();
+    const key = getFintrailOnboardingKey();
+    localStorage.setItem(key, 'true');
+    localStorage.setItem('fintrail_onboarding_complete', 'true');
+    localStorage.setItem('fintrail_pro_onboarding_complete', 'true');
   } catch(e) {}
 }
 
@@ -8914,8 +9154,7 @@ function showOnboardingIfNeeded() {
       onboardingState.step++;
       renderOnboarding();
     } else {
-      markOnboardingComplete();
-      closeOnboarding();
+      becomeFoundingMember();
     }
   }
   function renderOnboarding() {
@@ -9096,6 +9335,8 @@ function showOnboardingIfNeeded() {
     if (langToggle) { langToggle.textContent = isEs ? 'ES' : 'EN'; langToggle.style.background = isEs ? 'rgba(240,85,85,0.1)' : 'none'; langToggle.style.color = isEs ? 'var(--accent)' : 'var(--text-soft)'; langToggle.style.borderColor = isEs ? 'var(--accent)' : 'var(--border)'; }
 
     // Mobile lang button
+    if (typeof updateFoundingMemberUI === 'function') updateFoundingMemberUI();
+    if (typeof applyFoundingFeedbackLanguage === 'function') applyFoundingFeedbackLanguage();
     const mobileLangBtn = document.getElementById('mobile-lang-btn');
     if (mobileLangBtn) { mobileLangBtn.textContent = isEs ? 'ES' : 'EN'; mobileLangBtn.style.color = isEs ? 'var(--accent)' : 'var(--muted)'; mobileLangBtn.style.borderColor = isEs ? 'var(--accent)' : 'var(--border)'; }
 
