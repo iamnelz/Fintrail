@@ -10717,5 +10717,76 @@ window.addEventListener('load', function(){
 })();
 </script>
 
+
+<script>
+/* === AI ADVISOR SPANISH TEXT FIX === */
+(function(){
+  function isSpanish(){
+    try { return currentLang === 'es'; } catch(e) { return false; }
+  }
+
+  function applyAIAdvisorSpanishFix(){
+    try {
+      var aiRoot = document.getElementById('tab-ai');
+      if (!aiRoot) return;
+
+      var input = aiRoot.querySelector('.chat-input') || aiRoot.querySelector('input[placeholder], textarea[placeholder]');
+      if (input) {
+        input.setAttribute(
+          'placeholder',
+          isSpanish() ? 'Haz una pregunta financiera...' : 'Ask a finance question...'
+        );
+      }
+
+      var headerSub = aiRoot.querySelector('.chat-header-info p');
+      if (headerSub) {
+        headerSub.innerHTML = isSpanish()
+          ? '<span class="online-dot"></span>En línea — pregúntame cualquier cosa sobre finanzas'
+          : '<span class="online-dot"></span>Online — ask me anything about finances';
+      }
+
+      aiRoot.querySelectorAll('button, p, span, h3, div').forEach(function(el){
+        if (!el || !el.textContent) return;
+        if (el.children && el.children.length > 0 && el.tagName !== 'BUTTON') return;
+
+        var t = String(el.textContent || '').replace(/\s+/g, ' ').trim();
+
+        if (isSpanish()) {
+          if (t === 'Online — ask me anything about finances') {
+            el.textContent = 'En línea — pregúntame cualquier cosa sobre finanzas';
+          } else if (t === 'Ask a finance question...') {
+            el.textContent = 'Haz una pregunta financiera...';
+          }
+        } else {
+          if (t === 'En línea — pregúntame cualquier cosa sobre finanzas') {
+            el.textContent = 'Online — ask me anything about finances';
+          } else if (t === 'Haz una pregunta financiera...') {
+            el.textContent = 'Ask a finance question...';
+          }
+        }
+      });
+    } catch(e) {
+      console.log('AI Advisor Spanish fix skipped:', e.message);
+    }
+  }
+
+  window.fintrailAIAdvisorSpanishFix = applyAIAdvisorSpanishFix;
+
+  window.addEventListener('load', function(){
+    setTimeout(applyAIAdvisorSpanishFix, 800);
+    setTimeout(applyAIAdvisorSpanishFix, 1800);
+  });
+
+  document.addEventListener('click', function(){
+    setTimeout(applyAIAdvisorSpanishFix, 120);
+    setTimeout(applyAIAdvisorSpanishFix, 500);
+  });
+
+  document.addEventListener('input', function(){
+    setTimeout(applyAIAdvisorSpanishFix, 120);
+  });
+})();
+</script>
+
 </body>
 </html>
