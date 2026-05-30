@@ -11062,15 +11062,21 @@ window.addEventListener('load', function(){
 </script>
 
 
+
+
+
 <script>
-/* === STREAKS LANGUAGE REFRESH FIX === */
+/* === STREAKS NO-BLINK SPANISH FIX === */
 (function(){
+  var streaksFixTimer = null;
+
   function isSpanish(){
     try { return currentLang === 'es'; } catch(e) { return false; }
   }
 
-  function translateActivityText(value){
+  function mapText(value){
     var text = String(value || '');
+    if (!text.trim()) return text;
 
     if (isSpanish()) {
       text = text.replace(/Active Streaks/g, 'Rachas Activas');
@@ -11087,11 +11093,9 @@ window.addEventListener('load', function(){
       text = text.replace(/Used DTI calculator/g, 'Usó la calculadora DTI');
       text = text.replace(/Updated health score/g, 'Actualizó el puntaje de salud');
       text = text.replace(/Total XP Earned/g, 'XP Total Ganado');
-      text = text.replace(/earned/g, 'logrados');
+      text = text.replace(/No activity yet — start using Fintrail to earn XP!/g, 'Aún no hay actividad — ¡comienza a usar Fintrail para ganar XP!');
       text = text.replace(/Login streak of (\d+) days!/g, '¡Racha de inicio de $1 días!');
       text = text.replace(/Budget streak of (\d+) days!/g, '¡Racha de presupuesto de $1 días!');
-      text = text.replace(/(\d+) day streak!/g, '¡Racha de $1 días!');
-      text = text.replace(/No activity yet — start using Fintrail to earn XP!/g, 'Aún no hay actividad — ¡comienza a usar Fintrail para ganar XP!');
       text = text.replace(/Level (\d+) · Just Getting Started/g, 'Nivel $1 · Apenas Comenzando');
       text = text.replace(/XP to Silver/g, 'XP para Plata');
       text = text.replace(/XP to Gold/g, 'XP para Oro');
@@ -11111,11 +11115,9 @@ window.addEventListener('load', function(){
       text = text.replace(/Usó la calculadora DTI/g, 'Used DTI calculator');
       text = text.replace(/Actualizó el puntaje de salud/g, 'Updated health score');
       text = text.replace(/XP Total Ganado/g, 'Total XP Earned');
-      text = text.replace(/logrados/g, 'earned');
+      text = text.replace(/Aún no hay actividad — ¡comienza a usar Fintrail para ganar XP!/g, 'No activity yet — start using Fintrail to earn XP!');
       text = text.replace(/¡Racha de inicio de (\d+) días!/g, 'Login streak of $1 days!');
       text = text.replace(/¡Racha de presupuesto de (\d+) días!/g, 'Budget streak of $1 days!');
-      text = text.replace(/¡Racha de (\d+) días!/g, '$1 day streak!');
-      text = text.replace(/Aún no hay actividad — ¡comienza a usar Fintrail para ganar XP!/g, 'No activity yet — start using Fintrail to earn XP!');
       text = text.replace(/Nivel (\d+) · Apenas Comenzando/g, 'Level $1 · Just Getting Started');
       text = text.replace(/XP para Plata/g, 'XP to Silver');
       text = text.replace(/XP para Oro/g, 'XP to Gold');
@@ -11125,130 +11127,64 @@ window.addEventListener('load', function(){
     return text;
   }
 
-  function applyDataTranslations(root){
-    if (!root) root = document;
-    root.querySelectorAll('[data-en][data-es]').forEach(function(el){
-      var next = isSpanish() ? el.getAttribute('data-es') : el.getAttribute('data-en');
-      if (!next) return;
-      if (el.hasAttribute('data-es-html') && el.hasAttribute('data-en-html')) {
-        el.innerHTML = isSpanish() ? el.getAttribute('data-es-html') : el.getAttribute('data-en-html');
-      } else {
-        el.textContent = next;
-      }
+  function translateTextNode(node){
+    if (!node || node.nodeType !== 3) return;
+    var next = mapText(node.textContent);
+    if (next !== node.textContent) node.textContent = next;
+  }
+
+  function translateChildren(el){
+    if (!el) return;
+    Array.prototype.forEach.call(el.childNodes, function(node){
+      if (node.nodeType === 3) translateTextNode(node);
+      else if (node.nodeType === 1 && node.tagName !== 'SCRIPT' && node.tagName !== 'STYLE') translateChildren(node);
     });
   }
 
-  function translateTextNodes(el){
-    if (!el) return;
-    if (el.nodeType === 3) {
-      el.textContent = translateActivityText(el.textContent);
-      return;
-    }
-    if (el.nodeType !== 1) return;
-    if (el.tagName === 'SCRIPT' || el.tagName === 'STYLE') return;
-    Array.prototype.forEach.call(el.childNodes, translateTextNodes);
-  }
-
-  function applyStreaksFix(){
+  function applyStreaksNoBlinkFix(){
     try {
       var root = document.getElementById('tab-streaks');
       if (!root) return;
 
-      applyDataTranslations(root);
-
-      var nodes = root.querySelectorAll(
-        'h2, h3, h4, p, span, div.activity-text, div.activity-item, .empty-state, #level-subtitle, #total-xp-label, #xp-next, #badges-count'
-      );
-
-      nodes.forEach(function(el){
-        if (!el) return;
-        translateTextNodes(el);
+      root.querySelectorAll('[data-en][data-es]').forEach(function(el){
+        var html = isSpanish() ? el.getAttribute('data-es-html') : el.getAttribute('data-en-html');
+        var txt = isSpanish() ? el.getAttribute('data-es') : el.getAttribute('data-en');
+        if (html) el.innerHTML = html;
+        else if (txt) el.textContent = txt;
       });
+
+      root.querySelectorAll(
+        'h2, h3, h4, p, span, .activity-text, .activity-item, .empty-state, #level-subtitle, #xp-next, #badges-count, .total-xp-label'
+      ).forEach(translateChildren);
     } catch(e) {
-      console.log('Streaks language refresh skipped:', e.message);
+      console.log('Streaks no-blink Spanish fix skipped:', e.message);
     }
   }
 
-  function refreshCurrentVisibleTab(){
-    try {
-      if (typeof applyLanguage === 'function') applyLanguage();
-
-      var visible = document.querySelector('.tab-section.visible');
-      var visibleId = visible ? visible.id : '';
-
-      if (visibleId === 'tab-streaks') {
-        if (typeof renderStreaks === 'function') renderStreaks();
-        if (typeof renderBadges === 'function') renderBadges();
-        if (typeof renderActivityFeed === 'function') renderActivityFeed();
-        if (typeof renderGamification === 'function') renderGamification();
-        setTimeout(applyStreaksFix, 50);
-        setTimeout(applyStreaksFix, 300);
-      }
-
-      if (visibleId === 'tab-profile' && typeof updateFoundingMemberUI === 'function') {
-        updateFoundingMemberUI();
-      }
-
-      if (visibleId === 'tab-ai' && typeof fintrailAIAdvisorSpanishFix === 'function') {
-        fintrailAIAdvisorSpanishFix();
-      }
-
-      if (visibleId === 'tab-report' && typeof renderMonthlyReport === 'function') {
-        renderMonthlyReport();
-      }
-
-      setTimeout(applyStreaksFix, 500);
-    } catch(e) {
-      console.log('Current tab refresh skipped:', e.message);
-    }
+  function scheduleStreaksFix(){
+    clearTimeout(streaksFixTimer);
+    streaksFixTimer = setTimeout(applyStreaksNoBlinkFix, 180);
   }
 
-  window.fintrailStreaksLanguageRefreshFix = applyStreaksFix;
-  window.fintrailRefreshCurrentLanguageView = refreshCurrentVisibleTab;
-
-  // Patch common language switch functions so the visible tab updates immediately.
-  function wrapLanguageFunction(name){
-    try {
-      var fn = window[name];
-      if (typeof fn === 'function' && !fn.__fintrailRefreshWrapped) {
-        var wrapped = function(){
-          var result = fn.apply(this, arguments);
-          setTimeout(refreshCurrentVisibleTab, 50);
-          setTimeout(refreshCurrentVisibleTab, 350);
-          return result;
-        };
-        wrapped.__fintrailRefreshWrapped = true;
-        window[name] = wrapped;
-      }
-    } catch(e) {}
-  }
-
-  function install(){
-    wrapLanguageFunction('setLanguage');
-    wrapLanguageFunction('switchLanguage');
-    wrapLanguageFunction('toggleLanguage');
-    wrapLanguageFunction('applyLanguage');
-
-    document.querySelectorAll('[onclick*="setLanguage"], [onclick*="switchLanguage"], [onclick*="toggleLanguage"]').forEach(function(el){
-      if (el.__fintrailLangListener) return;
-      el.__fintrailLangListener = true;
-      el.addEventListener('click', function(){
-        setTimeout(refreshCurrentVisibleTab, 100);
-        setTimeout(refreshCurrentVisibleTab, 500);
-      });
-    });
-  }
+  window.fintrailStreaksNoBlinkFix = scheduleStreaksFix;
 
   window.addEventListener('load', function(){
-    install();
-    setTimeout(applyStreaksFix, 900);
-    setTimeout(applyStreaksFix, 2200);
+    setTimeout(applyStreaksNoBlinkFix, 900);
+    setTimeout(applyStreaksNoBlinkFix, 1800);
   });
 
-  document.addEventListener('click', function(){
-    install();
-    setTimeout(applyStreaksFix, 120);
-    setTimeout(applyStreaksFix, 600);
+  document.addEventListener('click', function(e){
+    var target = e.target;
+    if (!target) return;
+    var text = String(target.textContent || '');
+    var isRelevant =
+      (target.closest && target.closest('#tab-streaks')) ||
+      text.indexOf('English') !== -1 ||
+      text.indexOf('Español') !== -1 ||
+      text.indexOf('Spanish') !== -1 ||
+      text.indexOf('EN') === 0 ||
+      text.indexOf('ES') === 0;
+    if (isRelevant) scheduleStreaksFix();
   });
 })();
 </script>
