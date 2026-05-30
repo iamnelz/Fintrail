@@ -11754,5 +11754,177 @@ window.addEventListener('load', function(){
 })();
 </script>
 
+
+<script>
+/* === BILL SCHEDULE CATEGORY + PLACEHOLDER SPANISH FIX === */
+(function(){
+  var billCategoryTimer = null;
+
+  function isSpanish(){
+    try { return currentLang === 'es'; } catch(e) { return false; }
+  }
+
+  var catEnToEs = [
+    ['🏠 Housing', '🏠 Vivienda'],
+    ['🚗 Auto', '🚗 Auto'],
+    ['💡 Utilities', '💡 Servicios'],
+    ['📱 Phone/Internet', '📱 Teléfono/Internet'],
+    ['🎬 Subscriptions', '🎬 Suscripciones'],
+    ['🏥 Insurance/Health', '🏥 Seguro/Salud'],
+    ['🎓 Education/Loans', '🎓 Educación/Préstamos'],
+    ['💳 Credit Card', '💳 Tarjeta de Crédito'],
+    ['🐾 Pet', '🐾 Mascota'],
+    ['📦 Other', '📦 Otro'],
+    ['Housing', 'Vivienda'],
+    ['Utilities', 'Servicios'],
+    ['Phone/Internet', 'Teléfono/Internet'],
+    ['Subscriptions', 'Suscripciones'],
+    ['Insurance/Health', 'Seguro/Salud'],
+    ['Education/Loans', 'Educación/Préstamos'],
+    ['Credit Card', 'Tarjeta de Crédito'],
+    ['Pet', 'Mascota'],
+    ['Other', 'Otro']
+  ];
+  var catEsToEn = catEnToEs.map(function(pair){ return [pair[1], pair[0]]; });
+
+  function applyPairs(value){
+    var text = String(value || '');
+    var pairs = isSpanish() ? catEnToEs : catEsToEn;
+    pairs.forEach(function(pair){
+      text = text.split(pair[0]).join(pair[1]);
+    });
+
+    if (isSpanish()) {
+      text = text.replace('How much you pay each payday', 'Cuánto pagas en cada día de pago');
+      text = text.replace('Enter less than the full amount to split', 'Ingresa menos que el monto total para dividirlo');
+      text = text.replace('e.g. Rent, Netflix, Car Payment', 'ej. Renta, Netflix, Pago del Auto');
+      text = text.replace(/Due (\d+)(st|nd|rd|th)/g, 'Vence el $1');
+      text = text.replace('/paycheck', '/cheque');
+    } else {
+      text = text.replace('Cuánto pagas en cada día de pago', 'How much you pay each payday');
+      text = text.replace('Ingresa menos que el monto total para dividirlo', 'Enter less than the full amount to split');
+      text = text.replace('ej. Renta, Netflix, Pago del Auto', 'e.g. Rent, Netflix, Car Payment');
+      text = text.replace(/Vence el (\d+)/g, 'Due $1st');
+      text = text.replace('/cheque', '/paycheck');
+    }
+
+    return text;
+  }
+
+  function translateSelect(select){
+    if (!select) return;
+
+    var selected = select.value;
+
+    Array.prototype.forEach.call(select.options || [], function(opt){
+      var newText = applyPairs(opt.textContent);
+      var newValue = applyPairs(opt.value);
+
+      if (newText !== opt.textContent) opt.textContent = newText;
+      if (newValue !== opt.value) opt.value = newValue;
+    });
+
+    var translatedSelected = applyPairs(selected);
+    try { select.value = translatedSelected; } catch(e) {}
+  }
+
+  function walk(node){
+    if (!node) return;
+
+    if (node.nodeType === 3) {
+      var next = applyPairs(node.textContent);
+      if (next !== node.textContent) node.textContent = next;
+      return;
+    }
+
+    if (node.nodeType !== 1) return;
+    if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE') return;
+
+    if (node.placeholder) {
+      var nextPh = applyPairs(node.placeholder);
+      if (nextPh !== node.placeholder) node.placeholder = nextPh;
+    }
+
+    if (node.tagName === 'OPTION') {
+      var nextOption = applyPairs(node.textContent);
+      if (nextOption !== node.textContent) node.textContent = nextOption;
+      var nextVal = applyPairs(node.value);
+      if (nextVal !== node.value) node.value = nextVal;
+    }
+
+    Array.prototype.forEach.call(node.childNodes || [], walk);
+  }
+
+  function applyBillScheduleCategorySpanishFix(){
+    try {
+      var roots = [
+        document.getElementById('bsub-schedule'),
+        document.getElementById('tab-budget')
+      ].filter(Boolean);
+
+      roots.forEach(function(root){
+        root.querySelectorAll('select').forEach(function(select){
+          var allText = (
+            String(select.id || '') + ' ' +
+            String(select.name || '') + ' ' +
+            String(select.closest('.form-group') ? select.closest('.form-group').textContent : '')
+          ).toLowerCase();
+
+          var hasCategoryOptions = Array.prototype.some.call(select.options || [], function(opt){
+            return /Housing|Utilities|Phone\/Internet|Subscriptions|Insurance\/Health|Education\/Loans|Credit Card|Pet|Other|Vivienda|Servicios|Teléfono\/Internet|Suscripciones|Seguro\/Salud|Educación\/Préstamos|Tarjeta de Crédito|Mascota|Otro/.test(opt.textContent || opt.value || '');
+          });
+
+          if (allText.indexOf('categor') !== -1 || hasCategoryOptions) {
+            translateSelect(select);
+          }
+        });
+
+        root.querySelectorAll('input, textarea').forEach(function(input){
+          if (input.placeholder) input.placeholder = applyPairs(input.placeholder);
+        });
+
+        walk(root);
+      });
+    } catch(e) {
+      console.log('Bill schedule category Spanish fix skipped:', e.message);
+    }
+  }
+
+  function scheduleBillScheduleCategorySpanishFix(){
+    clearTimeout(billCategoryTimer);
+    billCategoryTimer = setTimeout(applyBillScheduleCategorySpanishFix, 120);
+  }
+
+  window.fintrailBillScheduleCategorySpanishFix = scheduleBillScheduleCategorySpanishFix;
+
+  window.addEventListener('load', function(){
+    setTimeout(applyBillScheduleCategorySpanishFix, 900);
+    setTimeout(applyBillScheduleCategorySpanishFix, 1800);
+  });
+
+  document.addEventListener('click', function(e){
+    var target = e.target;
+    if (!target) return;
+    if (
+      (target.closest && (target.closest('#bsub-schedule') || target.closest('#tab-budget'))) ||
+      String(target.textContent || '').indexOf('English') !== -1 ||
+      String(target.textContent || '').indexOf('Español') !== -1 ||
+      String(target.textContent || '').indexOf('Spanish') !== -1 ||
+      String(target.textContent || '').indexOf('EN') === 0 ||
+      String(target.textContent || '').indexOf('ES') === 0
+    ) {
+      scheduleBillScheduleCategorySpanishFix();
+      setTimeout(applyBillScheduleCategorySpanishFix, 500);
+    }
+  });
+
+  document.addEventListener('change', function(e){
+    if (e.target && e.target.closest && e.target.closest('#bsub-schedule')) {
+      scheduleBillScheduleCategorySpanishFix();
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
