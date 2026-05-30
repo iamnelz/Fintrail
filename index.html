@@ -11379,5 +11379,108 @@ window.addEventListener('load', function(){
 })();
 </script>
 
+
+<script>
+/* === PRO UPGRADE MODAL SPANISH FIX === */
+(function(){
+  var proModalTimer = null;
+
+  function isSpanish(){
+    try { return currentLang === 'es'; } catch(e) { return false; }
+  }
+
+  var enToEs = [
+    ['Unlock the full toolkit and take control of your finances.', 'Desbloquea todas las herramientas y toma el control de tus finanzas.'],
+    ['/month', '/mes'],
+    ['Cancel anytime · No hidden fees', 'Cancela cuando quieras · Sin cargos ocultos'],
+    ['Everything in Free', 'Todo lo incluido en Gratis'],
+    ['AI Financial Advisor — unlimited chat', 'Asesor Financiero IA — chat ilimitado'],
+    ['Financial Health Score & tracking', 'Puntaje de Salud Financiera y seguimiento'],
+    ['Personalized Debt Payoff Planner', 'Planificador personalizado de pago de deudas'],
+    ['Budget Alerts & Bill Reminders', 'Alertas de presupuesto y recordatorios de facturas'],
+    ['Full Credit Score Improvement Guide', 'Guía completa para mejorar tu crédito'],
+    ['Partner Lender Rates & Partner Offers', 'Tasas de prestamistas socios y ofertas de socios'],
+    ['Start Pro — $4.99/mo', 'Comenzar Pro — $4.99/mes'],
+    ['Founding price: first 7 days free · then $4.99/mo', 'Precio fundador: primeros 7 días gratis · luego $4.99/mes'],
+    ['Maybe later', 'Tal vez más tarde']
+  ];
+
+  var esToEn = enToEs.map(function(pair){ return [pair[1], pair[0]]; });
+
+  function applyPairs(value){
+    var text = String(value || '');
+    var pairs = isSpanish() ? enToEs : esToEn;
+    pairs.forEach(function(pair){
+      text = text.split(pair[0]).join(pair[1]);
+    });
+    return text;
+  }
+
+  function walk(node){
+    if (!node) return;
+
+    if (node.nodeType === 3) {
+      var next = applyPairs(node.textContent);
+      if (next !== node.textContent) node.textContent = next;
+      return;
+    }
+
+    if (node.nodeType !== 1) return;
+    if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE') return;
+
+    Array.prototype.forEach.call(node.childNodes || [], walk);
+  }
+
+  function applyProModalSpanishFix(){
+    try {
+      var modals = document.querySelectorAll('.paywall-modal, .paywall-overlay');
+      if (!modals || !modals.length) return;
+      modals.forEach(function(modal){
+        walk(modal);
+      });
+    } catch(e) {
+      console.log('Pro modal Spanish fix skipped:', e.message);
+    }
+  }
+
+  function scheduleProModalSpanishFix(){
+    clearTimeout(proModalTimer);
+    proModalTimer = setTimeout(applyProModalSpanishFix, 120);
+  }
+
+  window.fintrailProModalSpanishFix = scheduleProModalSpanishFix;
+
+  window.addEventListener('load', function(){
+    setTimeout(applyProModalSpanishFix, 900);
+  });
+
+  document.addEventListener('click', function(){
+    setTimeout(applyProModalSpanishFix, 120);
+    setTimeout(applyProModalSpanishFix, 500);
+  });
+
+  var observer = new MutationObserver(function(mutations){
+    var shouldRun = false;
+    mutations.forEach(function(m){
+      Array.prototype.forEach.call(m.addedNodes || [], function(node){
+        if (node.nodeType === 1 && (
+          (node.classList && (node.classList.contains('paywall-overlay') || node.classList.contains('paywall-modal'))) ||
+          (node.querySelector && node.querySelector('.paywall-modal'))
+        )) {
+          shouldRun = true;
+        }
+      });
+    });
+    if (shouldRun) scheduleProModalSpanishFix();
+  });
+
+  window.addEventListener('load', function(){
+    try {
+      observer.observe(document.body, { childList:true, subtree:true });
+    } catch(e) {}
+  });
+})();
+</script>
+
 </body>
 </html>
