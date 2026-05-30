@@ -8812,7 +8812,48 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     safeSet(getOnboardingKey(), 'true');
     safeSet('fintrail_onboarding_answers_' + (currentUser?.id || currentUser?.email || 'demo'), JSON.stringify(onboardingState));
   }
-  function showOnboardingIfNeeded() {
+  
+/* === ONBOARDING USER-SPECIFIC COMPLETION FIX === */
+function getFintrailOnboardingKey(){
+  try {
+    const email =
+      (window.currentUser && (window.currentUser.email || window.currentUser.user_metadata?.email)) ||
+      (window.supabaseUser && window.supabaseUser.email) ||
+      (window.user && window.user.email) ||
+      'guest';
+    return 'fintrail_pro_onboarding_complete_' + String(email).trim().toLowerCase();
+  } catch(e) {
+    return 'fintrail_pro_onboarding_complete_guest';
+  }
+}
+
+function isFintrailOnboardingComplete(){
+  try {
+    return localStorage.getItem(getFintrailOnboardingKey()) === 'true'
+      || localStorage.getItem('fintrail_onboarding_complete') === 'true'
+      || localStorage.getItem('fintrail_pro_onboarding_complete') === 'true';
+  } catch(e) {
+    return false;
+  }
+}
+
+function setFintrailOnboardingComplete(){
+  try {
+    localStorage.setItem(getFintrailOnboardingKey(), 'true');
+    setFintrailOnboardingComplete();
+    setFintrailOnboardingComplete();
+  } catch(e) {}
+}
+
+function resetFintrailOnboardingForTesting(){
+  try {
+    localStorage.removeItem(getFintrailOnboardingKey());
+    localStorage.removeItem('fintrail_onboarding_complete');
+    localStorage.removeItem('fintrail_pro_onboarding_complete');
+  } catch(e) {}
+}
+
+function showOnboardingIfNeeded() {
     const overlay = document.getElementById('onboarding-overlay');
     if (!overlay || hasCompletedOnboarding()) return;
     onboardingState.lang = currentLang || 'en';
@@ -8824,7 +8865,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const overlay = document.getElementById('onboarding-overlay');
     if (overlay) overlay.classList.remove('visible');
   }
-  function skipOnboarding() { markOnboardingComplete(); closeOnboarding(); }
+  function skipOnboarding() {
+  setFintrailOnboardingComplete(); markOnboardingComplete(); closeOnboarding(); }
   function onboardingBack() { if (onboardingState.step > 0) { onboardingState.step--; renderOnboarding(); } }
   function selectOnboardingLang(lang) {
     onboardingState.lang = lang;
