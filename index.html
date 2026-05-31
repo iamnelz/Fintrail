@@ -12273,177 +12273,207 @@ window.addEventListener('load', function(){
 </script>
 
 
+
+
+
 <script>
-/* === SAVINGS GOAL CARD SPANISH FIX === */
+/* === SAVINGS GOALS RENDER LOGIC SPANISH FIX === */
 (function(){
-  var goalCardTimer = null;
+  var timer = null;
 
   function isSpanish(){
     try { return currentLang === 'es'; } catch(e) { return false; }
   }
 
-  var goalPairsEnEs = [
-    ['Emergency Fund', 'Fondo de Emergencia'],
-    ['Home', 'Casa'],
-    ['Vehicle', 'Vehículo'],
-    ['Travel', 'Viaje'],
-    ['Education', 'Educación'],
-    ['Wedding', 'Boda'],
-    ['Family', 'Familia'],
-    ['Tech', 'Tecnología'],
-    ['Health', 'Salud'],
-    ['Retirement', 'Jubilación'],
-    ['Other', 'Otro'],
-    ['Add savings...', 'Agregar ahorro...'],
-    ['+ Add Goal', '+ Agregar Meta'],
-    ['+ Add', '+ Agregar'],
-    ['of $', 'de $'],
-    ['complete', 'completado'],
-    ['Save $', 'Ahorra $'],
-    ['/mo', '/mes'],
-    ['to reach your goal in', 'para alcanzar tu meta en'],
-    ['months', 'meses'],
-    ['month', 'mes'],
-    ['Nov', 'nov'],
-    ['Dec', 'dic'],
-    ['Jan', 'ene'],
-    ['Feb', 'feb'],
-    ['Mar', 'mar'],
-    ['Apr', 'abr'],
-    ['May', 'may'],
-    ['Jun', 'jun'],
-    ['Jul', 'jul'],
-    ['Aug', 'ago'],
-    ['Sep', 'sep'],
-    ['Oct', 'oct'],
-    ['e.g. Emergency Fund, Vacation', 'ej. Fondo de Emergencia, Vacaciones']
-  ];
+  var categoryMap = {
+    'Emergency Fund': 'Fondo de Emergencia',
+    'Home': 'Casa',
+    'Vehicle': 'Vehículo',
+    'Travel': 'Viaje',
+    'Education': 'Educación',
+    'Wedding': 'Boda',
+    'Family': 'Familia',
+    'Tech': 'Tecnología',
+    'Health': 'Salud',
+    'Retirement': 'Jubilación',
+    'Other': 'Otro'
+  };
 
-  var goalPairsEsEn = goalPairsEnEs.map(function(pair){ return [pair[1], pair[0]]; });
+  var reverseCategoryMap = {};
+  Object.keys(categoryMap).forEach(function(k){ reverseCategoryMap[categoryMap[k]] = k; });
 
-  function applyPairs(value){
-    var text = String(value || '');
-    var pairs = isSpanish() ? goalPairsEnEs : goalPairsEsEn;
+  var monthMap = {
+    'Jan':'ene', 'Feb':'feb', 'Mar':'mar', 'Apr':'abr', 'May':'may', 'Jun':'jun',
+    'Jul':'jul', 'Aug':'ago', 'Sep':'sep', 'Oct':'oct', 'Nov':'nov', 'Dec':'dic'
+  };
+  var reverseMonthMap = {};
+  Object.keys(monthMap).forEach(function(k){ reverseMonthMap[monthMap[k]] = k; });
 
-    pairs.forEach(function(pair){
-      text = text.split(pair[0]).join(pair[1]);
+  function cat(text){
+    text = String(text || '');
+    var map = isSpanish() ? categoryMap : reverseCategoryMap;
+    Object.keys(map).forEach(function(k){
+      text = text.replace(new RegExp('\\b' + k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'g'), map[k]);
     });
+    return text;
+  }
+
+  function months(text){
+    text = String(text || '');
+    var map = isSpanish() ? monthMap : reverseMonthMap;
+    Object.keys(map).forEach(function(k){
+      text = text.replace(new RegExp('\\b' + k + '\\b', 'g'), map[k]);
+    });
+    return text;
+  }
+
+  function tr(text){
+    text = String(text || '');
 
     if (isSpanish()) {
+      text = cat(text);
+      text = months(text);
+
+      text = text.replace(/of \$([0-9,]+(?:\.[0-9]{2})?)/g, 'de $$$1');
       text = text.replace(/(\d+)% complete/g, '$1% completado');
       text = text.replace(/Save \$([0-9,.]+)\/mo to reach your goal in (\d+) months/g, 'Ahorra $$$1/mes para alcanzar tu meta en $2 meses');
       text = text.replace(/Save \$([0-9,.]+)\/mo to reach your goal in (\d+) month/g, 'Ahorra $$$1/mes para alcanzar tu meta en $2 mes');
-      text = text.replace(/of \$([0-9,.]+)/g, 'de $$$1');
+      text = text.replace(/Add savings\.\.\./g, 'Agregar ahorro...');
+      text = text.replace(/\+ Add Goal/g, '+ Agregar Meta');
+      text = text.replace(/\+ Add/g, '+ Agregar');
+      text = text.replace(/e\.g\. Emergency Fund, Vacation/g, 'ej. Fondo de Emergencia, Vacaciones');
     } else {
+      text = cat(text);
+      text = months(text);
+
+      text = text.replace(/de \$([0-9,]+(?:\.[0-9]{2})?)/g, 'of $$$1');
       text = text.replace(/(\d+)% completado/g, '$1% complete');
       text = text.replace(/Ahorra \$([0-9,.]+)\/mes para alcanzar tu meta en (\d+) meses/g, 'Save $$$1/mo to reach your goal in $2 months');
       text = text.replace(/Ahorra \$([0-9,.]+)\/mes para alcanzar tu meta en (\d+) mes/g, 'Save $$$1/mo to reach your goal in $2 month');
-      text = text.replace(/de \$([0-9,.]+)/g, 'of $$$1');
+      text = text.replace(/Agregar ahorro\.\.\./g, 'Add savings...');
+      text = text.replace(/\+ Agregar Meta/g, '+ Add Goal');
+      text = text.replace(/\+ Agregar/g, '+ Add');
+      text = text.replace(/ej\. Fondo de Emergencia, Vacaciones/g, 'e.g. Emergency Fund, Vacation');
     }
 
     return text;
   }
 
-  function translateNode(node){
-    if (!node) return;
-
-    if (node.nodeType === 3) {
-      var next = applyPairs(node.textContent);
-      if (next !== node.textContent) node.textContent = next;
-      return;
-    }
-
-    if (node.nodeType !== 1) return;
-    if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE') return;
-
-    if (node.placeholder) {
-      var nextPh = applyPairs(node.placeholder);
-      if (nextPh !== node.placeholder) node.placeholder = nextPh;
-    }
-
-    if (node.value && (node.tagName === 'OPTION')) {
-      var nextVal = applyPairs(node.value);
-      if (nextVal !== node.value) node.value = nextVal;
-    }
-
-    Array.prototype.forEach.call(node.childNodes || [], translateNode);
+  function translateTextNode(node){
+    if (!node || node.nodeType !== 3) return;
+    var next = tr(node.textContent);
+    if (next !== node.textContent) node.textContent = next;
   }
 
-  function translateGoalSelects(root){
-    root.querySelectorAll('select').forEach(function(select){
-      var selected = select.value;
-      Array.prototype.forEach.call(select.options || [], function(opt){
-        var nextText = applyPairs(opt.textContent);
-        var nextValue = applyPairs(opt.value);
+  function walkTextOnly(root){
+    if (!root) return;
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(node){
+        var p = node.parentElement;
+        if (!p) return NodeFilter.FILTER_REJECT;
+        if (['SCRIPT','STYLE'].indexOf(p.tagName) >= 0) return NodeFilter.FILTER_REJECT;
+        if (p.matches && p.matches('input, textarea')) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(translateTextNode);
+  }
+
+  function translatePlaceholdersAndOptions(root){
+    if (!root) return;
+
+    root.querySelectorAll('input, textarea').forEach(function(el){
+      if (el.placeholder) {
+        var next = tr(el.placeholder);
+        if (next !== el.placeholder) el.placeholder = next;
+      }
+    });
+
+    root.querySelectorAll('select').forEach(function(sel){
+      var current = sel.value;
+      Array.prototype.forEach.call(sel.options || [], function(opt){
+        var nextText = tr(opt.textContent);
+        var nextValue = tr(opt.value);
         if (nextText !== opt.textContent) opt.textContent = nextText;
         if (nextValue !== opt.value) opt.value = nextValue;
       });
-      try { select.value = applyPairs(selected); } catch(e) {}
+      try { sel.value = tr(current); } catch(e) {}
     });
   }
 
-  function applySavingsGoalCardSpanishFix(){
+  function apply(){
     try {
       var root = document.getElementById('tab-goals');
       if (!root) return;
 
-      translateGoalSelects(root);
+      translatePlaceholdersAndOptions(root);
+      walkTextOnly(root);
 
-      root.querySelectorAll('input, textarea').forEach(function(input){
-        if (input.placeholder) input.placeholder = applyPairs(input.placeholder);
+      // Extra direct fixes for common generated elements after render
+      root.querySelectorAll('.goal-category, .goal-target, .goal-pct, .goal-deadline, .goal-monthly, .goal-name, .deposit-btn').forEach(function(el){
+        walkTextOnly(el);
       });
-
-      root.querySelectorAll(
-        '.goal-card, .goal-category, .goal-target, .goal-pct, .goal-deadline, .goal-monthly, .deposit-input, .deposit-btn, .new-goal-form, button, input, select'
-      ).forEach(function(el){
-        translateNode(el);
-      });
-
-      // Fallback: translate the full goals tab, but only text nodes.
-      translateNode(root);
     } catch(e) {
-      console.log('Savings goal card Spanish fix skipped:', e.message);
+      console.log('Savings goals render logic Spanish fix skipped:', e.message);
     }
   }
 
-  function scheduleSavingsGoalCardSpanishFix(){
-    clearTimeout(goalCardTimer);
-    goalCardTimer = setTimeout(applySavingsGoalCardSpanishFix, 120);
+  function schedule(){
+    clearTimeout(timer);
+    timer = setTimeout(apply, 120);
   }
 
-  window.fintrailSavingsGoalCardSpanishFix = scheduleSavingsGoalCardSpanishFix;
+  window.fintrailSavingsGoalsRenderLogicSpanishFix = schedule;
+
+  function wrapRender(name){
+    try {
+      var fn = window[name];
+      if (typeof fn === 'function' && !fn.__savingsGoalsSpanishWrapped) {
+        var wrapped = function(){
+          var result = fn.apply(this, arguments);
+          setTimeout(apply, 40);
+          setTimeout(apply, 250);
+          return result;
+        };
+        wrapped.__savingsGoalsSpanishWrapped = true;
+        window[name] = wrapped;
+      }
+    } catch(e) {}
+  }
+
+  function install(){
+    wrapRender('renderSavingsGoals');
+    wrapRender('renderGoals');
+    wrapRender('updateGoals');
+    wrapRender('addSavingsGoal');
+    wrapRender('addGoalDeposit');
+  }
 
   window.addEventListener('load', function(){
-    setTimeout(applySavingsGoalCardSpanishFix, 900);
-    setTimeout(applySavingsGoalCardSpanishFix, 1800);
+    install();
+    setTimeout(apply, 900);
+    setTimeout(apply, 1800);
   });
 
   document.addEventListener('click', function(e){
+    install();
     var t = e.target;
     if (!t) return;
-    if (
-      (t.closest && t.closest('#tab-goals')) ||
-      String(t.textContent || '').indexOf('English') !== -1 ||
-      String(t.textContent || '').indexOf('Español') !== -1 ||
-      String(t.textContent || '').indexOf('Spanish') !== -1 ||
-      String(t.textContent || '').indexOf('EN') === 0 ||
-      String(t.textContent || '').indexOf('ES') === 0
-    ) {
-      scheduleSavingsGoalCardSpanishFix();
-      setTimeout(applySavingsGoalCardSpanishFix, 500);
+    if ((t.closest && t.closest('#tab-goals')) ||
+        /English|Español|Spanish|^EN|^ES/.test(String(t.textContent || ''))) {
+      schedule();
+      setTimeout(apply, 500);
     }
   });
 
   document.addEventListener('input', function(e){
-    if (e.target && e.target.closest && e.target.closest('#tab-goals')) {
-      scheduleSavingsGoalCardSpanishFix();
-    }
+    if (e.target && e.target.closest && e.target.closest('#tab-goals')) schedule();
   });
 
   document.addEventListener('change', function(e){
-    if (e.target && e.target.closest && e.target.closest('#tab-goals')) {
-      scheduleSavingsGoalCardSpanishFix();
-    }
+    if (e.target && e.target.closest && e.target.closest('#tab-goals')) schedule();
   });
 })();
 </script>
