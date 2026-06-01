@@ -12370,5 +12370,394 @@ window.addEventListener('load', function(){
 })();
 </script>
 
+
+<script>
+/* === NET WORTH CALCULATOR SPANISH FIX === */
+(function(){
+  var timer = null;
+  var applying = false;
+  var observerStarted = false;
+
+  function isSpanish(){
+    try { return currentLang === 'es'; } catch(e) { return false; }
+  }
+
+  var pairs = [
+    ['Your Net Worth', 'Tu Patrimonio Neto'],
+    ['Add your assets and liabilities below', 'Agrega tus activos y pasivos abajo'],
+    ['Savings Account', 'Cuenta de Ahorros'],
+    ['Certificate', 'Certificado'],
+    ['Vehicle Value', 'Valor del Vehículo'],
+    ['Car Loan', 'Préstamo del Auto'],
+    ['e.g. Savings Account', 'ej. Cuenta de Ahorros'],
+    ['e.g. Mortgage', 'ej. Hipoteca'],
+    ['Cash', 'Efectivo'],
+    ['Savings', 'Ahorros'],
+    ['Retirement', 'Jubilación'],
+    ['Home', 'Casa'],
+    ['Car', 'Auto'],
+    ['Mortgage', 'Hipoteca'],
+    ['Credit Cards', 'Tarjetas de Crédito'],
+    ['Student Loans', 'Préstamos Estudiantiles'],
+    ['Edit', 'Editar'],
+    ['+ Add', '+ Agregar'],
+    ['Breakdown', 'Desglose'],
+    ['Monthly History', 'Historial Mensual'],
+    ['Clear', 'Limpiar'],
+    ['May 2026', 'mayo de 2026'],
+    ['Net Worth Over Time', 'Patrimonio Neto en el Tiempo'],
+    ['Add data to see your history', 'Agrega datos para ver tu historial'],
+    ['A monthly snapshot is saved each time you visit this tab.', 'Se guarda una captura mensual cada vez que visitas esta pestaña.'],
+    ['Total Assets', 'Activos Totales'],
+    ['Total Liabilities', 'Pasivos Totales']
+  ];
+
+  function translateValue(s){
+    s = String(s || '');
+
+    if (isSpanish()) {
+      pairs.forEach(function(p){ s = s.split(p[0]).join(p[1]); });
+    } else {
+      pairs.forEach(function(p){ s = s.split(p[1]).join(p[0]); });
+    }
+
+    return s;
+  }
+
+  function translateTextNodes(root){
+    if (!root) return;
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(node){
+        var p = node.parentElement;
+        if (!p) return NodeFilter.FILTER_REJECT;
+        if (p.tagName === 'SCRIPT' || p.tagName === 'STYLE' || p.tagName === 'OPTION') return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+
+    var nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+
+    nodes.forEach(function(node){
+      var next = translateValue(node.textContent);
+      if (next !== node.textContent) node.textContent = next;
+    });
+  }
+
+  function translateInputs(root){
+    if (!root) return;
+    root.querySelectorAll('input, textarea').forEach(function(el){
+      if (el.placeholder) {
+        var next = translateValue(el.placeholder);
+        if (next !== el.placeholder) el.placeholder = next;
+      }
+    });
+  }
+
+  function apply(){
+    if (applying) return;
+    applying = true;
+
+    try {
+      var root =
+        document.getElementById('tab-networth') ||
+        document.getElementById('tab-net-worth') ||
+        document.querySelector('[id*="networth"]') ||
+        document.querySelector('[id*="net-worth"]');
+
+      if (!root) return;
+
+      translateInputs(root);
+      translateTextNodes(root);
+
+      root.querySelectorAll('button').forEach(function(btn){
+        var next = translateValue(btn.textContent);
+        if (next !== btn.textContent) btn.textContent = next;
+      });
+
+      root.querySelectorAll('.asset-name, .liability-name, .breakdown-label, .chip, .category-chip').forEach(function(el){
+        translateTextNodes(el);
+      });
+
+    } catch(e) {
+      console.log('Net worth Spanish fix skipped:', e.message);
+    } finally {
+      applying = false;
+    }
+  }
+
+  function schedule(){
+    clearTimeout(timer);
+    timer = setTimeout(apply, 100);
+  }
+
+  function wrap(name){
+    try {
+      var fn = window[name];
+      if (typeof fn === 'function' && !fn.__fintrailNetWorthSpanishWrapped) {
+        var wrapped = function(){
+          var result = fn.apply(this, arguments);
+          setTimeout(apply, 40);
+          setTimeout(apply, 250);
+          setTimeout(apply, 700);
+          return result;
+        };
+        wrapped.__fintrailNetWorthSpanishWrapped = true;
+        window[name] = wrapped;
+      }
+    } catch(e) {}
+  }
+
+  function install(){
+    [
+      'renderNetWorth',
+      'renderNetWorthCalculator',
+      'updateNetWorth',
+      'showTab',
+      'setLanguage',
+      'switchLanguage',
+      'applyLanguage',
+      'addAsset',
+      'addLiability'
+    ].forEach(wrap);
+  }
+
+  function startObserver(){
+    if (observerStarted) return;
+    var root =
+      document.getElementById('tab-networth') ||
+      document.getElementById('tab-net-worth') ||
+      document.querySelector('[id*="networth"]') ||
+      document.querySelector('[id*="net-worth"]');
+
+    if (!root) return;
+    observerStarted = true;
+
+    var observer = new MutationObserver(function(){
+      if (!applying) schedule();
+    });
+    observer.observe(root, { childList:true, subtree:true, characterData:true });
+  }
+
+  window.fintrailNetWorthSpanishFix = function(){
+    install();
+    startObserver();
+    apply();
+  };
+
+  window.addEventListener('load', function(){
+    install();
+    startObserver();
+    [300, 900, 1800, 3000].forEach(function(ms){ setTimeout(apply, ms); });
+  });
+
+  document.addEventListener('click', function(e){
+    install();
+    startObserver();
+    var t = e.target;
+    if (!t) return;
+
+    if ((t.closest && (
+        t.closest('#tab-networth') ||
+        t.closest('#tab-net-worth') ||
+        t.closest('[id*="networth"]') ||
+        t.closest('[id*="net-worth"]')
+      )) || /English|Español|Spanish|^EN|^ES|Net Worth|Patrimonio/.test(String(t.textContent || ''))) {
+      schedule();
+      setTimeout(apply, 300);
+      setTimeout(apply, 800);
+    }
+  });
+
+  document.addEventListener('input', function(e){
+    if (e.target && e.target.closest && (
+      e.target.closest('#tab-networth') ||
+      e.target.closest('#tab-net-worth') ||
+      e.target.closest('[id*="networth"]') ||
+      e.target.closest('[id*="net-worth"]')
+    )) schedule();
+  });
+})();
+</script>
+
+
+<script>
+/* === DEBT PAYOFF DESKTOP RESULTS SPANISH FIX === */
+(function(){
+  var timer = null;
+  var applying = false;
+
+  function isSpanish(){
+    try { return currentLang === 'es'; } catch(e) { return false; }
+  }
+
+  var monthMap = [
+    ['Jan','ene'], ['Feb','feb'], ['Mar','mar'], ['Apr','abr'], ['May','may'], ['Jun','jun'],
+    ['Jul','jul'], ['Aug','ago'], ['Sep','sep'], ['Oct','oct'], ['Nov','nov'], ['Dec','dic']
+  ];
+
+  function translateValue(s){
+    s = String(s || '');
+
+    if (isSpanish()) {
+      s = s.replace(/Total Monthly Payment/g, 'Pago Mensual Total');
+      s = s.replace(/MINIMUMS ONLY/g, 'SOLO MÍNIMOS');
+      s = s.replace(/AVALANCHE \+ \$([0-9,]+)\/MO/g, 'AVALANCHA + $$$1/MES');
+      s = s.replace(/SNOWBALL \+ \$([0-9,]+)\/MO/g, 'BOLA DE NIEVE + $$$1/MES');
+      s = s.replace(/Time to debt free/g, 'Tiempo para quedar libre de deudas');
+      s = s.replace(/Total interest/g, 'Interés total');
+      s = s.replace(/Total paid/g, 'Total pagado');
+      s = s.replace(/Save \$([0-9,]+) and get debt free ([0-9]+) months sooner!/g, '¡Ahorra $$$1 y sal de deudas $2 meses antes!');
+      s = s.replace(/using Avalanche with \$([0-9,]+)\/mo extra/g, 'usando Avalancha con $$$1/mes extra');
+      s = s.replace(/using Snowball with \$([0-9,]+)\/mo extra/g, 'usando Bola de Nieve con $$$1/mes extra');
+      s = s.replace(/AVALANCHE PAYOFF ORDER/g, 'ORDEN DE PAGO AVALANCHA');
+      s = s.replace(/SNOWBALL PAYOFF ORDER/g, 'ORDEN DE PAGO BOLA DE NIEVE');
+      s = s.replace(/APR/g, 'TNA');
+      s = s.replace(/Focus now/g, 'Prioridad ahora');
+      s = s.replace(/Paid off by/g, 'Pagado para');
+      s = s.replace(/(\d+)yr\s+(\d+)mo/g, '$1 año $2 meses');
+      s = s.replace(/(\d+)yr/g, '$1 año');
+      s = s.replace(/(\d+)mo\b/g, '$1 mes');
+      monthMap.forEach(function(p){ s = s.replace(new RegExp('\\b' + p[0] + '\\b', 'g'), p[1]); });
+    } else {
+      s = s.replace(/Pago Mensual Total/g, 'Total Monthly Payment');
+      s = s.replace(/SOLO MÍNIMOS/g, 'MINIMUMS ONLY');
+      s = s.replace(/AVALANCHA \+ \$([0-9,]+)\/MES/g, 'AVALANCHE + $$$1/MO');
+      s = s.replace(/BOLA DE NIEVE \+ \$([0-9,]+)\/MES/g, 'SNOWBALL + $$$1/MO');
+      s = s.replace(/Tiempo para quedar libre de deudas/g, 'Time to debt free');
+      s = s.replace(/Interés total/g, 'Total interest');
+      s = s.replace(/Total pagado/g, 'Total paid');
+      s = s.replace(/¡Ahorra \$([0-9,]+) y sal de deudas ([0-9]+) meses antes!/g, 'Save $$$1 and get debt free $2 months sooner!');
+      s = s.replace(/usando Avalancha con \$([0-9,]+)\/mes extra/g, 'using Avalanche with $$$1/mo extra');
+      s = s.replace(/usando Bola de Nieve con \$([0-9,]+)\/mes extra/g, 'using Snowball with $$$1/mo extra');
+      s = s.replace(/ORDEN DE PAGO AVALANCHA/g, 'AVALANCHE PAYOFF ORDER');
+      s = s.replace(/ORDEN DE PAGO BOLA DE NIEVE/g, 'SNOWBALL PAYOFF ORDER');
+      s = s.replace(/TNA/g, 'APR');
+      s = s.replace(/Prioridad ahora/g, 'Focus now');
+      s = s.replace(/Pagado para/g, 'Paid off by');
+      s = s.replace(/(\d+) año (\d+) meses/g, '$1yr $2mo');
+      s = s.replace(/(\d+) año/g, '$1yr');
+      s = s.replace(/(\d+) mes\b/g, '$1mo');
+      monthMap.forEach(function(p){ s = s.replace(new RegExp('\\b' + p[1] + '\\b', 'g'), p[0]); });
+    }
+
+    return s;
+  }
+
+  function translateTextNodes(root){
+    if (!root) return;
+
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(node){
+        var p = node.parentElement;
+        if (!p) return NodeFilter.FILTER_REJECT;
+        if (p.tagName === 'SCRIPT' || p.tagName === 'STYLE') return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+
+    var nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+
+    nodes.forEach(function(node){
+      var next = translateValue(node.textContent);
+      if (next !== node.textContent) node.textContent = next;
+    });
+  }
+
+  function apply(){
+    if (applying) return;
+    applying = true;
+
+    try {
+      var root =
+        document.getElementById('tab-debtplan') ||
+        document.getElementById('tab-debt-payoff') ||
+        document.querySelector('[id*="debtplan"]') ||
+        document.querySelector('[id*="debt-payoff"]');
+
+      if (!root) return;
+
+      translateTextNodes(root);
+    } catch(e) {
+      console.log('Debt payoff desktop Spanish fix skipped:', e.message);
+    } finally {
+      applying = false;
+    }
+  }
+
+  function schedule(){
+    clearTimeout(timer);
+    timer = setTimeout(apply, 100);
+  }
+
+  function wrap(name){
+    try {
+      var fn = window[name];
+      if (typeof fn === 'function' && !fn.__fintrailDebtPayoffDesktopSpanishWrapped) {
+        var wrapped = function(){
+          var result = fn.apply(this, arguments);
+          setTimeout(apply, 40);
+          setTimeout(apply, 250);
+          setTimeout(apply, 700);
+          return result;
+        };
+        wrapped.__fintrailDebtPayoffDesktopSpanishWrapped = true;
+        window[name] = wrapped;
+      }
+    } catch(e) {}
+  }
+
+  function install(){
+    [
+      'renderDebtPayoffPlan',
+      'renderDebtPlan',
+      'updateDebtPayoffPlan',
+      'calculateDebtPayoff',
+      'showTab',
+      'setLanguage',
+      'switchLanguage',
+      'applyLanguage'
+    ].forEach(wrap);
+  }
+
+  window.fintrailDebtPayoffDesktopSpanishFix = function(){
+    install();
+    apply();
+  };
+
+  window.addEventListener('load', function(){
+    install();
+    [300, 900, 1800, 3000].forEach(function(ms){ setTimeout(apply, ms); });
+  });
+
+  document.addEventListener('click', function(e){
+    install();
+    var t = e.target;
+    if (!t) return;
+
+    if ((t.closest && (
+        t.closest('#tab-debtplan') ||
+        t.closest('#tab-debt-payoff') ||
+        t.closest('[id*="debtplan"]') ||
+        t.closest('[id*="debt-payoff"]')
+      )) || /English|Español|Spanish|^EN|^ES|Debt Payoff|Pago de Deudas/.test(String(t.textContent || ''))) {
+      schedule();
+      setTimeout(apply, 300);
+      setTimeout(apply, 800);
+    }
+  });
+
+  document.addEventListener('input', function(e){
+    if (e.target && e.target.closest && (
+      e.target.closest('#tab-debtplan') ||
+      e.target.closest('#tab-debt-payoff') ||
+      e.target.closest('[id*="debtplan"]') ||
+      e.target.closest('[id*="debt-payoff"]')
+    )) schedule();
+  });
+})();
+</script>
+
 </body>
 </html>
