@@ -7401,6 +7401,44 @@ Guidelines:
 })();
 </script>
 
+
+<script>
+/* === DEBT PAYOFF METHOD SPANISH DESCRIPTION FIX === */
+(function(){
+  function applyFix(){
+    document.querySelectorAll('*').forEach(function(el){
+      if(el.children.length > 0) return;
+
+      let t = el.textContent || '';
+
+      t = t.replace(
+        /Pay minimums on all debts, then put ALL extra money toward the highest interest rate debt first\. Mathematically saves the most money in interest\./g,
+        'Paga los mínimos en todas tus deudas y destina TODO el dinero extra a la deuda con la tasa de interés más alta primero. Matemáticamente, es el método que más dinero ahorra en intereses.'
+      );
+
+      t = t.replace(
+        /Pay minimums on all debts, then put ALL extra money toward the smallest balance debt first\. Gives you quick wins and motivation to keep going\./g,
+        'Paga los mínimos en todas tus deudas y destina TODO el dinero extra a la deuda con el saldo más pequeño primero. Te brinda victorias rápidas y motivación para seguir avanzando.'
+      );
+
+      if (t !== el.textContent) el.textContent = t;
+    });
+  }
+
+  window.addEventListener('load', function(){
+    setTimeout(applyFix, 300);
+    setTimeout(applyFix, 1200);
+    setTimeout(applyFix, 2500);
+  });
+
+  new MutationObserver(applyFix).observe(document.body, {
+    childList:true,
+    subtree:true,
+    characterData:true
+  });
+})();
+</script>
+
 </body>
       </html>
     `);
@@ -13120,6 +13158,44 @@ window.addEventListener('load', function(){
     setTimeout(fixMonths,1200);
   });
   new MutationObserver(fixMonths).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
+
+
+<script>
+/* === DEBT PAYOFF METHOD SPANISH DESCRIPTION FIX === */
+(function(){
+  function applyFix(){
+    document.querySelectorAll('*').forEach(function(el){
+      if(el.children.length > 0) return;
+
+      let t = el.textContent || '';
+
+      t = t.replace(
+        /Pay minimums on all debts, then put ALL extra money toward the highest interest rate debt first\. Mathematically saves the most money in interest\./g,
+        'Paga los mínimos en todas tus deudas y destina TODO el dinero extra a la deuda con la tasa de interés más alta primero. Matemáticamente, es el método que más dinero ahorra en intereses.'
+      );
+
+      t = t.replace(
+        /Pay minimums on all debts, then put ALL extra money toward the smallest balance debt first\. Gives you quick wins and motivation to keep going\./g,
+        'Paga los mínimos en todas tus deudas y destina TODO el dinero extra a la deuda con el saldo más pequeño primero. Te brinda victorias rápidas y motivación para seguir avanzando.'
+      );
+
+      if (t !== el.textContent) el.textContent = t;
+    });
+  }
+
+  window.addEventListener('load', function(){
+    setTimeout(applyFix, 300);
+    setTimeout(applyFix, 1200);
+    setTimeout(applyFix, 2500);
+  });
+
+  new MutationObserver(applyFix).observe(document.body, {
+    childList:true,
+    subtree:true,
+    characterData:true
+  });
 })();
 </script>
 
