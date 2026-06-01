@@ -12759,5 +12759,220 @@ window.addEventListener('load', function(){
 })();
 </script>
 
+
+<script>
+/* === FINAL DEBT PAYOFF REMAINING SPANISH FIX === */
+(function(){
+  var timer = null;
+  var applying = false;
+
+  function isSpanish(){
+    try { return currentLang === 'es'; } catch(e) { return false; }
+  }
+
+  var monthMap = [
+    ['Jan','ene'], ['Feb','feb'], ['Mar','mar'], ['Apr','abr'], ['May','may'], ['Jun','jun'],
+    ['Jul','jul'], ['Aug','ago'], ['Sep','sep'], ['Oct','oct'], ['Nov','nov'], ['Dec','dic']
+  ];
+
+  function translateDebtPayoffText(value){
+    var s = String(value || '');
+
+    if (isSpanish()) {
+      s = s.replace(/MINIMUMS ONLY/g, 'SOLO PAGOS MÍNIMOS');
+      s = s.replace(/Minimums Only/g, 'Solo pagos mínimos');
+      s = s.replace(/AVALANCHE \+ \$([0-9,]+)\/MO/g, 'AVALANCHA + $$$1/MES');
+      s = s.replace(/Avalanche \+ \$([0-9,]+)\/mo/g, 'Avalancha + $$$1/mes');
+      s = s.replace(/SNOWBALL \+ \$([0-9,]+)\/MO/g, 'BOLA DE NIEVE + $$$1/MES');
+      s = s.replace(/Snowball \+ \$([0-9,]+)\/mo/g, 'Bola de Nieve + $$$1/mes');
+
+      s = s.replace(/AVALANCHE PAYOFF ORDER/g, 'ORDEN DE PAGO AVALANCHA');
+      s = s.replace(/Avalanche Payoff Order/g, 'Orden de Pago Avalancha');
+      s = s.replace(/SNOWBALL PAYOFF ORDER/g, 'ORDEN DE PAGO BOLA DE NIEVE');
+      s = s.replace(/Snowball Payoff Order/g, 'Orden de Pago Bola de Nieve');
+
+      s = s.replace(/Time to debt free/g, 'Tiempo para quedar libre de deudas');
+      s = s.replace(/Total interest/g, 'Interés total');
+      s = s.replace(/Total paid/g, 'Total pagado');
+      s = s.replace(/Focus now/g, 'Prioridad actual');
+      s = s.replace(/Paid off by/g, 'Liquidado para');
+      s = s.replace(/APR/g, 'TNA');
+
+      s = s.replace(/Save \$([0-9,]+) and get debt free ([0-9]+) months sooner!/g, '¡Ahorra $$$1 y sal de deudas $2 meses antes!');
+      s = s.replace(/using Avalanche with \$([0-9,]+)\/mo extra/g, 'usando Avalancha con $$$1/mes extra');
+      s = s.replace(/using Snowball with \$([0-9,]+)\/mo extra/g, 'usando Bola de Nieve con $$$1/mes extra');
+
+      s = s.replace(/(\d+)yr\s+(\d+)mo/g, '$1 año $2 meses');
+      s = s.replace(/(\d+)yr/g, '$1 año');
+      s = s.replace(/(\d+)mo\b/g, '$1 mes');
+
+      monthMap.forEach(function(pair){
+        s = s.replace(new RegExp('\\b' + pair[0] + '\\b', 'g'), pair[1] + '.');
+      });
+    } else {
+      s = s.replace(/SOLO PAGOS MÍNIMOS/g, 'MINIMUMS ONLY');
+      s = s.replace(/Solo pagos mínimos/g, 'Minimums Only');
+      s = s.replace(/AVALANCHA \+ \$([0-9,]+)\/MES/g, 'AVALANCHE + $$$1/MO');
+      s = s.replace(/Avalancha \+ \$([0-9,]+)\/mes/g, 'Avalanche + $$$1/mo');
+      s = s.replace(/BOLA DE NIEVE \+ \$([0-9,]+)\/MES/g, 'SNOWBALL + $$$1/MO');
+      s = s.replace(/Bola de Nieve \+ \$([0-9,]+)\/mes/g, 'Snowball + $$$1/mo');
+
+      s = s.replace(/ORDEN DE PAGO AVALANCHA/g, 'AVALANCHE PAYOFF ORDER');
+      s = s.replace(/Orden de Pago Avalancha/g, 'Avalanche Payoff Order');
+      s = s.replace(/ORDEN DE PAGO BOLA DE NIEVE/g, 'SNOWBALL PAYOFF ORDER');
+      s = s.replace(/Orden de Pago Bola de Nieve/g, 'Snowball Payoff Order');
+
+      s = s.replace(/Tiempo para quedar libre de deudas/g, 'Time to debt free');
+      s = s.replace(/Interés total/g, 'Total interest');
+      s = s.replace(/Total pagado/g, 'Total paid');
+      s = s.replace(/Prioridad actual/g, 'Focus now');
+      s = s.replace(/Liquidado para/g, 'Paid off by');
+      s = s.replace(/TNA/g, 'APR');
+
+      s = s.replace(/¡Ahorra \$([0-9,]+) y sal de deudas ([0-9]+) meses antes!/g, 'Save $$$1 and get debt free $2 months sooner!');
+      s = s.replace(/usando Avalancha con \$([0-9,]+)\/mes extra/g, 'using Avalanche with $$$1/mo extra');
+      s = s.replace(/usando Bola de Nieve con \$([0-9,]+)\/mes extra/g, 'using Snowball with $$$1/mo extra');
+
+      s = s.replace(/(\d+) año (\d+) meses/g, '$1yr $2mo');
+      s = s.replace(/(\d+) año/g, '$1yr');
+      s = s.replace(/(\d+) mes\b/g, '$1mo');
+
+      monthMap.forEach(function(pair){
+        s = s.replace(new RegExp('\\b' + pair[1] + '\\.?\\b', 'g'), pair[0]);
+      });
+    }
+
+    return s;
+  }
+
+  function findDebtPayoffRoot(){
+    return (
+      document.getElementById('tab-debtplan') ||
+      document.getElementById('tab-debt-payoff') ||
+      document.querySelector('[id*="debtplan"]') ||
+      document.querySelector('[id*="debt-payoff"]')
+    );
+  }
+
+  function translateTextNodes(root){
+    if (!root) return;
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(node){
+        var parent = node.parentElement;
+        if (!parent) return NodeFilter.FILTER_REJECT;
+        if (parent.tagName === 'SCRIPT' || parent.tagName === 'STYLE') return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+
+    var nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+
+    nodes.forEach(function(node){
+      var next = translateDebtPayoffText(node.textContent);
+      if (next !== node.textContent) node.textContent = next;
+    });
+  }
+
+  function applyDebtPayoffRemainingSpanishFix(){
+    if (applying) return;
+    applying = true;
+
+    try {
+      var root = findDebtPayoffRoot();
+      if (!root) return;
+
+      translateTextNodes(root);
+
+      root.querySelectorAll('button, span, div, h1, h2, h3, h4, p, label').forEach(function(el){
+        if (el.childNodes.length === 1 && el.childNodes[0].nodeType === 3) {
+          var next = translateDebtPayoffText(el.textContent);
+          if (next !== el.textContent) el.textContent = next;
+        }
+      });
+    } catch(e) {
+      console.log('Final debt payoff Spanish fix skipped:', e.message);
+    } finally {
+      applying = false;
+    }
+  }
+
+  function scheduleDebtPayoffRemainingSpanishFix(){
+    clearTimeout(timer);
+    timer = setTimeout(applyDebtPayoffRemainingSpanishFix, 100);
+  }
+
+  function wrap(name){
+    try {
+      var fn = window[name];
+      if (typeof fn === 'function' && !fn.__fintrailFinalDebtSpanishWrapped) {
+        var wrapped = function(){
+          var result = fn.apply(this, arguments);
+          setTimeout(applyDebtPayoffRemainingSpanishFix, 40);
+          setTimeout(applyDebtPayoffRemainingSpanishFix, 250);
+          setTimeout(applyDebtPayoffRemainingSpanishFix, 700);
+          return result;
+        };
+        wrapped.__fintrailFinalDebtSpanishWrapped = true;
+        window[name] = wrapped;
+      }
+    } catch(e) {}
+  }
+
+  function install(){
+    [
+      'renderDebtPayoffPlan',
+      'renderDebtPlan',
+      'updateDebtPayoffPlan',
+      'calculateDebtPayoff',
+      'showTab',
+      'setLanguage',
+      'switchLanguage',
+      'applyLanguage'
+    ].forEach(wrap);
+  }
+
+  window.fintrailDebtPayoffRemainingSpanishFix = function(){
+    install();
+    applyDebtPayoffRemainingSpanishFix();
+  };
+
+  window.addEventListener('load', function(){
+    install();
+    [300, 900, 1800, 3000].forEach(function(ms){
+      setTimeout(applyDebtPayoffRemainingSpanishFix, ms);
+    });
+  });
+
+  document.addEventListener('click', function(e){
+    install();
+    var target = e.target;
+    if (!target) return;
+
+    if ((target.closest && (
+      target.closest('#tab-debtplan') ||
+      target.closest('#tab-debt-payoff') ||
+      target.closest('[id*="debtplan"]') ||
+      target.closest('[id*="debt-payoff"]')
+    )) || /English|Español|Spanish|^EN|^ES|Debt Payoff|Pago de Deudas/.test(String(target.textContent || ''))) {
+      scheduleDebtPayoffRemainingSpanishFix();
+      setTimeout(applyDebtPayoffRemainingSpanishFix, 350);
+      setTimeout(applyDebtPayoffRemainingSpanishFix, 900);
+    }
+  });
+
+  document.addEventListener('input', function(e){
+    if (e.target && e.target.closest && (
+      e.target.closest('#tab-debtplan') ||
+      e.target.closest('#tab-debt-payoff') ||
+      e.target.closest('[id*="debtplan"]') ||
+      e.target.closest('[id*="debt-payoff"]')
+    )) {
+      scheduleDebtPayoffRemainingSpanishFix();
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
