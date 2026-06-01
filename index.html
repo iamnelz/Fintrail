@@ -12992,5 +12992,96 @@ window.addEventListener('load', function(){
 })();
 </script>
 
+
+<script>
+/* === BUDGET TRACKER DROPDOWN CLICK FIX === */
+(function(){
+  function activateBudgetTracker(){
+    try {
+      // Open the main Budget tab first.
+      if (typeof showTab === 'function') {
+        try { showTab('budget'); } catch(e) {}
+      }
+
+      // Then force the Budget Tracker sub-tab visible.
+      var tracker = document.getElementById('bsub-tracker');
+      var schedule = document.getElementById('bsub-schedule');
+
+      if (tracker) tracker.classList.add('visible');
+      if (schedule) schedule.classList.remove('visible');
+
+      // Update sub-tab buttons.
+      document.querySelectorAll('.sched-tab-btn').forEach(function(btn){
+        var txt = (btn.textContent || '').toLowerCase();
+        var isTrackerBtn =
+          txt.indexOf('tracker') !== -1 ||
+          txt.indexOf('rastreador') !== -1 ||
+          txt.indexOf('presupuesto') !== -1 ||
+          (btn.getAttribute('onclick') || '').indexOf('tracker') !== -1;
+
+        var isScheduleBtn =
+          txt.indexOf('schedule') !== -1 ||
+          txt.indexOf('facturas') !== -1 ||
+          (btn.getAttribute('onclick') || '').indexOf('schedule') !== -1;
+
+        if (isTrackerBtn) btn.classList.add('active');
+        if (isScheduleBtn) btn.classList.remove('active');
+      });
+
+      // Use any built-in subtab function if it exists.
+      ['showBudgetSub','switchBudgetSub','showBudgetTab','switchBudgetTab'].forEach(function(name){
+        try {
+          if (typeof window[name] === 'function') {
+            window[name]('tracker');
+          }
+        } catch(e) {}
+      });
+
+      if (tracker) tracker.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch(e) {
+      console.log('Budget tracker dropdown fix skipped:', e.message);
+    }
+  }
+
+  function looksLikeBudgetTrackerTarget(el){
+    if (!el) return false;
+    var text = (el.textContent || '').toLowerCase();
+    var onclick = (el.getAttribute && (el.getAttribute('onclick') || '').toLowerCase()) || '';
+    var dataTab = (el.getAttribute && (
+      el.getAttribute('data-tab') ||
+      el.getAttribute('data-target') ||
+      el.getAttribute('data-section') ||
+      ''
+    ).toLowerCase()) || '';
+
+    return (
+      text.indexOf('budget tracker') !== -1 ||
+      text.indexOf('rastreador de presupuesto') !== -1 ||
+      dataTab.indexOf('tracker') !== -1 ||
+      dataTab.indexOf('budget') !== -1 ||
+      onclick.indexOf('bsub-tracker') !== -1 ||
+      onclick.indexOf('tracker') !== -1
+    );
+  }
+
+  document.addEventListener('click', function(e){
+    var target = e.target;
+    if (!target || !target.closest) return;
+
+    var item = target.closest('button, .nav-dropdown-item, .mobile-nav-tile, [role="button"], a');
+    if (!item) return;
+
+    if (looksLikeBudgetTrackerTarget(item)) {
+      e.preventDefault();
+      e.stopPropagation();
+      setTimeout(activateBudgetTracker, 20);
+      setTimeout(activateBudgetTracker, 180);
+    }
+  }, true);
+
+  window.fintrailActivateBudgetTracker = activateBudgetTracker;
+})();
+</script>
+
 </body>
 </html>
