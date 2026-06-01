@@ -7381,6 +7381,26 @@ Guidelines:
       
 
 
+
+<script>
+/* === NET WORTH MONTH NAME SPANISH FIX === */
+(function(){
+  function fixMonths(){
+    document.querySelectorAll('*').forEach(function(el){
+      if(el.children.length===0){
+        if(el.textContent.trim()==='June 2026') el.textContent='Junio de 2026';
+        if(el.textContent.trim()==='mayo de 2026') el.textContent='Mayo de 2026';
+      }
+    });
+  }
+  window.addEventListener('load', function(){
+    setTimeout(fixMonths,300);
+    setTimeout(fixMonths,1200);
+  });
+  new MutationObserver(fixMonths).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
+
 </body>
       </html>
     `);
@@ -13080,6 +13100,26 @@ window.addEventListener('load', function(){
   }, true);
 
   window.fintrailActivateBudgetTracker = activateBudgetTracker;
+})();
+</script>
+
+
+<script>
+/* === NET WORTH MONTH NAME SPANISH FIX === */
+(function(){
+  function fixMonths(){
+    document.querySelectorAll('*').forEach(function(el){
+      if(el.children.length===0){
+        if(el.textContent.trim()==='June 2026') el.textContent='Junio de 2026';
+        if(el.textContent.trim()==='mayo de 2026') el.textContent='Mayo de 2026';
+      }
+    });
+  }
+  window.addEventListener('load', function(){
+    setTimeout(fixMonths,300);
+    setTimeout(fixMonths,1200);
+  });
+  new MutationObserver(fixMonths).observe(document.body,{childList:true,subtree:true});
 })();
 </script>
 
