@@ -4032,19 +4032,7 @@
           </div>
           <div class="form-group">
             <label data-en="Category" data-es="Categoría">Category</label>
-            <select id="g-category">
-              <option>Emergency Fund</option>
-              <option>Home</option>
-              <option>Vehicle</option>
-              <option>Travel</option>
-              <option>Education</option>
-              <option>Wedding</option>
-              <option>Family</option>
-              <option>Tech</option>
-              <option>Health</option>
-              <option>Retirement</option>
-              <option>Other</option>
-            </select>
+            <input type="text" id="g-category" placeholder="e.g. Emergency Fund, Home, Travel" data-placeholder-en="e.g. Emergency Fund, Home, Travel" data-placeholder-es="ej. Fondo de emergencia, Hogar, Viaje">
           </div>
           <button class="add-btn" onclick="addGoal()">+ Add Goal</button>
         </div>
@@ -6206,13 +6194,14 @@ Guidelines:
     const target = parseFloat(document.getElementById('g-target').value);
     const saved = parseFloat(document.getElementById('g-saved').value) || 0;
     const date = document.getElementById('g-date').value;
-    const category = document.getElementById('g-category').value;
-    if (!name || isNaN(target) || target <= 0) { alert('Please enter a goal name and target amount.'); return; }
+    const category = document.getElementById('g-category').value.trim() || (currentLang === 'es' ? 'Sin categoría' : 'Uncategorized');
+    if (!name || isNaN(target) || target <= 0) { alert(currentLang === 'es' ? 'Ingresa un nombre de meta y un monto objetivo.' : 'Please enter a goal name and target amount.'); return; }
     goals.push({ id: String(Date.now()), name, icon: selectedEmoji, target, saved: Math.min(saved, target), date, category });
     document.getElementById('g-name').value = '';
     document.getElementById('g-target').value = '';
     document.getElementById('g-saved').value = '';
     document.getElementById('g-date').value = '';
+    document.getElementById('g-category').value = '';
     // Save to localStorage immediately (sync) before async Supabase write
     const _gUid = currentUser?.id || 'demo';
     safeSet('fintrail_goals_' + _gUid, JSON.stringify(goals));
