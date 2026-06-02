@@ -12856,6 +12856,23 @@ window.addEventListener('load', function(){
     ['Breakdown', 'Desglose'],
     ['Monthly History', 'Historial Mensual'],
     ['Clear', 'Limpiar'],
+
+    ['Savings Goals', 'Metas de Ahorro'],
+    ['Debt Milestones', 'Hitos de Deuda'],
+    ['Custom Events', 'Eventos Personalizados'],
+    ['Today', 'Hoy'],
+    ['Upcoming Events', 'Próximos Eventos'],
+    ['Add Event', 'Agregar Evento'],
+    ['No upcoming events', 'No hay próximos eventos'],
+    ['No events yet', 'Aún no hay eventos'],
+    ['Event Title', 'Título del Evento'],
+    ['Event Type', 'Tipo de Evento'],
+    ['Save Event', 'Guardar Evento'],
+    ['Bill Due', 'Factura Vencida'],
+    ['Payday', 'Día de Pago'],
+    ['Goal Deadline', 'Fecha Límite de Meta'],
+    ['Debt Payoff', 'Pago de Deuda'],
+    ['Custom', 'Personalizado'],
     ['Net Worth Over Time', 'Patrimonio Neto en el Tiempo'],
     ['Add data to see your history', 'Agrega datos para ver tu historial'],
     ['A monthly snapshot is saved each time you visit this tab.', 'Se guarda una captura mensual cada vez que visitas esta pestaña.'],
@@ -13492,6 +13509,103 @@ window.addEventListener('load', function(){
   window.addEventListener('load', function(){
     try {
       var root = document.getElementById('tab-networth') || document.body;
+      if (root) observer.observe(root, { childList:true, subtree:true, characterData:true });
+    } catch(e) {}
+  });
+})();
+</script>
+
+
+<script>
+/* === FINANCIAL CALENDAR SPANISH LABEL PATCH === */
+(function(){
+  var calendarTranslations = {
+    'Savings Goals': 'Metas de Ahorro',
+    'Debt Milestones': 'Hitos de Deuda',
+    'Custom Events': 'Eventos Personalizados',
+    'Today': 'Hoy',
+    'Upcoming Events': 'Próximos Eventos',
+    'Add Event': 'Agregar Evento',
+    'No upcoming events': 'No hay próximos eventos',
+    'No events yet': 'Aún no hay eventos',
+    'Event Title': 'Título del Evento',
+    'Event Type': 'Tipo de Evento',
+    'Save Event': 'Guardar Evento',
+    'Bill Due': 'Factura Vencida',
+    'Payday': 'Día de Pago',
+    'Goal Deadline': 'Fecha Límite de Meta',
+    'Debt Payoff': 'Pago de Deuda',
+    'Custom': 'Personalizado',
+    'Month': 'Mes',
+    'Week': 'Semana',
+    'Day': 'Día'
+  };
+
+  function isSpanish(){
+    try { return (typeof currentLang !== 'undefined' && currentLang === 'es'); } catch(e) { return false; }
+  }
+
+  function translateCalendarTextNode(node){
+    var original = node.textContent || '';
+    var updated = original;
+    Object.keys(calendarTranslations).forEach(function(en){
+      updated = updated.split(en).join(calendarTranslations[en]);
+    });
+    if (updated !== original) node.textContent = updated;
+  }
+
+  function applyFinancialCalendarSpanish(){
+    try {
+      if (!isSpanish()) return;
+      var root = document.getElementById('tab-calendar');
+      if (!root) return;
+
+      var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode: function(node){
+          var p = node.parentElement;
+          if (!p) return NodeFilter.FILTER_REJECT;
+          if (p.tagName === 'SCRIPT' || p.tagName === 'STYLE') return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+
+      var nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach(translateCalendarTextNode);
+
+      root.querySelectorAll('button, input, textarea, select').forEach(function(el){
+        if (el.placeholder) {
+          Object.keys(calendarTranslations).forEach(function(en){
+            el.placeholder = el.placeholder.split(en).join(calendarTranslations[en]);
+          });
+        }
+        if (el.title) {
+          Object.keys(calendarTranslations).forEach(function(en){
+            el.title = el.title.split(en).join(calendarTranslations[en]);
+          });
+        }
+      });
+    } catch(e) {}
+  }
+
+  window.fintrailCalendarSpanishPatch = applyFinancialCalendarSpanish;
+
+  window.addEventListener('load', function(){
+    setTimeout(applyFinancialCalendarSpanish, 500);
+    setTimeout(applyFinancialCalendarSpanish, 1500);
+  });
+
+  document.addEventListener('click', function(){
+    setTimeout(applyFinancialCalendarSpanish, 120);
+  });
+
+  var observer = new MutationObserver(function(){
+    setTimeout(applyFinancialCalendarSpanish, 80);
+  });
+
+  window.addEventListener('load', function(){
+    try {
+      var root = document.getElementById('tab-calendar');
       if (root) observer.observe(root, { childList:true, subtree:true, characterData:true });
     } catch(e) {}
   });
