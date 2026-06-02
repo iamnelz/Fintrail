@@ -13087,41 +13087,17 @@ window.addEventListener('load', function(){
 
 
 
-
-
-
 <script>
-/* === FINAL DEBT PAYOFF DESCRIPTIONS SPANISH FIX === */
+/* === TRANSLATIONS RESTORED LOGIN SAFE FIX === */
 (function(){
-  var applying = false;
-  var timer = null;
-
-  function isSpanish(){
-    try { return window.currentLang === 'es' || currentLang === 'es'; }
-    catch(e) { return false; }
-  }
-
-  var avalancheEn = 'Pay minimums on all debts, then put ALL extra money toward the highest interest rate debt first. Mathematically saves the most money in interest.';
-  var avalancheEs = 'Paga los mínimos en todas tus deudas y destina TODO el dinero extra a la deuda con la tasa de interés más alta primero. Matemáticamente, es el método que más dinero ahorra en intereses.';
-  var snowballEn = 'Pay minimums on all debts, then put ALL extra money toward the smallest balance debt first. Gives you quick wins and motivation to keep going.';
-  var snowballEs = 'Paga los mínimos en todas tus deudas y destina TODO el dinero extra a la deuda con el saldo más pequeño primero. Te brinda victorias rápidas y motivación para seguir avanzando.';
-
-  function debtRoot(){
-    return document.getElementById('tab-debtplan') ||
-           document.getElementById('tab-debt-payoff') ||
-           document.querySelector('[id*="debtplan"]') ||
-           document.querySelector('[id*="debt-payoff"]') ||
-           null;
-  }
-
-  function replaceInTextNodes(root){
+  function replaceInTextNodes(root, replacements){
     if (!root) return;
 
     var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
       acceptNode: function(node){
-        var p = node.parentElement;
-        if (!p) return NodeFilter.FILTER_REJECT;
-        if (p.tagName === 'SCRIPT' || p.tagName === 'STYLE') return NodeFilter.FILTER_REJECT;
+        var parent = node.parentElement;
+        if (!parent) return NodeFilter.FILTER_REJECT;
+        if (parent.tagName === "SCRIPT" || parent.tagName === "STYLE") return NodeFilter.FILTER_REJECT;
         return NodeFilter.FILTER_ACCEPT;
       }
     });
@@ -13130,25 +13106,183 @@ window.addEventListener('load', function(){
     while (walker.nextNode()) nodes.push(walker.currentNode);
 
     nodes.forEach(function(node){
-      var t = node.textContent || '';
+      var next = node.textContent || "";
+      replacements.forEach(function(pair){
+        next = next.split(pair[0]).join(pair[1]);
+      });
+      if (next !== node.textContent) node.textContent = next;
+    });
+  }
 
-      if (isSpanish()) {
-        t = t.split(avalancheEn).join(avalancheEs);
-        t = t.split(snowballEn).join(snowballEs);
-      } else {
-        t = t.split(avalancheEs).join(avalancheEn);
-        t = t.split(snowballEs).join(snowballEn);
+  function applyTranslations(){
+    var replacements = [
+      [
+        "Pay minimums on all debts, then put ALL extra money toward the highest interest rate debt first. Mathematically saves the most money in interest.",
+        "Paga los mínimos en todas tus deudas y destina TODO el dinero extra a la deuda con la tasa de interés más alta primero. Matemáticamente, es el método que más dinero ahorra en intereses."
+      ],
+      [
+        "Pay minimums on all debts, then put ALL extra money toward the smallest balance debt first. Gives you quick wins and motivation to keep going.",
+        "Paga los mínimos en todas tus deudas y destina TODO el dinero extra a la deuda con el saldo más pequeño primero. Te brinda victorias rápidas y motivación para seguir avanzando."
+      ],
+      ["June 2026", "Junio de 2026"],
+      ["june 2026", "Junio de 2026"],
+      ["mayo de 2026", "Mayo de 2026"]
+    ];
+
+    replaceInTextNodes(document.body, replacements);
+  }
+
+  window.addEventListener("load", function(){
+    setTimeout(applyTranslations, 300);
+    setTimeout(applyTranslations, 1000);
+    setTimeout(applyTranslations, 2200);
+  });
+
+  document.addEventListener("click", function(){
+    setTimeout(applyTranslations, 200);
+    setTimeout(applyTranslations, 700);
+  });
+
+  document.addEventListener("change", function(){
+    setTimeout(applyTranslations, 200);
+  });
+
+  window.fintrailRestoreSpanishTranslationsSafe = applyTranslations;
+})();
+</script>
+
+
+<script>
+/* === SAVINGS GOAL CATEGORY SPANISH FIX === */
+(function(){
+  var applying = false;
+  var timer = null;
+
+  var categories = [
+    ["Emergency Fund", "Fondo de Emergencia"],
+    ["Home", "Casa"],
+    ["Vehicle", "Vehículo"],
+    ["Travel", "Viaje"],
+    ["Education", "Educación"],
+    ["Wedding", "Boda"],
+    ["Family", "Familia"],
+    ["Tech", "Tecnología"],
+    ["Health", "Salud"],
+    ["Retirement", "Jubilación"],
+    ["Other", "Otro"]
+  ];
+
+  function isSpanish(){
+    try { return window.currentLang === "es" || currentLang === "es"; }
+    catch(e) { return false; }
+  }
+
+  function findCategoryIndex(value){
+    value = String(value || "").trim();
+    for (var i = 0; i < categories.length; i++) {
+      if (value === categories[i][0] || value === categories[i][1]) return i;
+    }
+    return -1;
+  }
+
+  function isSavingsGoalCategorySelect(select){
+    if (!select) return false;
+
+    var idName = (
+      (select.id || "") + " " +
+      (select.name || "") + " " +
+      (select.className || "")
+    ).toLowerCase();
+
+    var optionText = Array.prototype.map.call(select.options || [], function(opt){
+      return (opt.textContent || "") + " " + (opt.value || "");
+    }).join(" ");
+
+    var parentText = "";
+    var group = select.closest && select.closest(".form-group");
+    if (group) parentText = group.textContent || "";
+
+    var looksLikeSavingsCategories =
+      /Emergency Fund|Home|Vehicle|Travel|Education|Wedding|Family|Tech|Health|Retirement|Other|Fondo de Emergencia|Casa|Vehículo|Viaje|Educación|Boda|Familia|Tecnología|Salud|Jubilación|Otro/.test(optionText);
+
+    var looksLikeCategoryField =
+      /category|categoria|categoría|goal/.test(idName + " " + parentText.toLowerCase());
+
+    var insideGoals =
+      !!(select.closest && (
+        select.closest("#tab-goals") ||
+        select.closest('[id*="goal"]') ||
+        select.closest('[class*="goal"]')
+      ));
+
+    return insideGoals && looksLikeSavingsCategories && looksLikeCategoryField;
+  }
+
+  function rebuildSelect(select){
+    var selectedText = "";
+    if (select.selectedIndex >= 0 && select.options[select.selectedIndex]) {
+      selectedText = select.options[select.selectedIndex].textContent || select.options[select.selectedIndex].value || "";
+    }
+    var current = select.value || selectedText;
+    var index = findCategoryIndex(current);
+    if (index < 0 && select.selectedIndex >= 0) index = Math.min(select.selectedIndex, categories.length - 1);
+    if (index < 0) index = 0;
+
+    select.innerHTML = "";
+
+    categories.forEach(function(pair){
+      var opt = document.createElement("option");
+      opt.value = isSpanish() ? pair[1] : pair[0];
+      opt.textContent = isSpanish() ? pair[1] : pair[0];
+      select.appendChild(opt);
+    });
+
+    select.value = isSpanish() ? categories[index][1] : categories[index][0];
+  }
+
+  function translateGoalCategoryText(root){
+    if (!root) return;
+
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(node){
+        var p = node.parentElement;
+        if (!p) return NodeFilter.FILTER_REJECT;
+        if (p.tagName === "SCRIPT" || p.tagName === "STYLE" || p.tagName === "OPTION") return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
       }
+    });
 
-      if (t !== node.textContent) node.textContent = t;
+    var nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+
+    nodes.forEach(function(node){
+      var t = node.textContent || "";
+      var next = t;
+
+      categories.forEach(function(pair){
+        if (isSpanish()) next = next.split(pair[0]).join(pair[1]);
+        else next = next.split(pair[1]).join(pair[0]);
+      });
+
+      if (next !== t) node.textContent = next;
     });
   }
 
   function applyFix(){
     if (applying) return;
     applying = true;
+
     try {
-      replaceInTextNodes(debtRoot());
+      var root =
+        document.getElementById("tab-goals") ||
+        document.querySelector('[id*="goal"]') ||
+        document.body;
+
+      root.querySelectorAll("select").forEach(function(select){
+        if (isSavingsGoalCategorySelect(select)) rebuildSelect(select);
+      });
+
+      translateGoalCategoryText(root);
     } finally {
       applying = false;
     }
@@ -13156,21 +13290,21 @@ window.addEventListener('load', function(){
 
   function scheduleFix(){
     clearTimeout(timer);
-    timer = setTimeout(applyFix, 120);
+    timer = setTimeout(applyFix, 100);
   }
 
   function wrap(name){
     try {
       var fn = window[name];
-      if (typeof fn === 'function' && !fn.__fintrailDebtDescriptionsWrapped) {
+      if (typeof fn === "function" && !fn.__fintrailSavingsCategoryWrapped) {
         var wrapped = function(){
           var result = fn.apply(this, arguments);
-          setTimeout(applyFix, 50);
+          setTimeout(applyFix, 40);
           setTimeout(applyFix, 250);
           setTimeout(applyFix, 700);
           return result;
         };
-        wrapped.__fintrailDebtDescriptionsWrapped = true;
+        wrapped.__fintrailSavingsCategoryWrapped = true;
         window[name] = wrapped;
       }
     } catch(e) {}
@@ -13178,45 +13312,51 @@ window.addEventListener('load', function(){
 
   function install(){
     [
-      'renderDebtPayoffPlan',
-      'renderDebtPlan',
-      'updateDebtPayoffPlan',
-      'calculateDebtPayoff',
-      'showTab',
-      'setLanguage',
-      'switchLanguage',
-      'applyLanguage'
+      "renderSavingsGoals",
+      "renderGoals",
+      "addSavingsGoal",
+      "showTab",
+      "setLanguage",
+      "switchLanguage",
+      "applyLanguage"
     ].forEach(wrap);
   }
 
-  window.fintrailDebtMethodDescriptionsSpanishFix = function(){
+  window.fintrailSavingsGoalCategorySpanishFix = function(){
     install();
     applyFix();
   };
 
-  window.addEventListener('load', function(){
+  window.addEventListener("load", function(){
     install();
-    [350, 900, 1800, 3000].forEach(function(ms){ setTimeout(applyFix, ms); });
+    [300, 900, 1800, 3000].forEach(function(ms){ setTimeout(applyFix, ms); });
   });
 
-  document.addEventListener('click', function(e){
+  document.addEventListener("click", function(e){
     install();
     var target = e.target;
     if (!target) return;
-    var txt = String(target.textContent || '');
+    var text = String(target.textContent || "");
     if ((target.closest && (
-      target.closest('#tab-debtplan') ||
-      target.closest('#tab-debt-payoff') ||
-      target.closest('[id*="debtplan"]') ||
-      target.closest('[id*="debt-payoff"]')
-    )) || /Avalancha|Bola de Nieve|Debt|Deudas|English|Español|Spanish|^EN|^ES/.test(txt)) {
+      target.closest("#tab-goals") ||
+      target.closest('[id*="goal"]') ||
+      target.closest('[class*="goal"]')
+    )) || /English|Español|Spanish|^EN|^ES|Savings|Metas|Ahorro/.test(text)) {
       scheduleFix();
-      setTimeout(applyFix, 450);
-      setTimeout(applyFix, 1000);
+      setTimeout(applyFix, 350);
+      setTimeout(applyFix, 900);
     }
   });
 
-  document.addEventListener('change', scheduleFix);
+  document.addEventListener("change", function(e){
+    if (e.target && e.target.closest && (
+      e.target.closest("#tab-goals") ||
+      e.target.closest('[id*="goal"]') ||
+      e.target.closest('[class*="goal"]')
+    )) {
+      scheduleFix();
+    }
+  });
 })();
 </script>
 
