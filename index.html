@@ -3999,10 +3999,10 @@
         <div class="form-row">
           <div class="form-group">
             <label data-en="Goal Name" data-es="Nombre de la Meta">Goal Name</label>
-            <input type="text" id="g-name" placeholder="e.g. Emergency Fund, Vacation">
+            <input type="text" id="g-name" placeholder="e.g. Emergency Fund, Vacation" data-placeholder-en="e.g. Emergency Fund, Vacation" data-placeholder-es="ej. Emergencia, Vacaciones">
           </div>
           <div class="form-group">
-            <label>Icon</label>
+            <label data-en="Icon" data-es="Ícono">Icon</label>
             <div class="emoji-picker" id="emoji-picker">
               <div class="emoji-opt selected" onclick="selectEmoji(this)">🎯</div>
               <div class="emoji-opt" onclick="selectEmoji(this)">🏠</div>
@@ -4030,11 +4030,7 @@
             <label data-en="Target Date (optional)" data-es="Fecha Objetivo (opcional)">Target Date (optional)</label>
             <input type="date" id="g-date">
           </div>
-          <div class="form-group">
-            <label data-en="Category" data-es="Categoría">Category</label>
-            <input type="text" id="g-category" placeholder="e.g. Emergency Fund, Home, Travel" data-placeholder-en="e.g. Emergency Fund, Home, Travel" data-placeholder-es="ej. Fondo de emergencia, Hogar, Viaje">
-          </div>
-          <button class="add-btn" onclick="addGoal()">+ Add Goal</button>
+          <button class="add-btn" onclick="addGoal()" data-en="+ Add Goal" data-es="+ Agregar Meta">+ Add Goal</button>
         </div>
       </div>
     </div>
@@ -6194,14 +6190,12 @@ Guidelines:
     const target = parseFloat(document.getElementById('g-target').value);
     const saved = parseFloat(document.getElementById('g-saved').value) || 0;
     const date = document.getElementById('g-date').value;
-    const category = document.getElementById('g-category').value.trim() || (currentLang === 'es' ? 'Sin categoría' : 'Uncategorized');
     if (!name || isNaN(target) || target <= 0) { alert(currentLang === 'es' ? 'Ingresa un nombre de meta y un monto objetivo.' : 'Please enter a goal name and target amount.'); return; }
-    goals.push({ id: String(Date.now()), name, icon: selectedEmoji, target, saved: Math.min(saved, target), date, category });
+    goals.push({ id: String(Date.now()), name, icon: selectedEmoji, target, saved: Math.min(saved, target), date });
     document.getElementById('g-name').value = '';
     document.getElementById('g-target').value = '';
     document.getElementById('g-saved').value = '';
     document.getElementById('g-date').value = '';
-    document.getElementById('g-category').value = '';
     // Save to localStorage immediately (sync) before async Supabase write
     const _gUid = currentUser?.id || 'demo';
     safeSet('fintrail_goals_' + _gUid, JSON.stringify(goals));
@@ -6211,7 +6205,7 @@ Guidelines:
   }
 
   function deleteGoal(id) {
-    if (!confirm('Delete this savings goal?')) return;
+    if (!confirm(currentLang === 'es' ? '¿Eliminar esta meta de ahorro?' : 'Delete this savings goal?')) return;
     goals = goals.filter(g => String(g.id) !== String(id));
     // Save immediately to localStorage before async Supabase write
     const _dUid = currentUser?.id || 'demo';
@@ -6284,7 +6278,20 @@ Guidelines:
       const months = monthsUntil(g.date);
       const monthlyNeeded = (months && months > 0 && remaining > 0) ? (remaining / months) : null;
       const complete = pct >= 100;
-      const dateLabel = g.date ? new Date(g.date).toLocaleDateString('en-US', {month:'short', year:'numeric'}) : 'No deadline';
+      const isEs = currentLang === 'es';
+      const dateLabel = g.date ? new Date(g.date).toLocaleDateString(isEs ? 'es-US' : 'en-US', {month:'short', year:'numeric'}) : (isEs ? 'Sin fecha límite' : 'No deadline');
+      const monthWord = isEs ? (months === 1 ? 'mes' : 'meses') : (months === 1 ? 'month' : 'months');
+      const goalReachedText = isEs ? '🎉 ¡Meta alcanzada!' : '🎉 Goal Reached!';
+      const monthlyText = monthlyNeeded
+        ? (isEs
+          ? `Ahorra <strong>$${monthlyNeeded.toFixed(0)}/mes</strong> para alcanzar tu meta en <strong>${months} ${monthWord}</strong>`
+          : `Save <strong>$${monthlyNeeded.toFixed(0)}/mo</strong> to reach your goal in <strong>${months} ${monthWord}</strong>`)
+        : '';
+      const depositPlaceholder = isEs ? 'Agregar ahorro...' : 'Add savings...';
+      const depositBtn = isEs ? '+ Agregar' : '+ Add';
+      const ofLabel = isEs ? 'de' : 'of';
+      const completeLabel = isEs ? 'completado' : 'complete';
+      const deleteTitle = isEs ? 'Eliminar' : 'Delete';
 
       return `
       <div class="goal-card">
@@ -6293,30 +6300,29 @@ Guidelines:
             <span class="goal-icon">${g.icon}</span>
             <div>
               <div class="goal-name">${escHtml(g.name)}</div>
-              <div class="goal-category">${g.category}</div>
             </div>
           </div>
           <div class="goal-actions">
-            <button class="goal-action-btn del" onclick="deleteGoal('${g.id}')" title="Delete">✕</button>
+            <button class="goal-action-btn del" onclick="deleteGoal('${g.id}')" title="${deleteTitle}">✕</button>
           </div>
         </div>
         <div class="goal-amounts">
           <span class="goal-saved" style="color:${color}">$${g.saved.toLocaleString('en-US',{maximumFractionDigits:0})}</span>
-          <span class="goal-target">of $${g.target.toLocaleString('en-US',{maximumFractionDigits:0})}</span>
+          <span class="goal-target">${ofLabel} $${g.target.toLocaleString('en-US',{maximumFractionDigits:0})}</span>
         </div>
         <div class="goal-progress-track">
           <div class="goal-progress-fill" style="width:${pct}%;background:${color}"></div>
         </div>
         <div class="goal-meta">
-          <span class="goal-pct" style="color:${color}">${pct.toFixed(0)}% complete</span>
+          <span class="goal-pct" style="color:${color}">${pct.toFixed(0)}% ${completeLabel}</span>
           <span class="goal-deadline">📅 ${dateLabel}</span>
         </div>
-        ${complete ? '<div class="goal-complete-badge">🎉 Goal Reached!</div>' : ''}
-        ${monthlyNeeded ? `<div class="goal-monthly">Save <strong>$${monthlyNeeded.toFixed(0)}/mo</strong> to reach your goal in <strong>${months} month${months !== 1 ? 's' : ''}</strong></div>` : ''}
+        ${complete ? `<div class="goal-complete-badge">${goalReachedText}</div>` : ''}
+        ${monthlyText ? `<div class="goal-monthly">${monthlyText}</div>` : ''}
         ${!complete ? `
         <div class="add-deposit-row">
-          <input class="deposit-input" id="dep-${g.id}" type="number" placeholder="Add savings..." min="0" onkeydown="if(event.key==='Enter')deposit(${g.id})">
-          <button class="deposit-btn" onclick="deposit('${g.id}')">+ Add</button>
+          <input class="deposit-input" id="dep-${g.id}" type="number" placeholder="${depositPlaceholder}" min="0" onkeydown="if(event.key==='Enter')deposit(${g.id})">
+          <button class="deposit-btn" onclick="deposit('${g.id}')">${depositBtn}</button>
         </div>` : ''}
       </div>`;
     }).join('');
@@ -12242,7 +12248,7 @@ window.addEventListener('load', function(){
     if (applying) return;
     applying = true;
     try {
-      var root = document.getElementById('tab-goals');
+      var root = document.getElementById('tab-savings') || document.getElementById('tab-goals');
       if (!root) return;
 
       root.querySelectorAll('select').forEach(function(select){
@@ -12310,7 +12316,7 @@ window.addEventListener('load', function(){
 
   function startObserver(){
     if (observerStarted) return;
-    var root = document.getElementById('tab-goals');
+    var root = document.getElementById('tab-savings') || document.getElementById('tab-goals');
     if (!root) return;
     observerStarted = true;
 
