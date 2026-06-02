@@ -7377,60 +7377,31 @@ Guidelines:
 
 
 
+
 <script>
-/* === DEBT PAYOFF EXACT SPANISH COPY PATCH === */
+/* === SAFE DEBT PAYOFF SPANISH COPY ONLY === */
 (function(){
-  var avalancheText = 'Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.';
-  var snowballText = 'Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con el saldo más pequeño primero. Este método genera victorias rápidas y ayuda a mantener la motivación.';
-
-  function isSpanishMode(){
-    try { return window.currentLang === 'es' || currentLang === 'es'; } catch(e) { return false; }
-  }
-
-  function applyDebtPayoffExactSpanish(){
-    if (!isSpanishMode()) return;
-
-    var explanation = document.getElementById('method-explanation');
-    if (explanation) {
-      var activeMethod = 'avalanche';
-      try {
-        activeMethod = (document.getElementById('method-snowball') && document.getElementById('method-snowball').classList.contains('active')) ? 'snowball' : 'avalanche';
-      } catch(e) {}
-
-      if (activeMethod === 'snowball') {
-        explanation.innerHTML = '<strong style="color:var(--text)">☃️ Método Bola de Nieve:</strong> ' + snowballText;
+  function applyDebtSpanishCopy(){
+    try {
+      var lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
+      if (lang !== 'es') return;
+      var explanation = document.getElementById('method-explanation');
+      if (!explanation) return;
+      var snowballBtn = document.getElementById('method-snowball');
+      var isSnowball = snowballBtn && snowballBtn.classList && snowballBtn.classList.contains('active');
+      if (isSnowball) {
+        explanation.innerHTML = '<strong style="color:var(--text)">☃️ Método Bola de Nieve:</strong> Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con el saldo más pequeño primero. Este método genera victorias rápidas y ayuda a mantener la motivación.';
       } else {
-        explanation.innerHTML = '<strong style="color:var(--text)">🔥 Método Avalancha:</strong> ' + avalancheText;
+        explanation.innerHTML = '<strong style="color:var(--text)">🔥 Método Avalancha:</strong> Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.';
       }
-    }
-
-    var avalancheBtn = document.getElementById('method-avalanche');
-    var snowballBtn = document.getElementById('method-snowball');
-    if (avalancheBtn) avalancheBtn.textContent = '🔥 Avalancha — Ahorra Más';
-    if (snowballBtn) snowballBtn.textContent = '☃️ Bola de Nieve — Victorias Rápidas';
+    } catch(e) {}
   }
-
-  var originalSetMethod = window.setMethod;
-  if (typeof originalSetMethod === 'function' && !window.__fintrailDebtPayoffSpanishWrapped) {
-    window.setMethod = function(method, btn){
-      var result = originalSetMethod.apply(this, arguments);
-      setTimeout(applyDebtPayoffExactSpanish, 25);
-      return result;
-    };
-    window.__fintrailDebtPayoffSpanishWrapped = true;
-  }
-
-  window.fintrailDebtPayoffExactSpanish = applyDebtPayoffExactSpanish;
   window.addEventListener('load', function(){
-    setTimeout(applyDebtPayoffExactSpanish, 400);
-    setTimeout(applyDebtPayoffExactSpanish, 1200);
+    setTimeout(applyDebtSpanishCopy, 500);
+    setTimeout(applyDebtSpanishCopy, 1500);
   });
-  document.addEventListener('click', function(e){
-    var target = e.target;
-    if (!target) return;
-    if ((target.closest && target.closest('#tab-debtplan')) || String(target.textContent || '').indexOf('Español') !== -1 || String(target.textContent || '').indexOf('ES') === 0) {
-      setTimeout(applyDebtPayoffExactSpanish, 80);
-    }
+  document.addEventListener('click', function(){
+    setTimeout(applyDebtSpanishCopy, 100);
   });
 })();
 </script>
@@ -11262,7 +11233,7 @@ window.addEventListener('load', function(){
   var enToEs = [
     ['Save PDF', 'Guardar PDF'],
     ['Avalanche Method:', 'Método Avalancha:'],
-    ['Pay minimums on all debts, then put ALL extra money toward the highest interest rate debt first. Mathematically saves the most money in interest.', 'Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.'],
+    ['Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.', 'Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.'],
     ['This extra amount gets focused on one debt at a time', 'Este monto extra se aplica a una deuda a la vez'],
     ['+ Add a Debt', '+ Agregar Deuda'],
     ['Add a Debt', 'Agregar Deuda'],
@@ -11281,7 +11252,7 @@ window.addEventListener('load', function(){
     ['SNOWBALL PAYOFF ORDER', 'ORDEN DE PAGO BOLA DE NIEVE'],
     ['Paid off by', 'Pagado para'],
     ['Snowball Method:', 'Método Bola de Nieve:'],
-    ['Pay minimums on all debts, then put ALL extra money toward the smallest balance debt first. Builds quick wins and motivation.', 'Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con el saldo más pequeño primero. Este método genera victorias rápidas y ayuda a mantener la motivación.'],
+    ['Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con el saldo más pequeño primero. Este método genera victorias rápidas y ayuda a mantener la motivación.', 'Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con el saldo más pequeño primero. Este método genera victorias rápidas y ayuda a mantener la motivación.'],
     ['Avalanche — Save More', 'Avalancha — Ahorra Más'],
     ['Snowball — Quick Wins', 'Bola de Nieve — Victorias Rápidas'],
     ['APR', 'TNA'],
@@ -13171,7 +13142,7 @@ window.addEventListener('load', function(){
   function applyTranslations(){
     var replacements = [
       [
-        "Pay minimums on all debts, then put ALL extra money toward the highest interest rate debt first. Mathematically saves the most money in interest.",
+        "Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.",
         "Paga los mínimos en todas tus deudas y destina TODO el dinero extra a la deuda con la tasa de interés más alta primero. Matemáticamente, es el método que más dinero ahorra en intereses."
       ],
       [
@@ -13451,60 +13422,31 @@ window.addEventListener('load', function(){
 </script>
 
 
+
 <script>
-/* === DEBT PAYOFF EXACT SPANISH COPY PATCH === */
+/* === SAFE DEBT PAYOFF SPANISH COPY ONLY === */
 (function(){
-  var avalancheText = 'Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.';
-  var snowballText = 'Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con el saldo más pequeño primero. Este método genera victorias rápidas y ayuda a mantener la motivación.';
-
-  function isSpanishMode(){
-    try { return window.currentLang === 'es' || currentLang === 'es'; } catch(e) { return false; }
-  }
-
-  function applyDebtPayoffExactSpanish(){
-    if (!isSpanishMode()) return;
-
-    var explanation = document.getElementById('method-explanation');
-    if (explanation) {
-      var activeMethod = 'avalanche';
-      try {
-        activeMethod = (document.getElementById('method-snowball') && document.getElementById('method-snowball').classList.contains('active')) ? 'snowball' : 'avalanche';
-      } catch(e) {}
-
-      if (activeMethod === 'snowball') {
-        explanation.innerHTML = '<strong style="color:var(--text)">☃️ Método Bola de Nieve:</strong> ' + snowballText;
+  function applyDebtSpanishCopy(){
+    try {
+      var lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
+      if (lang !== 'es') return;
+      var explanation = document.getElementById('method-explanation');
+      if (!explanation) return;
+      var snowballBtn = document.getElementById('method-snowball');
+      var isSnowball = snowballBtn && snowballBtn.classList && snowballBtn.classList.contains('active');
+      if (isSnowball) {
+        explanation.innerHTML = '<strong style="color:var(--text)">☃️ Método Bola de Nieve:</strong> Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con el saldo más pequeño primero. Este método genera victorias rápidas y ayuda a mantener la motivación.';
       } else {
-        explanation.innerHTML = '<strong style="color:var(--text)">🔥 Método Avalancha:</strong> ' + avalancheText;
+        explanation.innerHTML = '<strong style="color:var(--text)">🔥 Método Avalancha:</strong> Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.';
       }
-    }
-
-    var avalancheBtn = document.getElementById('method-avalanche');
-    var snowballBtn = document.getElementById('method-snowball');
-    if (avalancheBtn) avalancheBtn.textContent = '🔥 Avalancha — Ahorra Más';
-    if (snowballBtn) snowballBtn.textContent = '☃️ Bola de Nieve — Victorias Rápidas';
+    } catch(e) {}
   }
-
-  var originalSetMethod = window.setMethod;
-  if (typeof originalSetMethod === 'function' && !window.__fintrailDebtPayoffSpanishWrapped) {
-    window.setMethod = function(method, btn){
-      var result = originalSetMethod.apply(this, arguments);
-      setTimeout(applyDebtPayoffExactSpanish, 25);
-      return result;
-    };
-    window.__fintrailDebtPayoffSpanishWrapped = true;
-  }
-
-  window.fintrailDebtPayoffExactSpanish = applyDebtPayoffExactSpanish;
   window.addEventListener('load', function(){
-    setTimeout(applyDebtPayoffExactSpanish, 400);
-    setTimeout(applyDebtPayoffExactSpanish, 1200);
+    setTimeout(applyDebtSpanishCopy, 500);
+    setTimeout(applyDebtSpanishCopy, 1500);
   });
-  document.addEventListener('click', function(e){
-    var target = e.target;
-    if (!target) return;
-    if ((target.closest && target.closest('#tab-debtplan')) || String(target.textContent || '').indexOf('Español') !== -1 || String(target.textContent || '').indexOf('ES') === 0) {
-      setTimeout(applyDebtPayoffExactSpanish, 80);
-    }
+  document.addEventListener('click', function(){
+    setTimeout(applyDebtSpanishCopy, 100);
   });
 })();
 </script>
