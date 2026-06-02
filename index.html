@@ -12371,214 +12371,7 @@ window.addEventListener('load', function(){
 </script>
 
 
-<script>
-/* === NET WORTH CALCULATOR SPANISH FIX === */
-(function(){
-  var timer = null;
-  var applying = false;
-  var observerStarted = false;
 
-  function isSpanish(){
-    try { return currentLang === 'es'; } catch(e) { return false; }
-  }
-
-  var pairs = [
-    ['Your Net Worth', 'Tu Patrimonio Neto'],
-    ['Add your assets and liabilities below', 'Agrega tus activos y pasivos abajo'],
-    ['Savings Account', 'Cuenta de Ahorros'],
-    ['Certificate', 'Certificado'],
-    ['Vehicle Value', 'Valor del Vehículo'],
-    ['Car Loan', 'Préstamo del Auto'],
-    ['e.g. Savings Account', 'ej. Cuenta de Ahorros'],
-    ['e.g. Mortgage', 'ej. Hipoteca'],
-    ['Cash', 'Efectivo'],
-    ['Savings', 'Ahorros'],
-    ['Retirement', 'Jubilación'],
-    ['Home', 'Casa'],
-    ['Car', 'Auto'],
-    ['Mortgage', 'Hipoteca'],
-    ['Credit Cards', 'Tarjetas de Crédito'],
-    ['Student Loans', 'Préstamos Estudiantiles'],
-    ['Edit', 'Editar'],
-    ['+ Add', '+ Agregar'],
-    ['Breakdown', 'Desglose'],
-    ['Monthly History', 'Historial Mensual'],
-    ['Clear', 'Limpiar'],
-    ['May 2026', 'mayo de 2026'],
-    ['Net Worth Over Time', 'Patrimonio Neto en el Tiempo'],
-    ['Add data to see your history', 'Agrega datos para ver tu historial'],
-    ['A monthly snapshot is saved each time you visit this tab.', 'Se guarda una captura mensual cada vez que visitas esta pestaña.'],
-    ['Total Assets', 'Activos Totales'],
-    ['Total Liabilities', 'Pasivos Totales']
-  ];
-
-  function translateValue(s){
-    s = String(s || '');
-
-    if (isSpanish()) {
-      pairs.forEach(function(p){ s = s.split(p[0]).join(p[1]); });
-    } else {
-      pairs.forEach(function(p){ s = s.split(p[1]).join(p[0]); });
-    }
-
-    return s;
-  }
-
-  function translateTextNodes(root){
-    if (!root) return;
-    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
-      acceptNode: function(node){
-        var p = node.parentElement;
-        if (!p) return NodeFilter.FILTER_REJECT;
-        if (p.tagName === 'SCRIPT' || p.tagName === 'STYLE' || p.tagName === 'OPTION') return NodeFilter.FILTER_REJECT;
-        return NodeFilter.FILTER_ACCEPT;
-      }
-    });
-
-    var nodes = [];
-    while (walker.nextNode()) nodes.push(walker.currentNode);
-
-    nodes.forEach(function(node){
-      var next = translateValue(node.textContent);
-      if (next !== node.textContent) node.textContent = next;
-    });
-  }
-
-  function translateInputs(root){
-    if (!root) return;
-    root.querySelectorAll('input, textarea').forEach(function(el){
-      if (el.placeholder) {
-        var next = translateValue(el.placeholder);
-        if (next !== el.placeholder) el.placeholder = next;
-      }
-    });
-  }
-
-  function apply(){
-    if (applying) return;
-    applying = true;
-
-    try {
-      var root =
-        document.getElementById('tab-networth') ||
-        document.getElementById('tab-net-worth') ||
-        document.querySelector('[id*="networth"]') ||
-        document.querySelector('[id*="net-worth"]');
-
-      if (!root) return;
-
-      translateInputs(root);
-      translateTextNodes(root);
-
-      root.querySelectorAll('button').forEach(function(btn){
-        var next = translateValue(btn.textContent);
-        if (next !== btn.textContent) btn.textContent = next;
-      });
-
-      root.querySelectorAll('.asset-name, .liability-name, .breakdown-label, .chip, .category-chip').forEach(function(el){
-        translateTextNodes(el);
-      });
-
-    } catch(e) {
-      console.log('Net worth Spanish fix skipped:', e.message);
-    } finally {
-      applying = false;
-    }
-  }
-
-  function schedule(){
-    clearTimeout(timer);
-    timer = setTimeout(apply, 100);
-  }
-
-  function wrap(name){
-    try {
-      var fn = window[name];
-      if (typeof fn === 'function' && !fn.__fintrailNetWorthSpanishWrapped) {
-        var wrapped = function(){
-          var result = fn.apply(this, arguments);
-          setTimeout(apply, 40);
-          setTimeout(apply, 250);
-          setTimeout(apply, 700);
-          return result;
-        };
-        wrapped.__fintrailNetWorthSpanishWrapped = true;
-        window[name] = wrapped;
-      }
-    } catch(e) {}
-  }
-
-  function install(){
-    [
-      'renderNetWorth',
-      'renderNetWorthCalculator',
-      'updateNetWorth',
-      'showTab',
-      'setLanguage',
-      'switchLanguage',
-      'applyLanguage',
-      'addAsset',
-      'addLiability'
-    ].forEach(wrap);
-  }
-
-  function startObserver(){
-    if (observerStarted) return;
-    var root =
-      document.getElementById('tab-networth') ||
-      document.getElementById('tab-net-worth') ||
-      document.querySelector('[id*="networth"]') ||
-      document.querySelector('[id*="net-worth"]');
-
-    if (!root) return;
-    observerStarted = true;
-
-    var observer = new MutationObserver(function(){
-      if (!applying) schedule();
-    });
-    observer.observe(root, { childList:true, subtree:true, characterData:true });
-  }
-
-  window.fintrailNetWorthSpanishFix = function(){
-    install();
-    startObserver();
-    apply();
-  };
-
-  window.addEventListener('load', function(){
-    install();
-    startObserver();
-    [300, 900, 1800, 3000].forEach(function(ms){ setTimeout(apply, ms); });
-  });
-
-  document.addEventListener('click', function(e){
-    install();
-    startObserver();
-    var t = e.target;
-    if (!t) return;
-
-    if ((t.closest && (
-        t.closest('#tab-networth') ||
-        t.closest('#tab-net-worth') ||
-        t.closest('[id*="networth"]') ||
-        t.closest('[id*="net-worth"]')
-      )) || /English|Español|Spanish|^EN|^ES|Net Worth|Patrimonio/.test(String(t.textContent || ''))) {
-      schedule();
-      setTimeout(apply, 300);
-      setTimeout(apply, 800);
-    }
-  });
-
-  document.addEventListener('input', function(e){
-    if (e.target && e.target.closest && (
-      e.target.closest('#tab-networth') ||
-      e.target.closest('#tab-net-worth') ||
-      e.target.closest('[id*="networth"]') ||
-      e.target.closest('[id*="net-worth"]')
-    )) schedule();
-  });
-})();
-</script>
 
 
 <script>
@@ -12976,55 +12769,401 @@ window.addEventListener('load', function(){
 
 
 <script>
-/* === SAVINGS GOAL DISPLAY LABELS + SAVE FIX === */
+/* === NET WORTH EDIT BUTTON SAFE SPANISH FIX === */
+(function(){
+  var timer = null;
+  var applying = false;
+  var observerStarted = false;
+
+  function isSpanish(){
+    try { return currentLang === 'es'; } catch(e) { return false; }
+  }
+
+  var exactPairs = [
+    ['Your Net Worth', 'Tu Patrimonio Neto'],
+    ['Add your assets and liabilities below', 'Agrega tus activos y pasivos abajo'],
+    ['Savings Account', 'Cuenta de Ahorros'],
+    ['Certificate', 'Certificado'],
+    ['Vehicle Value', 'Valor del Vehículo'],
+    ['Car Loan', 'Préstamo del Auto'],
+    ['e.g. Savings Account', 'ej. Cuenta de Ahorros'],
+    ['e.g. Mortgage', 'ej. Hipoteca'],
+    ['Cash', 'Efectivo'],
+    ['Savings', 'Ahorros'],
+    ['Retirement', 'Jubilación'],
+    ['Home', 'Casa'],
+    ['Car', 'Auto'],
+    ['Mortgage', 'Hipoteca'],
+    ['Credit Cards', 'Tarjetas de Crédito'],
+    ['Student Loans', 'Préstamos Estudiantiles'],
+    ['+ Add', '+ Agregar'],
+    ['Breakdown', 'Desglose'],
+    ['Monthly History', 'Historial Mensual'],
+    ['Clear', 'Limpiar'],
+    ['Net Worth Over Time', 'Patrimonio Neto en el Tiempo'],
+    ['Add data to see your history', 'Agrega datos para ver tu historial'],
+    ['A monthly snapshot is saved each time you visit this tab.', 'Se guarda una captura mensual cada vez que visitas esta pestaña.'],
+    ['Total Assets', 'Activos Totales'],
+    ['Total Liabilities', 'Pasivos Totales'],
+    ['May 2026', 'mayo de 2026']
+  ];
+
+  function fixBrokenEditText(s){
+    // Collapse any broken repeated translation from prior builds.
+    s = String(s || '');
+    s = s.replace(/^Editar(?:ar)+$/i, 'Editar');
+    s = s.replace(/Editar(?:ar){2,}/gi, 'Editar');
+    return s;
+  }
+
+  function translateFullText(s){
+    s = fixBrokenEditText(s);
+
+    var trimmed = s.trim();
+    if (isSpanish()) {
+      if (trimmed === 'Edit') return s.replace('Edit', 'Editar');
+      exactPairs.forEach(function(pair){
+        s = s.split(pair[0]).join(pair[1]);
+      });
+    } else {
+      if (trimmed === 'Editar') return s.replace('Editar', 'Edit');
+      exactPairs.forEach(function(pair){
+        s = s.split(pair[1]).join(pair[0]);
+      });
+    }
+
+    return fixBrokenEditText(s);
+  }
+
+  function translateTextNodes(root){
+    if (!root) return;
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(node){
+        var p = node.parentElement;
+        if (!p) return NodeFilter.FILTER_REJECT;
+        if (p.tagName === 'SCRIPT' || p.tagName === 'STYLE' || p.tagName === 'OPTION') return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+
+    var nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+
+    nodes.forEach(function(node){
+      var next = translateFullText(node.textContent);
+      if (next !== node.textContent) node.textContent = next;
+    });
+  }
+
+  function translateInputs(root){
+    if (!root) return;
+    root.querySelectorAll('input, textarea').forEach(function(el){
+      if (el.placeholder) {
+        var next = translateFullText(el.placeholder);
+        if (next !== el.placeholder) el.placeholder = next;
+      }
+    });
+  }
+
+  function findRoot(){
+    return (
+      document.getElementById('tab-networth') ||
+      document.getElementById('tab-net-worth') ||
+      document.querySelector('[id*="networth"]') ||
+      document.querySelector('[id*="net-worth"]')
+    );
+  }
+
+  function apply(){
+    if (applying) return;
+    applying = true;
+
+    try {
+      var root = findRoot();
+      if (!root) return;
+
+      translateInputs(root);
+      translateTextNodes(root);
+
+      // Force all edit buttons to the correct exact label.
+      root.querySelectorAll('button, .nw-item-edit').forEach(function(btn){
+        var clean = fixBrokenEditText(btn.textContent || '').trim();
+        if (clean === 'Edit' || clean === 'Editar' || /^Editar/i.test(clean)) {
+          btn.textContent = isSpanish() ? 'Editar' : 'Edit';
+        } else {
+          var next = translateFullText(btn.textContent);
+          if (next !== btn.textContent) btn.textContent = next;
+        }
+      });
+
+    } catch(e) {
+      console.log('Net worth safe Spanish fix skipped:', e.message);
+    } finally {
+      applying = false;
+    }
+  }
+
+  function schedule(){
+    clearTimeout(timer);
+    timer = setTimeout(apply, 100);
+  }
+
+  function wrap(name){
+    try {
+      var fn = window[name];
+      if (typeof fn === 'function' && !fn.__fintrailNetWorthSafeSpanishWrapped) {
+        var wrapped = function(){
+          var result = fn.apply(this, arguments);
+          setTimeout(apply, 40);
+          setTimeout(apply, 250);
+          setTimeout(apply, 700);
+          return result;
+        };
+        wrapped.__fintrailNetWorthSafeSpanishWrapped = true;
+        window[name] = wrapped;
+      }
+    } catch(e) {}
+  }
+
+  function install(){
+    [
+      'renderNetWorth',
+      'renderNetWorthCalculator',
+      'updateNetWorth',
+      'showTab',
+      'setLanguage',
+      'switchLanguage',
+      'applyLanguage',
+      'addAsset',
+      'addLiability'
+    ].forEach(wrap);
+  }
+
+  function startObserver(){
+    if (observerStarted) return;
+    var root = findRoot();
+    if (!root) return;
+    observerStarted = true;
+
+    var observer = new MutationObserver(function(){
+      if (!applying) schedule();
+    });
+    observer.observe(root, { childList:true, subtree:true, characterData:true });
+  }
+
+  window.fintrailNetWorthSafeSpanishFix = function(){
+    install();
+    startObserver();
+    apply();
+  };
+
+  window.addEventListener('load', function(){
+    install();
+    startObserver();
+    [300, 900, 1800, 3000].forEach(function(ms){ setTimeout(apply, ms); });
+  });
+
+  document.addEventListener('click', function(e){
+    install();
+    startObserver();
+    var t = e.target;
+    if (!t) return;
+
+    if ((t.closest && (
+        t.closest('#tab-networth') ||
+        t.closest('#tab-net-worth') ||
+        t.closest('[id*="networth"]') ||
+        t.closest('[id*="net-worth"]')
+      )) || /English|Español|Spanish|^EN|^ES|Net Worth|Patrimonio/.test(String(t.textContent || ''))) {
+      schedule();
+      setTimeout(apply, 300);
+      setTimeout(apply, 800);
+    }
+  });
+
+  document.addEventListener('input', function(e){
+    if (e.target && e.target.closest && (
+      e.target.closest('#tab-networth') ||
+      e.target.closest('#tab-net-worth') ||
+      e.target.closest('[id*="networth"]') ||
+      e.target.closest('[id*="net-worth"]')
+    )) schedule();
+  });
+})();
+</script>
+
+
+<script>
+/* === BUDGET TRACKER DROPDOWN CLICK FIX === */
+(function(){
+  function activateBudgetTracker(){
+    try {
+      // Open the main Budget tab first.
+      if (typeof showTab === 'function') {
+        try { showTab('budget'); } catch(e) {}
+      }
+
+      // Then force the Budget Tracker sub-tab visible.
+      var tracker = document.getElementById('bsub-tracker');
+      var schedule = document.getElementById('bsub-schedule');
+
+      if (tracker) tracker.classList.add('visible');
+      if (schedule) schedule.classList.remove('visible');
+
+      // Update sub-tab buttons.
+      document.querySelectorAll('.sched-tab-btn').forEach(function(btn){
+        var txt = (btn.textContent || '').toLowerCase();
+        var isTrackerBtn =
+          txt.indexOf('tracker') !== -1 ||
+          txt.indexOf('rastreador') !== -1 ||
+          txt.indexOf('presupuesto') !== -1 ||
+          (btn.getAttribute('onclick') || '').indexOf('tracker') !== -1;
+
+        var isScheduleBtn =
+          txt.indexOf('schedule') !== -1 ||
+          txt.indexOf('facturas') !== -1 ||
+          (btn.getAttribute('onclick') || '').indexOf('schedule') !== -1;
+
+        if (isTrackerBtn) btn.classList.add('active');
+        if (isScheduleBtn) btn.classList.remove('active');
+      });
+
+      // Use any built-in subtab function if it exists.
+      ['showBudgetSub','switchBudgetSub','showBudgetTab','switchBudgetTab'].forEach(function(name){
+        try {
+          if (typeof window[name] === 'function') {
+            window[name]('tracker');
+          }
+        } catch(e) {}
+      });
+
+      if (tracker) tracker.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch(e) {
+      console.log('Budget tracker dropdown fix skipped:', e.message);
+    }
+  }
+
+  function looksLikeBudgetTrackerTarget(el){
+    if (!el) return false;
+    var text = (el.textContent || '').toLowerCase();
+    var onclick = (el.getAttribute && (el.getAttribute('onclick') || '').toLowerCase()) || '';
+    var dataTab = (el.getAttribute && (
+      el.getAttribute('data-tab') ||
+      el.getAttribute('data-target') ||
+      el.getAttribute('data-section') ||
+      ''
+    ).toLowerCase()) || '';
+
+    return (
+      text.indexOf('budget tracker') !== -1 ||
+      text.indexOf('rastreador de presupuesto') !== -1 ||
+      dataTab.indexOf('tracker') !== -1 ||
+      dataTab.indexOf('budget') !== -1 ||
+      onclick.indexOf('bsub-tracker') !== -1 ||
+      onclick.indexOf('tracker') !== -1
+    );
+  }
+
+  document.addEventListener('click', function(e){
+    var target = e.target;
+    if (!target || !target.closest) return;
+
+    var item = target.closest('button, .nav-dropdown-item, .mobile-nav-tile, [role="button"], a');
+    if (!item) return;
+
+    if (looksLikeBudgetTrackerTarget(item)) {
+      e.preventDefault();
+      e.stopPropagation();
+      setTimeout(activateBudgetTracker, 20);
+      setTimeout(activateBudgetTracker, 180);
+    }
+  }, true);
+
+  window.fintrailActivateBudgetTracker = activateBudgetTracker;
+})();
+</script>
+
+
+
+
+
+<script>
+/* === TRANSLATIONS RESTORED LOGIN SAFE FIX === */
+(function(){
+  function replaceInTextNodes(root, replacements){
+    if (!root) return;
+
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(node){
+        var parent = node.parentElement;
+        if (!parent) return NodeFilter.FILTER_REJECT;
+        if (parent.tagName === "SCRIPT" || parent.tagName === "STYLE") return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+
+    var nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+
+    nodes.forEach(function(node){
+      var next = node.textContent || "";
+      replacements.forEach(function(pair){
+        next = next.split(pair[0]).join(pair[1]);
+      });
+      if (next !== node.textContent) node.textContent = next;
+    });
+  }
+
+  function applyTranslations(){
+    var replacements = [
+      [
+        "Pay minimums on all debts, then put ALL extra money toward the highest interest rate debt first. Mathematically saves the most money in interest.",
+        "Paga los mínimos en todas tus deudas y destina TODO el dinero extra a la deuda con la tasa de interés más alta primero. Matemáticamente, es el método que más dinero ahorra en intereses."
+      ],
+      [
+        "Pay minimums on all debts, then put ALL extra money toward the smallest balance debt first. Gives you quick wins and motivation to keep going.",
+        "Paga los mínimos en todas tus deudas y destina TODO el dinero extra a la deuda con el saldo más pequeño primero. Te brinda victorias rápidas y motivación para seguir avanzando."
+      ],
+      ["June 2026", "Junio de 2026"],
+      ["june 2026", "Junio de 2026"],
+      ["mayo de 2026", "Mayo de 2026"]
+    ];
+
+    replaceInTextNodes(document.body, replacements);
+  }
+
+  window.addEventListener("load", function(){
+    setTimeout(applyTranslations, 300);
+    setTimeout(applyTranslations, 1000);
+    setTimeout(applyTranslations, 2200);
+  });
+
+  document.addEventListener("click", function(){
+    setTimeout(applyTranslations, 200);
+    setTimeout(applyTranslations, 700);
+  });
+
+  document.addEventListener("change", function(){
+    setTimeout(applyTranslations, 200);
+  });
+
+  window.fintrailRestoreSpanishTranslationsSafe = applyTranslations;
+})();
+</script>
+
+
+<script>
+/* === SAVINGS GOAL CATEGORY TEXT INPUT FIX === */
 (function(){
   var applying = false;
   var timer = null;
-
-  var categories = [
-    ["Emergency Fund", "Fondo de Emergencia"],
-    ["Home", "Casa"],
-    ["Vehicle", "Vehículo"],
-    ["Travel", "Viaje"],
-    ["Education", "Educación"],
-    ["Wedding", "Boda"],
-    ["Family", "Familia"],
-    ["Tech", "Tecnología"],
-    ["Health", "Salud"],
-    ["Retirement", "Jubilación"],
-    ["Other", "Otro"]
-  ];
 
   function isSpanish(){
     try { return window.currentLang === "es" || currentLang === "es"; }
     catch(e) { return false; }
   }
 
-  function englishFor(value){
-    value = String(value || "").trim();
-    for (var i = 0; i < categories.length; i++) {
-      if (value === categories[i][0] || value === categories[i][1]) return categories[i][0];
-    }
-    return value;
-  }
-
-  function spanishFor(value){
-    value = String(value || "").trim();
-    for (var i = 0; i < categories.length; i++) {
-      if (value === categories[i][0] || value === categories[i][1]) return categories[i][1];
-    }
-    return value;
-  }
-
-  function findCategoryIndex(value){
-    value = String(value || "").trim();
-    for (var i = 0; i < categories.length; i++) {
-      if (value === categories[i][0] || value === categories[i][1]) return i;
-    }
-    return -1;
-  }
-
-  function isSavingsGoalCategorySelect(select){
+  function looksLikeSavingsCategorySelect(select){
     if (!select) return false;
 
     var optionText = Array.prototype.map.call(select.options || [], function(opt){
@@ -13049,37 +13188,87 @@ window.addEventListener('load', function(){
       /Emergency Fund|Home|Vehicle|Travel|Education|Wedding|Family|Tech|Health|Retirement|Other|Fondo de Emergencia|Casa|Vehículo|Viaje|Educación|Boda|Familia|Tecnología|Salud|Jubilación|Otro/.test(optionText);
   }
 
-  function rebuildCategorySelect(select){
-    var selected = select.value;
-    if (!selected && select.selectedIndex >= 0 && select.options[select.selectedIndex]) {
-      selected = select.options[select.selectedIndex].textContent;
+  function currentCategoryValue(select){
+    if (!select) return "";
+    if (select.value) return select.value;
+    if (select.selectedIndex >= 0 && select.options[select.selectedIndex]) {
+      return select.options[select.selectedIndex].textContent || select.options[select.selectedIndex].value || "";
     }
+    return "";
+  }
 
-    var index = findCategoryIndex(selected);
-    if (index < 0 && select.selectedIndex >= 0) index = Math.min(select.selectedIndex, categories.length - 1);
-    if (index < 0) index = 0;
+  function defaultCategoryText(value){
+    value = String(value || "").trim();
 
-    select.innerHTML = "";
+    if (!isSpanish()) return value || "Emergency Fund";
 
-    categories.forEach(function(pair){
-      var opt = document.createElement("option");
-      // IMPORTANT: keep value in English so the app save/render logic still works.
-      opt.value = pair[0];
-      opt.textContent = isSpanish() ? pair[1] : pair[0];
-      select.appendChild(opt);
+    var map = {
+      "Emergency Fund": "Fondo de Emergencia",
+      "Home": "Casa",
+      "Vehicle": "Vehículo",
+      "Travel": "Viaje",
+      "Education": "Educación",
+      "Wedding": "Boda",
+      "Family": "Familia",
+      "Tech": "Tecnología",
+      "Health": "Salud",
+      "Retirement": "Jubilación",
+      "Other": "Otro"
+    };
+
+    return map[value] || value || "Fondo de Emergencia";
+  }
+
+  function replaceSelectWithInput(select){
+    if (!select || select.dataset.fintrailCategoryInputReplaced === "true") return;
+
+    var input = document.createElement("input");
+    input.type = "text";
+
+    // Keep the same identifiers so existing save logic can still read the value.
+    if (select.id) input.id = select.id;
+    if (select.name) input.name = select.name;
+    input.className = select.className || "";
+    input.value = defaultCategoryText(currentCategoryValue(select));
+    input.placeholder = isSpanish() ? "Ej. Emergencia, Casa, Viaje" : "e.g. Emergency, Home, Travel";
+
+    // Preserve useful data/ARIA attributes.
+    Array.prototype.forEach.call(select.attributes || [], function(attr){
+      if (/^(id|name|class|type|value)$/i.test(attr.name)) return;
+      try { input.setAttribute(attr.name, attr.value); } catch(e) {}
     });
 
-    select.value = categories[index][0];
+    input.setAttribute("data-fintrail-category-input", "true");
+
+    select.dataset.fintrailCategoryInputReplaced = "true";
+    select.parentNode.replaceChild(input, select);
   }
 
   function translateVisibleGoalText(root){
     if (!root) return;
 
+    var pairs = [
+      ["Emergency Fund", "Fondo de Emergencia"],
+      ["Home", "Casa"],
+      ["Vehicle", "Vehículo"],
+      ["Travel", "Viaje"],
+      ["Education", "Educación"],
+      ["Wedding", "Boda"],
+      ["Family", "Familia"],
+      ["Tech", "Tecnología"],
+      ["Health", "Salud"],
+      ["Retirement", "Jubilación"],
+      ["Other", "Otro"],
+      ["Add savings...", "Agregar ahorro..."],
+      ["+ Add", "+ Agregar"],
+      ["complete", "completado"]
+    ];
+
     var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
       acceptNode: function(node){
         var p = node.parentElement;
         if (!p) return NodeFilter.FILTER_REJECT;
-        if (p.tagName === "SCRIPT" || p.tagName === "STYLE" || p.tagName === "OPTION") return NodeFilter.FILTER_REJECT;
+        if (p.tagName === "SCRIPT" || p.tagName === "STYLE" || p.tagName === "INPUT") return NodeFilter.FILTER_REJECT;
         return NodeFilter.FILTER_ACCEPT;
       }
     });
@@ -13088,40 +13277,11 @@ window.addEventListener('load', function(){
     while (walker.nextNode()) nodes.push(walker.currentNode);
 
     nodes.forEach(function(node){
-      var t = node.textContent || "";
-      var next = t;
-
-      categories.forEach(function(pair){
-        if (isSpanish()) next = next.split(pair[0]).join(pair[1]);
-        else next = next.split(pair[1]).join(pair[0]);
+      var next = node.textContent || "";
+      pairs.forEach(function(pair){
+        next = isSpanish() ? next.split(pair[0]).join(pair[1]) : next.split(pair[1]).join(pair[0]);
       });
-
-      if (isSpanish()) {
-        next = next.replace(/of \$([0-9,.]+)/g, "de $$$1");
-        next = next.replace(/(\d+)% complete/g, "$1% completado");
-        next = next.replace(/Save \$([0-9,.]+)\/mo to reach your goal in (\d+) months/g, "Ahorra $$$1/mes para alcanzar tu meta en $2 meses");
-        next = next.replace(/Add savings\.\.\./g, "Agregar ahorro...");
-        next = next.replace(/\+ Add\b/g, "+ Agregar");
-      } else {
-        next = next.replace(/de \$([0-9,.]+)/g, "of $$$1");
-        next = next.replace(/(\d+)% completado/g, "$1% complete");
-        next = next.replace(/Ahorra \$([0-9,.]+)\/mes para alcanzar tu meta en (\d+) meses/g, "Save $$$1/mo to reach your goal in $2 months");
-        next = next.replace(/Agregar ahorro\.\.\./g, "Add savings...");
-        next = next.replace(/\+ Agregar\b/g, "+ Add");
-      }
-
-      if (next !== t) node.textContent = next;
-    });
-  }
-
-  function fixGoalCardVisibility(root){
-    if (!root) return;
-
-    // Some prior patches may have left goal cards hidden/empty after the totals updated.
-    root.querySelectorAll(".goal-card, [class*='goal-card'], [class*='savings-goal']").forEach(function(card){
-      card.style.display = "";
-      card.style.visibility = "";
-      card.style.opacity = "";
+      if (next !== node.textContent) node.textContent = next;
     });
   }
 
@@ -13136,7 +13296,11 @@ window.addEventListener('load', function(){
         document.body;
 
       root.querySelectorAll("select").forEach(function(select){
-        if (isSavingsGoalCategorySelect(select)) rebuildCategorySelect(select);
+        if (looksLikeSavingsCategorySelect(select)) replaceSelectWithInput(select);
+      });
+
+      root.querySelectorAll('input[data-fintrail-category-input="true"]').forEach(function(input){
+        input.placeholder = isSpanish() ? "Ej. Emergencia, Casa, Viaje" : "e.g. Emergency, Home, Travel";
       });
 
       root.querySelectorAll("input, textarea").forEach(function(input){
@@ -13153,7 +13317,6 @@ window.addEventListener('load', function(){
       });
 
       translateVisibleGoalText(root);
-      fixGoalCardVisibility(root);
     } finally {
       applying = false;
     }
@@ -13164,32 +13327,18 @@ window.addEventListener('load', function(){
     timer = setTimeout(applyFix, 100);
   }
 
-  function normalizeSavingsGoalBeforeSave(){
-    var root =
-      document.getElementById("tab-goals") ||
-      document.querySelector('[id*="goal"]') ||
-      document.body;
-
-    root.querySelectorAll("select").forEach(function(select){
-      if (isSavingsGoalCategorySelect(select)) {
-        select.value = englishFor(select.value);
-      }
-    });
-  }
-
   function wrap(name){
     try {
       var fn = window[name];
-      if (typeof fn === "function" && !fn.__fintrailSavingsSaveDisplayWrapped) {
+      if (typeof fn === "function" && !fn.__fintrailSavingsCategoryTextWrapped) {
         var wrapped = function(){
-          normalizeSavingsGoalBeforeSave();
           var result = fn.apply(this, arguments);
           setTimeout(applyFix, 40);
           setTimeout(applyFix, 250);
           setTimeout(applyFix, 700);
           return result;
         };
-        wrapped.__fintrailSavingsSaveDisplayWrapped = true;
+        wrapped.__fintrailSavingsCategoryTextWrapped = true;
         window[name] = wrapped;
       }
     } catch(e) {}
@@ -13202,8 +13351,6 @@ window.addEventListener('load', function(){
       "addSavingsGoal",
       "saveSavingsGoal",
       "createSavingsGoal",
-      "deleteSavingsGoal",
-      "removeSavingsGoal",
       "showTab",
       "setLanguage",
       "switchLanguage",
@@ -13211,7 +13358,7 @@ window.addEventListener('load', function(){
     ].forEach(wrap);
   }
 
-  window.fintrailSavingsGoalSaveDisplayFix = function(){
+  window.fintrailSavingsGoalCategoryTextInputFix = function(){
     install();
     applyFix();
   };
@@ -13223,19 +13370,14 @@ window.addEventListener('load', function(){
 
   document.addEventListener("click", function(e){
     install();
-
     var target = e.target;
     if (!target) return;
 
-    if (target.closest && target.closest("#tab-goals")) {
-      normalizeSavingsGoalBeforeSave();
-      scheduleFix();
-      setTimeout(applyFix, 350);
-      setTimeout(applyFix, 900);
-    }
-
-    var txt = String(target.textContent || "");
-    if (/English|Español|Spanish|^EN|^ES|Savings|Metas|Ahorro/.test(txt)) {
+    if ((target.closest && (
+      target.closest("#tab-goals") ||
+      target.closest('[id*="goal"]') ||
+      target.closest('[class*="goal"]')
+    )) || /English|Español|Spanish|^EN|^ES|Savings|Metas|Ahorro/.test(String(target.textContent || ""))) {
       scheduleFix();
       setTimeout(applyFix, 350);
       setTimeout(applyFix, 900);
@@ -13248,7 +13390,6 @@ window.addEventListener('load', function(){
       e.target.closest('[id*="goal"]') ||
       e.target.closest('[class*="goal"]')
     )) {
-      normalizeSavingsGoalBeforeSave();
       scheduleFix();
     }
   }, true);
