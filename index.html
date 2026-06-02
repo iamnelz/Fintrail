@@ -4358,7 +4358,7 @@
         <div class="card">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
             <h2 style="margin:0;font-size:1rem" data-en="💚 Assets" data-es="💚 Activos">💚 Assets</h2>
-            <button onclick="addNWItem('asset')" data-en="+ Add" data-es="+ Agregar" style="background:var(--income-color);color:#fff;border:none;border-radius:8px;padding:0.35rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer">+ Add</button>
+            <button onclick="addNWItem('asset')" style="background:var(--income-color);color:#fff;border:none;border-radius:8px;padding:0.35rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer">+ Add</button>
           </div>
           <div id="nw-asset-list" style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.75rem"></div>
           <!-- Quick-add row -->
@@ -4381,7 +4381,7 @@
         <div class="card">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
             <h2 style="margin:0;font-size:1rem" data-en="❤️ Liabilities" data-es="❤️ Pasivos">❤️ Liabilities</h2>
-            <button onclick="addNWItem('liability')" data-en="+ Add" data-es="+ Agregar" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.35rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer">+ Add</button>
+            <button onclick="addNWItem('liability')" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.35rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer">+ Add</button>
           </div>
           <div id="nw-liability-list" style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.75rem"></div>
           <div style="display:grid;grid-template-columns:1fr auto auto;gap:0.5rem;align-items:center;background:var(--bg);border-radius:10px;padding:0.65rem;border:1px solid var(--border)">
@@ -6472,7 +6472,7 @@ Guidelines:
       } else {
         // Split — show on EVERY payday with the per-paycheck amount
         // until the cumulative paid reaches the full amount by due date
-        results.push({ ...b, dueDate, splitLabel: `$${perPaycheck.toFixed(2)}/paycheck`, displayAmount: perPaycheck });
+        results.push({ ...b, dueDate, splitLabel: `$${perPaycheck.toFixed(2)}${currentLang === 'es' ? '/cheque' : '/paycheck'}`, displayAmount: perPaycheck });
       }
     });
 
@@ -6552,7 +6552,7 @@ Guidelines:
                 <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap">
                   <span>${b.cat.split(' ')[0]}</span>
                   <span style="font-weight:600;font-size:0.875rem">${escHtml(b.name)}</span>
-                  ${b.splitLabel ? `<span style="font-size:0.68rem;background:rgba(240,85,85,0.1);color:var(--accent);padding:0.15rem 0.5rem;border-radius:4px;font-weight:700">Split ${b.splitLabel}</span>` : ''}
+                  ${b.splitLabel ? `<span style="font-size:0.68rem;background:rgba(240,85,85,0.1);color:var(--accent);padding:0.15rem 0.5rem;border-radius:4px;font-weight:700">${currentLang === 'es' ? 'Dividido' : 'Split'} ${b.splitLabel}</span>` : ''}
                 </div>
                 <span class="pbr-due" style="${urgency}">${currentLang === 'es' ? 'vence' : 'due'} ${dueDateStr}${daysUntil >= 0 && daysUntil <= 3 ? ' ⚠️' : ''}</span>
               </div>
@@ -7370,63 +7370,7 @@ Guidelines:
           .footer { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #eee; font-size: 0.72rem; color: #aaa; text-align: center; }
           @media print { body { padding: 1rem; } }
         </style>
-      
-<style>
-/* === DEBT PAYOFF TIMELINE MONTHS VISIBILITY PATCH === */
-#tab-debtplan .pt-row {
-  display: grid !important;
-  grid-template-columns: minmax(90px, 1.1fr) minmax(70px, 0.8fr) minmax(120px, 2fr) auto !important;
-  align-items: center !important;
-  gap: 0.65rem !important;
-}
-
-#tab-debtplan .pt-name {
-  width: auto !important;
-  min-width: 0 !important;
-}
-
-#tab-debtplan .pt-bar-track {
-  min-width: 120px !important;
-}
-
-#tab-debtplan .pt-months {
-  width: auto !important;
-  min-width: 72px !important;
-  white-space: nowrap !important;
-  text-align: right !important;
-  position: relative !important;
-  z-index: 2 !important;
-  background: var(--surface, #fff) !important;
-  border-radius: 8px !important;
-  padding: 0.25rem 0.45rem !important;
-  font-weight: 700 !important;
-}
-
-@media (max-width: 700px) {
-  #tab-debtplan .pt-row {
-    grid-template-columns: 1fr auto !important;
-    gap: 0.45rem 0.65rem !important;
-  }
-
-  #tab-debtplan .pt-name {
-    grid-column: 1 / 2 !important;
-  }
-
-  #tab-debtplan .pt-months {
-    grid-column: 2 / 3 !important;
-    grid-row: 1 !important;
-    min-width: 78px !important;
-  }
-
-  #tab-debtplan .pt-bar-track {
-    grid-column: 1 / -1 !important;
-    min-width: 0 !important;
-    width: 100% !important;
-  }
-}
-</style>
-
-</head>
+      </head>
       <body>
         <div class="pdf-header">
           <div class="pdf-logo">Fin<span>trail Pro</span></div>
@@ -12856,23 +12800,6 @@ window.addEventListener('load', function(){
     ['Breakdown', 'Desglose'],
     ['Monthly History', 'Historial Mensual'],
     ['Clear', 'Limpiar'],
-
-    ['Savings Goals', 'Metas de Ahorro'],
-    ['Debt Milestones', 'Hitos de Deuda'],
-    ['Custom Events', 'Eventos Personalizados'],
-    ['Today', 'Hoy'],
-    ['Upcoming Events', 'Próximos Eventos'],
-    ['Add Event', 'Agregar Evento'],
-    ['No upcoming events', 'No hay próximos eventos'],
-    ['No events yet', 'Aún no hay eventos'],
-    ['Event Title', 'Título del Evento'],
-    ['Event Type', 'Tipo de Evento'],
-    ['Save Event', 'Guardar Evento'],
-    ['Bill Due', 'Factura Vencida'],
-    ['Payday', 'Día de Pago'],
-    ['Goal Deadline', 'Fecha Límite de Meta'],
-    ['Debt Payoff', 'Pago de Deuda'],
-    ['Custom', 'Personalizado'],
     ['Net Worth Over Time', 'Patrimonio Neto en el Tiempo'],
     ['Add data to see your history', 'Agrega datos para ver tu historial'],
     ['A monthly snapshot is saved each time you visit this tab.', 'Se guarda una captura mensual cada vez que visitas esta pestaña.'],
@@ -13471,143 +13398,145 @@ window.addEventListener('load', function(){
 
 
 <script>
-/* === NET WORTH ADD BUTTON LABEL CLEANUP PATCH === */
+/* === BILL SCHEDULE ADD/SAVE + SPLIT SPANISH PATCH === */
 (function(){
-  function fintrailFixNetWorthAddButtons(){
-    try {
-      var lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
-      var label = lang === 'es' ? '+ Agregar' : '+ Add';
-      var root = document.getElementById('tab-networth') || document;
-      root.querySelectorAll('button').forEach(function(btn){
-        var text = (btn.textContent || '').trim();
-        var onclick = btn.getAttribute('onclick') || '';
-        var isNetWorthAdd = onclick.indexOf("addNWItem('asset')") !== -1 || onclick.indexOf('addNWItem("asset")') !== -1 ||
-                            onclick.indexOf("addNWItem('liability')") !== -1 || onclick.indexOf('addNWItem("liability")') !== -1;
-        var isTopAddButton = isNetWorthAdd && text !== '+';
-        var isBrokenTemplate = text.indexOf('${currentLang') !== -1 || text.indexOf('?') !== -1 && text.indexOf('Agregar') !== -1 && text.indexOf('Add') !== -1;
-        if (isTopAddButton || isBrokenTemplate) {
-          btn.textContent = label;
-        }
-      });
-    } catch(e) {}
-  }
-
-  window.fintrailFixNetWorthAddButtons = fintrailFixNetWorthAddButtons;
-
-  window.addEventListener('load', function(){
-    setTimeout(fintrailFixNetWorthAddButtons, 500);
-    setTimeout(fintrailFixNetWorthAddButtons, 1500);
-  });
-
-  document.addEventListener('click', function(){
-    setTimeout(fintrailFixNetWorthAddButtons, 100);
-  });
-
-  var observer = new MutationObserver(function(){
-    setTimeout(fintrailFixNetWorthAddButtons, 50);
-  });
-  window.addEventListener('load', function(){
-    try {
-      var root = document.getElementById('tab-networth') || document.body;
-      if (root) observer.observe(root, { childList:true, subtree:true, characterData:true });
-    } catch(e) {}
-  });
-})();
-</script>
-
-
-<script>
-/* === FINANCIAL CALENDAR SPANISH LABEL PATCH === */
-(function(){
-  var calendarTranslations = {
-    'Savings Goals': 'Metas de Ahorro',
-    'Debt Milestones': 'Hitos de Deuda',
-    'Custom Events': 'Eventos Personalizados',
-    'Today': 'Hoy',
-    'Upcoming Events': 'Próximos Eventos',
-    'Add Event': 'Agregar Evento',
-    'No upcoming events': 'No hay próximos eventos',
-    'No events yet': 'Aún no hay eventos',
-    'Event Title': 'Título del Evento',
-    'Event Type': 'Tipo de Evento',
-    'Save Event': 'Guardar Evento',
-    'Bill Due': 'Factura Vencida',
-    'Payday': 'Día de Pago',
-    'Goal Deadline': 'Fecha Límite de Meta',
-    'Debt Payoff': 'Pago de Deuda',
-    'Custom': 'Personalizado',
-    'Month': 'Mes',
-    'Week': 'Semana',
-    'Day': 'Día'
-  };
-
   function isSpanish(){
     try { return (typeof currentLang !== 'undefined' && currentLang === 'es'); } catch(e) { return false; }
   }
 
-  function translateCalendarTextNode(node){
-    var original = node.textContent || '';
-    var updated = original;
-    Object.keys(calendarTranslations).forEach(function(en){
-      updated = updated.split(en).join(calendarTranslations[en]);
-    });
-    if (updated !== original) node.textContent = updated;
+  function normalizeBillCategory(value){
+    var cat = String(value || '').trim();
+    var map = {
+      '🏠 Vivienda': '🏠 Housing',
+      '💡 Servicios': '💡 Utilities',
+      '📱 Teléfono/Internet': '📱 Phone/Internet',
+      '🎬 Suscripciones': '🎬 Subscriptions',
+      '🏥 Seguro/Salud': '🏥 Insurance/Health',
+      '🎓 Educación/Préstamos': '🎓 Education/Loans',
+      '💳 Tarjeta de Crédito': '💳 Credit Card',
+      '🐾 Mascota': '🐾 Pet',
+      '📦 Otro': '📦 Other'
+    };
+    return map[cat] || cat || '📦 Other';
   }
 
-  function applyFinancialCalendarSpanish(){
+  function clearBillInputs(){
+    var ids = ['bill-name', 'bill-amount', 'bill-per-paycheck'];
+    ids.forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+  }
+
+  window.addBill = function(){
     try {
-      if (!isSpanish()) return;
-      var root = document.getElementById('tab-calendar');
+      var nameEl = document.getElementById('bill-name');
+      var amountEl = document.getElementById('bill-amount');
+      var perEl = document.getElementById('bill-per-paycheck');
+      var dayEl = document.getElementById('bill-day');
+      var catEl = document.getElementById('bill-cat');
+
+      var name = nameEl ? String(nameEl.value || '').trim() : '';
+      var amount = amountEl ? parseFloat(amountEl.value) : NaN;
+      var perPaycheck = perEl ? parseFloat(perEl.value) : NaN;
+      var day = dayEl ? parseInt(dayEl.value, 10) : 1;
+      var cat = normalizeBillCategory(catEl ? catEl.value : '');
+
+      if (!name || isNaN(amount) || amount <= 0) {
+        alert(isSpanish() ? 'Ingresa el nombre de la factura y el monto.' : 'Please enter a bill name and amount.');
+        return;
+      }
+
+      if (isNaN(perPaycheck) || perPaycheck <= 0) perPaycheck = amount;
+      if (isNaN(day) || day < 1 || day > 28) day = 1;
+
+      if (!Array.isArray(window.bills)) {
+        try { window.bills = bills; } catch(e) { window.bills = []; }
+      }
+
+      var newBill = {
+        id: Date.now(),
+        name: name,
+        amount: amount,
+        perPaycheck: perPaycheck,
+        day: day,
+        cat: cat
+      };
+
+      try {
+        bills.push(newBill);
+        window.bills = bills;
+      } catch(e) {
+        window.bills.push(newBill);
+      }
+
+      clearBillInputs();
+
+      if (typeof renderBillList === 'function') renderBillList();
+      if (typeof renderSchedule === 'function') renderSchedule();
+      if (typeof saveUserData === 'function') saveUserData();
+      if (typeof awardXPForAction === 'function') awardXPForAction('bill');
+
+      setTimeout(applyBillScheduleSpanishCleanup, 100);
+    } catch(err) {
+      console.error('Bill add failed:', err);
+      alert(isSpanish() ? 'No se pudo agregar la factura. Inténtalo de nuevo.' : 'Could not add the bill. Please try again.');
+    }
+  };
+
+  var originalDeleteBill = window.deleteBill;
+  if (typeof originalDeleteBill === 'function' && !originalDeleteBill.__fintrailSaveWrapped) {
+    window.deleteBill = function(id){
+      var result = originalDeleteBill.apply(this, arguments);
+      try { if (typeof saveUserData === 'function') saveUserData(); } catch(e) {}
+      return result;
+    };
+    window.deleteBill.__fintrailSaveWrapped = true;
+  }
+
+  function applyBillScheduleSpanishCleanup(){
+    try {
+      var root = document.getElementById('bsub-schedule') || document.getElementById('tab-budget') || document;
       if (!root) return;
 
-      var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
-        acceptNode: function(node){
-          var p = node.parentElement;
-          if (!p) return NodeFilter.FILTER_REJECT;
-          if (p.tagName === 'SCRIPT' || p.tagName === 'STYLE') return NodeFilter.FILTER_REJECT;
-          return NodeFilter.FILTER_ACCEPT;
-        }
-      });
+      if (isSpanish()) {
+        root.querySelectorAll('.pbr-left span, .bi-meta span, .payday-bill-row span').forEach(function(el){
+          var t = el.textContent || '';
+          if (t.indexOf('Split ') !== -1) t = t.replace('Split ', 'Dividido ');
+          if (t.indexOf('/paycheck') !== -1) t = t.replace('/paycheck', '/cheque');
+          el.textContent = t;
+        });
 
-      var nodes = [];
-      while (walker.nextNode()) nodes.push(walker.currentNode);
-      nodes.forEach(translateCalendarTextNode);
+        root.querySelectorAll('.pd-summary').forEach(function(el){
+          var t = el.textContent || '';
+          t = t.replace(/\bbills\b/g, 'facturas').replace(/\bbill\b/g, 'factura').replace(/\bpaid\b/g, 'pagadas');
+          el.textContent = t;
+        });
 
-      root.querySelectorAll('button, input, textarea, select').forEach(function(el){
-        if (el.placeholder) {
-          Object.keys(calendarTranslations).forEach(function(en){
-            el.placeholder = el.placeholder.split(en).join(calendarTranslations[en]);
-          });
-        }
-        if (el.title) {
-          Object.keys(calendarTranslations).forEach(function(en){
-            el.title = el.title.split(en).join(calendarTranslations[en]);
-          });
-        }
-      });
+        root.querySelectorAll('.ml-badge').forEach(function(el){
+          var t = el.textContent || '';
+          t = t.replace('due', 'pendiente');
+          el.textContent = t;
+        });
+      }
     } catch(e) {}
   }
 
-  window.fintrailCalendarSpanishPatch = applyFinancialCalendarSpanish;
+  window.fintrailBillScheduleSpanishCleanup = applyBillScheduleSpanishCleanup;
 
   window.addEventListener('load', function(){
-    setTimeout(applyFinancialCalendarSpanish, 500);
-    setTimeout(applyFinancialCalendarSpanish, 1500);
+    setTimeout(applyBillScheduleSpanishCleanup, 600);
+    setTimeout(applyBillScheduleSpanishCleanup, 1600);
   });
 
   document.addEventListener('click', function(){
-    setTimeout(applyFinancialCalendarSpanish, 120);
+    setTimeout(applyBillScheduleSpanishCleanup, 120);
   });
 
-  var observer = new MutationObserver(function(){
-    setTimeout(applyFinancialCalendarSpanish, 80);
-  });
-
-  window.addEventListener('load', function(){
-    try {
-      var root = document.getElementById('tab-calendar');
-      if (root) observer.observe(root, { childList:true, subtree:true, characterData:true });
-    } catch(e) {}
+  document.addEventListener('change', function(e){
+    if (e.target && e.target.closest && e.target.closest('#bsub-schedule')) {
+      setTimeout(applyBillScheduleSpanishCleanup, 120);
+    }
   });
 })();
 </script>
