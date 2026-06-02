@@ -3467,7 +3467,22 @@
             <label id="label-amount" data-en="Amount ($)" data-es="Monto ($)">Amount ($)</label>
             <input type="number" id="amount" placeholder="0.00" min="0" step="0.01">
           </div>
-<button class="add-btn" id="btn-add-transaction" onclick="addTransaction()">Add Transaction</button>
+          <div class="form-group">
+            <label id="label-category" data-en="Category" data-es="Categoría">Category</label>
+            <select id="category">
+              <option value="Salary" data-en="Salary" data-es="Salario">Salary</option>
+              <option value="Freelance" data-en="Freelance" data-es="Freelance">Freelance</option>
+              <option value="Investment" data-en="Investment" data-es="Inversión">Investment</option>
+              <option value="Housing" data-en="Housing" data-es="Vivienda">Housing</option>
+              <option value="Food" data-en="Food" data-es="Alimentación">Food</option>
+              <option value="Transport" data-en="Transport" data-es="Transporte">Transport</option>
+              <option value="Healthcare" data-en="Healthcare" data-es="Salud">Healthcare</option>
+              <option value="Entertainment" data-en="Entertainment" data-es="Entretenimiento">Entertainment</option>
+              <option value="Education" data-en="Education" data-es="Educación">Education</option>
+              <option value="Other" data-en="Other" data-es="Otro">Other</option>
+            </select>
+          </div>
+          <button class="add-btn" id="btn-add-transaction" onclick="addTransaction()">Add Transaction</button>
         </div>
       </div>
 
@@ -3551,7 +3566,22 @@
                 <option value="28" data-en="28th of each month" data-es="28 de cada mes">28th of each month</option>
               </select>
             </div>
-<button class="add-btn" onclick="addBill()" data-en="+ Add Bill" data-es="+ Agregar Factura">+ Add Bill</button>
+            <div class="form-group">
+              <label data-en="Category" data-es="Categoría">Category</label>
+              <select id="bill-cat">
+                <option>🏠 Housing</option>
+                <option>🚗 Auto</option>
+                <option>💡 Utilities</option>
+                <option>📱 Phone/Internet</option>
+                <option>🎬 Subscriptions</option>
+                <option>🏥 Insurance/Health</option>
+                <option>🎓 Education/Loans</option>
+                <option>💳 Credit Card</option>
+                <option>🐾 Pet</option>
+                <option>📦 Other</option>
+              </select>
+            </div>
+            <button class="add-btn" onclick="addBill()" data-en="+ Add Bill" data-es="+ Agregar Factura">+ Add Bill</button>
           </div>
 
           <div style="margin-top:1.25rem;">
@@ -4000,7 +4030,23 @@
             <label data-en="Target Date (optional)" data-es="Fecha Objetivo (opcional)">Target Date (optional)</label>
             <input type="date" id="g-date">
           </div>
-<button class="add-btn" onclick="addGoal()">+ Add Goal</button>
+          <div class="form-group">
+            <label data-en="Category" data-es="Categoría">Category</label>
+            <select id="g-category">
+              <option>Emergency Fund</option>
+              <option>Home</option>
+              <option>Vehicle</option>
+              <option>Travel</option>
+              <option>Education</option>
+              <option>Wedding</option>
+              <option>Family</option>
+              <option>Tech</option>
+              <option>Health</option>
+              <option>Retirement</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <button class="add-btn" onclick="addGoal()">+ Add Goal</button>
         </div>
       </div>
     </div>
@@ -4145,7 +4191,7 @@
 
         <!-- METHOD EXPLANATION -->
         <div id="method-explanation" style="background:var(--bg);border-radius:10px;padding:0.85rem 1rem;margin-bottom:1rem;border:1px solid var(--border);font-size:0.82rem;color:var(--text-soft);line-height:1.6">
-          <strong style="color:var(--text)">🔥 Método Avalancha:</strong> Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.
+          <strong style="color:var(--text)">🔥 Avalanche Method:</strong> Pay minimums on all debts, then put ALL extra money toward the <strong>highest interest rate</strong> debt first. Mathematically saves the most money in interest.
         </div>
 
         <!-- EXTRA PAYMENT INPUT -->
@@ -4312,7 +4358,7 @@
         <div class="card">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
             <h2 style="margin:0;font-size:1rem" data-en="💚 Assets" data-es="💚 Activos">💚 Assets</h2>
-            <button onclick="addNWItem('asset')" style="background:var(--income-color);color:#fff;border:none;border-radius:8px;padding:0.35rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer">${currentLang === 'es' ? '+ Agregar' : '+ Add'}</button>
+            <button onclick="addNWItem('asset')" data-en="+ Add" data-es="+ Agregar" style="background:var(--income-color);color:#fff;border:none;border-radius:8px;padding:0.35rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer">+ Add</button>
           </div>
           <div id="nw-asset-list" style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.75rem"></div>
           <!-- Quick-add row -->
@@ -4335,7 +4381,7 @@
         <div class="card">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
             <h2 style="margin:0;font-size:1rem" data-en="❤️ Liabilities" data-es="❤️ Pasivos">❤️ Liabilities</h2>
-            <button onclick="addNWItem('liability')" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.35rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer">${currentLang === 'es' ? '+ Agregar' : '+ Add'}</button>
+            <button onclick="addNWItem('liability')" data-en="+ Add" data-es="+ Agregar" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.35rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer">+ Add</button>
           </div>
           <div id="nw-liability-list" style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.75rem"></div>
           <div style="display:grid;grid-template-columns:1fr auto auto;gap:0.5rem;align-items:center;background:var(--bg);border-radius:10px;padding:0.65rem;border:1px solid var(--border)">
@@ -6277,11 +6323,11 @@ Guidelines:
           <span class="goal-deadline">📅 ${dateLabel}</span>
         </div>
         ${complete ? '<div class="goal-complete-badge">🎉 Goal Reached!</div>' : ''}
-        ${monthlyNeeded ? `<div class="goal-monthly">${currentLang === 'es' ? 'Ahorra' : 'Save'} <strong>$${monthlyNeeded.toFixed(0)}${currentLang === 'es' ? '/mes' : '/mo'}</strong> ${currentLang === 'es' ? 'para alcanzar tu meta en' : 'to reach your goal in'} <strong>${months} ${currentLang === 'es' ? (months === 1 ? 'mes' : 'meses') : ('month' + (months !== 1 ? 's' : ''))}</strong></div>` : ''}
+        ${monthlyNeeded ? `<div class="goal-monthly">Save <strong>$${monthlyNeeded.toFixed(0)}/mo</strong> to reach your goal in <strong>${months} month${months !== 1 ? 's' : ''}</strong></div>` : ''}
         ${!complete ? `
         <div class="add-deposit-row">
-          <input class="deposit-input" id="dep-${g.id}" type="number" placeholder="${currentLang === 'es' ? 'Agregar ahorro...' : 'Add savings...'}" min="0" onkeydown="if(event.key==='Enter')deposit(${g.id})">
-          <button class="deposit-btn" onclick="deposit('${g.id}')">${currentLang === 'es' ? '+ Agregar' : '+ Add'}</button>
+          <input class="deposit-input" id="dep-${g.id}" type="number" placeholder="Add savings..." min="0" onkeydown="if(event.key==='Enter')deposit(${g.id})">
+          <button class="deposit-btn" onclick="deposit('${g.id}')">+ Add</button>
         </div>` : ''}
       </div>`;
     }).join('');
@@ -6642,7 +6688,7 @@ Guidelines:
     btn.classList.add('active');
     const explanation = document.getElementById('method-explanation');
     if (method === 'avalanche') {
-      explanation.innerHTML = '<strong style="color:var(--text)">🔥 Método Avalancha:</strong> Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.';
+      explanation.innerHTML = '<strong style="color:var(--text)">🔥 Avalanche Method:</strong> Pay minimums on all debts, then put ALL extra money toward the <strong>highest interest rate</strong> debt first. Mathematically saves the most money in interest.';
     } else {
       explanation.innerHTML = '<strong style="color:var(--text)">⛄ Snowball Method:</strong> Pay minimums on all debts, then put ALL extra money toward the <strong>smallest balance</strong> debt first. Gives you quick wins and motivation to keep going.';
     }
@@ -9164,7 +9210,7 @@ function showOnboardingIfNeeded() {
     } else if (step === 3) {
       body.innerHTML = head + copy.goals.map(g => optionHtml('goal', g)).join('');
     } else if (step === 4) {
-      body.innerHTML = `${head}<div class="onboarding-form"><div class="onboarding-input-row"><label>${copy.fields.income}</label><input type="number" inputmode="decimal" value="" oninput="updateOnboardingField('income', this.value)" placeholder="$ 4,500"></div><div class="onboarding-input-row"><label>${copy.fields.debt}</label><input type="number" inputmode="decimal" value="" oninput="updateOnboardingField('debt', this.value)" placeholder="$ 1,200"></div><div class="onboarding-input-row"><label>${copy.fields.savings}</label><input type="number" inputmode="decimal" value="" oninput="updateOnboardingField('savings', this.value)" placeholder="$ 3,500"></div><div class="onboarding-note">🔒 <span>${copy.note}</span></div></div>`;
+      body.innerHTML = `${head}<div class="onboarding-form"><div class="onboarding-input-row"><label>${copy.fields.income}</label><input type="number" inputmode="decimal" value="${onboardingState.income}" oninput="updateOnboardingField('income', this.value)" placeholder="$ 4,500"></div><div class="onboarding-input-row"><label>${copy.fields.debt}</label><input type="number" inputmode="decimal" value="${onboardingState.debt}" oninput="updateOnboardingField('debt', this.value)" placeholder="$ 1,200"></div><div class="onboarding-input-row"><label>${copy.fields.savings}</label><input type="number" inputmode="decimal" value="${onboardingState.savings}" oninput="updateOnboardingField('savings', this.value)" placeholder="$ 3,500"></div><div class="onboarding-note">🔒 <span>${copy.note}</span></div></div>`;
     } else if (step === 5) {
       const score = onboardingScore();
       body.innerHTML = `${head}<div class="onboarding-score-wrap"><div class="onboarding-score-ring" style="background:conic-gradient(var(--income-color) 0 ${score}%, var(--surface2) ${score}% 100%)"><div class="onboarding-score-inner"><div class="onboarding-score-num">${score}</div><div class="onboarding-score-denom">/100</div></div></div><div class="onboarding-score-message"><strong style="color:var(--text)">${copy.onTrack}</strong><br>${copy.scoreMsg}</div></div><div class="onboarding-split"><div class="onboarding-list-card"><h4 style="color:var(--income-color)">${copy.strengths}</h4><p>✓ ${copy.strength1}</p><p>✓ ${copy.strength2}</p></div><div class="onboarding-list-card"><h4 style="color:var(--accent2)">${copy.opportunities}</h4><p>• ${copy.opp1}</p><p>• ${copy.opp2}</p></div></div>`;
@@ -11162,7 +11208,7 @@ window.addEventListener('load', function(){
   var enToEs = [
     ['Save PDF', 'Guardar PDF'],
     ['Avalanche Method:', 'Método Avalancha:'],
-    ['Pay minimums on all debts, then put ALL extra money toward the highest interest rate debt first. Mathematically saves the most money in interest.', 'Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.'],
+    ['Pay minimums on all debts, then put ALL extra money toward the highest interest rate debt first. Mathematically saves the most money in interest.', 'Paga los mínimos de todas tus deudas y luego aplica TODO el dinero extra a la deuda con la tasa de interés más alta primero. Este método suele ahorrar más dinero en intereses.'],
     ['This extra amount gets focused on one debt at a time', 'Este monto extra se aplica a una deuda a la vez'],
     ['+ Add a Debt', '+ Agregar Deuda'],
     ['Add a Debt', 'Agregar Deuda'],
@@ -11181,7 +11227,7 @@ window.addEventListener('load', function(){
     ['SNOWBALL PAYOFF ORDER', 'ORDEN DE PAGO BOLA DE NIEVE'],
     ['Paid off by', 'Pagado para'],
     ['Snowball Method:', 'Método Bola de Nieve:'],
-    ['Pay minimums on all debts, then put ALL extra money toward the smallest balance debt first. Builds quick wins and motivation.', 'Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con el saldo más pequeño primero. Este método genera victorias rápidas y ayuda a mantener la motivación.'],
+    ['Pay minimums on all debts, then put ALL extra money toward the smallest balance debt first. Builds quick wins and motivation.', 'Paga los mínimos de todas tus deudas y luego aplica TODO el dinero extra a la deuda con el saldo más pequeño primero. Este método ayuda a crear victorias rápidas y motivación.'],
     ['Avalanche — Save More', 'Avalancha — Ahorra Más'],
     ['Snowball — Quick Wins', 'Bola de Nieve — Victorias Rápidas'],
     ['APR', 'TNA'],
@@ -13352,78 +13398,47 @@ window.addEventListener('load', function(){
 
 
 <script>
-/* === SAFE DEBT METHOD SPANISH TRANSLATION PATCH === */
+/* === NET WORTH ADD BUTTON LABEL CLEANUP PATCH === */
 (function(){
-  function applyDebtMethodSpanish(){
+  function fintrailFixNetWorthAddButtons(){
     try {
       var lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
-      if (lang !== 'es') return;
-      var explanation = document.getElementById('method-explanation');
-      if (!explanation) return;
-      var snowballBtn = document.getElementById('method-snowball');
-      var isSnowball = !!(snowballBtn && snowballBtn.classList && snowballBtn.classList.contains('active'));
-      if (isSnowball) {
-        explanation.innerHTML = '<strong style="color:var(--text)">☃️ Método Bola de Nieve:</strong> Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con el saldo más pequeño primero. Este método genera victorias rápidas y ayuda a mantener la motivación.';
-      } else {
-        explanation.innerHTML = '<strong style="color:var(--text)">🔥 Método Avalancha:</strong> Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.';
-      }
-      var avalancheBtn = document.getElementById('method-avalanche');
-      var snowballBtn2 = document.getElementById('method-snowball');
-      if (avalancheBtn) avalancheBtn.textContent = '🔥 Avalancha — Ahorra Más';
-      if (snowballBtn2) snowballBtn2.textContent = '☃️ Bola de Nieve — Victorias Rápidas';
-    } catch(e) {}
-  }
-  window.addEventListener('load', function(){
-    setTimeout(applyDebtMethodSpanish, 500);
-    setTimeout(applyDebtMethodSpanish, 1500);
-  });
-  document.addEventListener('click', function(){ setTimeout(applyDebtMethodSpanish, 100); });
-})();
-</script>
-
-
-<script>
-/* === SAFE SAVINGS GOALS SPANISH + NO CATEGORY PATCH === */
-(function(){
-  function applySavingsGoalSpanishPatch(){
-    try {
-      var lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
-      document.querySelectorAll('#goals-list .goal-category, #goals-grid .goal-category, .goal-card .goal-category').forEach(function(el){
-        el.remove();
-      });
-      document.querySelectorAll('.goal-monthly').forEach(function(el){
-        if (lang !== 'es') return;
-        var text = el.textContent || '';
-        if (text.indexOf('Save') !== -1 || text.indexOf('/mo') !== -1 || text.indexOf('to reach your goal') !== -1 || text.indexOf('month') !== -1) {
-          var amountMatch = text.match(/\$[0-9,]+(?:\.\d+)?/);
-          var monthsMatch = text.match(/(\d+)\s*month/);
-          var amount = amountMatch ? amountMatch[0] : '';
-          var months = monthsMatch ? parseInt(monthsMatch[1], 10) : null;
-          if (amount && months) {
-            el.innerHTML = 'Ahorra <strong>' + amount + '/mes</strong> para alcanzar tu meta en <strong>' + months + ' ' + (months === 1 ? 'mes' : 'meses') + '</strong>';
-          }
+      var label = lang === 'es' ? '+ Agregar' : '+ Add';
+      var root = document.getElementById('tab-networth') || document;
+      root.querySelectorAll('button').forEach(function(btn){
+        var text = (btn.textContent || '').trim();
+        var onclick = btn.getAttribute('onclick') || '';
+        var isNetWorthAdd = onclick.indexOf("addNWItem('asset')") !== -1 || onclick.indexOf('addNWItem("asset")') !== -1 ||
+                            onclick.indexOf("addNWItem('liability')") !== -1 || onclick.indexOf('addNWItem("liability")') !== -1;
+        var isTopAddButton = isNetWorthAdd && text !== '+';
+        var isBrokenTemplate = text.indexOf('${currentLang') !== -1 || text.indexOf('?') !== -1 && text.indexOf('Agregar') !== -1 && text.indexOf('Add') !== -1;
+        if (isTopAddButton || isBrokenTemplate) {
+          btn.textContent = label;
         }
       });
-      document.querySelectorAll('.deposit-input').forEach(function(input){
-        if (lang === 'es') input.setAttribute('placeholder', 'Agregar ahorro...');
-      });
-      document.querySelectorAll('.deposit-btn').forEach(function(btn){
-        if (lang === 'es') btn.textContent = '+ Agregar';
-      });
-      var catField = document.getElementById('goal-cat') || document.getElementById('goal-category');
-      if (catField) {
-        var group = catField.closest ? catField.closest('.form-group') : null;
-        if (group) group.style.display = 'none';
-      }
     } catch(e) {}
   }
-  window.fintrailSavingsGoalSpanishPatch = applySavingsGoalSpanishPatch;
+
+  window.fintrailFixNetWorthAddButtons = fintrailFixNetWorthAddButtons;
+
   window.addEventListener('load', function(){
-    setTimeout(applySavingsGoalSpanishPatch, 700);
-    setTimeout(applySavingsGoalSpanishPatch, 1600);
+    setTimeout(fintrailFixNetWorthAddButtons, 500);
+    setTimeout(fintrailFixNetWorthAddButtons, 1500);
   });
-  document.addEventListener('click', function(){ setTimeout(applySavingsGoalSpanishPatch, 120); });
-  document.addEventListener('input', function(){ setTimeout(applySavingsGoalSpanishPatch, 120); });
+
+  document.addEventListener('click', function(){
+    setTimeout(fintrailFixNetWorthAddButtons, 100);
+  });
+
+  var observer = new MutationObserver(function(){
+    setTimeout(fintrailFixNetWorthAddButtons, 50);
+  });
+  window.addEventListener('load', function(){
+    try {
+      var root = document.getElementById('tab-networth') || document.body;
+      if (root) observer.observe(root, { childList:true, subtree:true, characterData:true });
+    } catch(e) {}
+  });
 })();
 </script>
 
