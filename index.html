@@ -7370,7 +7370,63 @@ Guidelines:
           .footer { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #eee; font-size: 0.72rem; color: #aaa; text-align: center; }
           @media print { body { padding: 1rem; } }
         </style>
-      </head>
+      
+<style>
+/* === DEBT PAYOFF TIMELINE MONTHS VISIBILITY PATCH === */
+#tab-debtplan .pt-row {
+  display: grid !important;
+  grid-template-columns: minmax(90px, 1.1fr) minmax(70px, 0.8fr) minmax(120px, 2fr) auto !important;
+  align-items: center !important;
+  gap: 0.65rem !important;
+}
+
+#tab-debtplan .pt-name {
+  width: auto !important;
+  min-width: 0 !important;
+}
+
+#tab-debtplan .pt-bar-track {
+  min-width: 120px !important;
+}
+
+#tab-debtplan .pt-months {
+  width: auto !important;
+  min-width: 72px !important;
+  white-space: nowrap !important;
+  text-align: right !important;
+  position: relative !important;
+  z-index: 2 !important;
+  background: var(--surface, #fff) !important;
+  border-radius: 8px !important;
+  padding: 0.25rem 0.45rem !important;
+  font-weight: 700 !important;
+}
+
+@media (max-width: 700px) {
+  #tab-debtplan .pt-row {
+    grid-template-columns: 1fr auto !important;
+    gap: 0.45rem 0.65rem !important;
+  }
+
+  #tab-debtplan .pt-name {
+    grid-column: 1 / 2 !important;
+  }
+
+  #tab-debtplan .pt-months {
+    grid-column: 2 / 3 !important;
+    grid-row: 1 !important;
+    min-width: 78px !important;
+  }
+
+  #tab-debtplan .pt-bar-track {
+    grid-column: 1 / -1 !important;
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+}
+</style>
+
+</head>
       <body>
         <div class="pdf-header">
           <div class="pdf-logo">Fin<span>trail Pro</span></div>
