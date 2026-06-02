@@ -3467,22 +3467,7 @@
             <label id="label-amount" data-en="Amount ($)" data-es="Monto ($)">Amount ($)</label>
             <input type="number" id="amount" placeholder="0.00" min="0" step="0.01">
           </div>
-          <div class="form-group">
-            <label id="label-category" data-en="Category" data-es="Categoría">Category</label>
-            <select id="category">
-              <option value="Salary" data-en="Salary" data-es="Salario">Salary</option>
-              <option value="Freelance" data-en="Freelance" data-es="Freelance">Freelance</option>
-              <option value="Investment" data-en="Investment" data-es="Inversión">Investment</option>
-              <option value="Housing" data-en="Housing" data-es="Vivienda">Housing</option>
-              <option value="Food" data-en="Food" data-es="Alimentación">Food</option>
-              <option value="Transport" data-en="Transport" data-es="Transporte">Transport</option>
-              <option value="Healthcare" data-en="Healthcare" data-es="Salud">Healthcare</option>
-              <option value="Entertainment" data-en="Entertainment" data-es="Entretenimiento">Entertainment</option>
-              <option value="Education" data-en="Education" data-es="Educación">Education</option>
-              <option value="Other" data-en="Other" data-es="Otro">Other</option>
-            </select>
-          </div>
-          <button class="add-btn" id="btn-add-transaction" onclick="addTransaction()">Add Transaction</button>
+<button class="add-btn" id="btn-add-transaction" onclick="addTransaction()">Add Transaction</button>
         </div>
       </div>
 
@@ -3566,22 +3551,7 @@
                 <option value="28" data-en="28th of each month" data-es="28 de cada mes">28th of each month</option>
               </select>
             </div>
-            <div class="form-group">
-              <label data-en="Category" data-es="Categoría">Category</label>
-              <select id="bill-cat">
-                <option>🏠 Housing</option>
-                <option>🚗 Auto</option>
-                <option>💡 Utilities</option>
-                <option>📱 Phone/Internet</option>
-                <option>🎬 Subscriptions</option>
-                <option>🏥 Insurance/Health</option>
-                <option>🎓 Education/Loans</option>
-                <option>💳 Credit Card</option>
-                <option>🐾 Pet</option>
-                <option>📦 Other</option>
-              </select>
-            </div>
-            <button class="add-btn" onclick="addBill()" data-en="+ Add Bill" data-es="+ Agregar Factura">+ Add Bill</button>
+<button class="add-btn" onclick="addBill()" data-en="+ Add Bill" data-es="+ Agregar Factura">+ Add Bill</button>
           </div>
 
           <div style="margin-top:1.25rem;">
@@ -4030,23 +4000,7 @@
             <label data-en="Target Date (optional)" data-es="Fecha Objetivo (opcional)">Target Date (optional)</label>
             <input type="date" id="g-date">
           </div>
-          <div class="form-group">
-            <label data-en="Category" data-es="Categoría">Category</label>
-            <select id="g-category">
-              <option>Emergency Fund</option>
-              <option>Home</option>
-              <option>Vehicle</option>
-              <option>Travel</option>
-              <option>Education</option>
-              <option>Wedding</option>
-              <option>Family</option>
-              <option>Tech</option>
-              <option>Health</option>
-              <option>Retirement</option>
-              <option>Other</option>
-            </select>
-          </div>
-          <button class="add-btn" onclick="addGoal()">+ Add Goal</button>
+<button class="add-btn" onclick="addGoal()">+ Add Goal</button>
         </div>
       </div>
     </div>
@@ -4358,7 +4312,7 @@
         <div class="card">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
             <h2 style="margin:0;font-size:1rem" data-en="💚 Assets" data-es="💚 Activos">💚 Assets</h2>
-            <button onclick="addNWItem('asset')" style="background:var(--income-color);color:#fff;border:none;border-radius:8px;padding:0.35rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer">+ Add</button>
+            <button onclick="addNWItem('asset')" style="background:var(--income-color);color:#fff;border:none;border-radius:8px;padding:0.35rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer">${currentLang === 'es' ? '+ Agregar' : '+ Add'}</button>
           </div>
           <div id="nw-asset-list" style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.75rem"></div>
           <!-- Quick-add row -->
@@ -4381,7 +4335,7 @@
         <div class="card">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
             <h2 style="margin:0;font-size:1rem" data-en="❤️ Liabilities" data-es="❤️ Pasivos">❤️ Liabilities</h2>
-            <button onclick="addNWItem('liability')" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.35rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer">+ Add</button>
+            <button onclick="addNWItem('liability')" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.35rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer">${currentLang === 'es' ? '+ Agregar' : '+ Add'}</button>
           </div>
           <div id="nw-liability-list" style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.75rem"></div>
           <div style="display:grid;grid-template-columns:1fr auto auto;gap:0.5rem;align-items:center;background:var(--bg);border-radius:10px;padding:0.65rem;border:1px solid var(--border)">
@@ -6323,11 +6277,11 @@ Guidelines:
           <span class="goal-deadline">📅 ${dateLabel}</span>
         </div>
         ${complete ? '<div class="goal-complete-badge">🎉 Goal Reached!</div>' : ''}
-        ${monthlyNeeded ? `<div class="goal-monthly">Save <strong>$${monthlyNeeded.toFixed(0)}/mo</strong> to reach your goal in <strong>${months} month${months !== 1 ? 's' : ''}</strong></div>` : ''}
+        ${monthlyNeeded ? `<div class="goal-monthly">${currentLang === 'es' ? 'Ahorra' : 'Save'} <strong>$${monthlyNeeded.toFixed(0)}${currentLang === 'es' ? '/mes' : '/mo'}</strong> ${currentLang === 'es' ? 'para alcanzar tu meta en' : 'to reach your goal in'} <strong>${months} ${currentLang === 'es' ? (months === 1 ? 'mes' : 'meses') : ('month' + (months !== 1 ? 's' : ''))}</strong></div>` : ''}
         ${!complete ? `
         <div class="add-deposit-row">
-          <input class="deposit-input" id="dep-${g.id}" type="number" placeholder="Add savings..." min="0" onkeydown="if(event.key==='Enter')deposit(${g.id})">
-          <button class="deposit-btn" onclick="deposit('${g.id}')">+ Add</button>
+          <input class="deposit-input" id="dep-${g.id}" type="number" placeholder="${currentLang === 'es' ? 'Agregar ahorro...' : 'Add savings...'}" min="0" onkeydown="if(event.key==='Enter')deposit(${g.id})">
+          <button class="deposit-btn" onclick="deposit('${g.id}')">${currentLang === 'es' ? '+ Agregar' : '+ Add'}</button>
         </div>` : ''}
       </div>`;
     }).join('');
@@ -13424,6 +13378,52 @@ window.addEventListener('load', function(){
     setTimeout(applyDebtMethodSpanish, 1500);
   });
   document.addEventListener('click', function(){ setTimeout(applyDebtMethodSpanish, 100); });
+})();
+</script>
+
+
+<script>
+/* === SAFE SAVINGS GOALS SPANISH + NO CATEGORY PATCH === */
+(function(){
+  function applySavingsGoalSpanishPatch(){
+    try {
+      var lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
+      document.querySelectorAll('#goals-list .goal-category, #goals-grid .goal-category, .goal-card .goal-category').forEach(function(el){
+        el.remove();
+      });
+      document.querySelectorAll('.goal-monthly').forEach(function(el){
+        if (lang !== 'es') return;
+        var text = el.textContent || '';
+        if (text.indexOf('Save') !== -1 || text.indexOf('/mo') !== -1 || text.indexOf('to reach your goal') !== -1 || text.indexOf('month') !== -1) {
+          var amountMatch = text.match(/\$[0-9,]+(?:\.\d+)?/);
+          var monthsMatch = text.match(/(\d+)\s*month/);
+          var amount = amountMatch ? amountMatch[0] : '';
+          var months = monthsMatch ? parseInt(monthsMatch[1], 10) : null;
+          if (amount && months) {
+            el.innerHTML = 'Ahorra <strong>' + amount + '/mes</strong> para alcanzar tu meta en <strong>' + months + ' ' + (months === 1 ? 'mes' : 'meses') + '</strong>';
+          }
+        }
+      });
+      document.querySelectorAll('.deposit-input').forEach(function(input){
+        if (lang === 'es') input.setAttribute('placeholder', 'Agregar ahorro...');
+      });
+      document.querySelectorAll('.deposit-btn').forEach(function(btn){
+        if (lang === 'es') btn.textContent = '+ Agregar';
+      });
+      var catField = document.getElementById('goal-cat') || document.getElementById('goal-category');
+      if (catField) {
+        var group = catField.closest ? catField.closest('.form-group') : null;
+        if (group) group.style.display = 'none';
+      }
+    } catch(e) {}
+  }
+  window.fintrailSavingsGoalSpanishPatch = applySavingsGoalSpanishPatch;
+  window.addEventListener('load', function(){
+    setTimeout(applySavingsGoalSpanishPatch, 700);
+    setTimeout(applySavingsGoalSpanishPatch, 1600);
+  });
+  document.addEventListener('click', function(){ setTimeout(applySavingsGoalSpanishPatch, 120); });
+  document.addEventListener('input', function(){ setTimeout(applySavingsGoalSpanishPatch, 120); });
 })();
 </script>
 
