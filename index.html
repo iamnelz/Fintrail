@@ -3999,10 +3999,10 @@
         <div class="form-row">
           <div class="form-group">
             <label data-en="Goal Name" data-es="Nombre de la Meta">Goal Name</label>
-            <input type="text" id="g-name" placeholder="e.g. Emergency Fund, Vacation" data-placeholder-en="e.g. Emergency Fund, Vacation" data-placeholder-es="ej. Emergencia, Vacaciones">
+            <input type="text" id="g-name" placeholder="e.g. Emergency Fund, Vacation">
           </div>
           <div class="form-group">
-            <label data-en="Icon" data-es="Ícono">Icon</label>
+            <label>Icon</label>
             <div class="emoji-picker" id="emoji-picker">
               <div class="emoji-opt selected" onclick="selectEmoji(this)">🎯</div>
               <div class="emoji-opt" onclick="selectEmoji(this)">🏠</div>
@@ -4030,7 +4030,23 @@
             <label data-en="Target Date (optional)" data-es="Fecha Objetivo (opcional)">Target Date (optional)</label>
             <input type="date" id="g-date">
           </div>
-          <button class="add-btn" onclick="addGoal()" data-en="+ Add Goal" data-es="+ Agregar Meta">+ Add Goal</button>
+          <div class="form-group">
+            <label data-en="Category" data-es="Categoría">Category</label>
+            <select id="g-category">
+              <option>Emergency Fund</option>
+              <option>Home</option>
+              <option>Vehicle</option>
+              <option>Travel</option>
+              <option>Education</option>
+              <option>Wedding</option>
+              <option>Family</option>
+              <option>Tech</option>
+              <option>Health</option>
+              <option>Retirement</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <button class="add-btn" onclick="addGoal()">+ Add Goal</button>
         </div>
       </div>
     </div>
@@ -4175,7 +4191,7 @@
 
         <!-- METHOD EXPLANATION -->
         <div id="method-explanation" style="background:var(--bg);border-radius:10px;padding:0.85rem 1rem;margin-bottom:1rem;border:1px solid var(--border);font-size:0.82rem;color:var(--text-soft);line-height:1.6">
-          <strong style="color:var(--text)">🔥 Método Avalancha:</strong> Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.
+          <strong style="color:var(--text)">🔥 Avalanche Method:</strong> Pay minimums on all debts, then put ALL extra money toward the <strong>highest interest rate</strong> debt first. Mathematically saves the most money in interest.
         </div>
 
         <!-- EXTRA PAYMENT INPUT -->
@@ -6190,8 +6206,9 @@ Guidelines:
     const target = parseFloat(document.getElementById('g-target').value);
     const saved = parseFloat(document.getElementById('g-saved').value) || 0;
     const date = document.getElementById('g-date').value;
-    if (!name || isNaN(target) || target <= 0) { alert(currentLang === 'es' ? 'Ingresa un nombre de meta y un monto objetivo.' : 'Please enter a goal name and target amount.'); return; }
-    goals.push({ id: String(Date.now()), name, icon: selectedEmoji, target, saved: Math.min(saved, target), date });
+    const category = document.getElementById('g-category').value;
+    if (!name || isNaN(target) || target <= 0) { alert('Please enter a goal name and target amount.'); return; }
+    goals.push({ id: String(Date.now()), name, icon: selectedEmoji, target, saved: Math.min(saved, target), date, category });
     document.getElementById('g-name').value = '';
     document.getElementById('g-target').value = '';
     document.getElementById('g-saved').value = '';
@@ -6205,7 +6222,7 @@ Guidelines:
   }
 
   function deleteGoal(id) {
-    if (!confirm(currentLang === 'es' ? '¿Eliminar esta meta de ahorro?' : 'Delete this savings goal?')) return;
+    if (!confirm('Delete this savings goal?')) return;
     goals = goals.filter(g => String(g.id) !== String(id));
     // Save immediately to localStorage before async Supabase write
     const _dUid = currentUser?.id || 'demo';
@@ -6278,20 +6295,7 @@ Guidelines:
       const months = monthsUntil(g.date);
       const monthlyNeeded = (months && months > 0 && remaining > 0) ? (remaining / months) : null;
       const complete = pct >= 100;
-      const isEs = currentLang === 'es';
-      const dateLabel = g.date ? new Date(g.date).toLocaleDateString(isEs ? 'es-US' : 'en-US', {month:'short', year:'numeric'}) : (isEs ? 'Sin fecha límite' : 'No deadline');
-      const monthWord = isEs ? (months === 1 ? 'mes' : 'meses') : (months === 1 ? 'month' : 'months');
-      const goalReachedText = isEs ? '🎉 ¡Meta alcanzada!' : '🎉 Goal Reached!';
-      const monthlyText = monthlyNeeded
-        ? (isEs
-          ? `Ahorra <strong>$${monthlyNeeded.toFixed(0)}/mes</strong> para alcanzar tu meta en <strong>${months} ${monthWord}</strong>`
-          : `Save <strong>$${monthlyNeeded.toFixed(0)}/mo</strong> to reach your goal in <strong>${months} ${monthWord}</strong>`)
-        : '';
-      const depositPlaceholder = isEs ? 'Agregar ahorro...' : 'Add savings...';
-      const depositBtn = isEs ? '+ Agregar' : '+ Add';
-      const ofLabel = isEs ? 'de' : 'of';
-      const completeLabel = isEs ? 'completado' : 'complete';
-      const deleteTitle = isEs ? 'Eliminar' : 'Delete';
+      const dateLabel = g.date ? new Date(g.date).toLocaleDateString('en-US', {month:'short', year:'numeric'}) : 'No deadline';
 
       return `
       <div class="goal-card">
@@ -6300,29 +6304,30 @@ Guidelines:
             <span class="goal-icon">${g.icon}</span>
             <div>
               <div class="goal-name">${escHtml(g.name)}</div>
+              <div class="goal-category">${g.category}</div>
             </div>
           </div>
           <div class="goal-actions">
-            <button class="goal-action-btn del" onclick="deleteGoal('${g.id}')" title="${deleteTitle}">✕</button>
+            <button class="goal-action-btn del" onclick="deleteGoal('${g.id}')" title="Delete">✕</button>
           </div>
         </div>
         <div class="goal-amounts">
           <span class="goal-saved" style="color:${color}">$${g.saved.toLocaleString('en-US',{maximumFractionDigits:0})}</span>
-          <span class="goal-target">${ofLabel} $${g.target.toLocaleString('en-US',{maximumFractionDigits:0})}</span>
+          <span class="goal-target">of $${g.target.toLocaleString('en-US',{maximumFractionDigits:0})}</span>
         </div>
         <div class="goal-progress-track">
           <div class="goal-progress-fill" style="width:${pct}%;background:${color}"></div>
         </div>
         <div class="goal-meta">
-          <span class="goal-pct" style="color:${color}">${pct.toFixed(0)}% ${completeLabel}</span>
+          <span class="goal-pct" style="color:${color}">${pct.toFixed(0)}% complete</span>
           <span class="goal-deadline">📅 ${dateLabel}</span>
         </div>
-        ${complete ? `<div class="goal-complete-badge">${goalReachedText}</div>` : ''}
-        ${monthlyText ? `<div class="goal-monthly">${monthlyText}</div>` : ''}
+        ${complete ? '<div class="goal-complete-badge">🎉 Goal Reached!</div>' : ''}
+        ${monthlyNeeded ? `<div class="goal-monthly">Save <strong>$${monthlyNeeded.toFixed(0)}/mo</strong> to reach your goal in <strong>${months} month${months !== 1 ? 's' : ''}</strong></div>` : ''}
         ${!complete ? `
         <div class="add-deposit-row">
-          <input class="deposit-input" id="dep-${g.id}" type="number" placeholder="${depositPlaceholder}" min="0" onkeydown="if(event.key==='Enter')deposit(${g.id})">
-          <button class="deposit-btn" onclick="deposit('${g.id}')">${depositBtn}</button>
+          <input class="deposit-input" id="dep-${g.id}" type="number" placeholder="Add savings..." min="0" onkeydown="if(event.key==='Enter')deposit(${g.id})">
+          <button class="deposit-btn" onclick="deposit('${g.id}')">+ Add</button>
         </div>` : ''}
       </div>`;
     }).join('');
@@ -6683,7 +6688,7 @@ Guidelines:
     btn.classList.add('active');
     const explanation = document.getElementById('method-explanation');
     if (method === 'avalanche') {
-      explanation.innerHTML = '<strong style="color:var(--text)">🔥 Método Avalancha:</strong> Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.';
+      explanation.innerHTML = '<strong style="color:var(--text)">🔥 Avalanche Method:</strong> Pay minimums on all debts, then put ALL extra money toward the <strong>highest interest rate</strong> debt first. Mathematically saves the most money in interest.';
     } else {
       explanation.innerHTML = '<strong style="color:var(--text)">⛄ Snowball Method:</strong> Pay minimums on all debts, then put ALL extra money toward the <strong>smallest balance</strong> debt first. Gives you quick wins and motivation to keep going.';
     }
@@ -7377,18 +7382,33 @@ Guidelines:
 
 
 
+<script>
+/* === SAFE AUTH FUNCTION ALIASES === */
+(function(){
+  if (typeof window.signInGoogle !== 'function' && typeof window.signInWithGoogle === 'function') {
+    window.signInGoogle = window.signInWithGoogle;
+  }
+  if (typeof window.signIn !== 'function' && typeof window.loginUser === 'function') {
+    window.signIn = window.loginUser;
+  }
+  if (typeof window.signUp !== 'function' && typeof window.signupUser === 'function') {
+    window.signUp = window.signupUser;
+  }
+})();
+</script>
+
 
 <script>
-/* === SAFE DEBT PAYOFF SPANISH COPY ONLY === */
+/* === SAFE DEBT PAYOFF SPANISH COPY PATCH === */
 (function(){
-  function applyDebtSpanishCopy(){
+  function debtSpanishCopyPatch(){
     try {
       var lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
       if (lang !== 'es') return;
       var explanation = document.getElementById('method-explanation');
       if (!explanation) return;
       var snowballBtn = document.getElementById('method-snowball');
-      var isSnowball = snowballBtn && snowballBtn.classList && snowballBtn.classList.contains('active');
+      var isSnowball = !!(snowballBtn && snowballBtn.classList && snowballBtn.classList.contains('active'));
       if (isSnowball) {
         explanation.innerHTML = '<strong style="color:var(--text)">☃️ Método Bola de Nieve:</strong> Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con el saldo más pequeño primero. Este método genera victorias rápidas y ayuda a mantener la motivación.';
       } else {
@@ -7396,12 +7416,13 @@ Guidelines:
       }
     } catch(e) {}
   }
+  window.fintrailDebtSpanishCopyPatch = debtSpanishCopyPatch;
   window.addEventListener('load', function(){
-    setTimeout(applyDebtSpanishCopy, 500);
-    setTimeout(applyDebtSpanishCopy, 1500);
+    setTimeout(debtSpanishCopyPatch, 600);
+    setTimeout(debtSpanishCopyPatch, 1600);
   });
   document.addEventListener('click', function(){
-    setTimeout(applyDebtSpanishCopy, 100);
+    setTimeout(debtSpanishCopyPatch, 120);
   });
 })();
 </script>
@@ -9235,7 +9256,7 @@ function showOnboardingIfNeeded() {
     } else if (step === 3) {
       body.innerHTML = head + copy.goals.map(g => optionHtml('goal', g)).join('');
     } else if (step === 4) {
-      body.innerHTML = `${head}<div class="onboarding-form"><div class="onboarding-input-row"><label>${copy.fields.income}</label><input type="number" inputmode="decimal" value="${onboardingState.income}" oninput="updateOnboardingField('income', this.value)" placeholder="$ 4,500"></div><div class="onboarding-input-row"><label>${copy.fields.debt}</label><input type="number" inputmode="decimal" value="${onboardingState.debt}" oninput="updateOnboardingField('debt', this.value)" placeholder="$ 1,200"></div><div class="onboarding-input-row"><label>${copy.fields.savings}</label><input type="number" inputmode="decimal" value="${onboardingState.savings}" oninput="updateOnboardingField('savings', this.value)" placeholder="$ 3,500"></div><div class="onboarding-note">🔒 <span>${copy.note}</span></div></div>`;
+      body.innerHTML = `${head}<div class="onboarding-form"><div class="onboarding-input-row"><label>${copy.fields.income}</label><input type="number" inputmode="decimal" value="" oninput="updateOnboardingField('income', this.value)" placeholder="$ 4,500"></div><div class="onboarding-input-row"><label>${copy.fields.debt}</label><input type="number" inputmode="decimal" value="" oninput="updateOnboardingField('debt', this.value)" placeholder="$ 1,200"></div><div class="onboarding-input-row"><label>${copy.fields.savings}</label><input type="number" inputmode="decimal" value="" oninput="updateOnboardingField('savings', this.value)" placeholder="$ 3,500"></div><div class="onboarding-note">🔒 <span>${copy.note}</span></div></div>`;
     } else if (step === 5) {
       const score = onboardingScore();
       body.innerHTML = `${head}<div class="onboarding-score-wrap"><div class="onboarding-score-ring" style="background:conic-gradient(var(--income-color) 0 ${score}%, var(--surface2) ${score}% 100%)"><div class="onboarding-score-inner"><div class="onboarding-score-num">${score}</div><div class="onboarding-score-denom">/100</div></div></div><div class="onboarding-score-message"><strong style="color:var(--text)">${copy.onTrack}</strong><br>${copy.scoreMsg}</div></div><div class="onboarding-split"><div class="onboarding-list-card"><h4 style="color:var(--income-color)">${copy.strengths}</h4><p>✓ ${copy.strength1}</p><p>✓ ${copy.strength2}</p></div><div class="onboarding-list-card"><h4 style="color:var(--accent2)">${copy.opportunities}</h4><p>• ${copy.opp1}</p><p>• ${copy.opp2}</p></div></div>`;
@@ -11233,7 +11254,7 @@ window.addEventListener('load', function(){
   var enToEs = [
     ['Save PDF', 'Guardar PDF'],
     ['Avalanche Method:', 'Método Avalancha:'],
-    ['Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.', 'Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.'],
+    ['Pay minimums on all debts, then put ALL extra money toward the highest interest rate debt first. Mathematically saves the most money in interest.', 'Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.'],
     ['This extra amount gets focused on one debt at a time', 'Este monto extra se aplica a una deuda a la vez'],
     ['+ Add a Debt', '+ Agregar Deuda'],
     ['Add a Debt', 'Agregar Deuda'],
@@ -11252,7 +11273,7 @@ window.addEventListener('load', function(){
     ['SNOWBALL PAYOFF ORDER', 'ORDEN DE PAGO BOLA DE NIEVE'],
     ['Paid off by', 'Pagado para'],
     ['Snowball Method:', 'Método Bola de Nieve:'],
-    ['Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con el saldo más pequeño primero. Este método genera victorias rápidas y ayuda a mantener la motivación.', 'Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con el saldo más pequeño primero. Este método genera victorias rápidas y ayuda a mantener la motivación.'],
+    ['Pay minimums on all debts, then put ALL extra money toward the smallest balance debt first. Builds quick wins and motivation.', 'Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con el saldo más pequeño primero. Este método genera victorias rápidas y ayuda a mantener la motivación.'],
     ['Avalanche — Save More', 'Avalancha — Ahorra Más'],
     ['Snowball — Quick Wins', 'Bola de Nieve — Victorias Rápidas'],
     ['APR', 'TNA'],
@@ -12278,7 +12299,7 @@ window.addEventListener('load', function(){
     if (applying) return;
     applying = true;
     try {
-      var root = document.getElementById('tab-savings') || document.getElementById('tab-goals');
+      var root = document.getElementById('tab-goals');
       if (!root) return;
 
       root.querySelectorAll('select').forEach(function(select){
@@ -12346,7 +12367,7 @@ window.addEventListener('load', function(){
 
   function startObserver(){
     if (observerStarted) return;
-    var root = document.getElementById('tab-savings') || document.getElementById('tab-goals');
+    var root = document.getElementById('tab-goals');
     if (!root) return;
     observerStarted = true;
 
@@ -13142,7 +13163,7 @@ window.addEventListener('load', function(){
   function applyTranslations(){
     var replacements = [
       [
-        "Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.",
+        "Pay minimums on all debts, then put ALL extra money toward the highest interest rate debt first. Mathematically saves the most money in interest.",
         "Paga los mínimos en todas tus deudas y destina TODO el dinero extra a la deuda con la tasa de interés más alta primero. Matemáticamente, es el método que más dinero ahorra en intereses."
       ],
       [
@@ -13422,18 +13443,33 @@ window.addEventListener('load', function(){
 </script>
 
 
+<script>
+/* === SAFE AUTH FUNCTION ALIASES === */
+(function(){
+  if (typeof window.signInGoogle !== 'function' && typeof window.signInWithGoogle === 'function') {
+    window.signInGoogle = window.signInWithGoogle;
+  }
+  if (typeof window.signIn !== 'function' && typeof window.loginUser === 'function') {
+    window.signIn = window.loginUser;
+  }
+  if (typeof window.signUp !== 'function' && typeof window.signupUser === 'function') {
+    window.signUp = window.signupUser;
+  }
+})();
+</script>
+
 
 <script>
-/* === SAFE DEBT PAYOFF SPANISH COPY ONLY === */
+/* === SAFE DEBT PAYOFF SPANISH COPY PATCH === */
 (function(){
-  function applyDebtSpanishCopy(){
+  function debtSpanishCopyPatch(){
     try {
       var lang = (typeof currentLang !== 'undefined') ? currentLang : 'en';
       if (lang !== 'es') return;
       var explanation = document.getElementById('method-explanation');
       if (!explanation) return;
       var snowballBtn = document.getElementById('method-snowball');
-      var isSnowball = snowballBtn && snowballBtn.classList && snowballBtn.classList.contains('active');
+      var isSnowball = !!(snowballBtn && snowballBtn.classList && snowballBtn.classList.contains('active'));
       if (isSnowball) {
         explanation.innerHTML = '<strong style="color:var(--text)">☃️ Método Bola de Nieve:</strong> Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con el saldo más pequeño primero. Este método genera victorias rápidas y ayuda a mantener la motivación.';
       } else {
@@ -13441,21 +13477,16 @@ window.addEventListener('load', function(){
       }
     } catch(e) {}
   }
+  window.fintrailDebtSpanishCopyPatch = debtSpanishCopyPatch;
   window.addEventListener('load', function(){
-    setTimeout(applyDebtSpanishCopy, 500);
-    setTimeout(applyDebtSpanishCopy, 1500);
+    setTimeout(debtSpanishCopyPatch, 600);
+    setTimeout(debtSpanishCopyPatch, 1600);
   });
   document.addEventListener('click', function(){
-    setTimeout(applyDebtSpanishCopy, 100);
+    setTimeout(debtSpanishCopyPatch, 120);
   });
 })();
 </script>
 
 </body>
 </html>
-
-
-function capitalizeSpanishMonth(str){
-  return str ? str.charAt(0).toUpperCase() + str.slice(1) : str;
-}
-
