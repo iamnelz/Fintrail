@@ -13550,5 +13550,105 @@ window.addEventListener('load', function(){
 })();
 </script>
 
+
+<script>
+/* === BILL SCHEDULE ADD BUTTON SAVE FIX SAFE === */
+(function(){
+  function isSpanish(){
+    try { return (typeof currentLang !== 'undefined' && currentLang === 'es'); } catch(e) { return false; }
+  }
+
+  function normalizeBillCategory(value){
+    var cat = String(value || '').trim();
+    var map = {
+      '🏠 Vivienda': '🏠 Housing',
+      '💡 Servicios': '💡 Utilities',
+      '📱 Teléfono/Internet': '📱 Phone/Internet',
+      '🎬 Suscripciones': '🎬 Subscriptions',
+      '🏥 Seguro/Salud': '🏥 Insurance/Health',
+      '🎓 Educación/Préstamos': '🎓 Education/Loans',
+      '💳 Tarjeta de Crédito': '💳 Credit Card',
+      '🐾 Mascota': '🐾 Pet',
+      '📦 Otro': '📦 Other',
+      'Vivienda': '🏠 Housing',
+      'Servicios': '💡 Utilities',
+      'Teléfono/Internet': '📱 Phone/Internet',
+      'Otro': '📦 Other'
+    };
+    return map[cat] || cat || '📦 Other';
+  }
+
+  window.addBill = function(){
+    try {
+      var nameEl = document.getElementById('bill-name');
+      var amountEl = document.getElementById('bill-amount');
+      var perEl = document.getElementById('bill-per-paycheck');
+      var dayEl = document.getElementById('bill-day');
+      var catEl = document.getElementById('bill-cat');
+
+      var name = nameEl ? String(nameEl.value || '').trim() : '';
+      var amount = amountEl ? parseFloat(amountEl.value) : NaN;
+      var perPaycheck = perEl ? parseFloat(perEl.value) : NaN;
+      var day = dayEl ? parseInt(dayEl.value, 10) : 1;
+      var cat = normalizeBillCategory(catEl ? catEl.value : '');
+
+      if (!name || isNaN(amount) || amount <= 0) {
+        alert(isSpanish() ? 'Ingresa el nombre de la factura y el monto.' : 'Please enter a bill name and amount.');
+        return false;
+      }
+
+      if (isNaN(perPaycheck) || perPaycheck <= 0) perPaycheck = amount;
+      if (isNaN(day) || day < 1 || day > 31) day = 1;
+
+      var newBill = {
+        id: Date.now(),
+        name: name,
+        amount: amount,
+        perPaycheck: perPaycheck,
+        day: day,
+        cat: cat
+      };
+
+      if (typeof bills === 'undefined' || !Array.isArray(bills)) {
+        window.bills = Array.isArray(window.bills) ? window.bills : [];
+        window.bills.push(newBill);
+      } else {
+        bills.push(newBill);
+        window.bills = bills;
+      }
+
+      if (nameEl) nameEl.value = '';
+      if (amountEl) amountEl.value = '';
+      if (perEl) perEl.value = '';
+
+      if (typeof renderBillList === 'function') renderBillList();
+      if (typeof renderSchedule === 'function') renderSchedule();
+      if (typeof saveUserData === 'function') saveUserData();
+      if (typeof awardXPForAction === 'function') awardXPForAction('bill');
+      if (typeof applyLanguage === 'function') setTimeout(applyLanguage, 50);
+      if (typeof fintrailSafeBillScheduleSpanish === 'function') setTimeout(fintrailSafeBillScheduleSpanish, 80);
+
+      return false;
+    } catch(err) {
+      console.error('Add bill failed:', err);
+      alert(isSpanish() ? 'No se pudo agregar la factura. Inténtalo de nuevo.' : 'Could not add the bill. Please try again.');
+      return false;
+    }
+  };
+
+  window.addEventListener('load', function(){
+    try {
+      var btns = document.querySelectorAll('button[onclick*="addBill"]');
+      btns.forEach(function(btn){
+        btn.onclick = function(e){
+          if (e && e.preventDefault) e.preventDefault();
+          return window.addBill();
+        };
+      });
+    } catch(e) {}
+  });
+})();
+</script>
+
 </body>
 </html>
