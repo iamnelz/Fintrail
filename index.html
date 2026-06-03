@@ -6476,7 +6476,7 @@ Guidelines:
       html += `<div class="month-block">
         <div class="month-label">
           ${monthNames[mo]} ${yr}
-          <span class="ml-badge">$${monthTotal.toFixed(0)} due</span>
+          <span class="ml-badge">$${monthTotal.toFixed(0)} ${currentLang === 'es' ? 'pendiente' : 'due'}</span>
         </div>`;
 
       entries.forEach(({ pd, next, idx }) => {
@@ -6491,7 +6491,7 @@ Guidelines:
           <div class="payday-block-header ${isOpen?'open':''}" onclick="togglePayBlock('${pdKey}', this)">
             <div class="pd-date"><span class="pd-icon">💵</span> ${currentLang === 'es' ? 'Día de Pago — ' : 'Payday — '}${pdStr}</div>
             <div style="display:flex;align-items:center;gap:0.75rem">
-              <div class="pd-summary">${dueBills.length} bill${dueBills.length!==1?'s':''} · $${periodTotal.toFixed(2)} · ${paidCount}/${dueBills.length} paid</div>
+              <div class="pd-summary">${dueBills.length} ${currentLang === 'es' ? (dueBills.length !== 1 ? 'facturas' : 'factura') : ('bill' + (dueBills.length!==1?'s':''))} · $${periodTotal.toFixed(2)} · ${paidCount}/${dueBills.length} ${currentLang === 'es' ? 'pagadas' : 'paid'}</div>
               <div class="pd-toggle">▼</div>
             </div>
           </div>
@@ -6503,7 +6503,7 @@ Guidelines:
           dueBills.forEach(b => {
             const checkKey = b.id + '-' + pd.toISOString().slice(0,10);
             const isPaid = !!paidChecks[checkKey];
-            const dueDateStr = b.dueDate ? b.dueDate.toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
+            const dueDateStr = b.dueDate ? b.dueDate.toLocaleDateString(currentLang === 'es' ? 'es-ES' : 'en-US',{month:'short',day:'numeric'}).replace(/^\w/, c => c.toUpperCase()) : '';
             const daysUntil = b.dueDate ? Math.ceil((b.dueDate - pd) / (1000*60*60*24)) : 0;
             const urgency = daysUntil >= 0 && daysUntil <= 3 ? 'color:var(--expense-color);font-weight:700' : 'color:var(--muted)';
 
@@ -13506,6 +13506,47 @@ window.addEventListener('load', function(){
       }
     } catch(e) {}
   });
+})();
+</script>
+
+
+<script>
+/* === SAFE BILL SCHEDULE SPANISH LEAF TEXT PATCH === */
+(function(){
+  function isSpanish(){
+    try { return (typeof currentLang !== 'undefined' && currentLang === 'es'); } catch(e) { return false; }
+  }
+
+  function patchLeafText(el, from, to){
+    if (!el) return;
+    if (el.children && el.children.length > 0) return;
+    var t = el.textContent || '';
+    if (t.indexOf(from) !== -1) el.textContent = t.split(from).join(to);
+  }
+
+  function applySafeBillScheduleSpanish(){
+    try {
+      if (!isSpanish()) return;
+      var root = document.getElementById('bsub-schedule') || document;
+      root.querySelectorAll('.pbr-left span, .bi-meta span, .ml-badge, .pd-summary, .sched-empty').forEach(function(el){
+        patchLeafText(el, 'Split ', 'Dividido ');
+        patchLeafText(el, '/paycheck', '/cheque');
+        patchLeafText(el, ' due', ' pendiente');
+        patchLeafText(el, ' paid', ' pagadas');
+        patchLeafText(el, ' bills', ' facturas');
+        patchLeafText(el, ' bill', ' factura');
+      });
+    } catch(e) {}
+  }
+
+  window.fintrailSafeBillScheduleSpanish = applySafeBillScheduleSpanish;
+
+  window.addEventListener('load', function(){
+    setTimeout(applySafeBillScheduleSpanish, 500);
+    setTimeout(applySafeBillScheduleSpanish, 1500);
+  });
+  document.addEventListener('click', function(){ setTimeout(applySafeBillScheduleSpanish, 100); });
+  document.addEventListener('change', function(){ setTimeout(applySafeBillScheduleSpanish, 100); });
 })();
 </script>
 
