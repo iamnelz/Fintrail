@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fintrail Pro — Budget Smarter, Live Better</title>
-<!-- BUILD: fintrail-master-stable-savings-bill-calendar-networth-2026-06-02 -->
+<!-- BUILD: FINTRAIL_FINAL_SYNC_FIX_2026_06_02_2215 -->
 <!-- REPLACE content value below with your actual Google Search Console verification code -->
 <meta name="google-site-verification" content="PASTE_YOUR_VERIFICATION_CODE_HERE" />
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -2995,6 +2995,12 @@
 @media(max-width:520px){.fm-visible-actions{grid-template-columns:1fr}}
 
 </style>
+
+<style>
+/* === FINAL SAVINGS GOALS CATEGORY REMOVAL === */
+#tab-goals .goal-category,#goals-list .goal-category,#goals-grid .goal-category,.goal-card .goal-category{display:none!important;}
+#goal-cat,#goal-category{display:none!important;}
+</style>
 </head>
 <body>
 
@@ -4145,7 +4151,7 @@
 
         <!-- METHOD EXPLANATION -->
         <div id="method-explanation" style="background:var(--bg);border-radius:10px;padding:0.85rem 1rem;margin-bottom:1rem;border:1px solid var(--border);font-size:0.82rem;color:var(--text-soft);line-height:1.6">
-          <strong style="color:var(--text)">🔥 Avalanche Method:</strong> Pay minimums on all debts, then put ALL extra money toward the <strong>highest interest rate</strong> debt first. Mathematically saves the most money in interest.
+          <strong style="color:var(--text)">🔥 Método Avalancha:</strong> Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.
         </div>
 
         <!-- EXTRA PAYMENT INPUT -->
@@ -4312,7 +4318,7 @@
         <div class="card">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
             <h2 style="margin:0;font-size:1rem" data-en="💚 Assets" data-es="💚 Activos">💚 Assets</h2>
-            <button onclick="addNWItem('asset')" style="background:var(--income-color);color:#fff;border:none;border-radius:8px;padding:0.35rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer">${currentLang === 'es' ? '+ Agregar' : '+ Add'}</button>
+            <button onclick="addNWItem('asset')" style="background:var(--income-color);color:#fff;border:none;border-radius:8px;padding:0.35rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer">+ Agregar</button>
           </div>
           <div id="nw-asset-list" style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.75rem"></div>
           <!-- Quick-add row -->
@@ -4335,7 +4341,7 @@
         <div class="card">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
             <h2 style="margin:0;font-size:1rem" data-en="❤️ Liabilities" data-es="❤️ Pasivos">❤️ Liabilities</h2>
-            <button onclick="addNWItem('liability')" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.35rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer">${currentLang === 'es' ? '+ Agregar' : '+ Add'}</button>
+            <button onclick="addNWItem('liability')" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.35rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer">+ Agregar</button>
           </div>
           <div id="nw-liability-list" style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.75rem"></div>
           <div style="display:grid;grid-template-columns:1fr auto auto;gap:0.5rem;align-items:center;background:var(--bg);border-radius:10px;padding:0.65rem;border:1px solid var(--border)">
@@ -6281,7 +6287,7 @@ Guidelines:
         ${!complete ? `
         <div class="add-deposit-row">
           <input class="deposit-input" id="dep-${g.id}" type="number" placeholder="${currentLang === 'es' ? 'Agregar ahorro...' : 'Add savings...'}" min="0" onkeydown="if(event.key==='Enter')deposit(${g.id})">
-          <button class="deposit-btn" onclick="deposit('${g.id}')">${currentLang === 'es' ? '+ Agregar' : '+ Add'}</button>
+          <button class="deposit-btn" onclick="deposit('${g.id}')">+ Agregar</button>
         </div>` : ''}
       </div>`;
     }).join('');
@@ -6642,7 +6648,7 @@ Guidelines:
     btn.classList.add('active');
     const explanation = document.getElementById('method-explanation');
     if (method === 'avalanche') {
-      explanation.innerHTML = '<strong style="color:var(--text)">🔥 Avalanche Method:</strong> Pay minimums on all debts, then put ALL extra money toward the <strong>highest interest rate</strong> debt first. Mathematically saves the most money in interest.';
+      explanation.innerHTML = '<strong style="color:var(--text)">🔥 Método Avalancha:</strong> Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.';
     } else {
       explanation.innerHTML = '<strong style="color:var(--text)">⛄ Snowball Method:</strong> Pay minimums on all debts, then put ALL extra money toward the <strong>smallest balance</strong> debt first. Gives you quick wins and motivation to keep going.';
     }
@@ -7324,7 +7330,13 @@ Guidelines:
           .footer { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #eee; font-size: 0.72rem; color: #aaa; text-align: center; }
           @media print { body { padding: 1rem; } }
         </style>
-      </head>
+      
+<style>
+/* === FINAL SAVINGS GOALS CATEGORY REMOVAL === */
+#tab-goals .goal-category,#goals-list .goal-category,#goals-grid .goal-category,.goal-card .goal-category{display:none!important;}
+#goal-cat,#goal-category{display:none!important;}
+</style>
+</head>
       <body>
         <div class="pdf-header">
           <div class="pdf-logo">Fin<span>trail Pro</span></div>
@@ -11162,7 +11174,7 @@ window.addEventListener('load', function(){
   var enToEs = [
     ['Save PDF', 'Guardar PDF'],
     ['Avalanche Method:', 'Método Avalancha:'],
-    ['Pay minimums on all debts, then put ALL extra money toward the highest interest rate debt first. Mathematically saves the most money in interest.', 'Paga los mínimos de todas tus deudas y luego aplica TODO el dinero extra a la deuda con la tasa de interés más alta primero. Este método suele ahorrar más dinero en intereses.'],
+    ['Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.', 'Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.'],
     ['This extra amount gets focused on one debt at a time', 'Este monto extra se aplica a una deuda a la vez'],
     ['+ Add a Debt', '+ Agregar Deuda'],
     ['Add a Debt', 'Agregar Deuda'],
@@ -11181,7 +11193,7 @@ window.addEventListener('load', function(){
     ['SNOWBALL PAYOFF ORDER', 'ORDEN DE PAGO BOLA DE NIEVE'],
     ['Paid off by', 'Pagado para'],
     ['Snowball Method:', 'Método Bola de Nieve:'],
-    ['Pay minimums on all debts, then put ALL extra money toward the smallest balance debt first. Builds quick wins and motivation.', 'Paga los mínimos de todas tus deudas y luego aplica TODO el dinero extra a la deuda con el saldo más pequeño primero. Este método ayuda a crear victorias rápidas y motivación.'],
+    ['Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con el saldo más pequeño primero. Este método genera victorias rápidas y ayuda a mantener la motivación.', 'Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con el saldo más pequeño primero. Este método genera victorias rápidas y ayuda a mantener la motivación.'],
     ['Avalanche — Save More', 'Avalancha — Ahorra Más'],
     ['Snowball — Quick Wins', 'Bola de Nieve — Victorias Rápidas'],
     ['APR', 'TNA'],
@@ -13071,7 +13083,7 @@ window.addEventListener('load', function(){
   function applyTranslations(){
     var replacements = [
       [
-        "Pay minimums on all debts, then put ALL extra money toward the highest interest rate debt first. Mathematically saves the most money in interest.",
+        "Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.",
         "Paga los mínimos en todas tus deudas y destina TODO el dinero extra a la deuda con la tasa de interés más alta primero. Matemáticamente, es el método que más dinero ahorra en intereses."
       ],
       [
@@ -13351,233 +13363,61 @@ window.addEventListener('load', function(){
 </script>
 
 
-<script>
-/* === BILL SCHEDULE ADD/SAVE + SPLIT SPANISH PATCH === */
-(function(){
-  function isSpanish(){
-    try { return (typeof currentLang !== 'undefined' && currentLang === 'es'); } catch(e) { return false; }
-  }
-
-  function normalizeBillCategory(value){
-    var cat = String(value || '').trim();
-    var map = {
-      '🏠 Vivienda': '🏠 Housing',
-      '💡 Servicios': '💡 Utilities',
-      '📱 Teléfono/Internet': '📱 Phone/Internet',
-      '🎬 Suscripciones': '🎬 Subscriptions',
-      '🏥 Seguro/Salud': '🏥 Insurance/Health',
-      '🎓 Educación/Préstamos': '🎓 Education/Loans',
-      '💳 Tarjeta de Crédito': '💳 Credit Card',
-      '🐾 Mascota': '🐾 Pet',
-      '📦 Otro': '📦 Other'
-    };
-    return map[cat] || cat || '📦 Other';
-  }
-
-  function clearBillInputs(){
-    var ids = ['bill-name', 'bill-amount', 'bill-per-paycheck'];
-    ids.forEach(function(id){
-      var el = document.getElementById(id);
-      if (el) el.value = '';
-    });
-  }
-
-  window.addBill = function(){
-    try {
-      var nameEl = document.getElementById('bill-name');
-      var amountEl = document.getElementById('bill-amount');
-      var perEl = document.getElementById('bill-per-paycheck');
-      var dayEl = document.getElementById('bill-day');
-      var catEl = document.getElementById('bill-cat');
-
-      var name = nameEl ? String(nameEl.value || '').trim() : '';
-      var amount = amountEl ? parseFloat(amountEl.value) : NaN;
-      var perPaycheck = perEl ? parseFloat(perEl.value) : NaN;
-      var day = dayEl ? parseInt(dayEl.value, 10) : 1;
-      var cat = normalizeBillCategory(catEl ? catEl.value : '');
-
-      if (!name || isNaN(amount) || amount <= 0) {
-        alert(isSpanish() ? 'Ingresa el nombre de la factura y el monto.' : 'Please enter a bill name and amount.');
-        return;
-      }
-
-      if (isNaN(perPaycheck) || perPaycheck <= 0) perPaycheck = amount;
-      if (isNaN(day) || day < 1 || day > 28) day = 1;
-
-      if (!Array.isArray(window.bills)) {
-        try { window.bills = bills; } catch(e) { window.bills = []; }
-      }
-
-      var newBill = {
-        id: Date.now(),
-        name: name,
-        amount: amount,
-        perPaycheck: perPaycheck,
-        day: day,
-        cat: cat
-      };
-
-      try {
-        bills.push(newBill);
-        window.bills = bills;
-      } catch(e) {
-        window.bills.push(newBill);
-      }
-
-      clearBillInputs();
-
-      if (typeof renderBillList === 'function') renderBillList();
-      if (typeof renderSchedule === 'function') renderSchedule();
-      if (typeof saveUserData === 'function') saveUserData();
-      if (typeof awardXPForAction === 'function') awardXPForAction('bill');
-
-      setTimeout(applyBillScheduleSpanishCleanup, 100);
-    } catch(err) {
-      console.error('Bill add failed:', err);
-      alert(isSpanish() ? 'No se pudo agregar la factura. Inténtalo de nuevo.' : 'Could not add the bill. Please try again.');
-    }
-  };
-
-  var originalDeleteBill = window.deleteBill;
-  if (typeof originalDeleteBill === 'function' && !originalDeleteBill.__fintrailSaveWrapped) {
-    window.deleteBill = function(id){
-      var result = originalDeleteBill.apply(this, arguments);
-      try { if (typeof saveUserData === 'function') saveUserData(); } catch(e) {}
-      return result;
-    };
-    window.deleteBill.__fintrailSaveWrapped = true;
-  }
-
-  function applyBillScheduleSpanishCleanup(){
-    try {
-      var root = document.getElementById('bsub-schedule') || document.getElementById('tab-budget') || document;
-      if (!root) return;
-
-      if (isSpanish()) {
-        root.querySelectorAll('.pbr-left span, .bi-meta span, .payday-bill-row span').forEach(function(el){
-          var t = el.textContent || '';
-          if (t.indexOf('Split ') !== -1) t = t.replace('Split ', 'Dividido ');
-          if (t.indexOf('/paycheck') !== -1) t = t.replace('/paycheck', '/cheque');
-          el.textContent = t;
-        });
-
-        root.querySelectorAll('.pd-summary').forEach(function(el){
-          var t = el.textContent || '';
-          t = t.replace(/\bbills\b/g, 'facturas').replace(/\bbill\b/g, 'factura').replace(/\bpaid\b/g, 'pagadas');
-          el.textContent = t;
-        });
-
-        root.querySelectorAll('.ml-badge').forEach(function(el){
-          var t = el.textContent || '';
-          t = t.replace('due', 'pendiente');
-          el.textContent = t;
-        });
-      }
-    } catch(e) {}
-  }
-
-  window.fintrailBillScheduleSpanishCleanup = applyBillScheduleSpanishCleanup;
-
-  window.addEventListener('load', function(){
-    setTimeout(applyBillScheduleSpanishCleanup, 600);
-    setTimeout(applyBillScheduleSpanishCleanup, 1600);
-  });
-
-  document.addEventListener('click', function(){
-    setTimeout(applyBillScheduleSpanishCleanup, 120);
-  });
-
-  document.addEventListener('change', function(e){
-    if (e.target && e.target.closest && e.target.closest('#bsub-schedule')) {
-      setTimeout(applyBillScheduleSpanishCleanup, 120);
-    }
-  });
-})();
-</script>
-
 
 <script>
-/* === MASTER SAVINGS GOALS NO CATEGORY + SPANISH PATCH === */
+/* === FINAL FINTRAIL SYNCED UI PATCH 2026-06-02 === */
 (function(){
-  function isSpanish(){
-    try { return (typeof currentLang !== 'undefined' && currentLang === 'es'); } catch(e) { return false; }
-  }
-
-  function applySavingsGoalMasterPatch(){
+  var avalancheText = 'Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.';
+  var snowballText = 'Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con el saldo más pequeño primero. Este método genera victorias rápidas y ayuda a mantener la motivación.';
+  function isSpanish(){ try { return (typeof currentLang !== 'undefined' && currentLang === 'es'); } catch(e) { return false; } }
+  function patchSavingsGoals(){
     try {
       var langEs = isSpanish();
-
-      document.querySelectorAll('#tab-goals .goal-category, #goals-list .goal-category, #goals-grid .goal-category, .goal-card .goal-category').forEach(function(el){
-        el.remove();
-      });
-
+      document.querySelectorAll('#tab-goals .goal-category,#goals-list .goal-category,#goals-grid .goal-category,.goal-card .goal-category').forEach(function(el){ el.remove(); });
       var catField = document.getElementById('goal-cat') || document.getElementById('goal-category');
-      if (catField) {
-        var group = catField.closest ? catField.closest('.form-group') : null;
-        if (group) group.style.display = 'none';
-        catField.style.display = 'none';
-      }
-
+      if (catField) { var group = catField.closest ? catField.closest('.form-group') : null; if (group) group.style.display = 'none'; catField.style.display = 'none'; }
       document.querySelectorAll('.goal-monthly').forEach(function(el){
         if (!langEs) return;
-        var text = el.textContent || '';
-        if (text.indexOf('Save') !== -1 || text.indexOf('/mo') !== -1 || text.indexOf('to reach your goal') !== -1 || text.indexOf('month') !== -1) {
-          var amountMatch = text.match(/\$[0-9,]+(?:\.\d+)?/);
-          var monthsMatch = text.match(/(\d+)\s*month/);
+        var t = el.textContent || '';
+        if (t.indexOf('Save') !== -1 || t.indexOf('/mo') !== -1 || t.indexOf('to reach your goal') !== -1 || t.indexOf('month') !== -1) {
+          var amountMatch = t.match(/\$[0-9,]+(?:\.\d+)?/);
+          var monthsMatch = t.match(/(\d+)\s*month/);
           var amount = amountMatch ? amountMatch[0] : '';
           var months = monthsMatch ? parseInt(monthsMatch[1], 10) : null;
-          if (amount && months) {
-            el.innerHTML = 'Ahorra <strong>' + amount + '/mes</strong> para alcanzar tu meta en <strong>' + months + ' ' + (months === 1 ? 'mes' : 'meses') + '</strong>';
-          }
+          if (amount && months) el.innerHTML = 'Ahorra <strong>' + amount + '/mes</strong> para alcanzar tu meta en <strong>' + months + ' ' + (months === 1 ? 'mes' : 'meses') + '</strong>';
         }
       });
-
-      document.querySelectorAll('.deposit-input').forEach(function(input){
-        if (langEs) input.setAttribute('placeholder', 'Agregar ahorro...');
-      });
-
-      document.querySelectorAll('.deposit-btn').forEach(function(btn){
-        if (langEs && (btn.textContent || '').indexOf('Add') !== -1) btn.textContent = '+ Agregar';
-      });
+      document.querySelectorAll('.deposit-input').forEach(function(input){ if (langEs) input.setAttribute('placeholder','Agregar ahorro...'); });
+      document.querySelectorAll('.deposit-btn').forEach(function(btn){ if (langEs && (btn.textContent || '').indexOf('Add') !== -1) btn.textContent = '+ Agregar'; });
     } catch(e) {}
   }
-
-  var originalRenderGoals = window.renderGoals;
-  if (typeof originalRenderGoals === 'function' && !originalRenderGoals.__fintrailSavingsMasterWrapped) {
-    window.renderGoals = function(){
-      var result = originalRenderGoals.apply(this, arguments);
-      setTimeout(applySavingsGoalMasterPatch, 50);
-      return result;
-    };
-    window.renderGoals.__fintrailSavingsMasterWrapped = true;
-  }
-
-  window.fintrailSavingsGoalMasterPatch = applySavingsGoalMasterPatch;
-
-  window.addEventListener('load', function(){
-    setTimeout(applySavingsGoalMasterPatch, 500);
-    setTimeout(applySavingsGoalMasterPatch, 1500);
-    setTimeout(applySavingsGoalMasterPatch, 3000);
-  });
-
-  document.addEventListener('click', function(){
-    setTimeout(applySavingsGoalMasterPatch, 120);
-  });
-
-  document.addEventListener('input', function(){
-    setTimeout(applySavingsGoalMasterPatch, 120);
-  });
-
-  var observer = new MutationObserver(function(){
-    setTimeout(applySavingsGoalMasterPatch, 80);
-  });
-
-  window.addEventListener('load', function(){
+  function patchDebtPayoff(){
     try {
-      var root = document.getElementById('tab-goals') || document.body;
-      if (root) observer.observe(root, { childList:true, subtree:true, characterData:true });
+      if (!isSpanish()) return;
+      var explanation = document.getElementById('method-explanation');
+      if (explanation) {
+        var snowballBtn = document.getElementById('method-snowball');
+        var isSnowball = !!(snowballBtn && snowballBtn.classList && snowballBtn.classList.contains('active'));
+        explanation.innerHTML = isSnowball ? '<strong style="color:var(--text)">☃️ Método Bola de Nieve:</strong> ' + snowballText : '<strong style="color:var(--text)">🔥 Método Avalancha:</strong> ' + avalancheText;
+      }
+      var a = document.getElementById('method-avalanche'); var s = document.getElementById('method-snowball');
+      if (a) a.textContent = '🔥 Avalancha — Ahorra Más';
+      if (s) s.textContent = '☃️ Bola de Nieve — Victorias Rápidas';
     } catch(e) {}
-  });
+  }
+  function patchBillSchedule(){ try { if (!isSpanish()) return; var root=document.getElementById('bsub-schedule')||document.getElementById('tab-budget')||document; root.querySelectorAll('span,div').forEach(function(el){ if(el.children&&el.children.length>2)return; var t=el.textContent||''; if(t.indexOf('Split ')!==-1||t.indexOf('/paycheck')!==-1){ el.textContent=t.replace('Split ','Dividido ').replace('/paycheck','/cheque'); }}); } catch(e){} }
+  function patchNetWorth(){ try { var label=isSpanish()?'+ Agregar':'+ Add'; var root=document.getElementById('tab-networth')||document; root.querySelectorAll('button').forEach(function(btn){ var txt=(btn.textContent||'').trim(); var onclick=btn.getAttribute('onclick')||''; var isNW=onclick.indexOf('addNWItem')!==-1; var broken=txt.indexOf('${currentLang')!==-1||(txt.indexOf('Agregar')!==-1&&txt.indexOf('Add')!==-1); if(isNW&&(broken||txt.indexOf('Add')!==-1||txt.indexOf('Agregar')!==-1)) btn.textContent=label; }); } catch(e){} }
+  function patchCalendar(){ try { if(!isSpanish())return; var root=document.getElementById('tab-calendar'); if(!root)return; var map={'Savings Goals':'Metas de Ahorro','Debt Milestones':'Hitos de Deuda','Custom Events':'Eventos Personalizados','Today':'Hoy','Upcoming Events':'Próximos Eventos','Add Event':'Agregar Evento'}; var walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null); var nodes=[]; while(walker.nextNode())nodes.push(walker.currentNode); nodes.forEach(function(node){ var v=node.textContent||''; Object.keys(map).forEach(function(k){v=v.split(k).join(map[k]);}); node.textContent=v; }); } catch(e){} }
+  function patchAll(){ patchSavingsGoals(); patchDebtPayoff(); patchBillSchedule(); patchNetWorth(); patchCalendar(); }
+  window.fintrailFinalSyncedPatch = patchAll;
+  var rg=window.renderGoals; if(typeof rg==='function'&&!rg.__finalSyncedWrapped){ window.renderGoals=function(){ var r=rg.apply(this,arguments); setTimeout(patchSavingsGoals,40); return r; }; window.renderGoals.__finalSyncedWrapped=true; }
+  var sm=window.setMethod; if(typeof sm==='function'&&!sm.__finalDebtWrapped){ window.setMethod=function(){ var r=sm.apply(this,arguments); setTimeout(patchDebtPayoff,40); return r; }; window.setMethod.__finalDebtWrapped=true; }
+  window.addEventListener('load',function(){ setTimeout(patchAll,400); setTimeout(patchAll,1200); setTimeout(patchAll,2500); });
+  document.addEventListener('click',function(){ setTimeout(patchAll,100); });
+  document.addEventListener('input',function(){ setTimeout(patchAll,100); });
+  document.addEventListener('change',function(){ setTimeout(patchAll,100); });
+  var observer=new MutationObserver(function(){ setTimeout(patchAll,80); });
+  window.addEventListener('load',function(){ try{ observer.observe(document.body,{childList:true,subtree:true,characterData:true}); }catch(e){} });
 })();
 </script>
 
