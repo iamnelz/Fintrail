@@ -13364,60 +13364,68 @@ window.addEventListener('load', function(){
 
 
 
+
 <script>
-/* === FINAL FINTRAIL SYNCED UI PATCH 2026-06-02 === */
+/* === DEBT PAYOFF BILINGUAL METHOD TEXT PATCH === */
 (function(){
-  var avalancheText = 'Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.';
-  var snowballText = 'Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con el saldo más pequeño primero. Este método genera victorias rápidas y ayuda a mantener la motivación.';
-  function isSpanish(){ try { return (typeof currentLang !== 'undefined' && currentLang === 'es'); } catch(e) { return false; } }
-  function patchSavingsGoals(){
-    try {
-      var langEs = isSpanish();
-      document.querySelectorAll('#tab-goals .goal-category,#goals-list .goal-category,#goals-grid .goal-category,.goal-card .goal-category').forEach(function(el){ el.remove(); });
-      var catField = document.getElementById('goal-cat') || document.getElementById('goal-category');
-      if (catField) { var group = catField.closest ? catField.closest('.form-group') : null; if (group) group.style.display = 'none'; catField.style.display = 'none'; }
-      document.querySelectorAll('.goal-monthly').forEach(function(el){
-        if (!langEs) return;
-        var t = el.textContent || '';
-        if (t.indexOf('Save') !== -1 || t.indexOf('/mo') !== -1 || t.indexOf('to reach your goal') !== -1 || t.indexOf('month') !== -1) {
-          var amountMatch = t.match(/\$[0-9,]+(?:\.\d+)?/);
-          var monthsMatch = t.match(/(\d+)\s*month/);
-          var amount = amountMatch ? amountMatch[0] : '';
-          var months = monthsMatch ? parseInt(monthsMatch[1], 10) : null;
-          if (amount && months) el.innerHTML = 'Ahorra <strong>' + amount + '/mes</strong> para alcanzar tu meta en <strong>' + months + ' ' + (months === 1 ? 'mes' : 'meses') + '</strong>';
-        }
-      });
-      document.querySelectorAll('.deposit-input').forEach(function(input){ if (langEs) input.setAttribute('placeholder','Agregar ahorro...'); });
-      document.querySelectorAll('.deposit-btn').forEach(function(btn){ if (langEs && (btn.textContent || '').indexOf('Add') !== -1) btn.textContent = '+ Agregar'; });
-    } catch(e) {}
+  var avalancheEs = "Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.";
+  var snowballEs = "Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con el saldo más pequeño primero. Este método genera victorias rápidas y ayuda a mantener la motivación.";
+  var avalancheEn = "Pay minimums on all debts, then put ALL extra money toward the highest interest rate debt first. Mathematically saves the most money in interest.";
+  var snowballEn = "Pay minimums on all debts, then put ALL extra money toward the smallest balance debt first. Builds quick wins and motivation.";
+
+  function getLang(){
+    try { return (typeof currentLang !== 'undefined') ? currentLang : 'en'; } catch(e) { return 'en'; }
   }
-  function patchDebtPayoff(){
+
+  function applyDebtPayoffBilingualText(){
     try {
-      if (!isSpanish()) return;
+      var isEs = getLang() === 'es';
       var explanation = document.getElementById('method-explanation');
+      var avalancheBtn = document.getElementById('method-avalanche');
+      var snowballBtn = document.getElementById('method-snowball');
+      var isSnowball = !!(snowballBtn && snowballBtn.classList && snowballBtn.classList.contains('active'));
+
+      if (avalancheBtn) avalancheBtn.textContent = isEs ? '🔥 Avalancha — Ahorra Más' : '🔥 Avalanche — Save Most Money';
+      if (snowballBtn) snowballBtn.textContent = isEs ? '☃️ Bola de Nieve — Victorias Rápidas' : '☃️ Snowball — Quick Wins First';
+
       if (explanation) {
-        var snowballBtn = document.getElementById('method-snowball');
-        var isSnowball = !!(snowballBtn && snowballBtn.classList && snowballBtn.classList.contains('active'));
-        explanation.innerHTML = isSnowball ? '<strong style="color:var(--text)">☃️ Método Bola de Nieve:</strong> ' + snowballText : '<strong style="color:var(--text)">🔥 Método Avalancha:</strong> ' + avalancheText;
+        if (isSnowball) {
+          explanation.innerHTML = isEs
+            ? '<strong style="color:var(--text)">☃️ Método Bola de Nieve:</strong> ' + snowballEs
+            : '<strong style="color:var(--text)">☃️ Snowball Method:</strong> ' + snowballEn;
+        } else {
+          explanation.innerHTML = isEs
+            ? '<strong style="color:var(--text)">🔥 Método Avalancha:</strong> ' + avalancheEs
+            : '<strong style="color:var(--text)">🔥 Avalanche Method:</strong> Pay minimums on all debts, then put ALL extra money toward the <strong>highest interest rate</strong> debt first. Mathematically saves the most money in interest.';
+        }
       }
-      var a = document.getElementById('method-avalanche'); var s = document.getElementById('method-snowball');
-      if (a) a.textContent = '🔥 Avalancha — Ahorra Más';
-      if (s) s.textContent = '☃️ Bola de Nieve — Victorias Rápidas';
     } catch(e) {}
   }
-  function patchBillSchedule(){ try { if (!isSpanish()) return; var root=document.getElementById('bsub-schedule')||document.getElementById('tab-budget')||document; root.querySelectorAll('span,div').forEach(function(el){ if(el.children&&el.children.length>2)return; var t=el.textContent||''; if(t.indexOf('Split ')!==-1||t.indexOf('/paycheck')!==-1){ el.textContent=t.replace('Split ','Dividido ').replace('/paycheck','/cheque'); }}); } catch(e){} }
-  function patchNetWorth(){ try { var label=isSpanish()?'+ Agregar':'+ Add'; var root=document.getElementById('tab-networth')||document; root.querySelectorAll('button').forEach(function(btn){ var txt=(btn.textContent||'').trim(); var onclick=btn.getAttribute('onclick')||''; var isNW=onclick.indexOf('addNWItem')!==-1; var broken=txt.indexOf('${currentLang')!==-1||(txt.indexOf('Agregar')!==-1&&txt.indexOf('Add')!==-1); if(isNW&&(broken||txt.indexOf('Add')!==-1||txt.indexOf('Agregar')!==-1)) btn.textContent=label; }); } catch(e){} }
-  function patchCalendar(){ try { if(!isSpanish())return; var root=document.getElementById('tab-calendar'); if(!root)return; var map={'Savings Goals':'Metas de Ahorro','Debt Milestones':'Hitos de Deuda','Custom Events':'Eventos Personalizados','Today':'Hoy','Upcoming Events':'Próximos Eventos','Add Event':'Agregar Evento'}; var walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null); var nodes=[]; while(walker.nextNode())nodes.push(walker.currentNode); nodes.forEach(function(node){ var v=node.textContent||''; Object.keys(map).forEach(function(k){v=v.split(k).join(map[k]);}); node.textContent=v; }); } catch(e){} }
-  function patchAll(){ patchSavingsGoals(); patchDebtPayoff(); patchBillSchedule(); patchNetWorth(); patchCalendar(); }
-  window.fintrailFinalSyncedPatch = patchAll;
-  var rg=window.renderGoals; if(typeof rg==='function'&&!rg.__finalSyncedWrapped){ window.renderGoals=function(){ var r=rg.apply(this,arguments); setTimeout(patchSavingsGoals,40); return r; }; window.renderGoals.__finalSyncedWrapped=true; }
-  var sm=window.setMethod; if(typeof sm==='function'&&!sm.__finalDebtWrapped){ window.setMethod=function(){ var r=sm.apply(this,arguments); setTimeout(patchDebtPayoff,40); return r; }; window.setMethod.__finalDebtWrapped=true; }
-  window.addEventListener('load',function(){ setTimeout(patchAll,400); setTimeout(patchAll,1200); setTimeout(patchAll,2500); });
-  document.addEventListener('click',function(){ setTimeout(patchAll,100); });
-  document.addEventListener('input',function(){ setTimeout(patchAll,100); });
-  document.addEventListener('change',function(){ setTimeout(patchAll,100); });
-  var observer=new MutationObserver(function(){ setTimeout(patchAll,80); });
-  window.addEventListener('load',function(){ try{ observer.observe(document.body,{childList:true,subtree:true,characterData:true}); }catch(e){} });
+
+  window.fintrailDebtPayoffBilingualText = applyDebtPayoffBilingualText;
+
+  var originalSetMethod = window.setMethod;
+  if (typeof originalSetMethod === 'function' && !originalSetMethod.__fintrailBilingualWrapped) {
+    window.setMethod = function(){
+      var result = originalSetMethod.apply(this, arguments);
+      setTimeout(applyDebtPayoffBilingualText, 40);
+      return result;
+    };
+    window.setMethod.__fintrailBilingualWrapped = true;
+  }
+
+  window.addEventListener('load', function(){
+    setTimeout(applyDebtPayoffBilingualText, 500);
+    setTimeout(applyDebtPayoffBilingualText, 1500);
+  });
+
+  document.addEventListener('click', function(){
+    setTimeout(applyDebtPayoffBilingualText, 100);
+  });
+
+  document.addEventListener('change', function(){
+    setTimeout(applyDebtPayoffBilingualText, 100);
+  });
 })();
 </script>
 
