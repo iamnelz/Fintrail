@@ -13429,5 +13429,85 @@ window.addEventListener('load', function(){
 })();
 </script>
 
+
+<script>
+/* === BUDGET TRACKER ADD TRANSACTION MOBILE FIX === */
+(function(){
+  function getSelectedTransactionType(){
+    try {
+      if (typeof currentType !== 'undefined' && (currentType === 'income' || currentType === 'expense')) return currentType;
+    } catch(e) {}
+    var incomeBtn = document.getElementById('btn-income');
+    var expenseBtn = document.getElementById('btn-expense');
+    if (expenseBtn && expenseBtn.classList && expenseBtn.classList.contains('active')) return 'expense';
+    if (incomeBtn && incomeBtn.classList && incomeBtn.classList.contains('active')) return 'income';
+    return 'income';
+  }
+
+  window.addTransaction = function(){
+    try {
+      var descEl = document.getElementById('desc');
+      var amountEl = document.getElementById('amount');
+      var catEl = document.getElementById('category');
+
+      var desc = descEl ? String(descEl.value || '').trim() : '';
+      var amount = amountEl ? parseFloat(amountEl.value) : NaN;
+      var category = catEl ? String(catEl.value || '') : 'Other';
+      var type = getSelectedTransactionType();
+
+      var isEs = false;
+      try { isEs = (typeof currentLang !== 'undefined' && currentLang === 'es'); } catch(e) {}
+
+      if (!desc || isNaN(amount) || amount <= 0) {
+        alert(isEs ? 'Ingresa una descripción y un monto válido.' : 'Please enter a description and valid amount.');
+        return;
+      }
+
+      var item = {
+        id: Date.now(),
+        type: type,
+        desc: desc,
+        amount: amount,
+        category: category
+      };
+
+      try {
+        if (!Array.isArray(transactions)) transactions = [];
+        transactions.push(item);
+        window.transactions = transactions;
+      } catch(e) {
+        if (!Array.isArray(window.transactions)) window.transactions = [];
+        window.transactions.push(item);
+      }
+
+      if (descEl) descEl.value = '';
+      if (amountEl) amountEl.value = '';
+
+      if (typeof render === 'function') render();
+      if (typeof saveUserData === 'function') saveUserData();
+      if (typeof awardXPForAction === 'function') awardXPForAction('transaction');
+
+      if (typeof applyLanguage === 'function') setTimeout(applyLanguage, 50);
+    } catch(err) {
+      console.error('Add transaction failed:', err);
+      alert('Could not add transaction. Please try again.');
+    }
+  };
+
+  window.addEventListener('load', function(){
+    try {
+      var btn = document.getElementById('btn-add-transaction');
+      if (btn) {
+        btn.onclick = function(e) {
+          if (e && e.preventDefault) e.preventDefault();
+          window.addTransaction();
+          return false;
+        };
+      }
+    } catch(e) {}
+  });
+})();
+</script>
+
 </body>
 </html>
