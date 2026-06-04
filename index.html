@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fintrail Pro — Budget Smarter, Live Better</title>
-<!-- BUILD: FINTRAIL_FINAL_SYNC_FIX_2026_06_02_2215 -->
+<!-- BUILD: FINTRAIL_ONBOARDING_V2_7DAY_FEEDBACK_2026_06_03 -->
 <!-- REPLACE content value below with your actual Google Search Console verification code -->
 <meta name="google-site-verification" content="PASTE_YOUR_VERIFICATION_CODE_HERE" />
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -7336,6 +7336,94 @@ Guidelines:
 #tab-goals .goal-category,#goals-list .goal-category,#goals-grid .goal-category,.goal-card .goal-category{display:none!important;}
 #goal-cat,#goal-category{display:none!important;}
 </style>
+
+<style>
+/* === FINTRAIL ONBOARDING V2 GOAL SELECTION === */
+.onboarding-goal-grid-v2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+  margin: 1rem 0 0.65rem;
+}
+.onboarding-goal-card-v2 {
+  border: 1.5px solid var(--border);
+  background: #fff;
+  border-radius: 14px;
+  padding: 0.85rem 0.8rem;
+  font-family: 'Sora', sans-serif;
+  cursor: pointer;
+  transition: all .18s;
+  color: var(--text);
+  text-align: left;
+  min-height: 78px;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+.onboarding-goal-card-v2:hover {
+  border-color: var(--accent);
+  background: rgba(240,85,85,0.04);
+}
+.onboarding-goal-card-v2.selected {
+  border-color: var(--accent);
+  background: rgba(240,85,85,0.06);
+  box-shadow: 0 0 0 3px var(--glow-red);
+}
+.onboarding-goal-emoji-v2 {
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  background: var(--surface2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+.onboarding-goal-card-v2.selected .onboarding-goal-emoji-v2 {
+  background: rgba(240,85,85,0.12);
+}
+.onboarding-goal-label-v2 {
+  font-size: 0.82rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+.onboarding-goal-counter-v2 {
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--text-soft);
+  margin-top: 0.35rem;
+}
+.onboarding-welcome-actions-v2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.65rem;
+  margin-top: 1rem;
+}
+.onboarding-welcome-pill-v2 {
+  background: rgba(6,214,160,0.08);
+  border: 1px solid rgba(6,214,160,0.18);
+  color: var(--text-soft);
+  border-radius: 999px;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-align: center;
+}
+.feedback-delay-note-v2 {
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.45;
+  margin-top: 0.75rem;
+}
+@media(max-width:560px){
+  .onboarding-goal-grid-v2 { grid-template-columns: 1fr; }
+  .onboarding-goal-card-v2 { min-height: 64px; }
+}
+</style>
+
 </head>
       <body>
         <div class="pdf-header">
@@ -13366,71 +13454,6 @@ window.addEventListener('load', function(){
 
 
 <script>
-/* === DEBT PAYOFF BILINGUAL METHOD TEXT PATCH === */
-(function(){
-  var avalancheEs = "Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.";
-  var snowballEs = "Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con el saldo más pequeño primero. Este método genera victorias rápidas y ayuda a mantener la motivación.";
-  var avalancheEn = "Pay minimums on all debts, then put ALL extra money toward the highest interest rate debt first. Mathematically saves the most money in interest.";
-  var snowballEn = "Pay minimums on all debts, then put ALL extra money toward the smallest balance debt first. Builds quick wins and motivation.";
-
-  function getLang(){
-    try { return (typeof currentLang !== 'undefined') ? currentLang : 'en'; } catch(e) { return 'en'; }
-  }
-
-  function applyDebtPayoffBilingualText(){
-    try {
-      var isEs = getLang() === 'es';
-      var explanation = document.getElementById('method-explanation');
-      var avalancheBtn = document.getElementById('method-avalanche');
-      var snowballBtn = document.getElementById('method-snowball');
-      var isSnowball = !!(snowballBtn && snowballBtn.classList && snowballBtn.classList.contains('active'));
-
-      if (avalancheBtn) avalancheBtn.textContent = isEs ? '🔥 Avalancha — Ahorra Más' : '🔥 Avalanche — Save Most Money';
-      if (snowballBtn) snowballBtn.textContent = isEs ? '☃️ Bola de Nieve — Victorias Rápidas' : '☃️ Snowball — Quick Wins First';
-
-      if (explanation) {
-        if (isSnowball) {
-          explanation.innerHTML = isEs
-            ? '<strong style="color:var(--text)">☃️ Método Bola de Nieve:</strong> ' + snowballEs
-            : '<strong style="color:var(--text)">☃️ Snowball Method:</strong> ' + snowballEn;
-        } else {
-          explanation.innerHTML = isEs
-            ? '<strong style="color:var(--text)">🔥 Método Avalancha:</strong> ' + avalancheEs
-            : '<strong style="color:var(--text)">🔥 Avalanche Method:</strong> Pay minimums on all debts, then put ALL extra money toward the <strong>highest interest rate</strong> debt first. Mathematically saves the most money in interest.';
-        }
-      }
-    } catch(e) {}
-  }
-
-  window.fintrailDebtPayoffBilingualText = applyDebtPayoffBilingualText;
-
-  var originalSetMethod = window.setMethod;
-  if (typeof originalSetMethod === 'function' && !originalSetMethod.__fintrailBilingualWrapped) {
-    window.setMethod = function(){
-      var result = originalSetMethod.apply(this, arguments);
-      setTimeout(applyDebtPayoffBilingualText, 40);
-      return result;
-    };
-    window.setMethod.__fintrailBilingualWrapped = true;
-  }
-
-  window.addEventListener('load', function(){
-    setTimeout(applyDebtPayoffBilingualText, 500);
-    setTimeout(applyDebtPayoffBilingualText, 1500);
-  });
-
-  document.addEventListener('click', function(){
-    setTimeout(applyDebtPayoffBilingualText, 100);
-  });
-
-  document.addEventListener('change', function(){
-    setTimeout(applyDebtPayoffBilingualText, 100);
-  });
-})();
-</script>
-
-
-<script>
 /* === BUDGET TRACKER ADD TRANSACTION MOBILE FIX === */
 (function(){
   function getSelectedTransactionType(){
@@ -13646,6 +13669,581 @@ window.addEventListener('load', function(){
         };
       });
     } catch(e) {}
+  });
+})();
+</script>
+
+
+<script>
+/* === DEBT PAYOFF SPANISH LABEL CLEANUP PATCH === */
+(function(){
+  var avalancheEs = "Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.";
+  var snowballEs = "Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con el saldo más pequeño primero. Este método genera victorias rápidas y ayuda a mantener la motivación.";
+  var avalancheEn = "Pay minimums on all debts, then put ALL extra money toward the highest interest rate debt first. Mathematically saves the most money in interest.";
+  var snowballEn = "Pay minimums on all debts, then put ALL extra money toward the smallest balance debt first. Builds quick wins and motivation.";
+
+  function getLang(){
+    try { return (typeof currentLang !== 'undefined') ? currentLang : 'en'; } catch(e) { return 'en'; }
+  }
+
+  function replaceTextNodes(root, map){
+    if (!root) return;
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(node){
+        var p = node.parentElement;
+        if (!p || p.tagName === 'SCRIPT' || p.tagName === 'STYLE') return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(function(node){
+      var v = node.textContent || '';
+      Object.keys(map).forEach(function(k){
+        v = v.split(k).join(map[k]);
+      });
+      node.textContent = v;
+    });
+  }
+
+  function applyDebtPayoffLabels(){
+    try {
+      var root = document.getElementById('tab-debtplan');
+      if (!root) return;
+
+      var es = getLang() === 'es';
+      var avalancheBtn = document.getElementById('method-avalanche');
+      var snowballBtn = document.getElementById('method-snowball');
+      var explanation = document.getElementById('method-explanation');
+      var isSnowball = !!(snowballBtn && snowballBtn.classList && snowballBtn.classList.contains('active'));
+
+      if (avalancheBtn) avalancheBtn.textContent = es ? '🔥 Avalancha — Ahorra Más' : '🔥 Avalanche — Save Most Money';
+      if (snowballBtn) snowballBtn.textContent = es ? '☃️ Bola de Nieve — Victorias Rápidas' : '☃️ Snowball — Quick Wins First';
+
+      if (explanation) {
+        if (isSnowball) {
+          explanation.innerHTML = es
+            ? '<strong style="color:var(--text)">☃️ Método Bola de Nieve:</strong> ' + snowballEs
+            : '<strong style="color:var(--text)">☃️ Snowball Method:</strong> ' + snowballEn;
+        } else {
+          explanation.innerHTML = es
+            ? '<strong style="color:var(--text)">🔥 Método Avalancha:</strong> ' + avalancheEs
+            : '<strong style="color:var(--text)">🔥 Avalanche Method:</strong> Pay minimums on all debts, then put ALL extra money toward the <strong>highest interest rate</strong> debt first. Mathematically saves the most money in interest.';
+        }
+      }
+
+      if (es) {
+        replaceTextNodes(root, {
+          'Total Monthly Payment': 'Pago Mensual Total',
+          'This Month': 'Este Mes',
+          'this month': 'Este Mes',
+          'Balance:': 'Saldo:',
+          'Balance': 'Saldo',
+          'Min:': 'Mín.:',
+          'Min': 'Mín.',
+          'Focus': 'Prioridad',
+          'Edit': 'Editar'
+        });
+      } else {
+        replaceTextNodes(root, {
+          'Pago Mensual Total': 'Total Monthly Payment',
+          'Este Mes': 'This Month',
+          'Saldo:': 'Balance:',
+          'Saldo': 'Balance',
+          'Mín.:': 'Min:',
+          'Mín.': 'Min',
+          'Prioridad': 'Focus',
+          'Editar': 'Edit'
+        });
+      }
+    } catch(e) {}
+  }
+
+  window.fintrailDebtPayoffSpanishLabels = applyDebtPayoffLabels;
+
+  var originalSetMethod = window.setMethod;
+  if (typeof originalSetMethod === 'function' && !originalSetMethod.__fintrailDebtLabelWrapped) {
+    window.setMethod = function(){
+      var result = originalSetMethod.apply(this, arguments);
+      setTimeout(applyDebtPayoffLabels, 40);
+      return result;
+    };
+    window.setMethod.__fintrailDebtLabelWrapped = true;
+  }
+
+  var originalRenderDebtList = window.renderDebtList;
+  if (typeof originalRenderDebtList === 'function' && !originalRenderDebtList.__fintrailDebtLabelWrapped) {
+    window.renderDebtList = function(){
+      var result = originalRenderDebtList.apply(this, arguments);
+      setTimeout(applyDebtPayoffLabels, 40);
+      return result;
+    };
+    window.renderDebtList.__fintrailDebtLabelWrapped = true;
+  }
+
+  var originalRenderDebtPlan = window.renderDebtPlan;
+  if (typeof originalRenderDebtPlan === 'function' && !originalRenderDebtPlan.__fintrailDebtLabelWrapped) {
+    window.renderDebtPlan = function(){
+      var result = originalRenderDebtPlan.apply(this, arguments);
+      setTimeout(applyDebtPayoffLabels, 40);
+      return result;
+    };
+    window.renderDebtPlan.__fintrailDebtLabelWrapped = true;
+  }
+
+  window.addEventListener('load', function(){
+    setTimeout(applyDebtPayoffLabels, 500);
+    setTimeout(applyDebtPayoffLabels, 1500);
+  });
+  document.addEventListener('click', function(){ setTimeout(applyDebtPayoffLabels, 100); });
+  document.addEventListener('change', function(){ setTimeout(applyDebtPayoffLabels, 100); });
+  document.addEventListener('input', function(){ setTimeout(applyDebtPayoffLabels, 100); });
+})();
+</script>
+
+
+<script>
+/* === FINTRAIL ONBOARDING V2 + 7 DAY FEEDBACK PATCH === */
+(function(){
+  var FEEDBACK_WAIT_DAYS = 7;
+  var FEEDBACK_REMIND_DAYS = 30;
+  var DAY_MS = 24 * 60 * 60 * 1000;
+
+  var goalsV2 = {
+    en: [
+      ['budget','💰','Create a Budget'],
+      ['debt','📉','Pay Off Debt'],
+      ['save','🏦','Save More Money'],
+      ['credit','📈','Improve My Credit'],
+      ['bills','📅','Track Bills & Payments'],
+      ['networth','📊','Build My Net Worth'],
+      ['savingsgoal','🎯','Reach a Savings Goal'],
+      ['guidance','🤖','Get Financial Guidance']
+    ],
+    es: [
+      ['budget','💰','Crear un Presupuesto'],
+      ['debt','📉','Pagar Deudas'],
+      ['save','🏦','Ahorrar Más Dinero'],
+      ['credit','📈','Mejorar Mi Crédito'],
+      ['bills','📅','Administrar Facturas y Pagos'],
+      ['networth','📊','Aumentar Mi Patrimonio Neto'],
+      ['savingsgoal','🎯','Alcanzar una Meta de Ahorro'],
+      ['guidance','🤖','Recibir Orientación Financiera']
+    ]
+  };
+
+  var copyV2 = {
+    en: {
+      count: function(n,total){ return n + ' of ' + total; },
+      getStarted: 'Get Started',
+      next: 'Continue',
+      finish: 'Enter Fintrail',
+      skip: 'Skip for now',
+      selected: function(n){ return n + ' of 3 selected'; },
+      chooseOne: 'Choose at least 1 goal to continue.',
+      steps: [
+        {
+          title: 'Take control of your finances with Fintrail Pro',
+          subtitle: 'Track your money, pay off debt, save more, and build better financial habits in one place.'
+        },
+        {
+          title: 'Choose your language',
+          subtitle: 'Pick the language you want to use for your Fintrail experience.'
+        },
+        {
+          title: 'What would you like to accomplish first?',
+          subtitle: 'Select up to 3 goals so we can personalize your experience.'
+        },
+        {
+          title: 'Welcome to Fintrail Pro!',
+          subtitle: 'Your dashboard is ready. Start with the tools that match your goals and build from there.'
+        }
+      ],
+      welcomePills: [
+        'Your selected goals are saved to personalize your experience.',
+        'Feedback will be requested after 7 days, once you have had time to use Fintrail.'
+      ],
+      feedbackTitle: 'How is Fintrail working for you so far?',
+      feedbackSubtitle: "We'd love your feedback to help improve the experience for everyone.",
+      leaveFeedback: 'Leave Feedback',
+      remindLater: 'Remind Me Later',
+      feedbackBadge: 'Feedback Request'
+    },
+    es: {
+      count: function(n,total){ return n + ' de ' + total; },
+      getStarted: 'Comenzar',
+      next: 'Continuar',
+      finish: 'Entrar a Fintrail',
+      skip: 'Omitir por ahora',
+      selected: function(n){ return n + ' de 3 seleccionadas'; },
+      chooseOne: 'Elige al menos 1 meta para continuar.',
+      steps: [
+        {
+          title: 'Toma control de tus finanzas con Fintrail Pro',
+          subtitle: 'Organiza tu dinero, paga deudas, ahorra más y crea mejores hábitos financieros en un solo lugar.'
+        },
+        {
+          title: 'Elige tu idioma',
+          subtitle: 'Selecciona el idioma que quieres usar en tu experiencia de Fintrail.'
+        },
+        {
+          title: '¿Qué te gustaría lograr primero?',
+          subtitle: 'Selecciona hasta 3 metas para personalizar tu experiencia.'
+        },
+        {
+          title: '¡Bienvenido a Fintrail Pro!',
+          subtitle: 'Tu panel está listo. Empieza con las herramientas que coinciden con tus metas.'
+        }
+      ],
+      welcomePills: [
+        'Tus metas seleccionadas se guardaron para personalizar tu experiencia.',
+        'Pediremos tus comentarios después de 7 días, cuando hayas tenido tiempo de usar Fintrail.'
+      ],
+      feedbackTitle: '¿Cómo te está funcionando Fintrail hasta ahora?',
+      feedbackSubtitle: 'Nos encantaría conocer tu opinión para seguir mejorando la experiencia para todos.',
+      leaveFeedback: 'Enviar Comentarios',
+      remindLater: 'Recordarme Más Tarde',
+      feedbackBadge: 'Solicitud de Comentarios'
+    }
+  };
+
+  function getLang(){
+    try { return (typeof currentLang !== 'undefined') ? currentLang : 'en'; } catch(e) { return 'en'; }
+  }
+
+  function getUserId(){
+    try {
+      if (typeof getUserStorageId === 'function') return getUserStorageId();
+      if (typeof currentUser !== 'undefined' && currentUser && currentUser.id) return currentUser.id;
+      if (typeof currentUser !== 'undefined' && currentUser && currentUser.email) return currentUser.email;
+    } catch(e) {}
+    return 'local';
+  }
+
+  function key(name){
+    return 'fintrail_' + name + '_' + getUserId();
+  }
+
+  function safeGetLocal(name){
+    try { return localStorage.getItem(name); } catch(e) { return null; }
+  }
+
+  function safeSetLocal(name, value){
+    try { localStorage.setItem(name, value); } catch(e) {}
+  }
+
+  function getMeta(){
+    try {
+      return (typeof currentUser !== 'undefined' && currentUser && currentUser.user_metadata) ? currentUser.user_metadata : {};
+    } catch(e) {
+      return {};
+    }
+  }
+
+  function nowISO(){ return new Date().toISOString(); }
+
+  function ensureSignupDate(){
+    var storageKey = key('signup_at');
+    var existing = safeGetLocal(storageKey);
+    if (existing) return existing;
+
+    var meta = getMeta();
+    var created =
+      meta.fintrail_signup_at ||
+      meta.signup_at ||
+      (typeof currentUser !== 'undefined' && currentUser && currentUser.created_at ? currentUser.created_at : '') ||
+      nowISO();
+
+    safeSetLocal(storageKey, created);
+
+    if (typeof saveUserMetadataPatch === 'function') {
+      try { saveUserMetadataPatch({ fintrail_signup_at: created }); } catch(e) {}
+    }
+
+    return created;
+  }
+
+  function selectedGoals(){
+    try {
+      if (!Array.isArray(onboardingState.goals)) onboardingState.goals = [];
+      return onboardingState.goals;
+    } catch(e) {
+      return [];
+    }
+  }
+
+  window.toggleOnboardingGoalV2 = function(goal){
+    try {
+      if (!Array.isArray(onboardingState.goals)) onboardingState.goals = [];
+      var idx = onboardingState.goals.indexOf(goal);
+      if (idx >= 0) {
+        onboardingState.goals.splice(idx, 1);
+      } else if (onboardingState.goals.length < 3) {
+        onboardingState.goals.push(goal);
+      }
+      onboardingState.goal = onboardingState.goals.join(',');
+      renderOnboarding();
+    } catch(e) {}
+  };
+
+  window.onboardingNeedsSelection = function(){
+    try {
+      if (onboardingState.step === 2) return selectedGoals().length > 0;
+    } catch(e) {}
+    return true;
+  };
+
+  window.onboardingNext = function(){
+    try {
+      var copy = copyV2[getLang()] || copyV2.en;
+      var total = copy.steps.length;
+      if (!onboardingNeedsSelection()) {
+        alert(copy.chooseOne);
+        return;
+      }
+      if (onboardingState.step < total - 1) {
+        onboardingState.step++;
+        renderOnboarding();
+      } else {
+        completeOnboardingV2();
+      }
+    } catch(e) {
+      console.error('Onboarding v2 next failed:', e);
+    }
+  };
+
+  window.onboardingBack = function(){
+    try {
+      if (onboardingState.step > 0) {
+        onboardingState.step--;
+        renderOnboarding();
+      }
+    } catch(e) {}
+  };
+
+  window.selectOnboardingLang = function(lang){
+    try {
+      onboardingState.lang = lang;
+      currentLang = lang;
+      safeSetLocal('fintrail_lang', lang);
+      if (typeof applyLanguage === 'function') applyLanguage();
+      renderOnboarding();
+    } catch(e) {}
+  };
+
+  function completeOnboardingV2(){
+    try {
+      onboardingState.completed_at = nowISO();
+      onboardingState.version = 'v2_goals_7day_feedback';
+      ensureSignupDate();
+      safeSetLocal(key('onboarding_goals'), JSON.stringify(selectedGoals()));
+      safeSetLocal(key('onboarding_v2_state'), JSON.stringify(onboardingState));
+      safeSetLocal('fintrail_onboarding_goals_' + getUserId(), JSON.stringify(selectedGoals()));
+      if (typeof saveUserMetadataPatch === 'function') {
+        saveUserMetadataPatch({
+          fintrail_onboarding_version: 'v2_goals_7day_feedback',
+          fintrail_onboarding_goals: selectedGoals(),
+          fintrail_feedback_eligible_after: new Date(Date.now() + FEEDBACK_WAIT_DAYS * DAY_MS).toISOString()
+        });
+      }
+      if (typeof setFintrailOnboardingComplete === 'function') setFintrailOnboardingComplete();
+      else if (typeof markOnboardingComplete === 'function') markOnboardingComplete();
+      if (typeof closeOnboarding === 'function') closeOnboarding();
+      setTimeout(maybeShowDelayedFeedbackPrompt, 800);
+    } catch(e) {
+      console.error('Complete onboarding v2 failed:', e);
+      if (typeof closeOnboarding === 'function') closeOnboarding();
+    }
+  }
+
+  window.renderOnboarding = function(){
+    try {
+      var lang = onboardingState.lang || getLang();
+      var copy = copyV2[lang] || copyV2.en;
+      var step = Math.max(0, Math.min(onboardingState.step || 0, copy.steps.length - 1));
+      onboardingState.step = step;
+
+      var body = document.getElementById('onboarding-body');
+      var count = document.getElementById('onboarding-count');
+      var fill = document.getElementById('onboarding-progress-fill');
+      var back = document.getElementById('onboarding-back');
+      var primary = document.getElementById('onboarding-primary');
+      var secondary = document.getElementById('onboarding-secondary');
+      if (!body || !count || !fill || !primary || !secondary) return;
+
+      var total = copy.steps.length;
+      var current = copy.steps[step];
+
+      count.textContent = copy.count(step + 1, total);
+      fill.style.width = (((step + 1) / total) * 100) + '%';
+      back.style.visibility = step === 0 ? 'hidden' : 'visible';
+      primary.textContent = step === 0 ? copy.getStarted : (step === total - 1 ? copy.finish : copy.next);
+      secondary.textContent = copy.skip;
+      secondary.style.display = step === total - 1 ? 'none' : 'block';
+
+      var html = '';
+
+      if (step === 0) {
+        html = `
+          <div class="onboarding-brand">
+            <div class="onboarding-brand-mark">FP</div>
+            <div class="onboarding-brand-name">Fintrail Pro</div>
+          </div>
+          <h2 class="onboarding-title" id="onboarding-title">${current.title}</h2>
+          <p class="onboarding-subtitle">${current.subtitle}</p>
+          <div class="onboarding-hero-visual">
+            <div class="onboarding-mini-phone">
+              <div style="font-size:0.72rem;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.35rem">Fintrail</div>
+              <div class="onboarding-mini-score">82</div>
+              <div style="font-size:0.75rem;color:var(--text-soft);font-weight:700">Health Score</div>
+            </div>
+            <div class="onboarding-mini-bars"><span style="height:38%"></span><span style="height:66%"></span><span style="height:48%;background:var(--accent2)"></span><span style="height:84%;background:var(--accent)"></span></div>
+          </div>`;
+      } else if (step === 1) {
+        html = `
+          <h2 class="onboarding-title" id="onboarding-title">${current.title}</h2>
+          <p class="onboarding-subtitle">${current.subtitle}</p>
+          <div class="onboarding-language-grid">
+            <button class="onboarding-lang-btn ${lang === 'en' ? 'active' : ''}" onclick="selectOnboardingLang('en')">🇺🇸 English</button>
+            <button class="onboarding-lang-btn ${lang === 'es' ? 'active' : ''}" onclick="selectOnboardingLang('es')">🇪🇸 Español</button>
+          </div>`;
+      } else if (step === 2) {
+        var chosen = selectedGoals();
+        html = `
+          <h2 class="onboarding-title" id="onboarding-title">${current.title}</h2>
+          <p class="onboarding-subtitle">${current.subtitle}</p>
+          <div class="onboarding-goal-grid-v2">
+            ${(goalsV2[lang] || goalsV2.en).map(function(g){
+              var active = chosen.indexOf(g[0]) >= 0;
+              return `<button class="onboarding-goal-card-v2 ${active ? 'selected' : ''}" onclick="toggleOnboardingGoalV2('${g[0]}')">
+                <span class="onboarding-goal-emoji-v2">${g[1]}</span>
+                <span class="onboarding-goal-label-v2">${g[2]}</span>
+                ${active ? '<span class="onboarding-check">✓</span>' : ''}
+              </button>`;
+            }).join('')}
+          </div>
+          <div class="onboarding-goal-counter-v2">${copy.selected(chosen.length)}</div>`;
+      } else {
+        html = `
+          <div class="onboarding-brand">
+            <div class="onboarding-brand-mark">FP</div>
+            <div class="onboarding-brand-name">Fintrail Pro</div>
+          </div>
+          <h2 class="onboarding-title" id="onboarding-title">${current.title}</h2>
+          <p class="onboarding-subtitle">${current.subtitle}</p>
+          <div class="onboarding-welcome-actions-v2">
+            <div class="onboarding-welcome-pill-v2">✅ ${copy.welcomePills[0]}</div>
+            <div class="onboarding-welcome-pill-v2">💬 ${copy.welcomePills[1]}</div>
+          </div>
+          <div class="feedback-delay-note-v2">${lang === 'es' ? 'No te pediremos comentarios durante la incorporación inicial.' : 'We will not ask for feedback during your first onboarding.'}</div>`;
+      }
+
+      body.innerHTML = html;
+    } catch(e) {
+      console.error('Render onboarding v2 failed:', e);
+    }
+  };
+
+  function daysSince(dateStr){
+    var time = Date.parse(dateStr || '');
+    if (!time) return 0;
+    return Math.floor((Date.now() - time) / DAY_MS);
+  }
+
+  window.fintrailDismissDelayedFeedback = function(){
+    safeSetLocal(key('feedback_prompt_dismissed_at'), nowISO());
+    var count = parseInt(safeGetLocal(key('feedback_prompt_dismiss_count')) || '0', 10) || 0;
+    safeSetLocal(key('feedback_prompt_dismiss_count'), String(count + 1));
+    if (typeof closeFoundingFeedback === 'function') closeFoundingFeedback();
+  };
+
+  function prepareFeedbackModalAsDelayedPrompt(){
+    var lang = getLang();
+    var copy = copyV2[lang] || copyV2.en;
+
+    var title = document.getElementById('fm-modal-title');
+    var subtitle = document.getElementById('fm-modal-subtitle');
+    var badge = document.getElementById('fm-badge-large');
+    var submitBtn = document.getElementById('fm-submit-btn');
+
+    if (title) title.textContent = copy.feedbackTitle;
+    if (subtitle) subtitle.textContent = copy.feedbackSubtitle;
+    if (badge) badge.textContent = '💬 ' + copy.feedbackBadge;
+    if (submitBtn) submitBtn.textContent = copy.leaveFeedback;
+
+    var secondary = document.querySelector('.fm-btn.secondary');
+    if (secondary) {
+      secondary.textContent = copy.remindLater;
+      secondary.onclick = function(){ fintrailDismissDelayedFeedback(); };
+    }
+  }
+
+  window.maybeShowDelayedFeedbackPrompt = function(){
+    try {
+      ensureSignupDate();
+
+      var submitted = safeGetLocal(key('feedback_submitted')) === 'true';
+      if (submitted) return;
+
+      var dismissedAt = safeGetLocal(key('feedback_prompt_dismissed_at'));
+      var dismissCount = parseInt(safeGetLocal(key('feedback_prompt_dismiss_count')) || '0', 10) || 0;
+      if (dismissCount >= 2) return;
+
+      if (dismissedAt && daysSince(dismissedAt) < FEEDBACK_REMIND_DAYS) return;
+
+      var signupAt = ensureSignupDate();
+      if (daysSince(signupAt) < FEEDBACK_WAIT_DAYS) return;
+
+      prepareFeedbackModalAsDelayedPrompt();
+      if (typeof openFoundingFeedback === 'function') {
+        openFoundingFeedback();
+        setTimeout(prepareFeedbackModalAsDelayedPrompt, 50);
+      }
+    } catch(e) {}
+  };
+
+  var originalSubmit = window.submitFoundingFeedback;
+  if (typeof originalSubmit === 'function' && !originalSubmit.__fintrailDelayedWrapped) {
+    window.submitFoundingFeedback = async function(){
+      var result = await originalSubmit.apply(this, arguments);
+      safeSetLocal(key('feedback_submitted'), 'true');
+      return result;
+    };
+    window.submitFoundingFeedback.__fintrailDelayedWrapped = true;
+  }
+
+  // Keep Founding Member join from forcing immediate feedback during onboarding.
+  var originalBecomeFoundingMember = window.becomeFoundingMember;
+  if (typeof originalBecomeFoundingMember === 'function' && !originalBecomeFoundingMember.__onboardingV2SafeWrapped) {
+    window.becomeFoundingMember = async function(){
+      try {
+        await completeOnboardingV2();
+      } catch(e) {}
+    };
+    window.becomeFoundingMember.__onboardingV2SafeWrapped = true;
+  }
+
+  var originalShowApp = window.showApp;
+  if (typeof originalShowApp === 'function' && !originalShowApp.__feedback7DayWrapped) {
+    window.showApp = function(){
+      var result = originalShowApp.apply(this, arguments);
+      setTimeout(function(){
+        ensureSignupDate();
+        maybeShowDelayedFeedbackPrompt();
+      }, 1800);
+      return result;
+    };
+    window.showApp.__feedback7DayWrapped = true;
+  }
+
+  window.addEventListener('load', function(){
+    setTimeout(function(){
+      ensureSignupDate();
+      if (document.getElementById('onboarding-overlay') && document.getElementById('onboarding-overlay').classList.contains('visible')) {
+        renderOnboarding();
+      }
+      maybeShowDelayedFeedbackPrompt();
+    }, 1500);
   });
 })();
 </script>
