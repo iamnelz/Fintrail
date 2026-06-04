@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fintrail Pro — Budget Smarter, Live Better</title>
-<!-- BUILD: FINTRAIL_ONBOARDING_V2_7DAY_FEEDBACK_2026_06_03 -->
+<!-- BUILD: FINTRAIL_ONBOARDING_V2_POLISHED_TOOLS_HEALTH_2026_06_03 -->
 <!-- REPLACE content value below with your actual Google Search Console verification code -->
 <meta name="google-site-verification" content="PASTE_YOUR_VERIFICATION_CODE_HERE" />
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -7337,91 +7337,32 @@ Guidelines:
 #goal-cat,#goal-category{display:none!important;}
 </style>
 
+
 <style>
-/* === FINTRAIL ONBOARDING V2 GOAL SELECTION === */
-.onboarding-goal-grid-v2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.65rem;
-  margin: 1rem 0 0.65rem;
-}
-.onboarding-goal-card-v2 {
-  border: 1.5px solid var(--border);
-  background: #fff;
-  border-radius: 14px;
-  padding: 0.85rem 0.8rem;
-  font-family: 'Sora', sans-serif;
-  cursor: pointer;
-  transition: all .18s;
-  color: var(--text);
-  text-align: left;
-  min-height: 78px;
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-}
-.onboarding-goal-card-v2:hover {
-  border-color: var(--accent);
-  background: rgba(240,85,85,0.04);
-}
-.onboarding-goal-card-v2.selected {
-  border-color: var(--accent);
-  background: rgba(240,85,85,0.06);
-  box-shadow: 0 0 0 3px var(--glow-red);
-}
-.onboarding-goal-emoji-v2 {
-  width: 36px;
-  height: 36px;
-  border-radius: 11px;
-  background: var(--surface2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.25rem;
-  flex-shrink: 0;
-}
-.onboarding-goal-card-v2.selected .onboarding-goal-emoji-v2 {
-  background: rgba(240,85,85,0.12);
-}
-.onboarding-goal-label-v2 {
-  font-size: 0.82rem;
-  font-weight: 800;
-  line-height: 1.25;
-}
-.onboarding-goal-counter-v2 {
-  text-align: center;
-  font-size: 0.75rem;
-  font-weight: 800;
-  color: var(--text-soft);
-  margin-top: 0.35rem;
-}
-.onboarding-welcome-actions-v2 {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.65rem;
-  margin-top: 1rem;
-}
-.onboarding-welcome-pill-v2 {
-  background: rgba(6,214,160,0.08);
-  border: 1px solid rgba(6,214,160,0.18);
-  color: var(--text-soft);
-  border-radius: 999px;
-  padding: 0.55rem 0.75rem;
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-align: center;
-}
-.feedback-delay-note-v2 {
-  font-size: 0.75rem;
-  color: var(--muted);
-  text-align: center;
-  line-height: 1.45;
-  margin-top: 0.75rem;
-}
-@media(max-width:560px){
-  .onboarding-goal-grid-v2 { grid-template-columns: 1fr; }
-  .onboarding-goal-card-v2 { min-height: 64px; }
-}
+/* === FINTRAIL ONBOARDING V2 POLISHED === */
+.onboarding-goal-grid-v2{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin:1rem 0 .65rem}
+.onboarding-goal-card-v2{border:1.5px solid var(--border);background:#fff;border-radius:15px;padding:.85rem;font-family:'Sora',sans-serif;cursor:pointer;transition:all .18s;color:var(--text);text-align:left;min-height:86px;display:flex;align-items:center;gap:.7rem;box-shadow:0 6px 18px rgba(18,24,40,.035)}
+.onboarding-goal-card-v2:hover{border-color:var(--accent);background:rgba(240,85,85,.035);transform:translateY(-1px)}
+.onboarding-goal-card-v2.selected{border-color:var(--accent);background:rgba(240,85,85,.07);box-shadow:0 0 0 3px var(--glow-red)}
+.onboarding-goal-emoji-v2{width:42px;height:42px;border-radius:13px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:1.35rem;flex-shrink:0}
+.onboarding-goal-label-v2{font-size:.84rem;font-weight:800;line-height:1.25;flex:1}
+.onboarding-goal-counter-v2{text-align:center;font-size:.76rem;font-weight:800;color:var(--text-soft);margin-top:.45rem}
+.onboarding-score-preview-v2{display:grid;grid-template-columns:150px 1fr;gap:1rem;align-items:center;margin:1rem 0}
+.onboarding-score-ring-v2{width:138px;height:138px;border-radius:50%;background:conic-gradient(var(--income-color) 0 72%, var(--surface2) 72% 100%);display:flex;align-items:center;justify-content:center;position:relative;margin:auto}
+.onboarding-score-ring-v2::after{content:'';position:absolute;inset:14px;border-radius:50%;background:#fff}
+.onboarding-score-inner-v2{position:relative;z-index:1;text-align:center}
+.onboarding-score-num-v2{font-family:'Playfair Display',serif;font-size:2.55rem;color:var(--dark);line-height:1}
+.onboarding-score-label-v2{font-size:.72rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.onboarding-score-copy-v2{border:1px solid var(--border);background:#fff;border-radius:14px;padding:1rem;box-shadow:0 6px 18px rgba(18,24,40,.035)}
+.onboarding-score-copy-v2 h4{font-size:.9rem;margin-bottom:.35rem;color:var(--text)}
+.onboarding-score-copy-v2 p{font-size:.78rem;line-height:1.55;color:var(--text-soft);margin:0}
+.onboarding-tools-grid-v2{display:grid;grid-template-columns:1fr;gap:.6rem;margin-top:1rem}
+.onboarding-tool-card-v2{border:1px solid var(--border);background:#fff;border-radius:14px;padding:.85rem;display:flex;align-items:center;gap:.75rem;box-shadow:0 6px 18px rgba(18,24,40,.035)}
+.onboarding-tool-icon-v2{width:42px;height:42px;border-radius:13px;background:rgba(240,85,85,.08);display:flex;align-items:center;justify-content:center;font-size:1.35rem;flex-shrink:0}
+.onboarding-tool-title-v2{font-size:.86rem;font-weight:900;color:var(--text)}
+.onboarding-tool-sub-v2{font-size:.74rem;color:var(--muted);margin-top:.12rem;line-height:1.35}
+.onboarding-welcome-pill-v2{background:rgba(6,214,160,.08);border:1px solid rgba(6,214,160,.18);color:var(--text-soft);border-radius:14px;padding:.75rem .85rem;font-size:.82rem;font-weight:700;line-height:1.45;margin-top:.8rem}
+@media(max-width:560px){.onboarding-goal-grid-v2{grid-template-columns:1fr}.onboarding-goal-card-v2{min-height:68px}.onboarding-score-preview-v2{grid-template-columns:1fr}}
 </style>
 
 </head>
@@ -13802,113 +13743,85 @@ window.addEventListener('load', function(){
 </script>
 
 
+
+
 <script>
-/* === FINTRAIL ONBOARDING V2 + 7 DAY FEEDBACK PATCH === */
+/* === FINTRAIL ONBOARDING V2 POLISHED + 7 DAY FEEDBACK PATCH === */
 (function(){
   var FEEDBACK_WAIT_DAYS = 7;
   var FEEDBACK_REMIND_DAYS = 30;
-  var DAY_MS = 24 * 60 * 60 * 1000;
+  var DAY_MS = 86400000;
 
   var goalsV2 = {
     en: [
-      ['budget','💰','Create a Budget'],
-      ['debt','📉','Pay Off Debt'],
-      ['save','🏦','Save More Money'],
-      ['credit','📈','Improve My Credit'],
-      ['bills','📅','Track Bills & Payments'],
-      ['networth','📊','Build My Net Worth'],
-      ['savingsgoal','🎯','Reach a Savings Goal'],
-      ['guidance','🤖','Get Financial Guidance']
+      ['budget','💰','Create a Budget'], ['debt','📉','Pay Off Debt'], ['save','🏦','Save More Money'], ['credit','📈','Improve My Credit'],
+      ['bills','📅','Track Bills & Payments'], ['networth','📊','Build My Net Worth'], ['savingsgoal','🎯','Reach a Savings Goal'], ['guidance','🤖','Get Financial Guidance']
     ],
     es: [
-      ['budget','💰','Crear un Presupuesto'],
-      ['debt','📉','Pagar Deudas'],
-      ['save','🏦','Ahorrar Más Dinero'],
-      ['credit','📈','Mejorar Mi Crédito'],
-      ['bills','📅','Administrar Facturas y Pagos'],
-      ['networth','📊','Aumentar Mi Patrimonio Neto'],
-      ['savingsgoal','🎯','Alcanzar una Meta de Ahorro'],
-      ['guidance','🤖','Recibir Orientación Financiera']
+      ['budget','💰','Crear un Presupuesto'], ['debt','📉','Pagar Deudas'], ['save','🏦','Ahorrar Más Dinero'], ['credit','📈','Mejorar Mi Crédito'],
+      ['bills','📅','Administrar Facturas y Pagos'], ['networth','📊','Aumentar Mi Patrimonio Neto'], ['savingsgoal','🎯','Alcanzar una Meta de Ahorro'], ['guidance','🤖','Recibir Orientación Financiera']
     ]
+  };
+
+  var toolMap = {
+    budget:['📊','Budget Tracker','Track income, expenses, and spending patterns.','Rastrea ingresos, gastos y patrones de consumo.'],
+    debt:['🎯','Debt Payoff Planner','Choose Avalanche or Snowball and build your plan.','Elige Avalancha o Bola de Nieve y crea tu plan.'],
+    save:['🏦','Savings Goals','Create goals and track your monthly progress.','Crea metas y sigue tu progreso mensual.'],
+    credit:['📈','Credit Simulator','Preview how financial actions may affect your score.','Visualiza cómo tus acciones pueden impactar tu crédito.'],
+    bills:['📅','Bill Schedule','Organize recurring bills around payday.','Organiza facturas recurrentes según tus días de pago.'],
+    networth:['💚','Net Worth Tracker','Track assets, debts, and your overall progress.','Rastrea activos, deudas y tu progreso general.'],
+    savingsgoal:['🎯','Savings Goal Tracker','Set a target and see how much to save monthly.','Define una meta y ve cuánto ahorrar al mes.'],
+    guidance:['🤖','AI Advisor','Ask questions and get personalized guidance.','Haz preguntas y recibe orientación personalizada.']
   };
 
   var copyV2 = {
     en: {
-      count: function(n,total){ return n + ' of ' + total; },
-      getStarted: 'Get Started',
-      next: 'Continue',
-      finish: 'Enter Fintrail',
-      skip: 'Skip for now',
-      selected: function(n){ return n + ' of 3 selected'; },
-      chooseOne: 'Choose at least 1 goal to continue.',
-      steps: [
-        {
-          title: 'Take control of your finances with Fintrail Pro',
-          subtitle: 'Track your money, pay off debt, save more, and build better financial habits in one place.'
-        },
-        {
-          title: 'Choose your language',
-          subtitle: 'Pick the language you want to use for your Fintrail experience.'
-        },
-        {
-          title: 'What would you like to accomplish first?',
-          subtitle: 'Select up to 3 goals so we can personalize your experience.'
-        },
-        {
-          title: 'Welcome to Fintrail Pro!',
-          subtitle: 'Your dashboard is ready. Start with the tools that match your goals and build from there.'
-        }
+      count:function(n,total){return n + ' of ' + total;}, getStarted:'Get Started', next:'Continue', finish:'Enter Fintrail', skip:'Skip for now',
+      selected:function(n){return n + ' of 3 selected';}, chooseOne:'Choose at least 1 goal to continue.',
+      steps:[
+        {title:'Take control of your finances with Fintrail Pro', subtitle:'Track your money, build stronger habits, and see your financial health in one place.'},
+        {title:'Choose your language', subtitle:'Pick the language you want to use for your Fintrail experience.'},
+        {title:'Preview your Fintrail Health Score', subtitle:'Fintrail helps you understand your financial picture before you choose where to focus.'},
+        {title:'What would you like to accomplish first?', subtitle:'Select up to 3 goals so we can personalize your experience.'},
+        {title:'Recommended tools for you', subtitle:'Start with these tools based on the goals you selected.'},
+        {title:'Welcome to Fintrail Pro!', subtitle:'Your dashboard is ready. Start with your recommended tools and build from there.'}
       ],
-      welcomePills: [
-        'Your selected goals are saved to personalize your experience.',
-        'Feedback will be requested after 7 days, once you have had time to use Fintrail.'
-      ],
-      feedbackTitle: 'How is Fintrail working for you so far?',
-      feedbackSubtitle: "We'd love your feedback to help improve the experience for everyone.",
-      leaveFeedback: 'Leave Feedback',
-      remindLater: 'Remind Me Later',
-      feedbackBadge: 'Feedback Request'
+      scoreTitle:'Your starter score preview',
+      scoreBody:'Once you add budgets, bills, savings goals, debts, and credit information, Fintrail will personalize your score and monthly report.',
+      recommendedFallback:'Choose goals first and Fintrail will recommend tools for you.',
+      saved:'Your selected goals are saved to personalize your experience.',
+      feedbackTitle:'How is Fintrail working for you so far?',
+      feedbackSubtitle:"We'd love your feedback to help improve the experience for everyone.",
+      leaveFeedback:'Leave Feedback',
+      remindLater:'Remind Me Later',
+      feedbackBadge:'Feedback Request'
     },
     es: {
-      count: function(n,total){ return n + ' de ' + total; },
-      getStarted: 'Comenzar',
-      next: 'Continuar',
-      finish: 'Entrar a Fintrail',
-      skip: 'Omitir por ahora',
-      selected: function(n){ return n + ' de 3 seleccionadas'; },
-      chooseOne: 'Elige al menos 1 meta para continuar.',
-      steps: [
-        {
-          title: 'Toma control de tus finanzas con Fintrail Pro',
-          subtitle: 'Organiza tu dinero, paga deudas, ahorra más y crea mejores hábitos financieros en un solo lugar.'
-        },
-        {
-          title: 'Elige tu idioma',
-          subtitle: 'Selecciona el idioma que quieres usar en tu experiencia de Fintrail.'
-        },
-        {
-          title: '¿Qué te gustaría lograr primero?',
-          subtitle: 'Selecciona hasta 3 metas para personalizar tu experiencia.'
-        },
-        {
-          title: '¡Bienvenido a Fintrail Pro!',
-          subtitle: 'Tu panel está listo. Empieza con las herramientas que coinciden con tus metas.'
-        }
+      count:function(n,total){return n + ' de ' + total;}, getStarted:'Comenzar', next:'Continuar', finish:'Entrar a Fintrail', skip:'Omitir por ahora',
+      selected:function(n){return n + ' de 3 seleccionadas';}, chooseOne:'Elige al menos 1 meta para continuar.',
+      steps:[
+        {title:'Toma control de tus finanzas con Fintrail Pro', subtitle:'Organiza tu dinero, crea mejores hábitos y ve tu salud financiera en un solo lugar.'},
+        {title:'Elige tu idioma', subtitle:'Selecciona el idioma que quieres usar en tu experiencia de Fintrail.'},
+        {title:'Vista previa de tu Salud Financiera', subtitle:'Fintrail te ayuda a entender tu panorama financiero antes de elegir dónde enfocarte.'},
+        {title:'¿Qué te gustaría lograr primero?', subtitle:'Selecciona hasta 3 metas para personalizar tu experiencia.'},
+        {title:'Herramientas recomendadas para ti', subtitle:'Empieza con estas herramientas según las metas que seleccionaste.'},
+        {title:'¡Bienvenido a Fintrail Pro!', subtitle:'Tu panel está listo. Empieza con tus herramientas recomendadas y sigue avanzando.'}
       ],
-      welcomePills: [
-        'Tus metas seleccionadas se guardaron para personalizar tu experiencia.',
-        'Pediremos tus comentarios después de 7 días, cuando hayas tenido tiempo de usar Fintrail.'
-      ],
-      feedbackTitle: '¿Cómo te está funcionando Fintrail hasta ahora?',
-      feedbackSubtitle: 'Nos encantaría conocer tu opinión para seguir mejorando la experiencia para todos.',
-      leaveFeedback: 'Enviar Comentarios',
-      remindLater: 'Recordarme Más Tarde',
-      feedbackBadge: 'Solicitud de Comentarios'
+      scoreTitle:'Vista previa de tu puntaje inicial',
+      scoreBody:'Cuando agregues presupuestos, facturas, metas de ahorro, deudas e información de crédito, Fintrail personalizará tu puntaje y reporte mensual.',
+      recommendedFallback:'Elige tus metas primero y Fintrail recomendará herramientas para ti.',
+      saved:'Tus metas seleccionadas se guardaron para personalizar tu experiencia.',
+      feedbackTitle:'¿Cómo te está funcionando Fintrail hasta ahora?',
+      feedbackSubtitle:'Nos encantaría conocer tu opinión para seguir mejorando la experiencia para todos.',
+      leaveFeedback:'Enviar Comentarios',
+      remindLater:'Recordarme Más Tarde',
+      feedbackBadge:'Solicitud de Comentarios'
     }
   };
 
   function getLang(){
-    try { return (typeof currentLang !== 'undefined') ? currentLang : 'en'; } catch(e) { return 'en'; }
+    try { return typeof currentLang !== 'undefined' ? currentLang : ((typeof onboardingState !== 'undefined' && onboardingState.lang) ? onboardingState.lang : 'en'); }
+    catch(e){ return 'en'; }
   }
 
   function getUserId(){
@@ -13920,46 +13833,26 @@ window.addEventListener('load', function(){
     return 'local';
   }
 
-  function key(name){
-    return 'fintrail_' + name + '_' + getUserId();
-  }
-
-  function safeGetLocal(name){
-    try { return localStorage.getItem(name); } catch(e) { return null; }
-  }
-
-  function safeSetLocal(name, value){
-    try { localStorage.setItem(name, value); } catch(e) {}
-  }
+  function key(name){ return 'fintrail_' + name + '_' + getUserId(); }
+  function safeGetLocal(name){ try { return localStorage.getItem(name); } catch(e) { return null; } }
+  function safeSetLocal(name,value){ try { localStorage.setItem(name,value); } catch(e) {} }
+  function nowISO(){ return new Date().toISOString(); }
 
   function getMeta(){
-    try {
-      return (typeof currentUser !== 'undefined' && currentUser && currentUser.user_metadata) ? currentUser.user_metadata : {};
-    } catch(e) {
-      return {};
-    }
+    try { return typeof currentUser !== 'undefined' && currentUser && currentUser.user_metadata ? currentUser.user_metadata : {}; }
+    catch(e){ return {}; }
   }
-
-  function nowISO(){ return new Date().toISOString(); }
 
   function ensureSignupDate(){
     var storageKey = key('signup_at');
     var existing = safeGetLocal(storageKey);
     if (existing) return existing;
-
     var meta = getMeta();
-    var created =
-      meta.fintrail_signup_at ||
-      meta.signup_at ||
-      (typeof currentUser !== 'undefined' && currentUser && currentUser.created_at ? currentUser.created_at : '') ||
-      nowISO();
-
+    var created = meta.fintrail_signup_at || meta.signup_at || (typeof currentUser !== 'undefined' && currentUser && currentUser.created_at ? currentUser.created_at : '') || nowISO();
     safeSetLocal(storageKey, created);
-
     if (typeof saveUserMetadataPatch === 'function') {
       try { saveUserMetadataPatch({ fintrail_signup_at: created }); } catch(e) {}
     }
-
     return created;
   }
 
@@ -13972,36 +13865,43 @@ window.addEventListener('load', function(){
     }
   }
 
-  window.toggleOnboardingGoalV2 = function(goal){
+  function setLang(lang){
+    try {
+      onboardingState.lang = lang;
+      currentLang = lang;
+      safeSetLocal('fintrail_lang', lang);
+      if (typeof applyLanguage === 'function') applyLanguage();
+      renderOnboarding();
+    } catch(e) {}
+  }
+
+  function toggleGoal(goal){
     try {
       if (!Array.isArray(onboardingState.goals)) onboardingState.goals = [];
       var idx = onboardingState.goals.indexOf(goal);
-      if (idx >= 0) {
-        onboardingState.goals.splice(idx, 1);
-      } else if (onboardingState.goals.length < 3) {
-        onboardingState.goals.push(goal);
-      }
+      if (idx >= 0) onboardingState.goals.splice(idx, 1);
+      else if (onboardingState.goals.length < 3) onboardingState.goals.push(goal);
       onboardingState.goal = onboardingState.goals.join(',');
       renderOnboarding();
     } catch(e) {}
-  };
+  }
 
-  window.onboardingNeedsSelection = function(){
-    try {
-      if (onboardingState.step === 2) return selectedGoals().length > 0;
-    } catch(e) {}
-    return true;
-  };
+  window.selectOnboardingLang = setLang;
+  window.toggleOnboardingGoalV2 = toggleGoal;
+
+  function needsSelection(){
+    try { return onboardingState.step !== 3 || selectedGoals().length > 0; }
+    catch(e){ return true; }
+  }
 
   window.onboardingNext = function(){
     try {
       var copy = copyV2[getLang()] || copyV2.en;
-      var total = copy.steps.length;
-      if (!onboardingNeedsSelection()) {
+      if (!needsSelection()) {
         alert(copy.chooseOne);
         return;
       }
-      if (onboardingState.step < total - 1) {
+      if (onboardingState.step < copy.steps.length - 1) {
         onboardingState.step++;
         renderOnboarding();
       } else {
@@ -14021,44 +13921,20 @@ window.addEventListener('load', function(){
     } catch(e) {}
   };
 
-  window.selectOnboardingLang = function(lang){
-    try {
-      onboardingState.lang = lang;
-      currentLang = lang;
-      safeSetLocal('fintrail_lang', lang);
-      if (typeof applyLanguage === 'function') applyLanguage();
-      renderOnboarding();
-    } catch(e) {}
-  };
-
-  function completeOnboardingV2(){
-    try {
-      onboardingState.completed_at = nowISO();
-      onboardingState.version = 'v2_goals_7day_feedback';
-      ensureSignupDate();
-      safeSetLocal(key('onboarding_goals'), JSON.stringify(selectedGoals()));
-      safeSetLocal(key('onboarding_v2_state'), JSON.stringify(onboardingState));
-      safeSetLocal('fintrail_onboarding_goals_' + getUserId(), JSON.stringify(selectedGoals()));
-      if (typeof saveUserMetadataPatch === 'function') {
-        saveUserMetadataPatch({
-          fintrail_onboarding_version: 'v2_goals_7day_feedback',
-          fintrail_onboarding_goals: selectedGoals(),
-          fintrail_feedback_eligible_after: new Date(Date.now() + FEEDBACK_WAIT_DAYS * DAY_MS).toISOString()
-        });
-      }
-      if (typeof setFintrailOnboardingComplete === 'function') setFintrailOnboardingComplete();
-      else if (typeof markOnboardingComplete === 'function') markOnboardingComplete();
-      if (typeof closeOnboarding === 'function') closeOnboarding();
-      setTimeout(maybeShowDelayedFeedbackPrompt, 800);
-    } catch(e) {
-      console.error('Complete onboarding v2 failed:', e);
-      if (typeof closeOnboarding === 'function') closeOnboarding();
-    }
+  function recommendedToolsHtml(lang,maxCount){
+    var chosen = selectedGoals();
+    var copy = copyV2[lang] || copyV2.en;
+    if (!chosen.length) return '<div class="onboarding-welcome-pill-v2">' + copy.recommendedFallback + '</div>';
+    return chosen.slice(0, maxCount || 3).map(function(goal){
+      var tool = toolMap[goal] || toolMap.budget;
+      var desc = lang === 'es' ? tool[3] : tool[2];
+      return '<div class="onboarding-tool-card-v2"><div class="onboarding-tool-icon-v2">' + tool[0] + '</div><div><div class="onboarding-tool-title-v2">' + tool[1] + '</div><div class="onboarding-tool-sub-v2">' + desc + '</div></div></div>';
+    }).join('');
   }
 
   window.renderOnboarding = function(){
     try {
-      var lang = onboardingState.lang || getLang();
+      var lang = (typeof onboardingState !== 'undefined' && onboardingState.lang) ? onboardingState.lang : getLang();
       var copy = copyV2[lang] || copyV2.en;
       var step = Math.max(0, Math.min(onboardingState.step || 0, copy.steps.length - 1));
       onboardingState.step = step;
@@ -14073,7 +13949,6 @@ window.addEventListener('load', function(){
 
       var total = copy.steps.length;
       var current = copy.steps[step];
-
       count.textContent = copy.count(step + 1, total);
       fill.style.width = (((step + 1) / total) * 100) + '%';
       back.style.visibility = step === 0 ? 'hidden' : 'visible';
@@ -14081,68 +13956,64 @@ window.addEventListener('load', function(){
       secondary.textContent = copy.skip;
       secondary.style.display = step === total - 1 ? 'none' : 'block';
 
-      var html = '';
-
       if (step === 0) {
-        html = `
-          <div class="onboarding-brand">
-            <div class="onboarding-brand-mark">FP</div>
-            <div class="onboarding-brand-name">Fintrail Pro</div>
-          </div>
-          <h2 class="onboarding-title" id="onboarding-title">${current.title}</h2>
-          <p class="onboarding-subtitle">${current.subtitle}</p>
-          <div class="onboarding-hero-visual">
-            <div class="onboarding-mini-phone">
-              <div style="font-size:0.72rem;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.35rem">Fintrail</div>
-              <div class="onboarding-mini-score">82</div>
-              <div style="font-size:0.75rem;color:var(--text-soft);font-weight:700">Health Score</div>
-            </div>
-            <div class="onboarding-mini-bars"><span style="height:38%"></span><span style="height:66%"></span><span style="height:48%;background:var(--accent2)"></span><span style="height:84%;background:var(--accent)"></span></div>
-          </div>`;
+        body.innerHTML = '<div class="onboarding-brand"><div class="onboarding-brand-mark">FP</div><div class="onboarding-brand-name">Fintrail Pro</div></div><h2 class="onboarding-title" id="onboarding-title">' + current.title + '</h2><p class="onboarding-subtitle">' + current.subtitle + '</p><div class="onboarding-hero-visual"><div class="onboarding-mini-phone"><div style="font-size:0.72rem;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.35rem">Fintrail</div><div class="onboarding-mini-score">82</div><div style="font-size:0.75rem;color:var(--text-soft);font-weight:700">Health Score</div></div><div class="onboarding-mini-bars"><span style="height:38%"></span><span style="height:66%"></span><span style="height:48%;background:var(--accent2)"></span><span style="height:84%;background:var(--accent)"></span></div></div>';
       } else if (step === 1) {
-        html = `
-          <h2 class="onboarding-title" id="onboarding-title">${current.title}</h2>
-          <p class="onboarding-subtitle">${current.subtitle}</p>
-          <div class="onboarding-language-grid">
-            <button class="onboarding-lang-btn ${lang === 'en' ? 'active' : ''}" onclick="selectOnboardingLang('en')">🇺🇸 English</button>
-            <button class="onboarding-lang-btn ${lang === 'es' ? 'active' : ''}" onclick="selectOnboardingLang('es')">🇪🇸 Español</button>
-          </div>`;
+        body.innerHTML = '<h2 class="onboarding-title" id="onboarding-title">' + current.title + '</h2><p class="onboarding-subtitle">' + current.subtitle + '</p><div class="onboarding-language-grid"><button type="button" id="onb-lang-en" class="onboarding-lang-btn ' + (lang === 'en' ? 'active' : '') + '">🇺🇸 English</button><button type="button" id="onb-lang-es" class="onboarding-lang-btn ' + (lang === 'es' ? 'active' : '') + '">🇪🇸 Español</button></div>';
+        setTimeout(function(){
+          var en = document.getElementById('onb-lang-en');
+          var es = document.getElementById('onb-lang-es');
+          if (en) en.onclick = function(){ setLang('en'); };
+          if (es) es.onclick = function(){ setLang('es'); };
+        }, 0);
       } else if (step === 2) {
+        body.innerHTML = '<h2 class="onboarding-title" id="onboarding-title">' + current.title + '</h2><p class="onboarding-subtitle">' + current.subtitle + '</p><div class="onboarding-score-preview-v2"><div class="onboarding-score-ring-v2"><div class="onboarding-score-inner-v2"><div class="onboarding-score-num-v2">72</div><div class="onboarding-score-label-v2">Preview</div></div></div><div class="onboarding-score-copy-v2"><h4>' + copy.scoreTitle + '</h4><p>' + copy.scoreBody + '</p></div></div>';
+      } else if (step === 3) {
         var chosen = selectedGoals();
-        html = `
-          <h2 class="onboarding-title" id="onboarding-title">${current.title}</h2>
-          <p class="onboarding-subtitle">${current.subtitle}</p>
-          <div class="onboarding-goal-grid-v2">
-            ${(goalsV2[lang] || goalsV2.en).map(function(g){
-              var active = chosen.indexOf(g[0]) >= 0;
-              return `<button class="onboarding-goal-card-v2 ${active ? 'selected' : ''}" onclick="toggleOnboardingGoalV2('${g[0]}')">
-                <span class="onboarding-goal-emoji-v2">${g[1]}</span>
-                <span class="onboarding-goal-label-v2">${g[2]}</span>
-                ${active ? '<span class="onboarding-check">✓</span>' : ''}
-              </button>`;
-            }).join('')}
-          </div>
-          <div class="onboarding-goal-counter-v2">${copy.selected(chosen.length)}</div>`;
+        var goalsHtml = (goalsV2[lang] || goalsV2.en).map(function(g){
+          var active = chosen.indexOf(g[0]) >= 0;
+          return '<button type="button" class="onboarding-goal-card-v2 ' + (active ? 'selected' : '') + '" data-goal="' + g[0] + '"><span class="onboarding-goal-emoji-v2">' + g[1] + '</span><span class="onboarding-goal-label-v2">' + g[2] + '</span>' + (active ? '<span class="onboarding-check">✓</span>' : '') + '</button>';
+        }).join('');
+        body.innerHTML = '<h2 class="onboarding-title" id="onboarding-title">' + current.title + '</h2><p class="onboarding-subtitle">' + current.subtitle + '</p><div class="onboarding-goal-grid-v2">' + goalsHtml + '</div><div class="onboarding-goal-counter-v2">' + copy.selected(chosen.length) + '</div>';
+        setTimeout(function(){
+          document.querySelectorAll('.onboarding-goal-card-v2[data-goal]').forEach(function(btn){
+            btn.onclick = function(){ toggleGoal(btn.getAttribute('data-goal')); };
+          });
+        }, 0);
+      } else if (step === 4) {
+        body.innerHTML = '<h2 class="onboarding-title" id="onboarding-title">' + current.title + '</h2><p class="onboarding-subtitle">' + current.subtitle + '</p><div class="onboarding-tools-grid-v2">' + recommendedToolsHtml(lang, 3) + '</div>';
       } else {
-        html = `
-          <div class="onboarding-brand">
-            <div class="onboarding-brand-mark">FP</div>
-            <div class="onboarding-brand-name">Fintrail Pro</div>
-          </div>
-          <h2 class="onboarding-title" id="onboarding-title">${current.title}</h2>
-          <p class="onboarding-subtitle">${current.subtitle}</p>
-          <div class="onboarding-welcome-actions-v2">
-            <div class="onboarding-welcome-pill-v2">✅ ${copy.welcomePills[0]}</div>
-            <div class="onboarding-welcome-pill-v2">💬 ${copy.welcomePills[1]}</div>
-          </div>
-          <div class="feedback-delay-note-v2">${lang === 'es' ? 'No te pediremos comentarios durante la incorporación inicial.' : 'We will not ask for feedback during your first onboarding.'}</div>`;
+        body.innerHTML = '<div class="onboarding-brand"><div class="onboarding-brand-mark">FP</div><div class="onboarding-brand-name">Fintrail Pro</div></div><h2 class="onboarding-title" id="onboarding-title">' + current.title + '</h2><p class="onboarding-subtitle">' + current.subtitle + '</p><div class="onboarding-tools-grid-v2">' + recommendedToolsHtml(lang, 3) + '</div><div class="onboarding-welcome-pill-v2">✅ ' + copy.saved + '</div>';
       }
-
-      body.innerHTML = html;
     } catch(e) {
-      console.error('Render onboarding v2 failed:', e);
+      console.error('Render onboarding v2 polished failed:', e);
     }
   };
+
+  function completeOnboardingV2(){
+    try {
+      onboardingState.completed_at = nowISO();
+      onboardingState.version = 'v2_polished_goals_health_tools_7day_feedback';
+      ensureSignupDate();
+      safeSetLocal(key('onboarding_goals'), JSON.stringify(selectedGoals()));
+      safeSetLocal(key('onboarding_v2_state'), JSON.stringify(onboardingState));
+      safeSetLocal('fintrail_onboarding_goals_' + getUserId(), JSON.stringify(selectedGoals()));
+      if (typeof saveUserMetadataPatch === 'function') {
+        saveUserMetadataPatch({
+          fintrail_onboarding_version:'v2_polished_goals_health_tools_7day_feedback',
+          fintrail_onboarding_goals:selectedGoals(),
+          fintrail_feedback_eligible_after:new Date(Date.now() + FEEDBACK_WAIT_DAYS * DAY_MS).toISOString()
+        });
+      }
+      if (typeof setFintrailOnboardingComplete === 'function') setFintrailOnboardingComplete();
+      else if (typeof markOnboardingComplete === 'function') markOnboardingComplete();
+      if (typeof closeOnboarding === 'function') closeOnboarding();
+      setTimeout(maybeShowDelayedFeedbackPrompt, 800);
+    } catch(e) {
+      console.error('Complete onboarding v2 polished failed:', e);
+      if (typeof closeOnboarding === 'function') closeOnboarding();
+    }
+  }
 
   function daysSince(dateStr){
     var time = Date.parse(dateStr || '');
@@ -14160,17 +14031,14 @@ window.addEventListener('load', function(){
   function prepareFeedbackModalAsDelayedPrompt(){
     var lang = getLang();
     var copy = copyV2[lang] || copyV2.en;
-
     var title = document.getElementById('fm-modal-title');
     var subtitle = document.getElementById('fm-modal-subtitle');
     var badge = document.getElementById('fm-badge-large');
     var submitBtn = document.getElementById('fm-submit-btn');
-
     if (title) title.textContent = copy.feedbackTitle;
     if (subtitle) subtitle.textContent = copy.feedbackSubtitle;
     if (badge) badge.textContent = '💬 ' + copy.feedbackBadge;
     if (submitBtn) submitBtn.textContent = copy.leaveFeedback;
-
     var secondary = document.querySelector('.fm-btn.secondary');
     if (secondary) {
       secondary.textContent = copy.remindLater;
@@ -14181,19 +14049,13 @@ window.addEventListener('load', function(){
   window.maybeShowDelayedFeedbackPrompt = function(){
     try {
       ensureSignupDate();
-
-      var submitted = safeGetLocal(key('feedback_submitted')) === 'true';
-      if (submitted) return;
-
+      if (safeGetLocal(key('feedback_submitted')) === 'true') return;
       var dismissedAt = safeGetLocal(key('feedback_prompt_dismissed_at'));
       var dismissCount = parseInt(safeGetLocal(key('feedback_prompt_dismiss_count')) || '0', 10) || 0;
       if (dismissCount >= 2) return;
-
       if (dismissedAt && daysSince(dismissedAt) < FEEDBACK_REMIND_DAYS) return;
-
       var signupAt = ensureSignupDate();
       if (daysSince(signupAt) < FEEDBACK_WAIT_DAYS) return;
-
       prepareFeedbackModalAsDelayedPrompt();
       if (typeof openFoundingFeedback === 'function') {
         openFoundingFeedback();
@@ -14212,17 +14074,6 @@ window.addEventListener('load', function(){
     window.submitFoundingFeedback.__fintrailDelayedWrapped = true;
   }
 
-  // Keep Founding Member join from forcing immediate feedback during onboarding.
-  var originalBecomeFoundingMember = window.becomeFoundingMember;
-  if (typeof originalBecomeFoundingMember === 'function' && !originalBecomeFoundingMember.__onboardingV2SafeWrapped) {
-    window.becomeFoundingMember = async function(){
-      try {
-        await completeOnboardingV2();
-      } catch(e) {}
-    };
-    window.becomeFoundingMember.__onboardingV2SafeWrapped = true;
-  }
-
   var originalShowApp = window.showApp;
   if (typeof originalShowApp === 'function' && !originalShowApp.__feedback7DayWrapped) {
     window.showApp = function(){
@@ -14239,9 +14090,8 @@ window.addEventListener('load', function(){
   window.addEventListener('load', function(){
     setTimeout(function(){
       ensureSignupDate();
-      if (document.getElementById('onboarding-overlay') && document.getElementById('onboarding-overlay').classList.contains('visible')) {
-        renderOnboarding();
-      }
+      var overlay = document.getElementById('onboarding-overlay');
+      if (overlay && overlay.classList.contains('visible')) renderOnboarding();
       maybeShowDelayedFeedbackPrompt();
     }, 1500);
   });
