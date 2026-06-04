@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fintrail Pro — Budget Smarter, Live Better</title>
-<!-- BUILD: FINTRAIL_ONBOARDING_V2_POLISHED_TOOLS_HEALTH_2026_06_03 -->
+<!-- BUILD: FINTRAIL_ONBOARDING_V2_POLISHED_TRIGGER_FIXED_2026_06_03 -->
 <!-- REPLACE content value below with your actual Google Search Console verification code -->
 <meta name="google-site-verification" content="PASTE_YOUR_VERIFICATION_CODE_HERE" />
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -13746,7 +13746,7 @@ window.addEventListener('load', function(){
 
 
 <script>
-/* === FINTRAIL ONBOARDING V2 POLISHED + 7 DAY FEEDBACK PATCH === */
+/* === FINTRAIL ONBOARDING V2 POLISHED + TRIGGER FIX + 7 DAY FEEDBACK PATCH === */
 (function(){
   var FEEDBACK_WAIT_DAYS = 7;
   var FEEDBACK_REMIND_DAYS = 30;
@@ -13819,36 +13819,68 @@ window.addEventListener('load', function(){
     }
   };
 
+  function getActiveUserForOnboarding(){
+    try { if (typeof currentUser !== 'undefined' && currentUser) return currentUser; } catch(e) {}
+    try { if (window.currentUser) return window.currentUser; } catch(e) {}
+    try { if (window.supabaseUser) return window.supabaseUser; } catch(e) {}
+    try { if (window.user) return window.user; } catch(e) {}
+    return null;
+  }
+
   function getLang(){
     try { return typeof currentLang !== 'undefined' ? currentLang : ((typeof onboardingState !== 'undefined' && onboardingState.lang) ? onboardingState.lang : 'en'); }
     catch(e){ return 'en'; }
   }
 
   function getUserId(){
-    try {
-      if (typeof getUserStorageId === 'function') return getUserStorageId();
-      if (typeof currentUser !== 'undefined' && currentUser && currentUser.id) return currentUser.id;
-      if (typeof currentUser !== 'undefined' && currentUser && currentUser.email) return currentUser.email;
-    } catch(e) {}
-    return 'local';
+    var u = getActiveUserForOnboarding();
+    return (u && (u.id || u.email)) || 'local';
   }
 
   function key(name){ return 'fintrail_' + name + '_' + getUserId(); }
+  function localOnboardingKeyV2(){ return 'fintrail_onboarding_complete_' + getUserId(); }
   function safeGetLocal(name){ try { return localStorage.getItem(name); } catch(e) { return null; } }
   function safeSetLocal(name,value){ try { localStorage.setItem(name,value); } catch(e) {} }
   function nowISO(){ return new Date().toISOString(); }
 
   function getMeta(){
-    try { return typeof currentUser !== 'undefined' && currentUser && currentUser.user_metadata ? currentUser.user_metadata : {}; }
-    catch(e){ return {}; }
+    var u = getActiveUserForOnboarding();
+    return (u && u.user_metadata) ? u.user_metadata : {};
   }
+
+  function metadataOnboardingComplete(){
+    var meta = getMeta();
+    return meta.fintrail_onboarding_complete === true ||
+      meta.fintrail_pro_onboarding_complete === true ||
+      meta.onboarding_complete === true ||
+      meta.fintrail_onboarding_version === 'v2_polished_goals_health_tools_7day_feedback' ||
+      meta.fintrail_onboarding_version === 'v2_polished_goals_health_tools_7day_feedback_trigger_fixed' ||
+      !!meta.fintrail_onboarding_completed_at ||
+      !!meta.onboarding_completed_at;
+  }
+
+  function userLocalOnboardingComplete(){
+    return safeGetLocal(localOnboardingKeyV2()) === 'true';
+  }
+
+  function shouldShowOnboardingForCurrentUser(){
+    // Do NOT use old global keys like fintrail_onboarding_complete. They made new accounts skip onboarding.
+    return !metadataOnboardingComplete() && !userLocalOnboardingComplete();
+  }
+
+  window.hasCompletedOnboarding = function(){
+    return !shouldShowOnboardingForCurrentUser();
+  };
+  window.isFintrailOnboardingComplete = window.hasCompletedOnboarding;
+  window.fintrailIsOnboardingCompleteSynced = window.hasCompletedOnboarding;
 
   function ensureSignupDate(){
     var storageKey = key('signup_at');
     var existing = safeGetLocal(storageKey);
     if (existing) return existing;
     var meta = getMeta();
-    var created = meta.fintrail_signup_at || meta.signup_at || (typeof currentUser !== 'undefined' && currentUser && currentUser.created_at ? currentUser.created_at : '') || nowISO();
+    var u = getActiveUserForOnboarding();
+    var created = meta.fintrail_signup_at || meta.signup_at || (u && u.created_at ? u.created_at : '') || nowISO();
     safeSetLocal(storageKey, created);
     if (typeof saveUserMetadataPatch === 'function') {
       try { saveUserMetadataPatch({ fintrail_signup_at: created }); } catch(e) {}
@@ -13960,12 +13992,7 @@ window.addEventListener('load', function(){
         body.innerHTML = '<div class="onboarding-brand"><div class="onboarding-brand-mark">FP</div><div class="onboarding-brand-name">Fintrail Pro</div></div><h2 class="onboarding-title" id="onboarding-title">' + current.title + '</h2><p class="onboarding-subtitle">' + current.subtitle + '</p><div class="onboarding-hero-visual"><div class="onboarding-mini-phone"><div style="font-size:0.72rem;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.35rem">Fintrail</div><div class="onboarding-mini-score">82</div><div style="font-size:0.75rem;color:var(--text-soft);font-weight:700">Health Score</div></div><div class="onboarding-mini-bars"><span style="height:38%"></span><span style="height:66%"></span><span style="height:48%;background:var(--accent2)"></span><span style="height:84%;background:var(--accent)"></span></div></div>';
       } else if (step === 1) {
         body.innerHTML = '<h2 class="onboarding-title" id="onboarding-title">' + current.title + '</h2><p class="onboarding-subtitle">' + current.subtitle + '</p><div class="onboarding-language-grid"><button type="button" id="onb-lang-en" class="onboarding-lang-btn ' + (lang === 'en' ? 'active' : '') + '">🇺🇸 English</button><button type="button" id="onb-lang-es" class="onboarding-lang-btn ' + (lang === 'es' ? 'active' : '') + '">🇪🇸 Español</button></div>';
-        setTimeout(function(){
-          var en = document.getElementById('onb-lang-en');
-          var es = document.getElementById('onb-lang-es');
-          if (en) en.onclick = function(){ setLang('en'); };
-          if (es) es.onclick = function(){ setLang('es'); };
-        }, 0);
+        setTimeout(function(){ var en = document.getElementById('onb-lang-en'); var es = document.getElementById('onb-lang-es'); if (en) en.onclick = function(){ setLang('en'); }; if (es) es.onclick = function(){ setLang('es'); }; }, 0);
       } else if (step === 2) {
         body.innerHTML = '<h2 class="onboarding-title" id="onboarding-title">' + current.title + '</h2><p class="onboarding-subtitle">' + current.subtitle + '</p><div class="onboarding-score-preview-v2"><div class="onboarding-score-ring-v2"><div class="onboarding-score-inner-v2"><div class="onboarding-score-num-v2">72</div><div class="onboarding-score-label-v2">Preview</div></div></div><div class="onboarding-score-copy-v2"><h4>' + copy.scoreTitle + '</h4><p>' + copy.scoreBody + '</p></div></div>';
       } else if (step === 3) {
@@ -13975,11 +14002,7 @@ window.addEventListener('load', function(){
           return '<button type="button" class="onboarding-goal-card-v2 ' + (active ? 'selected' : '') + '" data-goal="' + g[0] + '"><span class="onboarding-goal-emoji-v2">' + g[1] + '</span><span class="onboarding-goal-label-v2">' + g[2] + '</span>' + (active ? '<span class="onboarding-check">✓</span>' : '') + '</button>';
         }).join('');
         body.innerHTML = '<h2 class="onboarding-title" id="onboarding-title">' + current.title + '</h2><p class="onboarding-subtitle">' + current.subtitle + '</p><div class="onboarding-goal-grid-v2">' + goalsHtml + '</div><div class="onboarding-goal-counter-v2">' + copy.selected(chosen.length) + '</div>';
-        setTimeout(function(){
-          document.querySelectorAll('.onboarding-goal-card-v2[data-goal]').forEach(function(btn){
-            btn.onclick = function(){ toggleGoal(btn.getAttribute('data-goal')); };
-          });
-        }, 0);
+        setTimeout(function(){ document.querySelectorAll('.onboarding-goal-card-v2[data-goal]').forEach(function(btn){ btn.onclick = function(){ toggleGoal(btn.getAttribute('data-goal')); }; }); }, 0);
       } else if (step === 4) {
         body.innerHTML = '<h2 class="onboarding-title" id="onboarding-title">' + current.title + '</h2><p class="onboarding-subtitle">' + current.subtitle + '</p><div class="onboarding-tools-grid-v2">' + recommendedToolsHtml(lang, 3) + '</div>';
       } else {
@@ -13990,36 +14013,67 @@ window.addEventListener('load', function(){
     }
   };
 
+  function markOnboardingCompleteV2(){
+    safeSetLocal(localOnboardingKeyV2(), 'true');
+    try { safeSetLocal('fintrail_onboarding_answers_' + getUserId(), JSON.stringify(onboardingState)); } catch(e) {}
+    if (typeof saveUserMetadataPatch === 'function') {
+      try {
+        saveUserMetadataPatch({
+          fintrail_onboarding_complete: true,
+          fintrail_pro_onboarding_complete: true,
+          fintrail_onboarding_completed_at: nowISO(),
+          onboarding_completed_at: nowISO(),
+          fintrail_onboarding_version:'v2_polished_goals_health_tools_7day_feedback_trigger_fixed',
+          fintrail_onboarding_goals:selectedGoals(),
+          fintrail_feedback_eligible_after:new Date(Date.now() + FEEDBACK_WAIT_DAYS * DAY_MS).toISOString()
+        });
+      } catch(e) {}
+    }
+  }
+
+  window.markOnboardingComplete = markOnboardingCompleteV2;
+  window.setFintrailOnboardingComplete = markOnboardingCompleteV2;
+  window.fintrailMarkOnboardingCompleteSynced = markOnboardingCompleteV2;
+
   function completeOnboardingV2(){
     try {
       onboardingState.completed_at = nowISO();
-      onboardingState.version = 'v2_polished_goals_health_tools_7day_feedback';
+      onboardingState.version = 'v2_polished_goals_health_tools_7day_feedback_trigger_fixed';
       ensureSignupDate();
       safeSetLocal(key('onboarding_goals'), JSON.stringify(selectedGoals()));
       safeSetLocal(key('onboarding_v2_state'), JSON.stringify(onboardingState));
       safeSetLocal('fintrail_onboarding_goals_' + getUserId(), JSON.stringify(selectedGoals()));
-      if (typeof saveUserMetadataPatch === 'function') {
-        saveUserMetadataPatch({
-          fintrail_onboarding_version:'v2_polished_goals_health_tools_7day_feedback',
-          fintrail_onboarding_goals:selectedGoals(),
-          fintrail_feedback_eligible_after:new Date(Date.now() + FEEDBACK_WAIT_DAYS * DAY_MS).toISOString()
-        });
-      }
-      if (typeof setFintrailOnboardingComplete === 'function') setFintrailOnboardingComplete();
-      else if (typeof markOnboardingComplete === 'function') markOnboardingComplete();
+      markOnboardingCompleteV2();
       if (typeof closeOnboarding === 'function') closeOnboarding();
+      else {
+        var overlay = document.getElementById('onboarding-overlay');
+        if (overlay) overlay.classList.remove('visible');
+      }
       setTimeout(maybeShowDelayedFeedbackPrompt, 800);
     } catch(e) {
       console.error('Complete onboarding v2 polished failed:', e);
-      if (typeof closeOnboarding === 'function') closeOnboarding();
+      var overlay = document.getElementById('onboarding-overlay');
+      if (overlay) overlay.classList.remove('visible');
     }
   }
 
-  function daysSince(dateStr){
-    var time = Date.parse(dateStr || '');
-    if (!time) return 0;
-    return Math.floor((Date.now() - time) / DAY_MS);
-  }
+  window.showOnboardingIfNeeded = function(){
+    try {
+      var overlay = document.getElementById('onboarding-overlay');
+      if (!overlay) return;
+      if (!shouldShowOnboardingForCurrentUser()) return;
+      if (typeof onboardingState === 'undefined' || !onboardingState) window.onboardingState = {};
+      onboardingState.lang = currentLang || safeGetLocal('fintrail_lang') || 'en';
+      onboardingState.step = 0;
+      onboardingState.goals = Array.isArray(onboardingState.goals) ? onboardingState.goals : [];
+      renderOnboarding();
+      overlay.classList.add('visible');
+    } catch(e) {
+      console.error('showOnboardingIfNeeded fixed failed:', e);
+    }
+  };
+
+  function daysSince(dateStr){ var time = Date.parse(dateStr || ''); if (!time) return 0; return Math.floor((Date.now() - time) / DAY_MS); }
 
   window.fintrailDismissDelayedFeedback = function(){
     safeSetLocal(key('feedback_prompt_dismissed_at'), nowISO());
@@ -14040,10 +14094,7 @@ window.addEventListener('load', function(){
     if (badge) badge.textContent = '💬 ' + copy.feedbackBadge;
     if (submitBtn) submitBtn.textContent = copy.leaveFeedback;
     var secondary = document.querySelector('.fm-btn.secondary');
-    if (secondary) {
-      secondary.textContent = copy.remindLater;
-      secondary.onclick = function(){ fintrailDismissDelayedFeedback(); };
-    }
+    if (secondary) { secondary.textContent = copy.remindLater; secondary.onclick = function(){ fintrailDismissDelayedFeedback(); }; }
   }
 
   window.maybeShowDelayedFeedbackPrompt = function(){
@@ -14057,10 +14108,7 @@ window.addEventListener('load', function(){
       var signupAt = ensureSignupDate();
       if (daysSince(signupAt) < FEEDBACK_WAIT_DAYS) return;
       prepareFeedbackModalAsDelayedPrompt();
-      if (typeof openFoundingFeedback === 'function') {
-        openFoundingFeedback();
-        setTimeout(prepareFeedbackModalAsDelayedPrompt, 50);
-      }
+      if (typeof openFoundingFeedback === 'function') { openFoundingFeedback(); setTimeout(prepareFeedbackModalAsDelayedPrompt, 50); }
     } catch(e) {}
   };
 
@@ -14075,25 +14123,28 @@ window.addEventListener('load', function(){
   }
 
   var originalShowApp = window.showApp;
-  if (typeof originalShowApp === 'function' && !originalShowApp.__feedback7DayWrapped) {
+  if (typeof originalShowApp === 'function' && !originalShowApp.__onboardingV2TriggerWrapped) {
     window.showApp = function(){
       var result = originalShowApp.apply(this, arguments);
       setTimeout(function(){
         ensureSignupDate();
+        window.showOnboardingIfNeeded();
         maybeShowDelayedFeedbackPrompt();
-      }, 1800);
+      }, 700);
       return result;
     };
-    window.showApp.__feedback7DayWrapped = true;
+    window.showApp.__onboardingV2TriggerWrapped = true;
   }
 
   window.addEventListener('load', function(){
     setTimeout(function(){
       ensureSignupDate();
-      var overlay = document.getElementById('onboarding-overlay');
-      if (overlay && overlay.classList.contains('visible')) renderOnboarding();
+      window.showOnboardingIfNeeded();
       maybeShowDelayedFeedbackPrompt();
-    }, 1500);
+    }, 1400);
+    setTimeout(function(){
+      window.showOnboardingIfNeeded();
+    }, 2600);
   });
 })();
 </script>
