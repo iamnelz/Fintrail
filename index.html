@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fintrail Pro — Budget Smarter, Live Better</title>
-<!-- BUILD: FINTRAIL_ONBOARDING_V4_SAMPLE_SCORE_TRIGGER_FIXED_2026_06_03 -->
+<!-- BUILD: FINTRAIL_ONBOARDING_V4_POPUP_LAYOUT_FIXED_2026_06_03 -->
 <!-- REPLACE content value below with your actual Google Search Console verification code -->
 <meta name="google-site-verification" content="PASTE_YOUR_VERIFICATION_CODE_HERE" />
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -7386,6 +7386,311 @@ Guidelines:
 }
 </style>
 
+
+<style>
+/* === FINTRAIL ONBOARDING V4 POPUP LAYOUT FORCE FIX === */
+#ft-v4,
+.ft-v4,
+.ft-v4-overlay,
+.ft-v4-overlay.show,
+#ft-onboarding-v3,
+.ft-onboarding-v3.visible {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999 !important;
+  background: linear-gradient(145deg, rgba(26,26,46,.97), rgba(45,27,78,.96)) !important;
+  display: none;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 18px !important;
+  overflow-y: auto !important;
+}
+
+#ft-v4.show,
+.ft-v4.show,
+.ft-v4-overlay.show,
+#ft-onboarding-v3.visible {
+  display: flex !important;
+}
+
+#ft-v4 .ft-v4-card,
+.ft-v4 .ft-v4-card,
+.ft-v4-card,
+.ft-v4-card-v3,
+.ft-onboarding-card-v3 {
+  width: 100% !important;
+  max-width: 760px !important;
+  background: #fff !important;
+  border: 1px solid #e2e6ef !important;
+  border-radius: 28px !important;
+  box-shadow: 0 30px 90px rgba(0,0,0,.42) !important;
+  overflow: hidden !important;
+  margin: auto !important;
+}
+
+.ft-v4-top,
+.ft-onboarding-top-v3 {
+  padding: 20px 26px 0 !important;
+}
+
+.ft-v4-line,
+.ft-v4-row,
+.ft-onboarding-line-v3 {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin-bottom: 14px !important;
+}
+
+.ft-v4-back,
+.ft-onboarding-back-v3 {
+  width: 42px !important;
+  height: 42px !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  color: #6b7085 !important;
+  font-size: 1.45rem !important;
+  cursor: pointer !important;
+}
+
+.ft-v4-count,
+.ft-onboarding-count-v3 {
+  font-weight: 900 !important;
+  color: #6b7085 !important;
+  font-size: .86rem !important;
+}
+
+.ft-v4-track,
+.ft-onboarding-progress-v3 {
+  height: 9px !important;
+  background: #e9ecf3 !important;
+  border-radius: 99px !important;
+  overflow: hidden !important;
+}
+
+.ft-v4-fill,
+.ft-onboarding-fill-v3 {
+  height: 100% !important;
+  border-radius: 99px !important;
+  background: linear-gradient(90deg,#f05555,#f5a31a) !important;
+  transition: width .25s !important;
+}
+
+.ft-v4-body,
+.ft-onboarding-body-v3 {
+  padding: 26px 30px 18px !important;
+}
+
+.ft-v4-brand,
+.ft-brand-v3 {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 14px !important;
+  margin: 4px 0 18px !important;
+}
+
+.ft-v4-mark,
+.ft-brand-mark-v3 {
+  width: 60px !important;
+  height: 60px !important;
+  border-radius: 50% !important;
+  background: #f05555 !important;
+  color: #fff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-family: 'Playfair Display', serif !important;
+  font-weight: 900 !important;
+  font-size: 1.35rem !important;
+}
+
+.ft-v4-name,
+.ft-v4-brand-text,
+.ft-brand-name-v3 {
+  font-family: 'Playfair Display', serif !important;
+  font-size: 2.25rem !important;
+  font-weight: 900 !important;
+  color: #1b1b31 !important;
+}
+
+.ft-v4-title,
+.ft-title-v3 {
+  font-size: 1.75rem !important;
+  line-height: 1.15 !important;
+  text-align: center !important;
+  color: #17172b !important;
+  margin: 0 0 10px !important;
+  font-weight: 900 !important;
+}
+
+.ft-v4-sub,
+.ft-v4-subtitle,
+.ft-subtitle-v3 {
+  font-size: 1rem !important;
+  line-height: 1.55 !important;
+  text-align: center !important;
+  color: #697087 !important;
+  margin: 0 auto 18px !important;
+  max-width: 610px !important;
+}
+
+.ft-v4-hero {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 14px !important;
+  margin-top: 18px !important;
+}
+
+.ft-v4-panel {
+  background: #f8f9fc !important;
+  border: 1px solid #e2e6ef !important;
+  border-radius: 20px !important;
+  padding: 18px !important;
+}
+
+.ft-v4-lang,
+.ft-v4-goals,
+.ft-v4-scorewrap {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 12px !important;
+  margin-top: 18px !important;
+}
+
+.ft-v4-lang button,
+.ft-v4-lang-btn,
+.ft-v4-goal,
+.ft-goal-v3 {
+  border: 2px solid #e2e6ef !important;
+  background: #fff !important;
+  border-radius: 18px !important;
+  padding: 14px !important;
+  font-family: 'Sora', sans-serif !important;
+  cursor: pointer !important;
+  color: #17172b !important;
+  font-weight: 900 !important;
+}
+
+.ft-v4-lang button.active,
+.ft-v4-goal.active,
+.ft-goal-v3.active {
+  border-color: #f05555 !important;
+  background: rgba(240,85,85,.07) !important;
+  box-shadow: 0 0 0 4px rgba(240,85,85,.12) !important;
+}
+
+.ft-v4-goal {
+  min-height: 82px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  text-align: left !important;
+}
+
+.ft-v4-emoji {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 14px !important;
+  background: #f1f3f7 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1.35rem !important;
+  flex-shrink: 0 !important;
+}
+
+.ft-v4-tools {
+  display: grid !important;
+  gap: 12px !important;
+  margin-top: 18px !important;
+}
+
+.ft-v4-tool {
+  display: flex !important;
+  gap: 13px !important;
+  align-items: center !important;
+  border: 1px solid #e2e6ef !important;
+  background: #fff !important;
+  border-radius: 18px !important;
+  padding: 15px !important;
+  box-shadow: 0 8px 22px rgba(18,24,40,.05) !important;
+}
+
+.ft-v4-actions,
+.ft-onboarding-actions-v3 {
+  padding: 0 30px 28px !important;
+  display: grid !important;
+  gap: 12px !important;
+}
+
+.ft-v4-primary,
+.ft-v4-secondary,
+.ft-primary-v3,
+.ft-secondary-v3 {
+  width: 100% !important;
+  min-height: 56px !important;
+  border-radius: 15px !important;
+  font-family: 'Sora', sans-serif !important;
+  font-size: 1rem !important;
+  font-weight: 900 !important;
+  cursor: pointer !important;
+}
+
+.ft-v4-primary,
+.ft-primary-v3 {
+  border: 0 !important;
+  color: #fff !important;
+  background: linear-gradient(135deg,#f05555,#dd4141) !important;
+}
+
+.ft-v4-secondary,
+.ft-secondary-v3 {
+  border: 2px solid #e2e6ef !important;
+  color: #697087 !important;
+  background: #fff !important;
+}
+
+@media(max-width:650px){
+  #ft-v4,
+  .ft-v4,
+  .ft-v4-overlay,
+  #ft-onboarding-v3 {
+    align-items: flex-start !important;
+    padding: 8px !important;
+  }
+  .ft-v4-card,
+  .ft-v4-card-v3,
+  .ft-onboarding-card-v3 {
+    border-radius: 22px !important;
+  }
+  .ft-v4-body,
+  .ft-onboarding-body-v3 {
+    padding: 22px 18px 14px !important;
+  }
+  .ft-v4-actions,
+  .ft-onboarding-actions-v3 {
+    padding: 0 18px 22px !important;
+  }
+  .ft-v4-hero,
+  .ft-v4-lang,
+  .ft-v4-goals,
+  .ft-v4-scorewrap {
+    grid-template-columns: 1fr !important;
+  }
+  .ft-v4-title,
+  .ft-title-v3 {
+    font-size: 1.35rem !important;
+  }
+  .ft-v4-name,
+  .ft-v4-brand-text,
+  .ft-brand-name-v3 {
+    font-size: 1.75rem !important;
+  }
+}
+</style>
+
 </head>
       <body>
         <div class="pdf-header">
@@ -13935,6 +14240,72 @@ var old=window.showApp;if(typeof old==='function'&&!old.__ftV4){window.showApp=f
     setTimeout(checkExistingSession, 2200);
     setTimeout(checkExistingSession, 4200);
   });
+})();
+</script>
+
+
+<script>
+/* === FINTRAIL ONBOARDING V4 POPUP POSITION FIX === */
+(function(){
+  function fixOnboardingPopupPosition(){
+    try {
+      var el = document.getElementById('ft-v4') || document.querySelector('.ft-v4') || document.querySelector('.ft-v4-overlay') || document.getElementById('ft-onboarding-v3');
+      if (!el) return;
+      var isVisible = el.classList.contains('show') || el.classList.contains('visible');
+      if (!isVisible) return;
+
+      document.body.appendChild(el);
+      el.style.position = 'fixed';
+      el.style.inset = '0';
+      el.style.zIndex = '999999';
+      el.style.display = 'flex';
+      el.style.alignItems = window.innerWidth <= 650 ? 'flex-start' : 'center';
+      el.style.justifyContent = 'center';
+      el.style.background = 'linear-gradient(145deg, rgba(26,26,46,.97), rgba(45,27,78,.96))';
+
+      var card = el.querySelector('.ft-v4-card') || el.querySelector('.ft-v4-card-v3') || el.querySelector('.ft-onboarding-card-v3');
+      if (card) {
+        card.style.margin = 'auto';
+        card.style.width = '100%';
+        card.style.maxWidth = '760px';
+        card.style.background = '#fff';
+        card.style.borderRadius = window.innerWidth <= 650 ? '22px' : '28px';
+        card.style.overflow = 'hidden';
+      }
+
+      var old = document.getElementById('onboarding-overlay');
+      if (old && old !== el) old.classList.remove('visible');
+    } catch(e) {}
+  }
+
+  document.addEventListener('click', function(){ setTimeout(fixOnboardingPopupPosition, 50); });
+  window.addEventListener('load', function(){
+    setTimeout(fixOnboardingPopupPosition, 800);
+    setTimeout(fixOnboardingPopupPosition, 1800);
+    setTimeout(fixOnboardingPopupPosition, 3200);
+  });
+
+  var oldShow = window.showNewOnboarding;
+  if (typeof oldShow === 'function' && !oldShow.__popupPositionWrapped) {
+    window.showNewOnboarding = function(){
+      var result = oldShow.apply(this, arguments);
+      setTimeout(fixOnboardingPopupPosition, 50);
+      setTimeout(fixOnboardingPopupPosition, 250);
+      return result;
+    };
+    window.showNewOnboarding.__popupPositionWrapped = true;
+  }
+
+  var oldNeeded = window.showOnboardingIfNeeded;
+  if (typeof oldNeeded === 'function' && !oldNeeded.__popupPositionWrapped) {
+    window.showOnboardingIfNeeded = function(){
+      var result = oldNeeded.apply(this, arguments);
+      setTimeout(fixOnboardingPopupPosition, 50);
+      setTimeout(fixOnboardingPopupPosition, 250);
+      return result;
+    };
+    window.showOnboardingIfNeeded.__popupPositionWrapped = true;
+  }
 })();
 </script>
 
