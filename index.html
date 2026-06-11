@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fintrail Pro — Budget Smarter, Live Better</title>
-<!-- BUILD: FINTRAIL_ONBOARDING_V4_POPUP_LAYOUT_FIXED_2026_06_03 -->
+<!-- BUILD: FINTRAIL_ONBOARDING_V5_MOCKUP_STYLE_SAMPLE_SCORE_2026_06_03 -->
 <!-- REPLACE content value below with your actual Google Search Console verification code -->
 <meta name="google-site-verification" content="PASTE_YOUR_VERIFICATION_CODE_HERE" />
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -7339,356 +7339,80 @@ Guidelines:
 
 
 
-<style>
-/* === FINTRAIL ONBOARDING V4 REDESIGNED === */
-.ft-v4{position:fixed;inset:0;z-index:4000;background:linear-gradient(145deg,rgba(26,26,46,.97),rgba(45,27,78,.96));display:none;align-items:center;justify-content:center;padding:18px;overflow:auto}.ft-v4.show{display:flex}.ft-v4-card{width:100%;max-width:760px;background:#fff;border-radius:28px;box-shadow:0 30px 90px rgba(0,0,0,.42);overflow:hidden}.ft-v4-top{padding:20px 26px 0}.ft-v4-line{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.ft-v4-back{border:0;background:transparent;width:42px;height:42px;border-radius:50%;font-size:1.4rem;color:#697087;cursor:pointer}.ft-v4-back:hover{background:#f2f4f8}.ft-v4-count{font-weight:900;color:#697087}.ft-v4-track{height:9px;background:#e9ecf3;border-radius:99px;overflow:hidden}.ft-v4-fill{height:100%;background:linear-gradient(90deg,#f05555,#f5a31a);width:16%;border-radius:99px;transition:.25s}.ft-v4-body{padding:26px 30px 18px}.ft-v4-brand{display:flex;gap:14px;justify-content:center;align-items:center;margin:4px 0 18px}.ft-v4-mark{width:60px;height:60px;border-radius:50%;background:#f05555;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:900}.ft-v4-name{font-family:'Playfair Display',serif;font-size:2.25rem;font-weight:900;color:#17172b}.ft-v4-title{font-size:1.75rem;line-height:1.15;text-align:center;color:#17172b;margin:0 0 10px;font-weight:900}.ft-v4-sub{font-size:1rem;line-height:1.55;text-align:center;color:#697087;margin:0 auto 18px;max-width:610px}.ft-v4-hero,.ft-v4-lang,.ft-v4-scorewrap,.ft-v4-goals{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}.ft-v4-panel,.ft-v4-info,.ft-v4-tool{background:#fff;border:1px solid #e2e6ef;border-radius:18px;padding:18px;box-shadow:0 8px 22px rgba(18,24,40,.05)}.ft-v4-panel{background:#f8f9fc}.ft-v4-label{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;font-weight:900;color:#8b91a8;margin-bottom:8px}.ft-v4-score{font-family:'Playfair Display',serif;font-size:3rem;color:#17172b;line-height:1}.ft-v4-muted{font-size:.82rem;color:#697087;font-weight:700;line-height:1.45}.ft-v4-bars{height:105px;display:flex;align-items:flex-end;gap:7px}.ft-v4-bars span{flex:1;border-radius:8px 8px 0 0;background:#06d6a0}.ft-v4-bars span:nth-child(3){background:#f5a31a}.ft-v4-bars span:nth-child(4){background:#f05555}.ft-v4-langbtn{border:2px solid #e2e6ef;background:#fff;border-radius:18px;padding:18px;font-family:'Sora',sans-serif;font-weight:900;font-size:1rem;cursor:pointer;color:#17172b}.ft-v4-langbtn.active,.ft-v4-goal.active{border-color:#f05555;background:rgba(240,85,85,.07);box-shadow:0 0 0 4px rgba(240,85,85,.12)}.ft-v4-ring{width:170px;height:170px;border-radius:50%;background:conic-gradient(#06d6a0 0 72%,#e9ecf3 72%);position:relative;display:flex;align-items:center;justify-content:center;margin:auto}.ft-v4-ring:after{content:'';position:absolute;inset:17px;background:#fff;border-radius:50%}.ft-v4-ringin{position:relative;z-index:1;text-align:center}.ft-v4-num{font-family:'Playfair Display',serif;font-size:3rem;color:#17172b;line-height:1}.ft-v4-info h4{margin:0 0 8px;color:#17172b}.ft-v4-info p{margin:0;color:#697087;font-size:.88rem;line-height:1.55}.ft-v4-goal{border:2px solid #e2e6ef;background:#fff;border-radius:18px;min-height:82px;padding:13px;display:flex;align-items:center;gap:12px;font-family:'Sora',sans-serif;cursor:pointer;text-align:left}.ft-v4-emoji,.ft-v4-toolicon{width:44px;height:44px;border-radius:14px;background:#f1f3f7;display:flex;align-items:center;justify-content:center;font-size:1.35rem;flex-shrink:0}.ft-v4-gtext{font-size:.88rem;font-weight:900;line-height:1.25;flex:1}.ft-v4-check{color:#06d6a0;font-weight:900}.ft-v4-counter{text-align:center;color:#697087;font-size:.82rem;font-weight:900;margin-top:12px}.ft-v4-tools{display:grid;gap:12px;margin-top:18px}.ft-v4-tool{display:flex;gap:13px;align-items:center}.ft-v4-toolicon{background:rgba(240,85,85,.08)}.ft-v4-tt{font-size:.96rem;font-weight:900;color:#17172b}.ft-v4-ts{font-size:.78rem;color:#697087;line-height:1.35;margin-top:2px}.ft-v4-saved{background:rgba(6,214,160,.08);border:1px solid rgba(6,214,160,.2);border-radius:18px;padding:15px;color:#4e566d;font-size:.88rem;font-weight:800;line-height:1.45;margin-top:14px}.ft-v4-actions{padding:0 30px 28px;display:grid;gap:12px}.ft-v4-primary,.ft-v4-secondary{min-height:56px;border-radius:15px;font-family:'Sora',sans-serif;font-size:1rem;font-weight:900;cursor:pointer}.ft-v4-primary{border:0;color:#fff;background:linear-gradient(135deg,#f05555,#dd4141)}.ft-v4-secondary{border:2px solid #e2e6ef;color:#697087;background:#fff}@media(max-width:650px){.ft-v4{align-items:flex-start;padding:8px}.ft-v4-card{border-radius:22px}.ft-v4-body{padding:22px 18px 14px}.ft-v4-actions{padding:0 18px 22px}.ft-v4-hero,.ft-v4-lang,.ft-v4-scorewrap,.ft-v4-goals{grid-template-columns:1fr}.ft-v4-title{font-size:1.35rem}.ft-v4-name{font-size:1.75rem}.ft-v4-mark{width:52px;height:52px}}
-</style>
+
 
 
 <style>
-/* === FINTRAIL ONBOARDING V4 SAMPLE SCORE === */
-.ft-v4-sample-breakdown {
-  display: grid;
-  gap: 0.5rem;
-  margin-top: 0.85rem;
+/* === FINTRAIL ONBOARDING V5 MOCKUP STYLE === */
+.ft5-overlay{
+  position:fixed!important;inset:0!important;z-index:999999!important;
+  background:linear-gradient(145deg,rgba(14,16,34,.96),rgba(38,24,74,.94))!important;
+  display:none;align-items:center;justify-content:center;padding:18px;overflow-y:auto;
+  font-family:'Sora',system-ui,sans-serif;
 }
-.ft-v4-factor {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 0.75rem;
-  align-items: center;
-  font-size: 0.8rem;
-  font-weight: 800;
-  color: #4e566d;
+.ft5-overlay.show{display:flex!important}
+.ft5-card{
+  width:100%;max-width:920px;background:#fff;border-radius:26px;box-shadow:0 30px 90px rgba(0,0,0,.45);
+  overflow:hidden;display:grid;grid-template-columns:255px 1fr;min-height:560px;
 }
-.ft-v4-factor-bar {
-  grid-column: 1 / -1;
-  height: 7px;
-  background: #e9ecf3;
-  border-radius: 99px;
-  overflow: hidden;
+.ft5-left{
+  background:linear-gradient(180deg,#101329,#171b36);color:#fff;padding:32px 28px;display:flex;flex-direction:column;justify-content:space-between;
 }
-.ft-v4-factor-fill {
-  height: 100%;
-  border-radius: 99px;
-  background: linear-gradient(90deg, #06d6a0, #f5a31a);
-}
-.ft-v4-example-note {
-  margin-top: 0.85rem;
-  padding: 0.75rem 0.85rem;
-  background: rgba(245,163,26,0.08);
-  border: 1px solid rgba(245,163,26,0.18);
-  border-radius: 14px;
-  color: #697087;
-  font-size: 0.78rem;
-  line-height: 1.45;
-  font-weight: 700;
-}
-</style>
-
-
-<style>
-/* === FINTRAIL ONBOARDING V4 POPUP LAYOUT FORCE FIX === */
-#ft-v4,
-.ft-v4,
-.ft-v4-overlay,
-.ft-v4-overlay.show,
-#ft-onboarding-v3,
-.ft-onboarding-v3.visible {
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: 999999 !important;
-  background: linear-gradient(145deg, rgba(26,26,46,.97), rgba(45,27,78,.96)) !important;
-  display: none;
-  align-items: center !important;
-  justify-content: center !important;
-  padding: 18px !important;
-  overflow-y: auto !important;
-}
-
-#ft-v4.show,
-.ft-v4.show,
-.ft-v4-overlay.show,
-#ft-onboarding-v3.visible {
-  display: flex !important;
-}
-
-#ft-v4 .ft-v4-card,
-.ft-v4 .ft-v4-card,
-.ft-v4-card,
-.ft-v4-card-v3,
-.ft-onboarding-card-v3 {
-  width: 100% !important;
-  max-width: 760px !important;
-  background: #fff !important;
-  border: 1px solid #e2e6ef !important;
-  border-radius: 28px !important;
-  box-shadow: 0 30px 90px rgba(0,0,0,.42) !important;
-  overflow: hidden !important;
-  margin: auto !important;
-}
-
-.ft-v4-top,
-.ft-onboarding-top-v3 {
-  padding: 20px 26px 0 !important;
-}
-
-.ft-v4-line,
-.ft-v4-row,
-.ft-onboarding-line-v3 {
-  display: flex !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  margin-bottom: 14px !important;
-}
-
-.ft-v4-back,
-.ft-onboarding-back-v3 {
-  width: 42px !important;
-  height: 42px !important;
-  border: 0 !important;
-  border-radius: 50% !important;
-  background: transparent !important;
-  color: #6b7085 !important;
-  font-size: 1.45rem !important;
-  cursor: pointer !important;
-}
-
-.ft-v4-count,
-.ft-onboarding-count-v3 {
-  font-weight: 900 !important;
-  color: #6b7085 !important;
-  font-size: .86rem !important;
-}
-
-.ft-v4-track,
-.ft-onboarding-progress-v3 {
-  height: 9px !important;
-  background: #e9ecf3 !important;
-  border-radius: 99px !important;
-  overflow: hidden !important;
-}
-
-.ft-v4-fill,
-.ft-onboarding-fill-v3 {
-  height: 100% !important;
-  border-radius: 99px !important;
-  background: linear-gradient(90deg,#f05555,#f5a31a) !important;
-  transition: width .25s !important;
-}
-
-.ft-v4-body,
-.ft-onboarding-body-v3 {
-  padding: 26px 30px 18px !important;
-}
-
-.ft-v4-brand,
-.ft-brand-v3 {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 14px !important;
-  margin: 4px 0 18px !important;
-}
-
-.ft-v4-mark,
-.ft-brand-mark-v3 {
-  width: 60px !important;
-  height: 60px !important;
-  border-radius: 50% !important;
-  background: #f05555 !important;
-  color: #fff !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  font-family: 'Playfair Display', serif !important;
-  font-weight: 900 !important;
-  font-size: 1.35rem !important;
-}
-
-.ft-v4-name,
-.ft-v4-brand-text,
-.ft-brand-name-v3 {
-  font-family: 'Playfair Display', serif !important;
-  font-size: 2.25rem !important;
-  font-weight: 900 !important;
-  color: #1b1b31 !important;
-}
-
-.ft-v4-title,
-.ft-title-v3 {
-  font-size: 1.75rem !important;
-  line-height: 1.15 !important;
-  text-align: center !important;
-  color: #17172b !important;
-  margin: 0 0 10px !important;
-  font-weight: 900 !important;
-}
-
-.ft-v4-sub,
-.ft-v4-subtitle,
-.ft-subtitle-v3 {
-  font-size: 1rem !important;
-  line-height: 1.55 !important;
-  text-align: center !important;
-  color: #697087 !important;
-  margin: 0 auto 18px !important;
-  max-width: 610px !important;
-}
-
-.ft-v4-hero {
-  display: grid !important;
-  grid-template-columns: 1fr 1fr !important;
-  gap: 14px !important;
-  margin-top: 18px !important;
-}
-
-.ft-v4-panel {
-  background: #f8f9fc !important;
-  border: 1px solid #e2e6ef !important;
-  border-radius: 20px !important;
-  padding: 18px !important;
-}
-
-.ft-v4-lang,
-.ft-v4-goals,
-.ft-v4-scorewrap {
-  display: grid !important;
-  grid-template-columns: 1fr 1fr !important;
-  gap: 12px !important;
-  margin-top: 18px !important;
-}
-
-.ft-v4-lang button,
-.ft-v4-lang-btn,
-.ft-v4-goal,
-.ft-goal-v3 {
-  border: 2px solid #e2e6ef !important;
-  background: #fff !important;
-  border-radius: 18px !important;
-  padding: 14px !important;
-  font-family: 'Sora', sans-serif !important;
-  cursor: pointer !important;
-  color: #17172b !important;
-  font-weight: 900 !important;
-}
-
-.ft-v4-lang button.active,
-.ft-v4-goal.active,
-.ft-goal-v3.active {
-  border-color: #f05555 !important;
-  background: rgba(240,85,85,.07) !important;
-  box-shadow: 0 0 0 4px rgba(240,85,85,.12) !important;
-}
-
-.ft-v4-goal {
-  min-height: 82px !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 12px !important;
-  text-align: left !important;
-}
-
-.ft-v4-emoji {
-  width: 44px !important;
-  height: 44px !important;
-  border-radius: 14px !important;
-  background: #f1f3f7 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  font-size: 1.35rem !important;
-  flex-shrink: 0 !important;
-}
-
-.ft-v4-tools {
-  display: grid !important;
-  gap: 12px !important;
-  margin-top: 18px !important;
-}
-
-.ft-v4-tool {
-  display: flex !important;
-  gap: 13px !important;
-  align-items: center !important;
-  border: 1px solid #e2e6ef !important;
-  background: #fff !important;
-  border-radius: 18px !important;
-  padding: 15px !important;
-  box-shadow: 0 8px 22px rgba(18,24,40,.05) !important;
-}
-
-.ft-v4-actions,
-.ft-onboarding-actions-v3 {
-  padding: 0 30px 28px !important;
-  display: grid !important;
-  gap: 12px !important;
-}
-
-.ft-v4-primary,
-.ft-v4-secondary,
-.ft-primary-v3,
-.ft-secondary-v3 {
-  width: 100% !important;
-  min-height: 56px !important;
-  border-radius: 15px !important;
-  font-family: 'Sora', sans-serif !important;
-  font-size: 1rem !important;
-  font-weight: 900 !important;
-  cursor: pointer !important;
-}
-
-.ft-v4-primary,
-.ft-primary-v3 {
-  border: 0 !important;
-  color: #fff !important;
-  background: linear-gradient(135deg,#f05555,#dd4141) !important;
-}
-
-.ft-v4-secondary,
-.ft-secondary-v3 {
-  border: 2px solid #e2e6ef !important;
-  color: #697087 !important;
-  background: #fff !important;
-}
-
-@media(max-width:650px){
-  #ft-v4,
-  .ft-v4,
-  .ft-v4-overlay,
-  #ft-onboarding-v3 {
-    align-items: flex-start !important;
-    padding: 8px !important;
-  }
-  .ft-v4-card,
-  .ft-v4-card-v3,
-  .ft-onboarding-card-v3 {
-    border-radius: 22px !important;
-  }
-  .ft-v4-body,
-  .ft-onboarding-body-v3 {
-    padding: 22px 18px 14px !important;
-  }
-  .ft-v4-actions,
-  .ft-onboarding-actions-v3 {
-    padding: 0 18px 22px !important;
-  }
-  .ft-v4-hero,
-  .ft-v4-lang,
-  .ft-v4-goals,
-  .ft-v4-scorewrap {
-    grid-template-columns: 1fr !important;
-  }
-  .ft-v4-title,
-  .ft-title-v3 {
-    font-size: 1.35rem !important;
-  }
-  .ft-v4-name,
-  .ft-v4-brand-text,
-  .ft-brand-name-v3 {
-    font-size: 1.75rem !important;
-  }
-}
+.ft5-logo{display:flex;align-items:center;gap:14px;margin-bottom:26px}
+.ft5-mark{width:58px;height:58px;border-radius:50%;background:#f05555;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:900;font-size:1.35rem}
+.ft5-brand{font-family:'Playfair Display',serif;font-weight:900;font-size:1.9rem}.ft5-brand span{color:#f05555}
+.ft5-tagline{font-size:1.05rem;line-height:1.45;font-weight:700;margin:16px 0;color:#fff}
+.ft5-mini-chart{height:145px;display:flex;align-items:flex-end;gap:9px;margin:24px 0 10px;position:relative}
+.ft5-mini-chart span{width:22px;border-radius:8px 8px 0 0;background:rgba(255,255,255,.14)}
+.ft5-mini-chart span:nth-child(2){height:50px}.ft5-mini-chart span:nth-child(3){height:82px}.ft5-mini-chart span:nth-child(4){height:110px;background:rgba(240,85,85,.85)}
+.ft5-mini-chart:after{content:'↗';position:absolute;right:20px;top:16px;color:#f05555;font-size:2rem;font-weight:900}
+.ft5-left-foot{font-size:.82rem;color:rgba(255,255,255,.72);line-height:1.5;text-align:center}
+.ft5-main{padding:24px 30px 28px;display:flex;flex-direction:column}
+.ft5-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.ft5-back{width:40px;height:40px;border:0;background:transparent;border-radius:50%;font-size:1.35rem;color:#12172b;cursor:pointer}.ft5-back:hover{background:#f3f5f9}
+.ft5-count{font-weight:900;color:#12172b;font-size:.88rem}
+.ft5-progress{display:flex;align-items:center;gap:10px;justify-content:center;flex:1;max-width:280px;margin:0 auto}
+.ft5-dot{height:5px;width:42px;border-radius:99px;background:#e7eaf1}.ft5-dot.active{background:#f05555}
+.ft5-body{flex:1}
+.ft5-title{font-size:1.75rem;line-height:1.15;color:#111426;font-weight:900;margin:8px 0 8px}
+.ft5-title.center{text-align:center}
+.ft5-sub{color:#596178;font-size:.96rem;line-height:1.55;margin:0 0 22px}
+.ft5-sub.center{text-align:center;max-width:560px;margin-left:auto;margin-right:auto}
+.ft5-lang-list{display:grid;gap:14px;margin-top:26px}
+.ft5-lang-btn{display:flex;align-items:center;justify-content:space-between;border:1.5px solid #e1e5ee;border-radius:16px;background:#fff;padding:16px 18px;cursor:pointer;box-shadow:0 8px 22px rgba(18,24,40,.04)}
+.ft5-lang-btn.active{border-color:#f05555;box-shadow:0 0 0 4px rgba(240,85,85,.1)}
+.ft5-lang-main{display:flex;gap:13px;align-items:center}.ft5-flag{font-size:2rem}.ft5-lang-title{font-weight:900;color:#111426}.ft5-lang-sub{font-size:.76rem;color:#697087;margin-top:2px}
+.ft5-secure{display:flex;gap:7px;align-items:center;justify-content:center;font-size:.74rem;color:#697087;margin-top:80px}
+.ft5-goal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.ft5-goal{min-height:112px;border:1.5px solid #e1e5ee;background:#fff;border-radius:16px;padding:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;text-align:center;cursor:pointer;position:relative}
+.ft5-goal.active{border-color:#f05555;background:rgba(240,85,85,.045)}
+.ft5-goal.active:after{content:'✓';position:absolute;right:10px;top:10px;background:#f05555;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:900}
+.ft5-goal-icon{width:46px;height:46px;border-radius:14px;background:#f2f5fb;display:flex;align-items:center;justify-content:center;font-size:1.55rem}
+.ft5-goal-label{font-size:.78rem;font-weight:900;color:#111426;line-height:1.25}
+.ft5-selected{font-size:.78rem;font-weight:900;color:#111426;margin:12px 0 0}
+.ft5-health{display:grid;grid-template-columns:1fr 210px;gap:22px;align-items:center;margin-top:18px}
+.ft5-ring{width:190px;height:190px;border-radius:50%;background:conic-gradient(#f5a31a 0 22%,#06d6a0 22% 79%,#e7eaf1 79% 100%);position:relative;display:flex;align-items:center;justify-content:center;margin:auto}
+.ft5-ring:after{content:'';position:absolute;inset:18px;background:#fff;border-radius:50%}
+.ft5-ring-inner{position:relative;z-index:1;text-align:center}.ft5-ring-num{font-size:3.4rem;font-weight:900;color:#111426;line-height:1}.ft5-ring-label{font-size:.76rem;font-weight:900;color:#06a77d;margin-top:5px}
+.ft5-health-panel{border:1px solid #e1e5ee;border-radius:18px;padding:16px;background:#fff;box-shadow:0 8px 24px rgba(18,24,40,.04)}
+.ft5-factor{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:10px;font-size:.78rem;font-weight:800;color:#333c55}.ft5-bar{grid-column:1/-1;height:7px;background:#e9edf5;border-radius:99px;overflow:hidden}.ft5-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#06d6a0,#f5a31a)}
+.ft5-note{margin-top:14px;background:rgba(245,163,26,.1);border:1px solid rgba(245,163,26,.22);border-radius:14px;padding:12px;font-size:.8rem;color:#596178;line-height:1.45;font-weight:700}
+.ft5-tools{display:grid;gap:12px;margin-top:18px}.ft5-tool{display:flex;align-items:center;gap:14px;border:1px solid #e1e5ee;border-radius:16px;background:#fff;padding:13px 15px;box-shadow:0 8px 22px rgba(18,24,40,.04)}
+.ft5-tool-img{width:76px;height:58px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:2rem;background:linear-gradient(135deg,rgba(6,214,160,.22),rgba(6,214,160,.08))}
+.ft5-tool:nth-child(2) .ft5-tool-img{background:linear-gradient(135deg,rgba(240,85,85,.22),rgba(240,85,85,.08))}
+.ft5-tool:nth-child(3) .ft5-tool-img{background:linear-gradient(135deg,rgba(45,127,249,.18),rgba(45,127,249,.06))}
+.ft5-tool-title{font-weight:900;color:#111426;font-size:.92rem}.ft5-tool-sub{font-size:.76rem;color:#596178;line-height:1.35;margin-top:3px}
+.ft5-final{display:grid;grid-template-columns:1fr 240px;gap:22px;align-items:center;background:linear-gradient(145deg,#111426,#1f2344);border-radius:22px;padding:26px;color:#fff;margin-top:12px}
+.ft5-final .ft5-title{color:#fff;text-align:left}.ft5-final p{color:rgba(255,255,255,.82);line-height:1.5}
+.ft5-checks{display:grid;gap:9px;margin:18px 0}.ft5-checks div{font-weight:800;font-size:.9rem}
+.ft5-phone{height:330px;border:8px solid rgba(255,255,255,.25);border-radius:28px;background:#0f1328;padding:18px;box-shadow:0 18px 40px rgba(0,0,0,.25)}
+.ft5-phone-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:22px}.ft5-phone-card{border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:10px;font-size:.68rem;color:rgba(255,255,255,.65)}.ft5-phone-card strong{display:block;color:#06d6a0;font-size:1rem;margin-top:4px}
+.ft5-actions{margin-top:22px;display:grid;gap:12px}
+.ft5-primary,.ft5-secondary{min-height:54px;border-radius:14px;font-family:'Sora',sans-serif;font-weight:900;font-size:.95rem;cursor:pointer}
+.ft5-primary{border:0;background:#f05555;color:#fff}.ft5-secondary{border:1.5px solid #e1e5ee;background:#fff;color:#596178}
+.ft5-final .ft5-primary{max-width:310px}
+@media(max-width:820px){.ft5-card{grid-template-columns:1fr;max-width:620px}.ft5-left{display:none}.ft5-goal-grid{grid-template-columns:1fr 1fr}.ft5-health,.ft5-final{grid-template-columns:1fr}.ft5-phone{display:none}}
+@media(max-width:520px){.ft5-overlay{align-items:flex-start;padding:8px}.ft5-card{border-radius:20px}.ft5-main{padding:18px}.ft5-goal-grid{grid-template-columns:1fr}.ft5-title{font-size:1.35rem}.ft5-health{gap:14px}.ft5-ring{width:165px;height:165px}.ft5-ring-num{font-size:2.8rem}}
 </style>
 
 </head>
@@ -14072,240 +13796,119 @@ window.addEventListener('load', function(){
 
 
 
-<script>
-/* === FINTRAIL ONBOARDING V4 REDESIGNED === */
-(function(){
-var DAY=86400000,WAIT=7,REMIND=30,state={step:0,lang:'en',goals:[]};
-var goals={en:[['budget','💰','Create a Budget'],['debt','📉','Pay Off Debt'],['save','🏦','Save More Money'],['credit','📈','Improve My Credit'],['bills','📅','Track Bills & Payments'],['networth','📊','Build My Net Worth'],['savingsgoal','🎯','Reach a Savings Goal'],['guidance','🤖','Get Financial Guidance']],es:[['budget','💰','Crear un Presupuesto'],['debt','📉','Pagar Deudas'],['save','🏦','Ahorrar Más Dinero'],['credit','📈','Mejorar Mi Crédito'],['bills','📅','Administrar Facturas y Pagos'],['networth','📊','Aumentar Mi Patrimonio Neto'],['savingsgoal','🎯','Alcanzar una Meta de Ahorro'],['guidance','🤖','Recibir Orientación Financiera']]};
-var tools={budget:['📊','Budget Tracker','Track income, expenses, and categories.','Rastrea ingresos, gastos y categorías.'],debt:['🎯','Debt Payoff Planner','Build an Avalanche or Snowball payoff plan.','Crea un plan de pago Avalancha o Bola de Nieve.'],save:['🏦','Savings Goals','Track progress toward savings targets.','Sigue tu progreso hacia tus metas de ahorro.'],credit:['📈','Credit Simulator','Preview credit score changes.','Visualiza posibles cambios en tu crédito.'],bills:['📅','Bill Schedule','Plan bills around paydays.','Organiza facturas según tus días de pago.'],networth:['💚','Net Worth Tracker','Track assets, liabilities, and progress.','Rastrea activos, pasivos y progreso.'],savingsgoal:['🎯','Savings Goal Tracker','See how much to save monthly.','Ve cuánto necesitas ahorrar al mes.'],guidance:['🤖','AI Advisor','Ask personal finance questions.','Haz preguntas sobre tus finanzas.']};
-var cp={en:{count:function(n,t){return n+' of '+t},start:'Get Started',next:'Continue',finish:'Enter Fintrail',skip:'Skip for now',pick:'Choose at least 1 goal to continue.',sel:function(n){return n+' of 3 selected'},steps:[['Welcome to Fintrail Pro','Budget smarter, pay off debt, save more, and understand your financial health in one place.'],['Choose Your Language','Pick how you want to use Fintrail.'],['How Your Financial Health Score Works','Here is a sample score using example budget, bills, debt, savings, and credit data.'],['What do you want to accomplish first?','Select up to 3 goals so Fintrail can personalize your experience.'],['Your Recommended Tools','These are the best places to start based on your goals.'],['You’re Ready to Start','Your dashboard is ready. You can update your goals anytime in Settings.']],scoreTitle:'Sample Financial Health Score',scoreBody:'Example profile: Sarah tracks her budget, pays bills on time, saves monthly, manages debt, and builds credit habits.',saved:'Your goals were saved. Fintrail will use them to guide your dashboard experience.',feedbackTitle:'How is Fintrail working for you so far?',feedbackSubtitle:"We'd love your feedback to help improve the experience for everyone.",leave:'Leave Feedback',remind:'Remind Me Later',badge:'Feedback Request'},es:{count:function(n,t){return n+' de '+t},start:'Comenzar',next:'Continuar',finish:'Entrar a Fintrail',skip:'Omitir por ahora',pick:'Elige al menos 1 meta para continuar.',sel:function(n){return n+' de 3 seleccionadas'},steps:[['Bienvenido a Fintrail Pro','Organiza tu presupuesto, paga deudas, ahorra más y entiende tu salud financiera en un solo lugar.'],['Elige Tu Idioma','Selecciona cómo quieres usar Fintrail.'],['Cómo Funciona Tu Salud Financiera','Aquí tienes un puntaje de ejemplo usando datos de presupuesto, facturas, deudas, ahorros y crédito.'],['¿Qué quieres lograr primero?','Selecciona hasta 3 metas para personalizar tu experiencia.'],['Tus Herramientas Recomendadas','Estos son los mejores lugares para empezar según tus metas.'],['Ya Puedes Empezar','Tu panel está listo. Puedes actualizar tus metas cuando quieras en Configuración.']],scoreTitle:'Ejemplo de Puntaje de Salud Financiera',scoreBody:'Perfil de ejemplo: Sarah organiza su presupuesto, paga facturas a tiempo, ahorra cada mes, maneja deudas y crea hábitos de crédito.',saved:'Tus metas fueron guardadas. Fintrail las usará para guiar tu experiencia en el panel.',feedbackTitle:'¿Cómo te está funcionando Fintrail hasta ahora?',feedbackSubtitle:'Nos encantaría conocer tu opinión para seguir mejorando la experiencia para todos.',leave:'Enviar Comentarios',remind:'Recordarme Más Tarde',badge:'Solicitud de Comentarios'}};
-function U(){try{return window.currentUser||window.supabaseUser||window.user||null}catch(e){return null}}function ID(){var u=U();return(u&&(u.id||u.email))||'local'}function M(){var u=U();return u&&u.user_metadata?u.user_metadata:{}}function L(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){}}function K(n){return'fintrail_onboarding_v4_'+n+'_'+ID()}function done(){var m=M();return L(K('complete'))==='true'||m.fintrail_onboarding_v4_complete===true||m.fintrail_onboarding_version==='v4_redesigned'}function C(){return cp[state.lang]||cp.en}
-function shell(){if(document.getElementById('ft-v4'))return;var d=document.createElement('div');d.id='ft-v4';d.className='ft-v4';d.innerHTML='<div class="ft-v4-card"><div class="ft-v4-top"><div class="ft-v4-line"><button class="ft-v4-back" id="ft-v4-back">←</button><div class="ft-v4-count" id="ft-v4-count"></div></div><div class="ft-v4-track"><div class="ft-v4-fill" id="ft-v4-fill"></div></div></div><div class="ft-v4-body" id="ft-v4-body"></div><div class="ft-v4-actions"><button class="ft-v4-primary" id="ft-v4-primary"></button><button class="ft-v4-secondary" id="ft-v4-secondary"></button></div></div>';document.body.appendChild(d);document.getElementById('ft-v4-back').onclick=function(){if(state.step>0){state.step--;render()}};document.getElementById('ft-v4-primary').onclick=next;document.getElementById('ft-v4-secondary').onclick=complete}
-function open(){shell();var old=document.getElementById('onboarding-overlay');if(old)old.classList.remove('visible');state.step=0;state.lang=L('fintrail_lang')||(typeof currentLang!=='undefined'?currentLang:'en')||'en';state.goals=[];render();document.getElementById('ft-v4').classList.add('show')}function close(){var el=document.getElementById('ft-v4');if(el)el.classList.remove('show')}function maybe(){shell();var old=document.getElementById('onboarding-overlay');if(old)old.classList.remove('visible');if(U()&&!done())open()}function next(){if(state.step===3&&state.goals.length<1){alert(C().pick);return}if(state.step<C().steps.length-1){state.step++;render()}else complete()}
-function complete(){L(K('complete'),'true');L(K('goals'),JSON.stringify(state.goals));L(K('signup_at'),L(K('signup_at'))||new Date().toISOString());try{if(typeof onboardingState!=='undefined'){onboardingState.version='v4_redesigned';onboardingState.goals=state.goals;onboardingState.goal=state.goals.join(',');onboardingState.lang=state.lang;onboardingState.completed_at=new Date().toISOString()}}catch(e){}if(typeof saveUserMetadataPatch==='function'){try{saveUserMetadataPatch({fintrail_onboarding_v4_complete:true,fintrail_onboarding_complete:true,fintrail_pro_onboarding_complete:true,fintrail_onboarding_version:'v4_redesigned',fintrail_onboarding_goals:state.goals,fintrail_onboarding_completed_at:new Date().toISOString(),fintrail_feedback_eligible_after:new Date(Date.now()+WAIT*DAY).toISOString()})}catch(e){}}close()}
-function toolCards(){var list=state.goals.length?state.goals:['budget','bills','debt'];return list.slice(0,3).map(function(g){var t=tools[g]||tools.budget,sub=state.lang==='es'?t[3]:t[2];return'<div class="ft-v4-tool"><div class="ft-v4-toolicon">'+t[0]+'</div><div><div class="ft-v4-tt">'+t[1]+'</div><div class="ft-v4-ts">'+sub+'</div></div></div>'}).join('')}
-function render(){shell();var c=C(),s=state.step,total=c.steps.length,title=c.steps[s][0],sub=c.steps[s][1],body=document.getElementById('ft-v4-body');document.getElementById('ft-v4-count').textContent=c.count(s+1,total);document.getElementById('ft-v4-fill').style.width=((s+1)/total*100)+'%';document.getElementById('ft-v4-back').style.visibility=s===0?'hidden':'visible';document.getElementById('ft-v4-primary').textContent=s===0?c.start:(s===total-1?c.finish:c.next);document.getElementById('ft-v4-secondary').textContent=c.skip;document.getElementById('ft-v4-secondary').style.display=s===total-1?'none':'block';
-if(s===0)body.innerHTML='<div class="ft-v4-brand"><div class="ft-v4-mark">FP</div><div class="ft-v4-name">Fintrail Pro</div></div><h2 class="ft-v4-title">'+title+'</h2><p class="ft-v4-sub">'+sub+'</p><div class="ft-v4-hero"><div class="ft-v4-panel"><div class="ft-v4-label">Fintrail</div><div class="ft-v4-score">79</div><div class="ft-v4-muted">Sample Health Score</div></div><div class="ft-v4-panel"><div class="ft-v4-label">Progress</div><div class="ft-v4-bars"><span style="height:38%"></span><span style="height:65%"></span><span style="height:48%"></span><span style="height:86%"></span></div></div></div>';
-else if(s===1){body.innerHTML='<h2 class="ft-v4-title">'+title+'</h2><p class="ft-v4-sub">'+sub+'</p><div class="ft-v4-lang"><button id="ft-v4-en" class="ft-v4-langbtn '+(state.lang==='en'?'active':'')+'">🇺🇸 English</button><button id="ft-v4-es" class="ft-v4-langbtn '+(state.lang==='es'?'active':'')+'">🇪🇸 Español</button></div>';setTimeout(function(){document.getElementById('ft-v4-en').onclick=function(){state.lang='en';L('fintrail_lang','en');try{currentLang='en';applyLanguage()}catch(e){}render()};document.getElementById('ft-v4-es').onclick=function(){state.lang='es';L('fintrail_lang','es');try{currentLang='es';applyLanguage()}catch(e){}render()}},0)}
-else if(s===2){
-  var factors = state.lang === 'es'
-    ? [['Presupuesto',85],['Facturas a Tiempo',95],['Ahorros',70],['Manejo de Deudas',65],['Hábitos de Crédito',80]]
-    : [['Budget Tracking',85],['Bills Paid On Time',95],['Savings Progress',70],['Debt Management',65],['Credit Habits',80]];
-  var note = state.lang === 'es'
-    ? 'Este puntaje es solo un ejemplo. Tu puntaje personal se calculará cuando agregues tu propia información.'
-    : 'This score is only an example. Your personal score will be calculated after you add your own information.';
-  var factorHtml = factors.map(function(f){
-    return '<div class="ft-v4-factor"><span>'+f[0]+'</span><strong>'+f[1]+'/100</strong><div class="ft-v4-factor-bar"><div class="ft-v4-factor-fill" style="width:'+f[1]+'%"></div></div></div>';
-  }).join('');
-  body.innerHTML='<h2 class="ft-v4-title">'+title+'</h2><p class="ft-v4-sub">'+sub+'</p><div class="ft-v4-scorewrap"><div class="ft-v4-ring"><div class="ft-v4-ringin"><div class="ft-v4-num">79</div><div class="ft-v4-label">'+(state.lang==='es'?'Ejemplo':'Sample')+'</div></div></div><div class="ft-v4-info"><h4>'+c.scoreTitle+'</h4><p>'+c.scoreBody+'</p><div class="ft-v4-sample-breakdown">'+factorHtml+'</div><div class="ft-v4-example-note">'+note+'</div></div></div>';
-}
-else if(s===3){var cards=goals[state.lang].map(function(g){var a=state.goals.indexOf(g[0])>=0;return'<button class="ft-v4-goal '+(a?'active':'')+'" data-goal="'+g[0]+'"><span class="ft-v4-emoji">'+g[1]+'</span><span class="ft-v4-gtext">'+g[2]+'</span>'+(a?'<span class="ft-v4-check">✓</span>':'')+'</button>'}).join('');body.innerHTML='<h2 class="ft-v4-title">'+title+'</h2><p class="ft-v4-sub">'+sub+'</p><div class="ft-v4-goals">'+cards+'</div><div class="ft-v4-counter">'+c.sel(state.goals.length)+'</div>';setTimeout(function(){document.querySelectorAll('.ft-v4-goal[data-goal]').forEach(function(b){b.onclick=function(){var g=b.getAttribute('data-goal'),i=state.goals.indexOf(g);if(i>=0)state.goals.splice(i,1);else if(state.goals.length<3)state.goals.push(g);render()}})},0)}
-else if(s===4)body.innerHTML='<h2 class="ft-v4-title">'+title+'</h2><p class="ft-v4-sub">'+sub+'</p><div class="ft-v4-tools">'+toolCards()+'</div>';
-else body.innerHTML='<div class="ft-v4-brand"><div class="ft-v4-mark">FP</div><div class="ft-v4-name">Fintrail Pro</div></div><h2 class="ft-v4-title">'+title+'</h2><p class="ft-v4-sub">'+sub+'</p><div class="ft-v4-tools">'+toolCards()+'</div><div class="ft-v4-saved">✅ '+c.saved+'</div>';}
-window.showOnboardingIfNeeded=maybe;window.showNewOnboarding=open;window.resetNewOnboardingForTesting=function(){try{localStorage.removeItem(K('complete'))}catch(e){}open()};
-window.maybeShowDelayedFeedbackPrompt=function(){try{if(L(K('feedback_submitted'))==='true')return;var dis=L(K('feedback_dismissed_at')),dc=parseInt(L(K('feedback_dismiss_count'))||'0',10)||0;if(dc>=2)return;if(dis&&((Date.now()-Date.parse(dis))/DAY)<REMIND)return;var signup=L(K('signup_at'))||(U()&&U().created_at)||new Date().toISOString();L(K('signup_at'),signup);if(((Date.now()-Date.parse(signup))/DAY)<WAIT)return;var c=C(),title=document.getElementById('fm-modal-title'),sub=document.getElementById('fm-modal-subtitle'),badge=document.getElementById('fm-badge-large'),submit=document.getElementById('fm-submit-btn');if(title)title.textContent=c.feedbackTitle;if(sub)sub.textContent=c.feedbackSubtitle;if(badge)badge.textContent='💬 '+c.badge;if(submit)submit.textContent=c.leave;var sec=document.querySelector('.fm-btn.secondary');if(sec){sec.textContent=c.remind;sec.onclick=function(){L(K('feedback_dismissed_at'),new Date().toISOString());L(K('feedback_dismiss_count'),String(dc+1));if(typeof closeFoundingFeedback==='function')closeFoundingFeedback()}}if(typeof openFoundingFeedback==='function')openFoundingFeedback()}catch(e){}};
-var old=window.showApp;if(typeof old==='function'&&!old.__ftV4){window.showApp=function(){var r=old.apply(this,arguments);setTimeout(maybe,700);setTimeout(maybe,2000);setTimeout(function(){if(window.maybeShowDelayedFeedbackPrompt)window.maybeShowDelayedFeedbackPrompt()},2600);return r};window.showApp.__ftV4=true}window.addEventListener('load',function(){setTimeout(maybe,1200);setTimeout(maybe,3000)});
-})();
-</script>
+
 
 
 <script>
-/* === FINTRAIL ONBOARDING V4 RELIABLE NEW ACCOUNT TRIGGER === */
+/* === FINTRAIL ONBOARDING V5 MOCKUP STYLE === */
 (function(){
-  function activeUser(){
-    try { if (typeof currentUser !== 'undefined' && currentUser) return currentUser; } catch(e) {}
-    try { if (window.currentUser) return window.currentUser; } catch(e) {}
-    try { if (window.supabaseUser) return window.supabaseUser; } catch(e) {}
-    return null;
-  }
-
-  function userId(user){
-    user = user || activeUser();
-    return (user && (user.id || user.email)) || 'local';
-  }
-
-  function metaComplete(user){
-    user = user || activeUser();
-    var m = (user && user.user_metadata) ? user.user_metadata : {};
-    return m.fintrail_onboarding_v4_complete === true ||
-           m.fintrail_onboarding_version === 'v4_redesigned' ||
-           m.fintrail_onboarding_version === 'v4_sample_score' ||
-           m.fintrail_onboarding_version === 'v4_sample_score_trigger_fixed' ||
-           m.fintrail_onboarding_completed_at ||
-           m.onboarding_completed_at;
-  }
-
-  function localComplete(user){
-    try {
-      return localStorage.getItem('fintrail_onboarding_v4_complete_' + userId(user)) === 'true' ||
-             localStorage.getItem('fintrail_onboarding_v4_complete_local') === 'true';
-    } catch(e) {
-      return false;
-    }
-  }
-
-  function shouldShowV4(user){
-    user = user || activeUser();
-    if (!user) return false;
-    return !metaComplete(user) && !localComplete(user);
-  }
-
-  function openV4(user){
-    try {
-      if (user) {
-        window.currentUser = user;
-        window.supabaseUser = user;
-      }
-      var old = document.getElementById('onboarding-overlay');
-      if (old) old.classList.remove('visible');
-
-      if (!shouldShowV4(user)) return;
-
-      if (typeof window.showNewOnboarding === 'function') {
-        window.showNewOnboarding();
-        return;
-      }
-      if (typeof window.showOnboardingV3 === 'function') {
-        window.showOnboardingV3();
-        return;
-      }
-      if (typeof window.showOnboardingIfNeeded === 'function') {
-        window.showOnboardingIfNeeded();
-      }
-    } catch(e) {
-      console.error('V4 onboarding trigger failed:', e);
-    }
-  }
-
-  // Override completion markers so V4 completion is stored per user, not globally only.
-  var originalMark = window.markOnboardingComplete;
-  window.markOnboardingComplete = function(){
-    try {
-      var uid = userId();
-      localStorage.setItem('fintrail_onboarding_v4_complete_' + uid, 'true');
-      localStorage.setItem('fintrail_onboarding_v4_completed_at_' + uid, new Date().toISOString());
-    } catch(e) {}
-    if (typeof originalMark === 'function') {
-      try { return originalMark.apply(this, arguments); } catch(e) {}
+  var DAY=86400000, WAIT=7, REMIND=30;
+  var st={step:0,lang:'en',goals:[]};
+  var data={
+    en:{
+      steps:[
+        ['Welcome!','Select your language to get started.'],
+        ['What would you like to accomplish first?','Select up to 3 goals so we can personalize your experience.'],
+        ['How Your Financial Health Score Works','This is a sample score using example budget, bills, debt, savings, and credit data.'],
+        ['Recommended tools for you','Based on your goals, start here for the biggest impact.'],
+        ['Welcome to Fintrail Pro! 🎉','Your dashboard is ready. Start using the tools that match your goals and build from there.']
+      ],
+      btn:['Continue','Enter Fintrail Dashboard'], skip:'Skip for now', selected:function(n){return n+' of 3 goals selected'}, pick:'Choose at least 1 goal to continue.',
+      langs:[['en','🇺🇸','English','Continue in English'],['es','🇪🇸','Español','Continuar en Español']],
+      goals:[['budget','💼','Create a Budget'],['debt','💳','Pay Off Debt'],['save','🐷','Save More Money'],['credit','📈','Improve My Credit'],['bills','🗓️','Track Bills & Payments'],['networth','📊','Build My Net Worth'],['savingsgoal','🎯','Reach a Savings Goal'],['guidance','🤖','Get Financial Guidance']],
+      factors:[['Budget Tracking',85],['Bills Paid On Time',95],['Savings Progress',70],['Debt Management',65],['Credit Habits',80]],
+      sampleNote:'This is only an example. Your personal Financial Health Score will be calculated after you add your own budget, bills, debt, savings, and credit information.',
+      tools:{
+        budget:['💼','Budget Tracker','Create budgets, add transactions, and track your spending.'],
+        debt:['🎯','Debt Payoff Planner','See how to pay off debt faster with smart strategies.'],
+        save:['🐷','Savings Goals','Set goals, track progress, and build your future.'],
+        credit:['📈','Credit Simulator','Preview how financial actions may impact your score.'],
+        bills:['🗓️','Bill Schedule','Plan recurring bills around your paydays.'],
+        networth:['📊','Net Worth Tracker','Track assets, debts, and progress over time.'],
+        savingsgoal:['🎯','Savings Goal Tracker','See how much to save each month.'],
+        guidance:['🤖','AI Advisor','Ask personal finance questions and get guidance.']
+      },
+      saved:['Your goals are saved','Your experience is personalized',"Let's build your financial future"],
+      feedbackTitle:'How is Fintrail working for you so far?', feedbackSubtitle:"We'd love your feedback to help improve the experience for everyone.", leave:'Leave Feedback', remind:'Remind Me Later', badge:'Feedback Request'
+    },
+    es:{
+      steps:[
+        ['¡Bienvenido!','Selecciona tu idioma para comenzar.'],
+        ['¿Qué te gustaría lograr primero?','Selecciona hasta 3 metas para personalizar tu experiencia.'],
+        ['Cómo Funciona Tu Salud Financiera','Este es un puntaje de ejemplo usando datos de presupuesto, facturas, deudas, ahorros y crédito.'],
+        ['Herramientas recomendadas para ti','Según tus metas, empieza aquí para lograr el mayor impacto.'],
+        ['¡Bienvenido a Fintrail Pro! 🎉','Tu panel está listo. Empieza con las herramientas que coinciden con tus metas.']
+      ],
+      btn:['Continuar','Entrar al Panel de Fintrail'], skip:'Omitir por ahora', selected:function(n){return n+' de 3 metas seleccionadas'}, pick:'Elige al menos 1 meta para continuar.',
+      langs:[['en','🇺🇸','English','Continue in English'],['es','🇪🇸','Español','Continuar en Español']],
+      goals:[['budget','💼','Crear un Presupuesto'],['debt','💳','Pagar Deudas'],['save','🐷','Ahorrar Más Dinero'],['credit','📈','Mejorar Mi Crédito'],['bills','🗓️','Administrar Facturas y Pagos'],['networth','📊','Aumentar Mi Patrimonio Neto'],['savingsgoal','🎯','Alcanzar una Meta de Ahorro'],['guidance','🤖','Recibir Orientación Financiera']],
+      factors:[['Presupuesto',85],['Facturas a Tiempo',95],['Progreso de Ahorro',70],['Manejo de Deudas',65],['Hábitos de Crédito',80]],
+      sampleNote:'Este puntaje es solo un ejemplo. Tu Salud Financiera personal se calculará después de agregar tu presupuesto, facturas, deudas, ahorros e información de crédito.',
+      tools:{
+        budget:['💼','Budget Tracker','Crea presupuestos, agrega transacciones y controla tus gastos.'],
+        debt:['🎯','Debt Payoff Planner','Ve cómo pagar deudas más rápido con estrategias inteligentes.'],
+        save:['🐷','Savings Goals','Crea metas, mide tu progreso y construye tu futuro.'],
+        credit:['📈','Credit Simulator','Visualiza cómo tus acciones pueden impactar tu crédito.'],
+        bills:['🗓️','Bill Schedule','Organiza facturas recurrentes según tus días de pago.'],
+        networth:['📊','Net Worth Tracker','Rastrea activos, deudas y progreso con el tiempo.'],
+        savingsgoal:['🎯','Savings Goal Tracker','Ve cuánto necesitas ahorrar cada mes.'],
+        guidance:['🤖','AI Advisor','Haz preguntas financieras y recibe orientación.']
+      },
+      saved:['Tus metas están guardadas','Tu experiencia está personalizada','Comencemos a construir tu futuro financiero'],
+      feedbackTitle:'¿Cómo te está funcionando Fintrail hasta ahora?', feedbackSubtitle:'Nos encantaría conocer tu opinión para seguir mejorando la experiencia para todos.', leave:'Enviar Comentarios', remind:'Recordarme Más Tarde', badge:'Solicitud de Comentarios'
     }
   };
-
-  // Make the existing V4 "complete" key compatible with this trigger.
-  var originalShowApp = window.showApp;
-  if (typeof originalShowApp === 'function' && !originalShowApp.__ftV4ReliableTrigger) {
-    window.showApp = function(user){
-      if (user) {
-        window.currentUser = user;
-        window.supabaseUser = user;
-      }
-      var result = originalShowApp.apply(this, arguments);
-      setTimeout(function(){ openV4(user); }, 600);
-      setTimeout(function(){ openV4(user); }, 1600);
-      setTimeout(function(){ openV4(user); }, 3200);
-      return result;
-    };
-    window.showApp.__ftV4ReliableTrigger = true;
+  function U(){try{return window.currentUser||window.supabaseUser||window.user||null}catch(e){return null}}
+  function id(){var u=U();return u&&(u.id||u.email)||'local'}
+  function L(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){}}
+  function K(n){return'fintrail_onboarding_v5_'+n+'_'+id()}
+  function M(){var u=U();return u&&u.user_metadata?u.user_metadata:{}}
+  function done(){var m=M();return L(K('complete'))==='true'||m.fintrail_onboarding_v5_complete===true||m.fintrail_onboarding_version==='v5_mockup_style'}
+  function should(){return !!U()&&!done()}
+  function C(){return data[st.lang]||data.en}
+  function shell(){
+    if(document.getElementById('ft5'))return;
+    var el=document.createElement('div');el.id='ft5';el.className='ft5-overlay';
+    el.innerHTML='<div class="ft5-card"><aside class="ft5-left"><div><div class="ft5-logo"><div class="ft5-mark">FP</div><div class="ft5-brand">Fintrail <span>Pro</span></div></div><div class="ft5-tagline">Budget Smarter.<br>Live Better.</div><div class="ft5-mini-chart"><span style="height:28px"></span><span></span><span></span><span></span></div></div><div class="ft5-left-foot">Your journey to financial freedom starts here.</div></aside><main class="ft5-main"><div class="ft5-top"><button class="ft5-back" id="ft5-back">←</button><div class="ft5-progress" id="ft5-progress"></div><div class="ft5-count" id="ft5-count"></div></div><div class="ft5-body" id="ft5-body"></div><div class="ft5-actions" id="ft5-actions"><button class="ft5-primary" id="ft5-primary"></button><button class="ft5-secondary" id="ft5-secondary"></button></div></main></div>';
+    document.body.appendChild(el);
+    document.getElementById('ft5-back').onclick=function(){if(st.step>0){st.step--;render()}};
+    document.getElementById('ft5-primary').onclick=next;
+    document.getElementById('ft5-secondary').onclick=complete;
   }
-
-  // If Supabase is already logged in before the wrapper is attached, check session directly.
-  async function checkExistingSession(){
-    try {
-      if (activeUser()) {
-        openV4(activeUser());
-        return;
-      }
-      if (typeof sbClient !== 'undefined' && sbClient && sbClient.auth && sbClient.auth.getSession) {
-        var res = await sbClient.auth.getSession();
-        var user = res && res.data && res.data.session && res.data.session.user;
-        if (user) {
-          window.currentUser = user;
-          window.supabaseUser = user;
-          openV4(user);
-        }
-      }
-    } catch(e) {}
+  function open(){shell();var old=document.getElementById('onboarding-overlay');if(old)old.classList.remove('visible');var old4=document.getElementById('ft-v4');if(old4)old4.classList.remove('show');st.step=0;st.lang=L('fintrail_lang')||(typeof currentLang!=='undefined'?currentLang:'en')||'en';st.goals=[];render();document.getElementById('ft5').classList.add('show')}
+  function close(){var e=document.getElementById('ft5');if(e)e.classList.remove('show')}
+  function next(){if(st.step===1&&st.goals.length<1){alert(C().pick);return} if(st.step<C().steps.length-1){st.step++;render()}else complete()}
+  function complete(){
+    L(K('complete'),'true');L(K('goals'),JSON.stringify(st.goals));L(K('signup_at'),L(K('signup_at'))||new Date().toISOString());
+    try{if(typeof onboardingState!=='undefined'){onboardingState.version='v5_mockup_style';onboardingState.goals=st.goals;onboardingState.goal=st.goals.join(',');onboardingState.lang=st.lang;onboardingState.completed_at=new Date().toISOString()}}catch(e){}
+    if(typeof saveUserMetadataPatch==='function'){try{saveUserMetadataPatch({fintrail_onboarding_v5_complete:true,fintrail_onboarding_complete:true,fintrail_pro_onboarding_complete:true,fintrail_onboarding_version:'v5_mockup_style',fintrail_onboarding_goals:st.goals,fintrail_onboarding_completed_at:new Date().toISOString(),fintrail_feedback_eligible_after:new Date(Date.now()+7*86400000).toISOString()})}catch(e){}}
+    close();
   }
-
-  window.forceShowOnboardingV4ForTesting = function(){
-    try {
-      var uid = userId();
-      localStorage.removeItem('fintrail_onboarding_v4_complete_' + uid);
-      localStorage.removeItem('fintrail_onboarding_v4_complete_local');
-    } catch(e) {}
-    if (typeof window.showNewOnboarding === 'function') window.showNewOnboarding();
-  };
-
-  window.addEventListener('load', function(){
-    setTimeout(checkExistingSession, 900);
-    setTimeout(checkExistingSession, 2200);
-    setTimeout(checkExistingSession, 4200);
-  });
-})();
-</script>
-
-
-<script>
-/* === FINTRAIL ONBOARDING V4 POPUP POSITION FIX === */
-(function(){
-  function fixOnboardingPopupPosition(){
-    try {
-      var el = document.getElementById('ft-v4') || document.querySelector('.ft-v4') || document.querySelector('.ft-v4-overlay') || document.getElementById('ft-onboarding-v3');
-      if (!el) return;
-      var isVisible = el.classList.contains('show') || el.classList.contains('visible');
-      if (!isVisible) return;
-
-      document.body.appendChild(el);
-      el.style.position = 'fixed';
-      el.style.inset = '0';
-      el.style.zIndex = '999999';
-      el.style.display = 'flex';
-      el.style.alignItems = window.innerWidth <= 650 ? 'flex-start' : 'center';
-      el.style.justifyContent = 'center';
-      el.style.background = 'linear-gradient(145deg, rgba(26,26,46,.97), rgba(45,27,78,.96))';
-
-      var card = el.querySelector('.ft-v4-card') || el.querySelector('.ft-v4-card-v3') || el.querySelector('.ft-onboarding-card-v3');
-      if (card) {
-        card.style.margin = 'auto';
-        card.style.width = '100%';
-        card.style.maxWidth = '760px';
-        card.style.background = '#fff';
-        card.style.borderRadius = window.innerWidth <= 650 ? '22px' : '28px';
-        card.style.overflow = 'hidden';
-      }
-
-      var old = document.getElementById('onboarding-overlay');
-      if (old && old !== el) old.classList.remove('visible');
-    } catch(e) {}
+  function progress(){var html='';for(var i=0;i<C().steps.length;i++)html+='<span class="ft5-dot '+(i===st.step?'active':'')+'"></span>';return html}
+  function toolCards(){var list=st.goals.length?st.goals:['budget','debt','save'];return list.slice(0,3).map(function(g){var t=C().tools[g]||C().tools.budget;return'<div class="ft5-tool"><div class="ft5-tool-img">'+t[0]+'</div><div><div class="ft5-tool-title">'+t[1]+'</div><div class="ft5-tool-sub">'+t[2]+'</div></div><div style="margin-left:auto;color:#697087;font-weight:900">›</div></div>'}).join('')}
+  function render(){
+    shell();var c=C(),body=document.getElementById('ft5-body'),s=st.step,title=c.steps[s][0],sub=c.steps[s][1];
+    document.getElementById('ft5-progress').innerHTML=progress();document.getElementById('ft5-count').textContent=(s+1)+' of '+c.steps.length;document.getElementById('ft5-back').style.visibility=s===0?'hidden':'visible';document.getElementById('ft5-primary').textContent=s===c.steps.length-1?c.btn[1]:c.btn[0];document.getElementById('ft5-secondary').textContent=c.skip;document.getElementById('ft5-secondary').style.display=s===c.steps.length-1?'none':'block';
+    if(s===0){
+      body.innerHTML='<h1 class="ft5-title">'+title+'</h1><p class="ft5-sub">'+sub+'</p><div class="ft5-lang-list">'+c.langs.map(function(l){return'<button class="ft5-lang-btn '+(st.lang===l[0]?'active':'')+'" data-lang="'+l[0]+'"><div class="ft5-lang-main"><div class="ft5-flag">'+l[1]+'</div><div><div class="ft5-lang-title">'+l[2]+'</div><div class="ft5-lang-sub">'+l[3]+'</div></div></div><div>›</div></button>'}).join('')+'</div><div class="ft5-secure">🛡️ Your data is secure and private</div>';
+      setTimeout(function(){document.querySelectorAll('.ft5-lang-btn').forEach(function(b){b.onclick=function(){st.lang=b.getAttribute('data-lang');L('fintrail_lang',st.lang);try{currentLang=st.lang;applyLanguage()}catch(e){}render()}})},0);
+    } else if(s===1){
+      body.innerHTML='<h1 class="ft5-title">'+title+'</h1><p class="ft5-sub">'+sub+'</p><div class="ft5-goal-grid">'+c.goals.map(function(g){var active=st.goals.indexOf(g[0])>=0;return'<button class="ft5-goal '+(active?'active':'')+'" data-goal="'+g[0]+'"><div class="ft5-goal-icon">'+g[1]+'</div><div class="ft5-goal-label">'+g[2]+'</div></button>'}).join('')+'</div><div class="ft5-selected">◎ '+c.selected(st.goals.length)+'</div>';
+      setTimeout(function(){document.querySelectorAll('.ft5-goal').forEach(function(b){b.onclick=function(){var g=b.getAttribute('data-goal'),i=st.goals.indexOf(g);if(i>=0)st.goals.splice(i,1);else if(st.goals.length<3)st.goals.push(g);render()}})},0);
+    } else if(s===2){
+      var fac=c.factors.map(function(f){return'<div class="ft5-factor"><span>'+f[0]+'</span><strong>'+f[1]+'/100</strong><div class="ft5-bar"><div class="ft5-fill" style="width:'+f[1]+'%"></div></div></div>'}).join('');
+      body.innerHTML='<h1 class="ft5-title">'+title+'</h1><p class="ft5-sub">'+sub+'</p><div class="ft5-health"><div class="ft5-health-panel"><h4>Sample User: Sarah</h4>'+fac+'<div class="ft5-note">'+c.sampleNote+'</div></div><div><div class="ft5-ring"><div class="ft5-ring-inner"><div class="ft5-ring-num">79</div><div class="ft5-ring-label">Good Start</div></div></div></div></div>';
+    } else if(s===3){
+      body.innerHTML='<h1 class="ft5-title">'+title+'</h1><p class="ft5-sub">'+sub+'</p><div class="ft5-tools">'+toolCards()+'</div>';
+    } else {
+      body.innerHTML='<div class="ft5-final"><div><div class="ft5-logo"><div class="ft5-mark">FP</div><div class="ft5-brand">Fintrail Pro</div></div><h1 class="ft5-title">'+title+'</h1><p>'+sub+'</p><div class="ft5-checks">'+c.saved.map(function(x){return'<div>✅ '+x+'</div>'}).join('')+'</div></div><div class="ft5-phone"><div style="color:#fff;font-weight:900">Overview</div><div class="ft5-phone-grid"><div class="ft5-phone-card">Income<strong>$4,250</strong></div><div class="ft5-phone-card">Expenses<strong style="color:#f05555">$2,185</strong></div><div class="ft5-phone-card">Savings<strong>$650</strong></div><div class="ft5-phone-card">Score<strong>79</strong></div></div></div></div>';
+    }
   }
-
-  document.addEventListener('click', function(){ setTimeout(fixOnboardingPopupPosition, 50); });
-  window.addEventListener('load', function(){
-    setTimeout(fixOnboardingPopupPosition, 800);
-    setTimeout(fixOnboardingPopupPosition, 1800);
-    setTimeout(fixOnboardingPopupPosition, 3200);
-  });
-
-  var oldShow = window.showNewOnboarding;
-  if (typeof oldShow === 'function' && !oldShow.__popupPositionWrapped) {
-    window.showNewOnboarding = function(){
-      var result = oldShow.apply(this, arguments);
-      setTimeout(fixOnboardingPopupPosition, 50);
-      setTimeout(fixOnboardingPopupPosition, 250);
-      return result;
-    };
-    window.showNewOnboarding.__popupPositionWrapped = true;
-  }
-
-  var oldNeeded = window.showOnboardingIfNeeded;
-  if (typeof oldNeeded === 'function' && !oldNeeded.__popupPositionWrapped) {
-    window.showOnboardingIfNeeded = function(){
-      var result = oldNeeded.apply(this, arguments);
-      setTimeout(fixOnboardingPopupPosition, 50);
-      setTimeout(fixOnboardingPopupPosition, 250);
-      return result;
-    };
-    window.showOnboardingIfNeeded.__popupPositionWrapped = true;
-  }
+  function maybe(){shell();var old=document.getElementById('onboarding-overlay');if(old)old.classList.remove('visible');var old4=document.getElementById('ft-v4');if(old4)old4.classList.remove('show');if(U()&&!done())open()}
+  window.showOnboardingIfNeeded=maybe;window.showNewOnboarding=open;window.forceShowOnboardingV5ForTesting=function(){L(K('complete'),'');open()};
+  window.maybeShowDelayedFeedbackPrompt=function(){try{if(L(K('feedback_submitted'))==='true')return;var signup=L(K('signup_at'))||(U()&&U().created_at)||new Date().toISOString();L(K('signup_at'),signup);if((Date.now()-Date.parse(signup))/86400000<7)return;var c=C();var title=document.getElementById('fm-modal-title'),sub=document.getElementById('fm-modal-subtitle'),badge=document.getElementById('fm-badge-large'),submit=document.getElementById('fm-submit-btn');if(title)title.textContent=c.feedbackTitle;if(sub)sub.textContent=c.feedbackSubtitle;if(badge)badge.textContent='💬 '+c.badge;if(submit)submit.textContent=c.leave;var sec=document.querySelector('.fm-btn.secondary');if(sec)sec.textContent=c.remind;if(typeof openFoundingFeedback==='function')openFoundingFeedback()}catch(e){}};
+  var oldShow=window.showApp;if(typeof oldShow==='function'&&!oldShow.__ft5){window.showApp=function(){var r=oldShow.apply(this,arguments);setTimeout(maybe,700);setTimeout(maybe,2000);return r};window.showApp.__ft5=true}
+  window.addEventListener('load',function(){setTimeout(maybe,1200);setTimeout(maybe,3000)});
 })();
 </script>
 
