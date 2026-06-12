@@ -3347,82 +3347,108 @@
 @media(max-width:520px){.fm-visible-actions{grid-template-columns:1fr}}
 
 
-
-/* === BUDGET CATEGORY SEARCHABLE DROPDOWN — POLISHED FINTRAIL STYLE === */
-.ft-budget-category-group { position: relative; }
-.ft-budget-category-picker { position: relative; width: 100%; }
-.ft-budget-category-picker input#category {
-  width: 100%;
-  padding-right: 2.75rem;
-  background: var(--surface2);
+/* === ONBOARDING SIDEBAR VISUAL POLISH — June 2026 === */
+.ft-onboarding-v5-tagline {
+  margin-top: 28px;
+  font-size: 1.18rem;
+  line-height: 1.45;
+  font-weight: 900;
 }
-.ft-budget-category-toggle {
-  position: absolute;
-  right: 0.55rem;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 2rem;
-  height: 2rem;
+.ft-onboarding-v5-accent-line {
+  width: 76px;
+  height: 3px;
+  border-radius: 99px;
+  margin-top: 22px;
+  background: #f05555;
+  box-shadow: 0 0 18px rgba(240,85,85,0.35);
+}
+.ft-onboarding-v5-visual {
+  margin: 42px 0 20px;
+  padding: 0;
   border: 0;
-  border-radius: 8px;
+  border-radius: 0;
   background: transparent;
-  color: var(--text);
-  font-family: 'Sora', sans-serif;
-  font-size: 1.1rem;
-  font-weight: 800;
-  cursor: pointer;
-  line-height: 1;
 }
-.ft-budget-category-toggle:hover { background: rgba(240,85,85,0.08); color: var(--accent); }
-.ft-budget-category-menu {
+.ft-onboarding-v5-mini-score { display: none !important; }
+.ft-onboarding-v5-mini-bars {
+  position: relative;
+  height: 165px;
+  gap: 14px;
+  padding: 12px 6px 0;
+  align-items: flex-end;
+  border-bottom: 2px solid rgba(255,255,255,0.08);
+}
+.ft-onboarding-v5-mini-bars span {
+  flex: 1;
+  max-width: 34px;
+  border-radius: 4px 4px 0 0;
+  background: rgba(255,255,255,0.12);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+}
+.ft-onboarding-v5-mini-bars span:nth-child(5) {
+  background: linear-gradient(180deg, #f05555, #ff414f);
+  box-shadow: 0 10px 26px rgba(240,85,85,0.20);
+}
+.ft-onboarding-v5-growth-line {
   position: absolute;
   left: 0;
   right: 0;
-  top: calc(100% + 8px);
-  z-index: 80;
-  display: none;
-  max-height: 260px;
-  overflow-y: auto;
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  box-shadow: 0 16px 34px rgba(18,24,40,0.14);
-  padding: 0.4rem;
-}
-.ft-budget-category-picker.open .ft-budget-category-menu { display: block; }
-.ft-budget-category-option {
+  top: 8px;
   width: 100%;
-  border: 0;
-  background: transparent;
-  color: var(--text);
-  font-family: 'Sora', sans-serif;
+  height: 120px;
+  overflow: visible;
+  pointer-events: none;
+}
+.ft-onboarding-v5-growth-line polyline {
+  fill: none;
+  stroke: #f05555;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 4px 10px rgba(240,85,85,0.22));
+}
+.ft-onboarding-v5-growth-line circle {
+  fill: #f05555;
+}
+.ft-onboarding-v5-brand-foot {
+  max-width: 245px;
+  color: rgba(255,255,255,0.80);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  font-weight: 600;
+}
+.ft-onboarding-v5-lang-main {
+  gap: 18px;
+  min-width: 0;
+}
+.ft-onboarding-v5-lang-main > span:last-child {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+.ft-onboarding-v5-lang-title {
+  display: inline-block;
+  white-space: nowrap;
+}
+.ft-onboarding-v5-lang-sub {
+  display: inline-block;
+  margin-top: 0;
+  color: #596178;
   font-size: 0.9rem;
-  font-weight: 650;
-  text-align: left;
-  padding: 0.72rem 0.85rem;
-  border-radius: 10px;
-  cursor: pointer;
+  white-space: nowrap;
 }
-.ft-budget-category-option:hover,
-.ft-budget-category-option.active {
-  background: rgba(240,85,85,0.08);
-  color: var(--accent);
+.ft-onboarding-v5-flag {
+  font-size: 1.9rem;
+  line-height: 1;
 }
-.ft-budget-category-empty {
-  padding: 0.85rem;
-  color: var(--muted);
-  font-size: 0.85rem;
-  line-height: 1.4;
-}
-@media (max-width:700px) {
-  #bsub-tracker .ft-budget-category-menu {
-    max-height: 230px;
-    border-radius: 13px;
+@media(max-width: 560px) {
+  .ft-onboarding-v5-lang-main > span:last-child {
+    gap: 8px;
   }
-  #bsub-tracker .ft-budget-category-option {
-    min-height: 42px;
-    font-size: 0.84rem;
-    padding: 0.65rem 0.75rem;
+  .ft-onboarding-v5-lang-sub {
+    font-size: 0.78rem;
   }
 }
 
@@ -3457,21 +3483,21 @@
       <!-- SIGN IN FORM -->
       <div id="form-signin" class="auth-form">
         <div class="auth-input-group">
-          <label data-en="Email" data-es="Correo electrónico">Email</label>
-          <input class="auth-input" type="email" id="si-email" placeholder="you@email.com" data-en-placeholder="you@email.com" data-es-placeholder="tu@correo.com" autocomplete="email">
+          <label>Email</label>
+          <input class="auth-input" type="email" id="si-email" placeholder="you@email.com" autocomplete="email">
         </div>
         <div class="auth-input-group">
-          <label data-en="Password" data-es="Contraseña">Password</label>
+          <label>Password</label>
           <input class="auth-input" type="password" id="si-password" placeholder="••••••••" autocomplete="current-password">
         </div>
         <button class="auth-submit" id="si-btn" onclick="signIn()" data-en="Sign In" data-es="Iniciar Sesión">Sign In</button>
-        <div class="auth-divider"><span data-en="or" data-es="o">or</span></div>
+        <div class="auth-divider"><span>or</span></div>
         <button class="auth-google" onclick="signInGoogle()">
           <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-          <span data-en="Continue with Google" data-es="Continuar con Google">Continue with Google</span>
+          Continue with Google
         </button>
         <div class="auth-footer">
-          <a href="#" onclick="showForgotPassword()" data-en="Forgot your password?" data-es="¿Olvidaste tu contraseña?">Forgot your password?</a>
+          <a href="#" onclick="showForgotPassword()">Forgot your password?</a>
         </div>
       </div>
 
@@ -3479,28 +3505,28 @@
       <div id="form-signup" class="auth-form" style="display:none">
         <div class="auth-input-group">
           <label data-en="Full Name" data-es="Nombre Completo">Full Name</label>
-          <input class="auth-input" type="text" id="su-name" placeholder="Jane Smith" data-en-placeholder="Jane Smith" data-es-placeholder="Juana Pérez" autocomplete="name">
+          <input class="auth-input" type="text" id="su-name" placeholder="Jane Smith" autocomplete="name">
         </div>
         <div class="auth-input-group">
-          <label data-en="Email" data-es="Correo electrónico">Email</label>
-          <input class="auth-input" type="email" id="su-email" placeholder="you@email.com" data-en-placeholder="you@email.com" data-es-placeholder="tu@correo.com" autocomplete="email">
+          <label>Email</label>
+          <input class="auth-input" type="email" id="su-email" placeholder="you@email.com" autocomplete="email">
         </div>
         <div class="auth-input-group">
-          <label data-en="Password" data-es="Contraseña">Password</label>
-          <input class="auth-input" type="password" id="su-password" placeholder="At least 8 characters" data-en-placeholder="At least 8 characters" data-es-placeholder="Al menos 8 caracteres" autocomplete="new-password">
+          <label>Password</label>
+          <input class="auth-input" type="password" id="su-password" placeholder="At least 8 characters" autocomplete="new-password">
         </div>
         <div class="auth-input-group">
-          <label data-en="Confirm Password" data-es="Confirmar contraseña">Confirm Password</label>
+          <label>Confirm Password</label>
           <input class="auth-input" type="password" id="su-confirm" placeholder="••••••••" autocomplete="new-password">
         </div>
-        <button class="auth-submit" id="su-btn" onclick="signUp()" data-en="Create Free Account" data-es="Crear Cuenta Gratis">Create Free Account</button>
-        <div class="auth-divider"><span data-en="or" data-es="o">or</span></div>
+        <button class="auth-submit" id="su-btn" onclick="signUp()">Create Free Account</button>
+        <div class="auth-divider"><span>or</span></div>
         <button class="auth-google" onclick="signInGoogle()">
           <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-          <span data-en="Continue with Google" data-es="Continuar con Google">Continue with Google</span>
+          Continue with Google
         </button>
         <div class="auth-footer">
-          <span data-en="By signing up you agree to our" data-es="Al crear una cuenta aceptas nuestros">By signing up you agree to our</span> <a href="/terms.html" target="_blank" data-en="Terms of Service" data-es="Términos de Servicio">Terms of Service</a> <span data-en="and" data-es="y">and</span> <a href="/privacy.html" target="_blank" data-en="Privacy Policy" data-es="Política de Privacidad">Privacy Policy</a>.
+          By signing up you agree to our <a href="/terms.html" target="_blank">Terms of Service</a> and <a href="/privacy.html" target="_blank">Privacy Policy</a>.
         </div>
       </div>
 
@@ -3519,18 +3545,26 @@
           <div class="ft-onboarding-v5-mark">FP</div>
           <div class="ft-onboarding-v5-name">Fintrail <span>Pro</span></div>
         </div>
-        <div class="ft-onboarding-v5-tagline" data-en-html="Budget smarter.<br>Build with confidence." data-es-html="Presupuesta mejor.<br>Construye con confianza.">Budget smarter.<br>Build with confidence.</div>
-        <div class="ft-onboarding-v5-visual">
-          <div class="ft-onboarding-v5-mini-score"><span data-en="Sample score" data-es="Puntaje de ejemplo">Sample score</span><strong>79</strong></div>
+        <div class="ft-onboarding-v5-tagline">Budget Smarter,<br>Live Better.</div>
+        <div class="ft-onboarding-v5-accent-line" aria-hidden="true"></div>
+        <div class="ft-onboarding-v5-visual" aria-hidden="true">
           <div class="ft-onboarding-v5-mini-bars">
-            <span style="height:35%"></span>
-            <span style="height:58%"></span>
-            <span style="height:76%"></span>
-            <span style="height:96%"></span>
+            <span style="height:34%"></span>
+            <span style="height:52%"></span>
+            <span style="height:64%"></span>
+            <span style="height:86%"></span>
+            <span style="height:100%"></span>
+            <svg class="ft-onboarding-v5-growth-line" viewBox="0 0 220 110" preserveAspectRatio="none" aria-hidden="true">
+              <polyline points="8,86 55,58 88,66 125,26 158,28 210,4"></polyline>
+              <circle cx="55" cy="58" r="4"></circle>
+              <circle cx="88" cy="66" r="4"></circle>
+              <circle cx="125" cy="26" r="4"></circle>
+              <circle cx="158" cy="28" r="4"></circle>
+            </svg>
           </div>
         </div>
       </div>
-      <div class="ft-onboarding-v5-brand-foot" data-en="Your dashboard will adapt around the goals you choose." data-es="Tu panel se adaptará a las metas que elijas.">Your dashboard will adapt around the goals you choose.</div>
+      <div class="ft-onboarding-v5-brand-foot">Your journey to financial freedom starts here.</div>
     </aside>
     <main class="ft-onboarding-v5-main">
       <div class="ft-onboarding-v5-top">
@@ -3553,14 +3587,14 @@
   <div class="fm-feedback-card">
     <div class="fm-feedback-top">
       <button class="fm-feedback-close" onclick="closeFoundingFeedback()" aria-label="Close">×</button>
-      <h2 id="fm-modal-title" data-en="🎉 You’re a Founding Member!" data-es="🎉 ¡Eres Miembro Fundador!">🎉 You’re a Founding Member!</h2>
-      <p id="fm-modal-subtitle" data-en="Your feedback helps shape the future of Fintrail Pro." data-es="Tus comentarios ayudan a mejorar el futuro de Fintrail Pro.">Your feedback helps shape the future of Fintrail Pro.</p>
+      <h2 id="fm-modal-title">🎉 You’re a Founding Member!</h2>
+      <p id="fm-modal-subtitle">Your feedback helps shape the future of Fintrail Pro.</p>
     </div>
     <div class="fm-feedback-body">
-      <div class="fm-badge-large" id="fm-badge-large" data-en="⭐ Founding Member" data-es="⭐ Miembro Fundador">⭐ Founding Member</div>
+      <div class="fm-badge-large" id="fm-badge-large">⭐ Founding Member</div>
 
       <div class="fm-field">
-        <label id="fm-rating-label" data-en="How would you rate your experience so far?" data-es="¿Cómo calificarías tu experiencia hasta ahora?">How would you rate your experience so far?</label>
+        <label id="fm-rating-label">How would you rate your experience so far?</label>
         <div class="fm-rating-row" id="fm-rating-row">
           <button type="button" class="fm-star" onclick="setFoundingRating(1)">★</button>
           <button type="button" class="fm-star" onclick="setFoundingRating(2)">★</button>
@@ -3571,26 +3605,26 @@
       </div>
 
       <div class="fm-field">
-        <label id="fm-feature-label" data-en="What feature would you like to see next?" data-es="¿Qué función te gustaría ver después?">What feature would you like to see next?</label>
+        <label id="fm-feature-label">What feature would you like to see next?</label>
         <select id="fm-feature-request">
-          <option value="" data-en="Choose one" data-es="Elige una opción">Choose one</option>
-          <option value="Budgeting Tools" data-en="Budgeting Tools" data-es="Herramientas de presupuesto">Budgeting Tools</option>
-          <option value="Debt Payoff Planning" data-en="Debt Payoff Planning" data-es="Planificación de deudas">Debt Payoff Planning</option>
-          <option value="Credit Improvement" data-en="Credit Improvement" data-es="Mejorar crédito">Credit Improvement</option>
-          <option value="Savings Goals" data-en="Savings Goals" data-es="Metas de ahorro">Savings Goals</option>
-          <option value="Investing Tools" data-en="Investing Tools" data-es="Herramientas de inversión">Investing Tools</option>
-          <option value="Other" data-en="Other" data-es="Otro">Other</option>
+          <option value="">Choose one</option>
+          <option value="Budgeting Tools">Budgeting Tools</option>
+          <option value="Debt Payoff Planning">Debt Payoff Planning</option>
+          <option value="Credit Improvement">Credit Improvement</option>
+          <option value="Savings Goals">Savings Goals</option>
+          <option value="Investing Tools">Investing Tools</option>
+          <option value="Other">Other</option>
         </select>
       </div>
 
       <div class="fm-field">
-        <label id="fm-feedback-label" data-en="What can we improve?" data-es="¿Qué podemos mejorar?">What can we improve?</label>
-        <textarea id="fm-feedback-text" placeholder="Share your ideas, suggestions, bugs, or feedback..." data-en-placeholder="Share your ideas, suggestions, bugs, or feedback..." data-es-placeholder="Comparte ideas, sugerencias, errores o comentarios..."></textarea>
+        <label id="fm-feedback-label">What can we improve?</label>
+        <textarea id="fm-feedback-text" placeholder="Share your ideas, suggestions, bugs, or feedback..."></textarea>
       </div>
 
       <div class="fm-actions">
-        <button class="fm-btn secondary" id="fm-later-btn" onclick="closeFoundingFeedback()" data-en="Maybe Later" data-es="Quizás después">Maybe Later</button>
-        <button class="fm-btn primary" id="fm-submit-btn" onclick="submitFoundingFeedback()" data-en="Submit Feedback" data-es="Enviar comentarios">Submit Feedback</button>
+        <button class="fm-btn secondary" id="fm-later-btn" onclick="closeFoundingFeedback()">Maybe Later</button>
+        <button class="fm-btn primary" id="fm-submit-btn" onclick="submitFoundingFeedback()">Submit Feedback</button>
       </div>
       <div id="fm-status" class="fm-status"></div>
     </div>
@@ -3600,8 +3634,8 @@
 
 <!-- SETUP BANNER (shown after first signup) -->
 <div class="setup-banner" id="setup-banner" style="display:none">
-  <span data-en-html="👋 Welcome to Fintrail! <strong>Add your Supabase credentials</strong> in the script below to enable real accounts &amp; data sync." data-es-html="👋 ¡Bienvenido a Fintrail! <strong>Agrega tus credenciales de Supabase</strong> en el script de abajo para activar cuentas reales y sincronización de datos.">👋 Welcome to Fintrail! <strong>Add your Supabase credentials</strong> in the script below to enable real accounts &amp; data sync.</span>
-  <button class="setup-dismiss" onclick="this.parentElement.style.display='none'" data-en="Got it" data-es="Entendido">Got it</button>
+  <span>👋 Welcome to Fintrail! <strong>Add your Supabase credentials</strong> in the script below to enable real accounts & data sync.</span>
+  <button class="setup-dismiss" onclick="this.parentElement.style.display='none'">Got it</button>
 </div>
 
 <header>
@@ -3635,7 +3669,7 @@
         <div class="nav-dropdown-section" data-en="Planning" data-es="Planificación">Planning</div>
         <button class="nav-dropdown-item" onclick="navTo('savings', this)">
           <span class="ndi-icon">🎯</span>
-          <div class="ndi-info"><span class="ndi-label" data-en="Savings Goals" data-es="Metas de Ahorro">Savings Goals</span><span class="ndi-desc" data-en="Track your goals" data-es="Rastrea tus metas">Track your goals</span></div>
+          <div class="ndi-info"><span class="ndi-label" data-en="Savings Goals" data-es="Metas de Ahorro" data-en="Savings Goals" data-es="Metas de Ahorro">Savings Goals</span><span class="ndi-desc" data-en="Track your goals" data-es="Rastrea tus metas">Track your goals</span></div>
         </button>
         <button class="nav-dropdown-item" onclick="navTo('invest', this)">
           <span class="ndi-icon">📈</span>
@@ -3643,7 +3677,7 @@
         </button>
         <button class="nav-dropdown-item" onclick="navTo('networth', this)">
           <span class="ndi-icon">💎</span>
-          <div class="ndi-info"><span class="ndi-label" data-en="Net Worth Tracker" data-es="Rastreador de Patrimonio Neto">Net Worth Tracker</span><span class="ndi-desc" data-en="Assets minus liabilities" data-es="Activos menos pasivos">Assets minus liabilities</span></div>
+          <div class="ndi-info"><span class="ndi-label" data-en="Net Worth Tracker" data-es="Rastreador de Patrimonio">Net Worth Tracker</span><span class="ndi-desc" data-en="Assets minus liabilities" data-es="Activos menos pasivos">Assets minus liabilities</span></div>
         </button>
         <button class="nav-dropdown-item" onclick="guardedNavTo('debtplan', this)">
           <span class="ndi-icon">💳</span>
@@ -3687,7 +3721,7 @@
         </button>
         <button class="nav-dropdown-item" onclick="guardedNavTo('healthscore', this)">
           <span class="ndi-icon">🏆</span>
-          <div class="ndi-info"><span class="ndi-label" data-en="Health Score & Alerts" data-es="Salud Financiera y Alertas">Health Score & Alerts <span class="pro-pill">PRO</span></span><span class="ndi-desc" data-en="Financial health tracking" data-es="Seguimiento de salud financiera">Financial health tracking</span></div>
+          <div class="ndi-info"><span class="ndi-label" data-en="Health Score & Alerts" data-es="Puntaje de Salud & Alertas">Health Score & Alerts <span class="pro-pill">PRO</span></span><span class="ndi-desc" data-en="Financial health tracking" data-es="Seguimiento de salud financiera">Financial health tracking</span></div>
         </button>
         <button class="nav-dropdown-item" onclick="guardedNavTo('reports', this)">
           <span class="ndi-icon">📈</span>
@@ -3704,7 +3738,7 @@
       </div>
     </div>
 
-    <button class="upgrade-btn-nav" onclick="showPaywall('nav')" data-en="⭐ Go Pro" data-es="⭐ Hazte Pro">⭐ Go Pro</button>
+    <button class="upgrade-btn-nav" onclick="showPaywall('nav')">⭐ Go Pro</button>
     <button onclick="navTo('profile', this)" style="background:none;border:none;font-size:1.1rem;cursor:pointer;padding:0.45rem 0.65rem;border-radius:8px;color:var(--text-soft)" title="Profile">👤</button>
     <button id="lang-toggle" onclick="toggleLanguage()" style="background:none;border:1.5px solid var(--border);color:var(--text-soft);font-family:'Sora',sans-serif;font-size:0.72rem;font-weight:700;padding:0.3rem 0.65rem;border-radius:20px;cursor:pointer;transition:all 0.2s;letter-spacing:0.05em">EN</button>
   </nav>
@@ -3739,7 +3773,7 @@
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem;padding:0 0.75rem 0.5rem">
     <button class="mobile-nav-tile" onclick="mobileTab('savings')">🎯<span data-en="Goals" data-es="Metas">Goals</span></button>
     <button class="mobile-nav-tile" onclick="mobileTab('invest')">📈<span data-en="Investment" data-es="Inversión">Investment</span></button>
-    <button class="mobile-nav-tile" onclick="mobileTab('networth');closeMobileNav()">💎<span data-en="Net Worth" data-es="Patrimonio Neto">Net Worth</span></button>
+    <button class="mobile-nav-tile" onclick="mobileTab('networth');closeMobileNav()">💎<span data-en="Net Worth" data-es="Patrimonio">Net Worth</span></button>
     <button class="mobile-nav-tile" onclick="mobileTab('calendar')">📅<span data-en="Calendar" data-es="Calendario">Calendar</span></button>
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('debtplan')">💳<span data-en="Debt Planner" data-es="Plan de Deuda">Debt Planner</span></button>
   </div>
@@ -3757,7 +3791,7 @@
   <div style="font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);padding:0.3rem 1rem 0.2rem" data-en="💡 Insights" data-es="💡 Análisis">💡 Insights</div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem;padding:0 0.75rem 0.5rem">
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('ai')">💬<span data-en="AI Advisor" data-es="Asesor IA">AI Advisor</span></button>
-    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('healthscore')">🏆<span data-en="Health Score" data-es="Salud Financiera">Health Score</span></button>
+    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('healthscore')">🏆<span data-en="Health Score" data-es="Salud">Health Score</span></button>
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('reports')">📈<span data-en="Reports" data-es="Reportes">Reports</span></button>
     <button class="mobile-nav-tile" onclick="mobileTab('streaks');closeMobileNav()">🔥🏅<span data-en="Streaks &amp; Milestones" data-es="Rachas y Logros">Streaks &amp; Milestones</span></button>
   </div>
@@ -3797,25 +3831,25 @@
 <div id="receipt-modal" style="display:none" class="receipt-modal-overlay" onclick="closeReceiptModal(event)">
   <div class="receipt-modal">
     <div class="receipt-modal-header">
-      <h3 id="receipt-modal-title" data-en="📄 Upload Payment Proof" data-es="📄 Subir comprobante de pago">📄 Upload Payment Proof</h3>
+      <h3 id="receipt-modal-title">📄 Upload Payment Proof</h3>
       <button class="receipt-modal-close" onclick="closeReceiptModal()">✕</button>
     </div>
     <div class="receipt-modal-body">
-      <p id="receipt-modal-desc" data-en="Upload a screenshot or photo of your payment confirmation to verify and earn XP. Your XP will be credited after a 48-hour review period." data-es="Sube una captura o foto de tu confirmación de pago para verificarla y ganar XP. Tu XP se acreditará después de una revisión de 48 horas.">Upload a screenshot or photo of your payment confirmation to verify and earn XP. Your XP will be credited after a 48-hour review period.</p>
+      <p id="receipt-modal-desc">Upload a screenshot or photo of your payment confirmation to verify and earn XP. Your XP will be credited after a 48-hour review period.</p>
 
-      <div class="pending-xp-badge" data-en="⏳ XP awarded after 48hr verification" data-es="⏳ XP otorgado después de la verificación de 48 horas">⏳ XP awarded after 48hr verification</div>
+      <div class="pending-xp-badge">⏳ XP awarded after 48hr verification</div>
 
       <div class="upload-zone" id="upload-zone" onclick="document.getElementById('receipt-file').click()">
         <div class="uz-icon">📸</div>
-        <div class="uz-text" data-en="Click to upload receipt or screenshot" data-es="Haz clic para subir recibo o captura">Click to upload receipt or screenshot</div>
-        <div class="uz-text" style="font-size:0.72rem;margin-top:0.25rem" data-en="PNG, JPG, PDF accepted" data-es="Se aceptan PNG, JPG y PDF">PNG, JPG, PDF accepted</div>
+        <div class="uz-text">Click to upload receipt or screenshot</div>
+        <div class="uz-text" style="font-size:0.72rem;margin-top:0.25rem">PNG, JPG, PDF accepted</div>
         <div class="uz-file" id="uz-file-name" style="display:none"></div>
       </div>
       <input type="file" id="receipt-file" accept="image/*,.pdf" style="display:none" onchange="handleReceiptFile(this)">
 
       <div class="receipt-modal-actions">
-        <button class="receipt-submit-btn" id="receipt-submit-btn" onclick="submitReceipt()" disabled data-en="Submit for Verification" data-es="Enviar para verificación">Submit for Verification</button>
-        <button class="receipt-skip-btn" onclick="skipReceipt()" data-en="Skip (no XP)" data-es="Omitir (sin XP)">Skip (no XP)</button>
+        <button class="receipt-submit-btn" id="receipt-submit-btn" onclick="submitReceipt()" disabled>Submit for Verification</button>
+        <button class="receipt-skip-btn" onclick="skipReceipt()">Skip (no XP)</button>
       </div>
     </div>
   </div>
@@ -3823,11 +3857,11 @@
 
 <!-- ACCOUNT BAR -->
 <div class="account-bar" id="account-bar">
-  <div class="ab-left">👤 <span id="ab-status" data-en="Free Plan — upgrade to unlock all features" data-es="Plan Gratis — mejora para desbloquear todas las funciones">Free Plan — upgrade to unlock all features</span></div>
+  <div class="ab-left">👤 <span id="ab-status">Free Plan — upgrade to unlock all features</span></div>
   <div class="ab-right">
-    <span class="ab-plan" id="ab-plan-badge" data-en="Free" data-es="Gratis">Free</span>
-    <button class="ab-manage" id="ab-action-btn" onclick="showPaywall('bar')" data-en="Upgrade to Pro →" data-es="Mejorar a Pro →">Upgrade to Pro →</button>
-    <button class="ab-manage ab-signout-mobile" onclick="signOut()" data-en="Sign Out" data-es="Salir">Sign Out</button>
+    <span class="ab-plan" id="ab-plan-badge">Free</span>
+    <button class="ab-manage" id="ab-action-btn" onclick="showPaywall('bar')">Upgrade to Pro →</button>
+    <button class="ab-manage ab-signout-mobile" onclick="signOut()">Sign Out</button>
   </div>
 </div>
 
@@ -3838,28 +3872,28 @@
       <button class="paywall-close" onclick="closePaywall()">✕</button>
       <div class="paywall-icon">⭐</div>
       <h2>Fintrail Pro</h2>
-      <p data-en="Unlock the full toolkit and take control of your finances." data-es="Desbloquea todas las herramientas y toma control de tus finanzas.">Unlock the full toolkit and take control of your finances.</p>
+      <p>Unlock the full toolkit and take control of your finances.</p>
     </div>
     <div class="paywall-price">
       <div class="price-display">
         <span class="price-amount">$4.99</span>
-        <span class="price-period" data-en="/month" data-es="/mes">/month</span>
+        <span class="price-period">/month</span>
       </div>
-      <div class="price-sub" data-en="Cancel anytime · No hidden fees" data-es="Cancela cuando quieras · Sin cargos ocultos">Cancel anytime · No hidden fees</div>
+      <div class="price-sub">Cancel anytime · No hidden fees</div>
     </div>
     <div class="paywall-features">
-      <div class="pw-feature" data-en="✓ Everything in Free" data-es="✓ Todo lo del plan Gratis"><span class="pw-check">✓</span> Everything in Free</div>
-      <div class="pw-feature" data-en="✓ 💬 AI Financial Advisor — unlimited chat" data-es="✓ 💬 Asesor Financiero IA — chat ilimitado"><span class="pw-check">✓</span> 💬 AI Financial Advisor — unlimited chat</div>
-      <div class="pw-feature" data-en="✓ 🏆 Financial Health Score & tracking" data-es="✓ 🏆 Salud Financiera y seguimiento"><span class="pw-check">✓</span> 🏆 Financial Health Score & tracking</div>
-      <div class="pw-feature" data-en="✓ 🎯 Personalized Debt Payoff Planner" data-es="✓ 🎯 Planificador de Deudas personalizado"><span class="pw-check">✓</span> 🎯 Personalized Debt Payoff Planner</div>
-      <div class="pw-feature" data-en="✓ 📱 Budget Alerts & Bill Reminders" data-es="✓ 📱 Alertas de presupuesto y recordatorios de facturas"><span class="pw-check">✓</span> 📱 Budget Alerts & Bill Reminders</div>
-      <div class="pw-feature" data-en="✓ 📘 Full Credit Score Improvement Guide" data-es="✓ 📘 Guía completa para mejorar tu crédito"><span class="pw-check">✓</span> 📘 Full Credit Score Improvement Guide</div>
-      <div class="pw-feature" data-en="✓ 🏦 Partner Lender Rates & Partner Offers" data-es="✓ 🏦 Tasas de prestamistas y ofertas de socios"><span class="pw-check">✓</span> 🏦 Partner Lender Rates & Partner Offers</div>
+      <div class="pw-feature"><span class="pw-check">✓</span> Everything in Free</div>
+      <div class="pw-feature"><span class="pw-check">✓</span> 💬 AI Financial Advisor — unlimited chat</div>
+      <div class="pw-feature"><span class="pw-check">✓</span> 🏆 Financial Health Score & tracking</div>
+      <div class="pw-feature"><span class="pw-check">✓</span> 🎯 Personalized Debt Payoff Planner</div>
+      <div class="pw-feature"><span class="pw-check">✓</span> 📱 Budget Alerts & Bill Reminders</div>
+      <div class="pw-feature"><span class="pw-check">✓</span> 📘 Full Credit Score Improvement Guide</div>
+      <div class="pw-feature"><span class="pw-check">✓</span> 🏦 Partner Lender Rates & Partner Offers</div>
     </div>
     <div class="paywall-actions">
-      <button class="pw-cta primary" onclick="activatePro()" data-en="Start Pro — $4.99/mo" data-es="Comenzar Pro — $4.99/mes">Start Pro — $4.99/mo</button>
-      <div class="pw-trial" data-en="🎉 Founding price: first 7 days free · then $4.99/mo" data-es="🎉 Precio fundador: primeros 7 días gratis · luego $4.99/mes">🎉 Founding price: first 7 days free · then $4.99/mo</div>
-      <button class="pw-cta secondary" onclick="closePaywall()" data-en="Maybe later" data-es="Quizás después">Maybe later</button>
+      <button class="pw-cta primary" onclick="activatePro()">Start Pro — $4.99/mo</button>
+      <div class="pw-trial">🎉 Founding price: first 7 days free · then $4.99/mo</div>
+      <button class="pw-cta secondary" onclick="closePaywall()">Maybe later</button>
     </div>
   </div>
 </div>
@@ -3868,11 +3902,11 @@
   <h1 data-en="Budget Smarter, <em>Live Better.</em>" data-es="Presupuesta Mejor, <em>Vive Mejor.</em>">Budget Smarter, <em>Live Better.</em></h1>
   <p data-en="Fintrail Pro gives you the AI-powered tools to track spending, eliminate debt, and build lasting financial health — all in one place." data-es="Fintrail Pro te da las herramientas con IA para controlar tus gastos, eliminar deudas y construir una salud financiera duradera — todo en un solo lugar.">Fintrail Pro gives you the AI-powered tools to track spending, eliminate debt, and build lasting financial health — all in one place.</p>
   <div class="hero-chips">
-    <span class="hero-chip" data-en="📊 Budget Tracker" data-es="📊 Rastreador de Presupuesto">📊 Budget Tracker</span>
-    <span class="hero-chip" data-en="🎯 Savings Goals" data-es="🎯 Metas de Ahorro">🎯 Savings Goals</span>
-    <span class="hero-chip" data-en="💬 AI Advisor" data-es="💬 Asesor IA">💬 AI Advisor</span>
-    <span class="hero-chip" data-en="🏦 Lender Rates" data-es="🏦 Tasas de Prestamistas">🏦 Lender Rates</span>
-    <span class="hero-chip" data-en="📅 Bill Schedule" data-es="📅 Horario de Facturas">📅 Bill Schedule</span>
+    <span class="hero-chip">📊 Budget Tracker</span>
+    <span class="hero-chip">🎯 Savings Goals</span>
+    <span class="hero-chip">💬 AI Advisor</span>
+    <span class="hero-chip">🏦 Lender Rates</span>
+    <span class="hero-chip">📅 Bill Schedule</span>
   </div>
 </div>
 
@@ -3883,8 +3917,8 @@
 
     <!-- SUB NAV -->
     <div class="schedule-toggle">
-      <button class="sched-tab-btn active" onclick="showBudgetSub('tracker', this)" data-en="📊 Tracker" data-es="📊 Rastreador">📊 Tracker</button>
-      <button class="sched-tab-btn" onclick="showBudgetSub('schedule', this)" data-en="📅 Bill Schedule" data-es="📅 Horario de Facturas">📅 Bill Schedule</button>
+      <button class="sched-tab-btn active" onclick="showBudgetSub('tracker', this)">📊 Tracker</button>
+      <button class="sched-tab-btn" onclick="showBudgetSub('schedule', this)">📅 Bill Schedule</button>
     </div>
 
     <!-- TRACKER SUB -->
@@ -3899,7 +3933,7 @@
         <div class="amount" id="total-expenses">$0.00</div>
       </div>
       <div class="summary-card balance">
-        <label id="label-net-balance" data-en="Net Balance" data-es="Balance Neto">Net Balance</label>
+        <label id="label-net-balance">Net Balance</label>
         <div class="amount" id="net-balance">$0.00</div>
       </div>
     </div>
@@ -3907,32 +3941,24 @@
     <div class="two-col">
       <!-- ADD FORM -->
       <div class="card">
-        <h2 id="label-add-transaction" data-en="Add Transaction" data-es="Agregar Transacción">Add Transaction</h2>
+        <h2 id="label-add-transaction">Add Transaction</h2>
         <div class="form-row">
           <div class="form-group">
-            <label data-en="Type" data-es="Tipo">Type</label>
+            <label>Type</label>
             <div class="type-toggle">
-              <button class="type-btn income active" id="btn-income" onclick="setType('income')" data-en="+ Income" data-es="+ Ingreso">+ Income</button>
-              <button class="type-btn expense" id="btn-expense" onclick="setType('expense')" data-en="− Expense" data-es="− Gasto">− Expense</button>
+              <button class="type-btn income active" id="btn-income" onclick="setType('income')">+ Income</button>
+              <button class="type-btn expense" id="btn-expense" onclick="setType('expense')">− Expense</button>
             </div>
           </div>
           <div class="form-group">
             <label id="label-desc" data-en="Description" data-es="Descripción">Description</label>
-            <input type="text" id="desc" placeholder="e.g. Salary, Rent, Groceries" data-en-placeholder="e.g. Salary, Rent, Groceries" data-es-placeholder="ej. Salario, Renta, Comida">
+            <input type="text" id="desc" placeholder="e.g. Salary, Rent, Groceries">
           </div>
           <div class="form-group">
             <label id="label-amount" data-en="Amount ($)" data-es="Monto ($)">Amount ($)</label>
             <input type="number" id="amount" placeholder="0.00" min="0" step="0.01">
           </div>
-          <div class="form-group ft-budget-category-group">
-            <label id="label-category" data-en="Category" data-es="Categoría">Category</label>
-            <div class="ft-budget-category-picker" id="budget-category-picker">
-              <input type="text" id="category" placeholder="Search or choose a category" data-en-placeholder="Search or choose a category" data-es-placeholder="Busca o elige una categoría" autocomplete="off" value="Other" aria-haspopup="listbox" aria-expanded="false">
-              <button type="button" class="ft-budget-category-toggle" id="budget-category-toggle" aria-label="Open category list">⌄</button>
-              <div class="ft-budget-category-menu" id="budget-category-menu" role="listbox"></div>
-            </div>
-          </div>
-<button class="add-btn" id="btn-add-transaction" onclick="addTransaction()" data-en="Add Transaction" data-es="Agregar Transacción">Add Transaction</button>
+<button class="add-btn" id="btn-add-transaction" onclick="addTransaction()">Add Transaction</button>
         </div>
       </div>
 
@@ -3940,7 +3966,7 @@
       <div class="card">
         <h2 id="label-transactions" data-en="Transactions" data-es="Transacciones">Transactions</h2>
         <div class="transaction-list" id="transaction-list">
-          <div class="empty-state" data-en-html="No transactions yet.<br>Add one to get started!" data-es-html="Aún no hay transacciones.<br>¡Agrega una para comenzar!">No transactions yet.<br>Add one to get started!</div>
+          <div class="empty-state">No transactions yet.<br>Add one to get started!</div>
         </div>
       </div>
     </div>
@@ -3948,11 +3974,11 @@
     <!-- SPENDING CHART -->
     <div class="chart-section card" style="margin-top:1.5rem;" id="chart-section">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
-        <h2 id="label-spending" style="margin-bottom:0" data-en="Spending by Category" data-es="Gastos por Categoría">Spending by Category</h2>
-        <button onclick="downloadBudgetPDF()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.45rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.35rem" data-en="📄 Save PDF" data-es="📄 Guardar PDF">📄 Save PDF</button>
+        <h2 id="label-spending" style="margin-bottom:0">Spending by Category</h2>
+        <button onclick="downloadBudgetPDF()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.45rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.35rem">📄 Save PDF</button>
       </div>
       <div class="bar-chart" id="bar-chart">
-        <div class="empty-state" data-en="Add expenses to see your spending breakdown." data-es="Agrega gastos para ver tu desglose.">Add expenses to see your spending breakdown.</div>
+        <div class="empty-state">Add expenses to see your spending breakdown.</div>
       </div>
     </div>
 
@@ -3972,7 +3998,7 @@
           <div class="form-row">
             <div class="form-group">
               <label data-en="Bill Name" data-es="Nombre de la Factura">Bill Name</label>
-              <input type="text" id="bill-name" placeholder="e.g. Rent, Netflix, Car Payment" data-en-placeholder="e.g. Rent, Netflix, Car Payment" data-es-placeholder="ej. Renta, Netflix, Pago del Auto">
+              <input type="text" id="bill-name" placeholder="e.g. Rent, Netflix, Car Payment">
             </div>
             <div class="form-group">
               <label data-en="Total Monthly Amount ($)" data-es="Monto Mensual Total ($)">Total Monthly Amount ($)</label>
@@ -3980,8 +4006,8 @@
             </div>
             <div class="form-group">
               <label data-en="Amount Per Paycheck ($)" data-es="Monto Por Pago ($)">Amount Per Paycheck ($)</label>
-              <input type="number" id="bill-per-paycheck" placeholder="How much you pay each paycheck" data-en-placeholder="How much you pay each paycheck" data-es-placeholder="Cuánto pagas en cada cheque" min="0" step="0.01">
-              <div style="font-size:0.72rem;color:var(--muted);margin-top:0.3rem" data-en="💡 Enter less than the full amount to split across paychecks" data-es="💡 Ingresa menos del total para dividirlo entre cheques">💡 Enter less than the full amount to split across paychecks</div>
+              <input type="number" id="bill-per-paycheck" placeholder="How much you pay each paycheck" min="0" step="0.01">
+              <div style="font-size:0.72rem;color:var(--muted);margin-top:0.3rem">💡 Enter less than the full amount to split across paychecks</div>
             </div>
             <div class="form-group">
               <label data-en="Due Day of Month" data-es="Día de Vencimiento">Due Day of Month</label>
@@ -4022,7 +4048,7 @@
           <div style="margin-top:1.25rem;">
             <h2 style="margin-bottom:0.75rem;" data-en="Your Bills" data-es="Tus Facturas">Your Bills</h2>
             <div class="bill-list" id="bill-list">
-              <div class="empty-state" data-en="No bills added yet." data-es="Aún no hay facturas.">No bills added yet.</div>
+              <div class="empty-state">No bills added yet.</div>
             </div>
           </div>
         </div>
@@ -4036,7 +4062,7 @@
                 <label data-en="Pay Frequency" data-es="Frecuencia de Pago">Pay Frequency</label>
                 <select class="payday-select" id="pay-frequency" onchange="safeSet('fintrail_pay_freq', this.value); renderSchedule()">
                   <option value="biweekly" data-en="Bi-weekly" data-es="Quincenal">Bi-weekly</option>
-                  <option value="semimonthly" data-en="Semi-monthly (1st & 15th)" data-es="Dos veces al mes (1 y 15)">Semi-monthly (1st & 15th)</option>
+                  <option value="semimonthly">Semi-monthly (1st & 15th)</option>
                   <option value="monthly" data-en="Monthly" data-es="Mensual">Monthly</option>
                   <option value="weekly" data-en="Weekly" data-es="Semanal">Weekly</option>
                 </select>
@@ -4347,9 +4373,9 @@
     <div id="ai-gate" style="display:none">
       <div class="lock-gate">
         <div class="lg-icon">💬</div>
-        <h3><span data-en="AI Financial Advisor" data-es="Asesor Financiero IA">AI Financial Advisor</span> <span class="premium-badge">PRO</span></h3>
-        <p data-en="Free users get 5 AI prompts per day. Pro users get unlimited AI advisor access." data-es="Los usuarios gratis tienen 5 preguntas de IA por día. Los usuarios Pro tienen acceso ilimitado al asesor IA.">Free users get 5 AI prompts per day. Pro users get unlimited AI advisor access.</p>
-        <button class="lock-gate-btn" onclick="showPaywall('ai')" data-en="Unlock with Pro — $4.99/mo" data-es="Desbloquear con Pro — $4.99/mes">Unlock with Pro — $4.99/mo</button>
+        <h3>AI Financial Advisor <span class="premium-badge">PRO</span></h3>
+        <p>Free users get 5 AI prompts per day. Pro users get unlimited AI advisor access.</p>
+        <button class="lock-gate-btn" onclick="showPaywall('ai')">Unlock with Pro — $4.99/mo</button>
         <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--muted)" data-en="7-day free trial · Cancel anytime" data-es="Prueba gratis de 7 días · Cancela cuando quieras">7-day free trial · Cancel anytime</div>
       </div>
     </div>
@@ -4497,7 +4523,7 @@
 
         <!-- FINANCIAL HEALTH SCORE -->
         <div class="health-score-card">
-        <h2 data-en="🏆 Financial Health Score" data-es="🏆 Salud Financiera">🏆 Financial Health Score</h2>
+          <h2 data-en="🏆 Financial Health Score" data-es="🏆 Puntaje de Salud Financiera">🏆 Financial Health Score</h2>
           <div class="score-gauge">
             <svg viewBox="0 0 200 110" width="100%">
               <path class="gauge-bg" d="M20,100 A80,80 0 0,1 180,100"/>
@@ -4609,8 +4635,8 @@
         </div>
 
         <!-- METHOD EXPLANATION -->
-        <div id="method-explanation" style="background:var(--bg);border-radius:10px;padding:0.85rem 1rem;margin-bottom:1rem;border:1px solid var(--border);font-size:0.82rem;color:var(--text-soft);line-height:1.6" data-en-html="<strong style='color:var(--text)'>🔥 Avalanche Method:</strong> Pay minimums on all debts, then put ALL extra money toward the debt with the highest interest rate first. Mathematically saves the most money in interest." data-es-html="<strong style='color:var(--text)'>🔥 Método Avalancha:</strong> Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.">
-          <strong style="color:var(--text)">🔥 Avalanche Method:</strong> Pay minimums on all debts, then put ALL extra money toward the debt with the highest interest rate first. Mathematically saves the most money in interest.
+        <div id="method-explanation" style="background:var(--bg);border-radius:10px;padding:0.85rem 1rem;margin-bottom:1rem;border:1px solid var(--border);font-size:0.82rem;color:var(--text-soft);line-height:1.6">
+          <strong style="color:var(--text)">🔥 Método Avalancha:</strong> Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.
         </div>
 
         <!-- EXTRA PAYMENT INPUT -->
@@ -4618,7 +4644,7 @@
           <div class="form-group">
             <label data-en="Extra Monthly Payment ($)" data-es="Pago Mensual Extra ($)">Extra Monthly Payment ($)</label>
             <input type="number" id="extra-payment" value="200" min="0" placeholder="e.g. 200" oninput="runPayoffPlan()">
-            <div style="font-size:0.72rem;color:var(--muted);margin-top:0.3rem" data-en="💡 This extra amount gets focused on one debt at a time" data-es="💡 Este monto extra se enfoca en una deuda a la vez">💡 This extra amount gets focused on one debt at a time</div>
+            <div style="font-size:0.72rem;color:var(--muted);margin-top:0.3rem">💡 This extra amount gets focused on one debt at a time</div>
           </div>
         </div>
 
@@ -4777,22 +4803,22 @@
         <div class="card">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
             <h2 style="margin:0;font-size:1rem" data-en="💚 Assets" data-es="💚 Activos">💚 Assets</h2>
-            <button onclick="addNWItem('asset')" style="background:var(--income-color);color:#fff;border:none;border-radius:8px;padding:0.35rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer" data-en="+ Add" data-es="+ Agregar">+ Add</button>
+            <button onclick="addNWItem('asset')" style="background:var(--income-color);color:#fff;border:none;border-radius:8px;padding:0.35rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer">+ Agregar</button>
           </div>
           <div id="nw-asset-list" style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.75rem"></div>
           <!-- Quick-add row -->
           <div style="display:grid;grid-template-columns:1fr auto auto;gap:0.5rem;align-items:center;background:var(--bg);border-radius:10px;padding:0.65rem;border:1px solid var(--border)">
-            <input type="text" id="nw-asset-name" placeholder="e.g. Savings Account" data-en-placeholder="e.g. Savings Account" data-es-placeholder="ej. Cuenta de Ahorros" style="background:none;border:none;outline:none;font-family:'Sora',sans-serif;font-size:0.85rem;color:var(--text);font-size:16px">
+            <input type="text" id="nw-asset-name" placeholder="e.g. Savings Account" style="background:none;border:none;outline:none;font-family:'Sora',sans-serif;font-size:0.85rem;color:var(--text);font-size:16px">
             <input type="number" id="nw-asset-value" placeholder="0.00" min="0" style="width:90px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:0.35rem 0.5rem;font-family:'Sora',sans-serif;font-size:16px;color:var(--text);outline:none;text-align:right">
             <button onclick="addNWItem('asset')" style="background:var(--income-color);color:#fff;border:none;border-radius:6px;padding:0.38rem 0.65rem;font-size:0.9rem;cursor:pointer;font-weight:700">+</button>
           </div>
           <!-- Common asset shortcuts -->
           <div style="display:flex;flex-wrap:wrap;gap:0.35rem;margin-top:0.6rem">
-            <button onclick="quickAddNW('asset','Cash / Checking',0)" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:20px;border:1px solid var(--border);background:none;cursor:pointer;color:var(--text-soft)" data-en="💵 Cash" data-es="💵 Efectivo">💵 Cash</button>
-            <button onclick="quickAddNW('asset','Savings Account',0)" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:20px;border:1px solid var(--border);background:none;cursor:pointer;color:var(--text-soft)" data-en="🏦 Savings" data-es="🏦 Ahorros">🏦 Savings</button>
-            <button onclick="quickAddNW('asset','401k / IRA',0)" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:20px;border:1px solid var(--border);background:none;cursor:pointer;color:var(--text-soft)" data-en="📈 Retirement" data-es="📈 Retiro">📈 Retirement</button>
-            <button onclick="quickAddNW('asset','Home Value',0)" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:20px;border:1px solid var(--border);background:none;cursor:pointer;color:var(--text-soft)" data-en="🏠 Home" data-es="🏠 Casa">🏠 Home</button>
-            <button onclick="quickAddNW('asset','Vehicle Value',0)" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:20px;border:1px solid var(--border);background:none;cursor:pointer;color:var(--text-soft)" data-en="🚗 Car" data-es="🚗 Auto">🚗 Car</button>
+            <button onclick="quickAddNW('asset','Cash / Checking',0)" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:20px;border:1px solid var(--border);background:none;cursor:pointer;color:var(--text-soft)">💵 Cash</button>
+            <button onclick="quickAddNW('asset','Savings Account',0)" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:20px;border:1px solid var(--border);background:none;cursor:pointer;color:var(--text-soft)">🏦 Savings</button>
+            <button onclick="quickAddNW('asset','401k / IRA',0)" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:20px;border:1px solid var(--border);background:none;cursor:pointer;color:var(--text-soft)">📈 Retirement</button>
+            <button onclick="quickAddNW('asset','Home Value',0)" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:20px;border:1px solid var(--border);background:none;cursor:pointer;color:var(--text-soft)">🏠 Home</button>
+            <button onclick="quickAddNW('asset','Vehicle Value',0)" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:20px;border:1px solid var(--border);background:none;cursor:pointer;color:var(--text-soft)">🚗 Car</button>
           </div>
         </div>
 
@@ -4800,19 +4826,19 @@
         <div class="card">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
             <h2 style="margin:0;font-size:1rem" data-en="❤️ Liabilities" data-es="❤️ Pasivos">❤️ Liabilities</h2>
-            <button onclick="addNWItem('liability')" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.35rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer" data-en="+ Add" data-es="+ Agregar">+ Add</button>
+            <button onclick="addNWItem('liability')" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.35rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer">+ Agregar</button>
           </div>
           <div id="nw-liability-list" style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.75rem"></div>
           <div style="display:grid;grid-template-columns:1fr auto auto;gap:0.5rem;align-items:center;background:var(--bg);border-radius:10px;padding:0.65rem;border:1px solid var(--border)">
-            <input type="text" id="nw-liability-name" placeholder="e.g. Mortgage" data-en-placeholder="e.g. Mortgage" data-es-placeholder="ej. Hipoteca" style="background:none;border:none;outline:none;font-family:'Sora',sans-serif;font-size:16px;color:var(--text)">
+            <input type="text" id="nw-liability-name" placeholder="e.g. Mortgage" style="background:none;border:none;outline:none;font-family:'Sora',sans-serif;font-size:16px;color:var(--text)">
             <input type="number" id="nw-liability-value" placeholder="0.00" min="0" style="width:90px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:0.35rem 0.5rem;font-family:'Sora',sans-serif;font-size:16px;color:var(--text);outline:none;text-align:right">
             <button onclick="addNWItem('liability')" style="background:var(--accent);color:#fff;border:none;border-radius:6px;padding:0.38rem 0.65rem;font-size:0.9rem;cursor:pointer;font-weight:700">+</button>
           </div>
           <div style="display:flex;flex-wrap:wrap;gap:0.35rem;margin-top:0.6rem">
-            <button onclick="quickAddNW('liability','Mortgage',0)" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:20px;border:1px solid var(--border);background:none;cursor:pointer;color:var(--text-soft)" data-en="🏠 Mortgage" data-es="🏠 Hipoteca">🏠 Mortgage</button>
-            <button onclick="quickAddNW('liability','Car Loan',0)" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:20px;border:1px solid var(--border);background:none;cursor:pointer;color:var(--text-soft)" data-en="🚗 Car Loan" data-es="🚗 Préstamo de Auto">🚗 Car Loan</button>
-            <button onclick="quickAddNW('liability','Credit Cards',0)" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:20px;border:1px solid var(--border);background:none;cursor:pointer;color:var(--text-soft)" data-en="💳 Credit Cards" data-es="💳 Tarjetas de Crédito">💳 Credit Cards</button>
-            <button onclick="quickAddNW('liability','Student Loans',0)" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:20px;border:1px solid var(--border);background:none;cursor:pointer;color:var(--text-soft)" data-en="🎓 Student Loans" data-es="🎓 Préstamos Estudiantiles">🎓 Student Loans</button>
+            <button onclick="quickAddNW('liability','Mortgage',0)" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:20px;border:1px solid var(--border);background:none;cursor:pointer;color:var(--text-soft)">🏠 Mortgage</button>
+            <button onclick="quickAddNW('liability','Car Loan',0)" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:20px;border:1px solid var(--border);background:none;cursor:pointer;color:var(--text-soft)">🚗 Car Loan</button>
+            <button onclick="quickAddNW('liability','Credit Cards',0)" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:20px;border:1px solid var(--border);background:none;cursor:pointer;color:var(--text-soft)">💳 Credit Cards</button>
+            <button onclick="quickAddNW('liability','Student Loans',0)" style="font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:20px;border:1px solid var(--border);background:none;cursor:pointer;color:var(--text-soft)">🎓 Student Loans</button>
           </div>
         </div>
 
@@ -4835,7 +4861,7 @@
         <div class="card">
           <h2 style="font-size:1rem;margin-bottom:1rem" data-en="🧩 Breakdown" data-es="🧩 Desglose">🧩 Breakdown</h2>
           <div id="nw-breakdown" style="display:flex;flex-direction:column;gap:0.5rem">
-            <div style="text-align:center;color:var(--muted);font-size:0.82rem;padding:1rem" data-en="Add assets and liabilities to see your breakdown" data-es="Agrega activos y pasivos para ver tu desglose">Add assets and liabilities to see your breakdown</div>
+            <div style="text-align:center;color:var(--muted);font-size:0.82rem;padding:1rem">Add assets and liabilities to see your breakdown</div>
           </div>
         </div>
 
@@ -4843,10 +4869,10 @@
         <div class="card">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
             <h2 style="font-size:1rem;margin:0" data-en="📅 Monthly History" data-es="📅 Historial Mensual">📅 Monthly History</h2>
-            <button onclick="clearNWHistory()" style="background:none;border:1px solid var(--border);color:var(--muted);font-size:0.7rem;padding:0.2rem 0.55rem;border-radius:6px;cursor:pointer" data-en="Clear" data-es="Limpiar">Clear</button>
+            <button onclick="clearNWHistory()" style="background:none;border:1px solid var(--border);color:var(--muted);font-size:0.7rem;padding:0.2rem 0.55rem;border-radius:6px;cursor:pointer">Clear</button>
           </div>
           <div id="nw-history-list" style="display:flex;flex-direction:column;gap:0.35rem;max-height:220px;overflow-y:auto">
-            <div style="text-align:center;color:var(--muted);font-size:0.82rem;padding:1rem" data-en="No history yet — check back next month" data-es="Aún no hay historial — vuelve el próximo mes">No history yet — check back next month</div>
+            <div style="text-align:center;color:var(--muted);font-size:0.82rem;padding:1rem">No history yet — check back next month</div>
           </div>
         </div>
 
@@ -4976,13 +5002,13 @@
         </div>
 
         <div class="profile-sidebar card" style="padding:0.75rem">
-          <button class="profile-menu-btn active" onclick="switchProfilePanel('account', this)" data-en="👤 Account Info" data-es="👤 Información de la Cuenta"><span class="pmb-icon">👤</span> Account Info</button>
-          <button class="profile-menu-btn" onclick="switchProfilePanel('password', this)" data-en="🔑 Change Password" data-es="🔑 Cambiar Contraseña"><span class="pmb-icon">🔑</span> Change Password</button>
-          <button class="profile-menu-btn" onclick="switchProfilePanel('security', this)" data-en="🛡️ Security &amp; 2FA" data-es="🛡️ Seguridad y 2FA"><span class="pmb-icon">🛡️</span> Security & 2FA</button>
-          <button class="profile-menu-btn" onclick="switchProfilePanel('notifications', this)" data-en="🔔 Notifications" data-es="🔔 Notificaciones"><span class="pmb-icon">🔔</span> Notifications</button>
-          <button class="profile-menu-btn" onclick="switchProfilePanel('danger', this)" data-en="⚠️ Danger Zone" data-es="⚠️ Zona de Riesgo"><span class="pmb-icon">⚠️</span> Danger Zone</button>
+          <button class="profile-menu-btn active" onclick="switchProfilePanel('account', this)"><span class="pmb-icon">👤</span> Account Info</button>
+          <button class="profile-menu-btn" onclick="switchProfilePanel('password', this)"><span class="pmb-icon">🔑</span> Change Password</button>
+          <button class="profile-menu-btn" onclick="switchProfilePanel('security', this)"><span class="pmb-icon">🛡️</span> Security & 2FA</button>
+          <button class="profile-menu-btn" onclick="switchProfilePanel('notifications', this)"><span class="pmb-icon">🔔</span> Notifications</button>
+          <button class="profile-menu-btn" onclick="switchProfilePanel('danger', this)"><span class="pmb-icon">⚠️</span> Danger Zone</button>
           <div style="border-top:1px solid var(--border);margin:0.5rem 0;padding-top:0.5rem">
-            <button class="profile-menu-btn" onclick="signOut()" style="color:var(--danger)" data-en="🚪 Sign Out" data-es="🚪 Salir"><span class="pmb-icon">🚪</span> Sign Out</button>
+            <button class="profile-menu-btn" onclick="signOut()" style="color:var(--danger)"><span class="pmb-icon">🚪</span> Sign Out</button>
           </div>
         </div>
       </div>
@@ -4993,10 +5019,10 @@
         <!-- ACCOUNT INFO -->
         <div class="profile-panel visible card" id="panel-account">
           <div class="profile-section-title" data-en="Account Information" data-es="Información de la Cuenta">Account Information</div>
-          <div class="profile-section-desc" data-en="Update your display name and email address." data-es="Actualiza tu nombre visible y correo electrónico.">Update your display name and email address.</div>
+          <div class="profile-section-desc">Update your display name and email address.</div>
           <div class="profile-field">
-            <label data-en="Full Name" data-es="Nombre Completo">Full Name</label>
-            <input class="profile-input" type="text" id="profile-name-input" placeholder="Your name" data-en-placeholder="Your name" data-es-placeholder="Tu nombre">
+            <label>Full Name</label>
+            <input class="profile-input" type="text" id="profile-name-input" placeholder="Your name">
           </div>
           <div class="profile-field">
             <label data-en="Email Address" data-es="Correo Electrónico">Email Address</label>
@@ -5005,65 +5031,65 @@
           <div class="profile-field">
             <label data-en="Profile Color" data-es="Color de Perfil">Profile Color</label>
             <div id="avatar-color-swatches" style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.25rem">
-              <button onclick="setAvatarColor('#f05555',this)" style="width:30px;height:30px;border-radius:50%;background:#f05555;border:3px solid transparent;cursor:pointer;transition:border-color 0.2s" title="Red" data-en-title="Red" data-es-title="Rojo"></button>
-              <button onclick="setAvatarColor('#818cf8',this)" style="width:30px;height:30px;border-radius:50%;background:#818cf8;border:3px solid transparent;cursor:pointer;transition:border-color 0.2s" title="Purple" data-en-title="Purple" data-es-title="Morado"></button>
-              <button onclick="setAvatarColor('#06d6a0',this)" style="width:30px;height:30px;border-radius:50%;background:#06d6a0;border:3px solid transparent;cursor:pointer;transition:border-color 0.2s" title="Teal" data-en-title="Teal" data-es-title="Verde azulado"></button>
-              <button onclick="setAvatarColor('#f5a623',this)" style="width:30px;height:30px;border-radius:50%;background:#f5a623;border:3px solid transparent;cursor:pointer;transition:border-color 0.2s" title="Orange" data-en-title="Orange" data-es-title="Naranja"></button>
-              <button onclick="setAvatarColor('#e84393',this)" style="width:30px;height:30px;border-radius:50%;background:#e84393;border:3px solid transparent;cursor:pointer;transition:border-color 0.2s" title="Pink" data-en-title="Pink" data-es-title="Rosa"></button>
-              <button onclick="setAvatarColor('#00b894',this)" style="width:30px;height:30px;border-radius:50%;background:#00b894;border:3px solid transparent;cursor:pointer;transition:border-color 0.2s" title="Green" data-en-title="Green" data-es-title="Verde"></button>
-              <button onclick="setAvatarColor('#0984e3',this)" style="width:30px;height:30px;border-radius:50%;background:#0984e3;border:3px solid transparent;cursor:pointer;transition:border-color 0.2s" title="Blue" data-en-title="Blue" data-es-title="Azul"></button>
-              <button onclick="setAvatarColor('#6c5ce7',this)" style="width:30px;height:30px;border-radius:50%;background:#6c5ce7;border:3px solid transparent;cursor:pointer;transition:border-color 0.2s" title="Violet" data-en-title="Violet" data-es-title="Violeta"></button>
+              <button onclick="setAvatarColor('#f05555',this)" style="width:30px;height:30px;border-radius:50%;background:#f05555;border:3px solid transparent;cursor:pointer;transition:border-color 0.2s" title="Red"></button>
+              <button onclick="setAvatarColor('#818cf8',this)" style="width:30px;height:30px;border-radius:50%;background:#818cf8;border:3px solid transparent;cursor:pointer;transition:border-color 0.2s" title="Purple"></button>
+              <button onclick="setAvatarColor('#06d6a0',this)" style="width:30px;height:30px;border-radius:50%;background:#06d6a0;border:3px solid transparent;cursor:pointer;transition:border-color 0.2s" title="Teal"></button>
+              <button onclick="setAvatarColor('#f5a623',this)" style="width:30px;height:30px;border-radius:50%;background:#f5a623;border:3px solid transparent;cursor:pointer;transition:border-color 0.2s" title="Orange"></button>
+              <button onclick="setAvatarColor('#e84393',this)" style="width:30px;height:30px;border-radius:50%;background:#e84393;border:3px solid transparent;cursor:pointer;transition:border-color 0.2s" title="Pink"></button>
+              <button onclick="setAvatarColor('#00b894',this)" style="width:30px;height:30px;border-radius:50%;background:#00b894;border:3px solid transparent;cursor:pointer;transition:border-color 0.2s" title="Green"></button>
+              <button onclick="setAvatarColor('#0984e3',this)" style="width:30px;height:30px;border-radius:50%;background:#0984e3;border:3px solid transparent;cursor:pointer;transition:border-color 0.2s" title="Blue"></button>
+              <button onclick="setAvatarColor('#6c5ce7',this)" style="width:30px;height:30px;border-radius:50%;background:#6c5ce7;border:3px solid transparent;cursor:pointer;transition:border-color 0.2s" title="Violet"></button>
             </div>
           </div>
           <button class="profile-save-btn" onclick="updateAccount()" data-en="Save Changes" data-es="Guardar Cambios">Save Changes</button>
           <div class="profile-msg" id="account-msg"></div>
 
           <div class="profile-subscription-card" id="account-subscription-card">
-            <h3 id="account-subscription-title" data-en="⭐ Subscription" data-es="⭐ Suscripción">⭐ Subscription</h3>
-            <p id="account-subscription-desc" data-en="Manage your Fintrail Pro subscription, billing, or upgrade status." data-es="Administra tu suscripción de Fintrail Pro, facturación o estado de mejora.">Manage your Fintrail Pro subscription, billing, or upgrade status.</p>
-            <button class="profile-subscription-btn" id="account-subscription-btn" onclick="handleProfileSubscriptionAction()" data-en="Manage Subscription" data-es="Administrar Suscripción">Manage Subscription</button>
+            <h3 id="account-subscription-title">⭐ Subscription</h3>
+            <p id="account-subscription-desc">Manage your Fintrail Pro subscription, billing, or upgrade status.</p>
+            <button class="profile-subscription-btn" id="account-subscription-btn" onclick="handleProfileSubscriptionAction()">Manage Subscription</button>
           </div>
         </div>
 
         <!-- CHANGE PASSWORD -->
         <div class="profile-panel card" id="panel-password">
           <div class="profile-section-title" data-en="Change Password" data-es="Cambiar Contraseña">Change Password</div>
-          <div class="profile-section-desc" data-en="Choose a strong password with at least 8 characters including letters and numbers." data-es="Elige una contraseña segura de al menos 8 caracteres que incluya letras y números.">Choose a strong password with at least 8 characters including letters and numbers.</div>
+          <div class="profile-section-desc">Choose a strong password with at least 8 characters including letters and numbers.</div>
           <div class="profile-field">
             <label data-en="New Password" data-es="Nueva Contraseña">New Password</label>
-            <input class="profile-input" type="password" id="new-password" placeholder="At least 8 characters" data-en-placeholder="At least 8 characters" data-es-placeholder="Al menos 8 caracteres">
+            <input class="profile-input" type="password" id="new-password" placeholder="At least 8 characters">
           </div>
           <div class="profile-field">
             <label data-en="Confirm New Password" data-es="Confirmar Contraseña">Confirm New Password</label>
-            <input class="profile-input" type="password" id="confirm-password" placeholder="Repeat new password" data-en-placeholder="Repeat new password" data-es-placeholder="Repite la nueva contraseña">
+            <input class="profile-input" type="password" id="confirm-password" placeholder="Repeat new password">
           </div>
-          <button class="profile-save-btn" onclick="updatePassword()" data-en="Update Password" data-es="Actualizar Contraseña">Update Password</button>
+          <button class="profile-save-btn" onclick="updatePassword()">Update Password</button>
           <div class="profile-msg" id="password-msg"></div>
         </div>
 
         <!-- SECURITY & 2FA -->
         <div class="profile-panel card" id="panel-security">
-          <div class="profile-section-title" data-en="Security &amp; Two-Factor Authentication" data-es="Seguridad y Autenticación de Dos Factores">Security & Two-Factor Authentication</div>
-          <div class="profile-section-desc" data-en="Add an extra layer of security to your account. With 2FA enabled, you'll receive a verification code by email every time you sign in." data-es="Agrega una capa extra de seguridad a tu cuenta. Con 2FA activado, recibirás un código de verificación por correo cada vez que inicies sesión.">Add an extra layer of security to your account. With 2FA enabled, you'll receive a verification code by email every time you sign in.</div>
+          <div class="profile-section-title">Security & Two-Factor Authentication</div>
+          <div class="profile-section-desc">Add an extra layer of security to your account. With 2FA enabled, you'll receive a verification code by email every time you sign in.</div>
 
           <div class="security-item">
             <div class="si-left">
               <span class="si-icon">📧</span>
               <div class="si-info">
-                <h4 data-en="Email Verification (2FA)" data-es="Verificación por correo (2FA)">Email Verification (2FA)</h4>
-                <p data-en="Receive a one-time code by email when signing in" data-es="Recibe un código de un solo uso por correo al iniciar sesión">Receive a one-time code by email when signing in</p>
+                <h4>Email Verification (2FA)</h4>
+                <p>Receive a one-time code by email when signing in</p>
               </div>
             </div>
             <div style="display:flex;align-items:center;gap:0.75rem">
-              <span class="si-status disabled" id="2fa-status" data-en="Not enabled" data-es="No activado">Not enabled</span>
-              <button class="si-btn" id="2fa-btn" onclick="toggle2FA()" data-en="Enable" data-es="Activar">Enable</button>
+              <span class="si-status disabled" id="2fa-status">Not enabled</span>
+              <button class="si-btn" id="2fa-btn" onclick="toggle2FA()">Enable</button>
             </div>
           </div>
 
           <div class="otp-box" id="otp-verify-box">
-            <p style="font-size:0.85rem;color:var(--text-soft);margin-bottom:0.5rem" data-en="Enter the 6-digit code sent to your email to verify and enable 2FA:" data-es="Ingresa el código de 6 dígitos enviado a tu correo para verificar y activar 2FA:">Enter the 6-digit code sent to your email to verify and enable 2FA:</p>
+            <p style="font-size:0.85rem;color:var(--text-soft);margin-bottom:0.5rem">Enter the 6-digit code sent to your email to verify and enable 2FA:</p>
             <input class="otp-input" type="text" id="otp-input" maxlength="6" placeholder="000000" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-            <button class="profile-save-btn" style="width:100%" onclick="verify2FA()" data-en="Verify &amp; Enable 2FA" data-es="Verificar y Activar 2FA">Verify & Enable 2FA</button>
+            <button class="profile-save-btn" style="width:100%" onclick="verify2FA()">Verify & Enable 2FA</button>
             <div class="profile-msg" id="otp-msg"></div>
           </div>
 
@@ -5071,22 +5097,22 @@
             <div class="si-left">
               <span class="si-icon">🔐</span>
               <div class="si-info">
-                <h4 data-en="Password Protection" data-es="Protección de Contraseña">Password Protection</h4>
-                <p data-en="Your account is protected with a hashed password" data-es="Tu cuenta está protegida con una contraseña cifrada">Your account is protected with a hashed password</p>
+                <h4>Password Protection</h4>
+                <p>Your account is protected with a hashed password</p>
               </div>
             </div>
-            <span class="si-status enabled" data-en="Active" data-es="Activo">Active</span>
+            <span class="si-status enabled">Active</span>
           </div>
 
           <div class="security-item">
             <div class="si-left">
               <span class="si-icon">🌐</span>
               <div class="si-info">
-                <h4 data-en="Google Sign In" data-es="Inicio de sesión con Google">Google Sign In</h4>
-                <p data-en="Sign in quickly with your Google account" data-es="Inicia sesión rápidamente con tu cuenta de Google">Sign in quickly with your Google account</p>
+                <h4>Google Sign In</h4>
+                <p>Sign in quickly with your Google account</p>
               </div>
             </div>
-            <span class="si-status enabled" data-en="Connected" data-es="Conectado">Connected</span>
+            <span class="si-status enabled">Connected</span>
           </div>
 
           <div class="profile-msg" id="security-msg"></div>
@@ -5094,50 +5120,50 @@
 
         <!-- NOTIFICATIONS -->
         <div class="profile-panel card" id="panel-notifications">
-          <div class="profile-section-title" data-en="Notification Preferences" data-es="Preferencias de Notificación">Notification Preferences</div>
-          <div class="profile-section-desc" data-en="Choose what emails you'd like to receive from Fintrail." data-es="Elige qué correos quieres recibir de Fintrail.">Choose what emails you'd like to receive from Fintrail.</div>
+          <div class="profile-section-title">Notification Preferences</div>
+          <div class="profile-section-desc">Choose what emails you'd like to receive from Fintrail.</div>
           <div class="security-item">
-            <div class="si-left"><span class="si-icon">📅</span><div class="si-info"><h4 data-en="Bill Reminders" data-es="Recordatorios de Facturas">Bill Reminders</h4><p data-en="Email reminders 3 days before bills are due" data-es="Recordatorios por correo 3 días antes del vencimiento de tus facturas">Email reminders 3 days before bills are due</p></div></div>
+            <div class="si-left"><span class="si-icon">📅</span><div class="si-info"><h4>Bill Reminders</h4><p>Email reminders 3 days before bills are due</p></div></div>
             <label class="toggle-switch"><input type="checkbox" id="notif-bills" checked><span class="toggle-slider"></span></label>
           </div>
           <div class="security-item">
-            <div class="si-left"><span class="si-icon">💳</span><div class="si-info"><h4 data-en="Payment Receipts" data-es="Recibos de Pago">Payment Receipts</h4><p data-en="Email confirmation when your Pro subscription renews" data-es="Confirmación por correo cuando se renueve tu suscripción Pro">Email confirmation when your Pro subscription renews</p></div></div>
+            <div class="si-left"><span class="si-icon">💳</span><div class="si-info"><h4>Payment Receipts</h4><p>Email confirmation when your Pro subscription renews</p></div></div>
             <label class="toggle-switch"><input type="checkbox" id="notif-receipts" checked><span class="toggle-slider"></span></label>
           </div>
           <div class="security-item">
-            <div class="si-left"><span class="si-icon">🎯</span><div class="si-info"><h4 data-en="Goal Milestones" data-es="Metas de Ahorro">Goal Milestones</h4><p data-en="Celebrate when you hit savings milestones" data-es="Celebra cuando alcances metas de ahorro">Celebrate when you hit savings milestones</p></div></div>
+            <div class="si-left"><span class="si-icon">🎯</span><div class="si-info"><h4>Goal Milestones</h4><p>Celebrate when you hit savings milestones</p></div></div>
             <label class="toggle-switch"><input type="checkbox" id="notif-goals" checked><span class="toggle-slider"></span></label>
           </div>
           <div class="security-item">
-            <div class="si-left"><span class="si-icon">📰</span><div class="si-info"><h4 data-en="Fintrail Newsletter" data-es="Boletín de Fintrail">Fintrail Newsletter</h4><p data-en="Tips, updates and new features" data-es="Consejos, actualizaciones y nuevas funciones">Tips, updates and new features</p></div></div>
+            <div class="si-left"><span class="si-icon">📰</span><div class="si-info"><h4>Fintrail Newsletter</h4><p>Tips, updates and new features</p></div></div>
             <label class="toggle-switch"><input type="checkbox" id="notif-newsletter"><span class="toggle-slider"></span></label>
           </div>
-          <button class="profile-save-btn" style="margin-top:0.5rem" onclick="saveNotifPrefs()" data-en="Save Preferences" data-es="Guardar preferencias">Save Preferences</button>
+          <button class="profile-save-btn" style="margin-top:0.5rem" onclick="saveNotifPrefs()">Save Preferences</button>
           <div class="profile-msg" id="notif-prefs-msg"></div>
         </div>
 
         <!-- DANGER ZONE -->
         <div class="profile-panel card" id="panel-danger">
-          <div class="profile-section-title" data-en="Danger Zone" data-es="Zona de Riesgo">Danger Zone</div>
+          <div class="profile-section-title">Danger Zone</div>
           <div class="danger-zone">
-            <h3 data-en="⚠️ Delete Account" data-es="⚠️ Eliminar Cuenta">⚠️ Delete Account</h3>
-            <p data-en="Permanently delete your Fintrail account and all associated data including transactions, bills, goals and subscription. This action cannot be undone." data-es="Elimina permanentemente tu cuenta de Fintrail y todos los datos asociados, incluyendo transacciones, facturas, metas y suscripción. Esta acción no se puede deshacer.">Permanently delete your Fintrail account and all associated data including transactions, bills, goals and subscription. This action cannot be undone.</p>
-            <button class="profile-save-btn" style="background:var(--danger)" onclick="confirmDeleteAccount()" data-en="Delete My Account" data-es="Eliminar Mi Cuenta">Delete My Account</button>
+            <h3>⚠️ Delete Account</h3>
+            <p>Permanently delete your Fintrail account and all associated data including transactions, bills, goals and subscription. This action cannot be undone.</p>
+            <button class="profile-save-btn" style="background:var(--danger)" onclick="confirmDeleteAccount()">Delete My Account</button>
           </div>
           <div class="danger-zone" style="margin-top:1rem">
-            <h3 data-en="🗑️ Clear All Data" data-es="🗑️ Borrar Todos los Datos">🗑️ Clear All Data</h3>
-            <p data-en="Remove all your transactions, bills, and goals while keeping your account active." data-es="Elimina tus transacciones, facturas y metas mientras mantienes tu cuenta activa.">Remove all your transactions, bills, and goals while keeping your account active.</p>
-            <button class="profile-save-btn" style="background:var(--danger)" onclick="confirmClearData()" data-en="Clear All Data" data-es="Borrar Todos los Datos">Clear All Data</button>
+            <h3>🗑️ Clear All Data</h3>
+            <p>Remove all your transactions, bills, and goals while keeping your account active.</p>
+            <button class="profile-save-btn" style="background:var(--danger)" onclick="confirmClearData()">Clear All Data</button>
           </div>
 
           <!-- LEGAL LINKS -->
           <div style="margin-top:1.5rem;padding:1rem;background:var(--bg);border-radius:10px;border:1px solid var(--border);text-align:center">
-            <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:0.6rem" data-en="Legal" data-es="Legal">Legal</div>
+            <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:0.6rem">Legal</div>
             <div style="display:flex;justify-content:center;gap:1.5rem">
-              <a href="/privacy.html" target="_blank" style="font-size:0.82rem;color:var(--accent);text-decoration:none;font-weight:600" data-en="Privacy Policy" data-es="Política de Privacidad">Privacy Policy</a>
-              <a href="/terms.html" target="_blank" style="font-size:0.82rem;color:var(--accent);text-decoration:none;font-weight:600" data-en="Terms of Service" data-es="Términos de Servicio">Terms of Service</a>
+              <a href="/privacy.html" target="_blank" style="font-size:0.82rem;color:var(--accent);text-decoration:none;font-weight:600">Privacy Policy</a>
+              <a href="/terms.html" target="_blank" style="font-size:0.82rem;color:var(--accent);text-decoration:none;font-weight:600">Terms of Service</a>
             </div>
-            <div style="font-size:0.72rem;color:var(--muted);margin-top:0.5rem"><span data-en="Questions?" data-es="¿Preguntas?">Questions?</span> <a href="mailto:business-support@fintrail.app" style="color:var(--accent);text-decoration:none">business-support@fintrail.app</a></div>
+            <div style="font-size:0.72rem;color:var(--muted);margin-top:0.5rem">Questions? <a href="mailto:business-support@fintrail.app" style="color:var(--accent);text-decoration:none">business-support@fintrail.app</a></div>
           </div>
         </div>
 
@@ -5845,7 +5871,7 @@
     const name = user.user_metadata?.full_name || user.email.split('@')[0];
     const btn = document.getElementById('mobile-profile-btn');
     if (btn) btn.textContent = name.charAt(0).toUpperCase();
-    document.getElementById('ab-status').textContent = `${name} · ${currentLang === 'es' ? 'Plan Gratis' : 'Free Plan'}`;
+    document.getElementById('ab-status').textContent = `${name} · Free Plan`;
     document.getElementById('ab-status').title = user.email;
     if (isPro) setProUI();
 
@@ -5930,31 +5956,13 @@
   }
   function showAuthMsg(msg, type) {
     const el = document.getElementById('auth-msg');
-    const authMessages = {
-      'Please enter your email and password.': 'Ingresa tu correo y contraseña.',
-      'Please fill in all fields.': 'Completa todos los campos.',
-      'Password must be at least 8 characters.': 'La contraseña debe tener al menos 8 caracteres.',
-      'Passwords do not match.': 'Las contraseñas no coinciden.',
-      'Configure Supabase credentials to enable real auth.': 'Configura las credenciales de Supabase para activar la autenticación real.',
-      'Configure Supabase credentials to enable Google auth.': 'Configura las credenciales de Supabase para activar Google.',
-      'Enter your email above, then click Forgot Password.': 'Ingresa tu correo arriba y luego toca ¿Olvidaste tu contraseña?',
-      'Configure Supabase credentials first.': 'Configura primero las credenciales de Supabase.'
-    };
-    let displayMsg = msg;
-    if (currentLang === 'es') {
-      displayMsg = authMessages[msg] || msg;
-      if (String(msg).startsWith('✅ Account created!')) displayMsg = '✅ ¡Cuenta creada! Revisa tu correo para confirmar y luego inicia sesión.';
-      if (String(msg).startsWith('✅ Password reset link sent to ')) displayMsg = '✅ Enlace para restablecer contraseña enviado a ' + String(msg).replace('✅ Password reset link sent to ', '');
-    }
-    el.textContent = displayMsg; el.className = 'auth-msg ' + type; el.style.display = 'block';
+    el.textContent = msg; el.className = 'auth-msg ' + type; el.style.display = 'block';
   }
   function hideAuthMsg() { document.getElementById('auth-msg').style.display = 'none'; }
   function setAuthLoading(btnId, loading) {
     const btn = document.getElementById(btnId);
     btn.disabled = loading;
-    btn.textContent = loading
-      ? (currentLang === 'es' ? 'Espera por favor...' : 'Please wait...')
-      : (btnId === 'si-btn' ? (currentLang === 'es' ? 'Iniciar Sesión' : 'Sign In') : (currentLang === 'es' ? 'Crear Cuenta Gratis' : 'Create Free Account'));
+    btn.textContent = loading ? 'Please wait...' : (btnId === 'si-btn' ? 'Sign In' : 'Create Free Account');
   }
 
   // DATA PERSISTENCE — save & load from Supabase
@@ -6033,8 +6041,8 @@
       bar.classList.remove('premium');
       badge.textContent = `${level.badge} ${level.name}`;
       badge.classList.remove('premium-plan');
-      statusEl.textContent = `${currentUser?.user_metadata?.full_name || currentUser?.email?.split('@')[0] || (currentLang === 'es' ? 'Usuario' : 'User')} · ${currentLang === 'es' ? 'Plan Gratis' : 'Free Plan'}`;
-      actionBtn.textContent = currentLang === 'es' ? 'Mejorar a Pro →' : 'Upgrade to Pro →';
+      statusEl.textContent = `${currentUser?.user_metadata?.full_name || currentUser?.email?.split('@')[0] || 'User'} · Free Plan`;
+      actionBtn.textContent = 'Upgrade to Pro →';
       actionBtn.onclick = () => showPaywall('bar');
     }
     updateProfileSubscriptionUI();
@@ -6139,7 +6147,7 @@
 
   async function activatePro() {
     const btn = document.querySelector('.pw-cta.primary');
-    if (btn) { btn.disabled = true; btn.textContent = currentLang === 'es' ? 'Redirigiendo al pago...' : 'Redirecting to checkout...'; }
+    if (btn) { btn.disabled = true; btn.textContent = 'Redirecting to checkout...'; }
     try {
       const response = await fetch('/.netlify/functions/create-checkout', {
         method: 'POST',
@@ -6150,12 +6158,12 @@
       if (data.url) {
         window.location.href = data.url;
       } else {
-        alert(currentLang === 'es' ? 'Algo salió mal. Inténtalo de nuevo.' : 'Something went wrong. Please try again.');
-        if (btn) { btn.disabled = false; btn.textContent = currentLang === 'es' ? 'Comenzar Pro — $4.99/mes' : 'Start Pro — $4.99/mo'; }
+        alert('Something went wrong. Please try again.');
+        if (btn) { btn.disabled = false; btn.textContent = 'Start Pro — $4.99/mo'; }
       }
     } catch (err) {
-      alert(currentLang === 'es' ? 'Algo salió mal. Inténtalo de nuevo.' : 'Something went wrong. Please try again.');
-      if (btn) { btn.disabled = false; btn.textContent = currentLang === 'es' ? 'Comenzar Pro — $4.99/mes' : 'Start Pro — $4.99/mo'; }
+      alert('Something went wrong. Please try again.');
+      if (btn) { btn.disabled = false; btn.textContent = 'Start Pro — $4.99/mo'; }
     }
   }
 
@@ -6170,7 +6178,7 @@
           applyProState();
           setProUI();
           saveUserData();
-          setTimeout(() => alert(currentLang === 'es' ? '🎉 ¡Bienvenido a Fintrail Pro! Todas las funciones están desbloqueadas.' : '🎉 Welcome to Fintrail Pro! All features are now unlocked.'), 500);
+          setTimeout(() => alert('🎉 Welcome to Fintrail Pro! All features are now unlocked.'), 500);
         }
       }, 300);
       setTimeout(() => clearInterval(tryActivate), 5000);
@@ -6191,10 +6199,10 @@
       if (data.url) {
         window.location.href = data.url;
       } else {
-        alert(currentLang === 'es' ? 'No se encontró una suscripción activa para esta cuenta.' : 'No active subscription found for this account.');
+        alert('No active subscription found for this account.');
       }
     } catch (err) {
-      alert(currentLang === 'es' ? 'Algo salió mal. Inténtalo de nuevo.' : 'Something went wrong. Please try again.');
+      alert('Something went wrong. Please try again.');
     }
   }
 
@@ -6346,13 +6354,11 @@
   function addTransaction() {
     const desc = document.getElementById('desc').value.trim();
     const amount = parseFloat(document.getElementById('amount').value);
-    const categoryEl = document.getElementById('category');
-    const category = (categoryEl && categoryEl.value.trim()) ? categoryEl.value.trim() : 'Other';
-    if (!desc || isNaN(amount) || amount <= 0) { alert(currentLang === 'es' ? 'Ingresa una descripción y un monto válido.' : 'Please enter a description and valid amount.'); return; }
+    const category = document.getElementById('category').value;
+    if (!desc || isNaN(amount) || amount <= 0) { alert('Please enter a description and valid amount.'); return; }
     transactions.push({ id: Date.now(), type: currentType, desc, amount, category });
     document.getElementById('desc').value = '';
     document.getElementById('amount').value = '';
-    if (document.getElementById('category')) document.getElementById('category').value = 'Other';
     render();
     saveUserData();
     awardXPForAction('transaction');
@@ -6377,7 +6383,7 @@
     balEl.style.color = balance < 0 ? 'var(--expense-color)' : 'var(--dark)';
     const list = document.getElementById('transaction-list');
     if (transactions.length === 0) {
-      list.innerHTML = `<div class="empty-state">${currentLang === 'es' ? 'Aún no hay transacciones.<br>¡Agrega una para comenzar!' : 'No transactions yet.<br>Add one to get started!'}</div>`;
+      list.innerHTML = '<div class="empty-state">No transactions yet.<br>Add one to get started!</div>';
     } else {
       list.innerHTML = [...transactions].reverse().map(t => `
         <div class="transaction-item ${t.type}">
@@ -6646,7 +6652,7 @@ Guidelines:
     const saved = parseFloat(document.getElementById('g-saved').value) || 0;
     const date = document.getElementById('g-date').value;
     const category = document.getElementById('g-category').value;
-    if (!name || isNaN(target) || target <= 0) { alert(currentLang === 'es' ? 'Ingresa el nombre de la meta y el monto objetivo.' : 'Please enter a goal name and target amount.'); return; }
+    if (!name || isNaN(target) || target <= 0) { alert('Please enter a goal name and target amount.'); return; }
     goals.push({ id: String(Date.now()), name, icon: selectedEmoji, target, saved: Math.min(saved, target), date, category });
     document.getElementById('g-name').value = '';
     document.getElementById('g-target').value = '';
@@ -6661,7 +6667,7 @@ Guidelines:
   }
 
   function deleteGoal(id) {
-    if (!confirm(currentLang === 'es' ? '¿Eliminar esta meta de ahorro?' : 'Delete this savings goal?')) return;
+    if (!confirm('Delete this savings goal?')) return;
     goals = goals.filter(g => String(g.id) !== String(id));
     // Save immediately to localStorage before async Supabase write
     const _dUid = currentUser?.id || 'demo';
@@ -6734,7 +6740,7 @@ Guidelines:
       const months = monthsUntil(g.date);
       const monthlyNeeded = (months && months > 0 && remaining > 0) ? (remaining / months) : null;
       const complete = pct >= 100;
-      const dateLabel = g.date ? new Date(g.date).toLocaleDateString(currentLang === 'es' ? 'es-US' : 'en-US', {month:'short', year:'numeric'}) : (currentLang === 'es' ? 'Sin fecha límite' : 'No deadline');
+      const dateLabel = g.date ? new Date(g.date).toLocaleDateString('en-US', {month:'short', year:'numeric'}) : 'No deadline';
 
       return `
       <div class="goal-card">
@@ -6766,7 +6772,7 @@ Guidelines:
         ${!complete ? `
         <div class="add-deposit-row">
           <input class="deposit-input" id="dep-${g.id}" type="number" placeholder="${currentLang === 'es' ? 'Agregar ahorro...' : 'Add savings...'}" min="0" onkeydown="if(event.key==='Enter')deposit(${g.id})">
-          <button class="deposit-btn" onclick="deposit('${g.id}')">${currentLang === 'es' ? '+ Agregar' : '+ Add'}</button>
+          <button class="deposit-btn" onclick="deposit('${g.id}')">+ Agregar</button>
         </div>` : ''}
       </div>`;
     }).join('');
@@ -6798,7 +6804,7 @@ Guidelines:
     const perPaycheck = parseFloat(document.getElementById('bill-per-paycheck').value) || amount;
     const day = parseInt(document.getElementById('bill-day').value);
     const cat = document.getElementById('bill-cat').value;
-    if (!name || isNaN(amount) || amount <= 0) { alert(currentLang === 'es' ? 'Ingresa el nombre de la factura y el monto.' : 'Please enter a bill name and amount.'); return; }
+    if (!name || isNaN(amount) || amount <= 0) { alert('Please enter a bill name and amount.'); return; }
     bills.push({ id: Date.now(), name, amount, perPaycheck, day, cat });
     document.getElementById('bill-name').value = '';
     document.getElementById('bill-amount').value = '';
@@ -6831,18 +6837,16 @@ Guidelines:
 
   function renderBillList() {
     const list = document.getElementById('bill-list');
-    if (bills.length === 0) { list.innerHTML = `<div class="empty-state">${currentLang === 'es' ? 'Aún no hay facturas.' : 'No bills added yet.'}</div>`; return; }
+    if (bills.length === 0) { list.innerHTML = '<div class="empty-state">No bills added yet.</div>'; return; }
     list.innerHTML = bills.map(b => {
       const perPaycheck = b.perPaycheck || b.amount;
       const isSplit = perPaycheck < b.amount;
-      const suffixes = ['th','st','nd','rd'];
-      const dayLabel = currentLang === 'es' ? `${b.day}` : `${b.day}${suffixes[(b.day % 100 >= 11 && b.day % 100 <= 13) ? 0 : (b.day % 10)] || 'th'}`;
       return `<div class="bill-item recurring">
         <div class="bi-left">
           <span class="bill-icon">${b.cat.split(' ')[0]}</span>
           <div class="bi-info">
             <div class="bi-name">${escHtml(b.name)}</div>
-            <div class="bi-meta">${currentLang === 'es' ? 'Vence el' : 'Due'} ${dayLabel} · ${b.cat.split(' ').slice(1).join(' ')}${isSplit ? ` · <span style="color:var(--accent)">$${perPaycheck.toFixed(2)}${currentLang === 'es' ? '/cheque' : '/paycheck'}</span>` : ''}</div>
+            <div class="bi-meta">Due ${b.day}${['st','nd','rd'][((b.day)%10)-1]||'th'} · ${b.cat.split(' ').slice(1).join(' ')}${isSplit ? ` · <span style="color:var(--accent)">$${perPaycheck.toFixed(2)}/paycheck</span>` : ''}</div>
           </div>
         </div>
         <div class="bi-right">
@@ -6923,7 +6927,7 @@ Guidelines:
   function renderSchedule() {
     const output = document.getElementById('schedule-output');
     if (bills.length === 0) {
-      output.innerHTML = `<div class="sched-empty">${currentLang === 'es' ? 'Agrega facturas y tu frecuencia de pago para generar tu horario de 6 meses.' : 'Add bills and your pay frequency to generate your 6-month payment schedule.'}</div>`;
+      output.innerHTML = '<div class="sched-empty">Add bills and your pay frequency to generate your 6-month payment schedule.</div>';
       return;
     }
     const frequency = document.getElementById('pay-frequency').value;
@@ -7128,15 +7132,10 @@ Guidelines:
     document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     const explanation = document.getElementById('method-explanation');
-    const es = currentLang === 'es';
     if (method === 'avalanche') {
-      explanation.innerHTML = es
-        ? '<strong style="color:var(--text)">🔥 Método Avalancha:</strong> Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.'
-        : '<strong style="color:var(--text)">🔥 Avalanche Method:</strong> Pay minimums on all debts, then put ALL extra money toward the debt with the highest interest rate first. Mathematically saves the most money in interest.';
+      explanation.innerHTML = '<strong style="color:var(--text)">🔥 Método Avalancha:</strong> Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.';
     } else {
-      explanation.innerHTML = es
-        ? '<strong style="color:var(--text)">⛄ Método Bola de Nieve:</strong> Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con el saldo más pequeño primero. Este método genera victorias rápidas y ayuda a mantener la motivación.'
-        : '<strong style="color:var(--text)">⛄ Snowball Method:</strong> Pay minimums on all debts, then put ALL extra money toward the debt with the smallest balance first. This method gives quick wins and helps maintain motivation.';
+      explanation.innerHTML = '<strong style="color:var(--text)">⛄ Snowball Method:</strong> Pay minimums on all debts, then put ALL extra money toward the <strong>smallest balance</strong> debt first. Gives you quick wins and motivation to keep going.';
     }
     runPayoffPlan();
   }
@@ -7146,7 +7145,7 @@ Guidelines:
     const balance = parseFloat(document.getElementById('debt-balance').value);
     const apr = parseFloat(document.getElementById('debt-apr').value);
     const minInput = parseFloat(document.getElementById('debt-min').value);
-    if (!name || isNaN(balance) || isNaN(apr)) { alert(currentLang === 'es' ? 'Completa el nombre de la deuda, saldo y APR.' : 'Please fill in debt name, balance and APR.'); return; }
+    if (!name || isNaN(balance) || isNaN(apr)) { alert('Please fill in debt name, balance and APR.'); return; }
     const minPayment = !isNaN(minInput) && minInput > 0 ? minInput : Math.max(25, balance * 0.02);
     planDebts.push({ id: Date.now(), name, balance, apr, minPayment });
     document.getElementById('debt-name').value = '';
@@ -7203,7 +7202,7 @@ Guidelines:
     const balance = parseFloat(document.getElementById('edit-debt-balance').value);
     const apr = parseFloat(document.getElementById('edit-debt-apr').value);
     const minPayment = parseFloat(document.getElementById('edit-debt-min').value) || Math.max(25, balance * 0.02);
-    if (!name || isNaN(balance) || isNaN(apr)) { alert(currentLang === 'es' ? 'Completa el nombre, saldo y APR.' : 'Please fill in name, balance, and APR.'); return; }
+    if (!name || isNaN(balance) || isNaN(apr)) { alert('Please fill in name, balance, and APR.'); return; }
     planDebts = planDebts.map(d => d.id === id ? { ...d, name, balance, apr, minPayment } : d);
     document.getElementById('edit-debt-modal').style.display = 'none';
     renderDebtList();
@@ -7312,11 +7311,6 @@ Guidelines:
 
     function fmtMonths(m) {
       const yrs = Math.floor(m/12); const mos = m % 12;
-      if (currentLang === 'es') {
-        if (yrs === 0) return `${mos} mes${mos===1?'':'es'}`;
-        if (mos === 0) return `${yrs} año${yrs===1?'':'s'}`;
-        return `${yrs} año${yrs===1?'':'s'} ${mos} mes${mos===1?'':'es'}`;
-      }
       if (yrs === 0) return `${mos}mo`;
       if (mos === 0) return `${yrs}yr`;
       return `${yrs}yr ${mos}mo`;
@@ -7325,49 +7319,48 @@ Guidelines:
     document.getElementById('plan-result').style.display = 'block';
     document.getElementById('plan-empty').style.display = 'none';
 
-    const es = currentLang === 'es';
     document.getElementById('plan-summary').innerHTML = `
       <div class="plan-col">
-        <div class="plan-col-title">💳 ${es ? 'Solo Mínimos' : 'Minimums Only'}</div>
-        <div class="plan-stat"><div class="plan-stat-val bad">${fmtMonths(minResult.months)}</div><div class="plan-stat-label">${es ? 'Tiempo para estar libre de deudas' : 'Time to debt free'}</div></div>
-        <div class="plan-stat"><div class="plan-stat-val bad">$${Math.round(minResult.totalInterest).toLocaleString()}</div><div class="plan-stat-label">${es ? 'Interés total' : 'Total interest'}</div></div>
-        <div class="plan-stat"><div class="plan-stat-val">$${Math.round(totalDebt + minResult.totalInterest).toLocaleString()}</div><div class="plan-stat-label">${es ? 'Total pagado' : 'Total paid'}</div></div>
+        <div class="plan-col-title">💳 Minimums Only</div>
+        <div class="plan-stat"><div class="plan-stat-val bad">${fmtMonths(minResult.months)}</div><div class="plan-stat-label">Time to debt free</div></div>
+        <div class="plan-stat"><div class="plan-stat-val bad">$${Math.round(minResult.totalInterest).toLocaleString()}</div><div class="plan-stat-label">Total interest</div></div>
+        <div class="plan-stat"><div class="plan-stat-val">$${Math.round(totalDebt + minResult.totalInterest).toLocaleString()}</div><div class="plan-stat-label">Total paid</div></div>
       </div>
       <div class="plan-col highlight">
-        <div class="plan-col-title">${payoffMethod === 'avalanche' ? (es ? '🔥 Avalancha' : '🔥 Avalanche') : (es ? '⛄ Bola de Nieve' : '⛄ Snowball')} + $${extra}/${es ? 'mes' : 'mo'}</div>
-        <div class="plan-stat"><div class="plan-stat-val good">${fmtMonths(extraResult.months)}</div><div class="plan-stat-label">${es ? 'Tiempo para estar libre de deudas' : 'Time to debt free'}</div></div>
-        <div class="plan-stat"><div class="plan-stat-val good">$${Math.round(extraResult.totalInterest).toLocaleString()}</div><div class="plan-stat-label">${es ? 'Interés total' : 'Total interest'}</div></div>
-        <div class="plan-stat"><div class="plan-stat-val">$${Math.round(totalDebt + extraResult.totalInterest).toLocaleString()}</div><div class="plan-stat-label">${es ? 'Total pagado' : 'Total paid'}</div></div>
+        <div class="plan-col-title">${payoffMethod === 'avalanche' ? '🔥 Avalanche' : '⛄ Snowball'} + $${extra}/mo</div>
+        <div class="plan-stat"><div class="plan-stat-val good">${fmtMonths(extraResult.months)}</div><div class="plan-stat-label">Time to debt free</div></div>
+        <div class="plan-stat"><div class="plan-stat-val good">$${Math.round(extraResult.totalInterest).toLocaleString()}</div><div class="plan-stat-label">Total interest</div></div>
+        <div class="plan-stat"><div class="plan-stat-val">$${Math.round(totalDebt + extraResult.totalInterest).toLocaleString()}</div><div class="plan-stat-label">Total paid</div></div>
       </div>
       ${interestSaved > 0 ? `
       <div class="plan-savings-banner" style="grid-column:1/-1">
-        <div class="psb-val">💰 ${es ? `Ahorra $${Math.round(interestSaved).toLocaleString()} y termina tus deudas ${monthsSaved} meses antes.` : `Save $${Math.round(interestSaved).toLocaleString()} and get debt free ${monthsSaved} months sooner!`}</div>
-        <div class="psb-label">${es ? `usando ${payoffMethod === 'avalanche' ? 'Avalancha' : 'Bola de Nieve'} con $${extra}/mes extra` : `using ${payoffMethod === 'avalanche' ? 'Avalanche' : 'Snowball'} with $${extra}/mo extra`}</div>
+        <div class="psb-val">💰 Save $${Math.round(interestSaved).toLocaleString()} and get debt free ${monthsSaved} months sooner!</div>
+        <div class="psb-label">using ${payoffMethod === 'avalanche' ? 'Avalanche' : 'Snowball'} with $${extra}/mo extra</div>
       </div>` : ''}`;
 
     // Timeline
     const colors = ['#f05555','#f5a623','#00b894','#818cf8','#06d6a0'];
     const maxM = Math.max(...Object.values(extraResult.debtMonths).filter(Boolean), 1);
-    const methodLabel = payoffMethod === 'avalanche' ? (es ? '🔥 Avalancha' : '🔥 Avalanche') : (es ? '⛄ Bola de Nieve' : '⛄ Snowball');
+    const methodLabel = payoffMethod === 'avalanche' ? '🔥 Avalanche' : '⛄ Snowball';
     const sortedForTimeline = [...planDebts].sort((a,b) =>
       payoffMethod === 'avalanche' ? b.apr - a.apr : a.balance - b.balance
     );
     document.getElementById('payoff-timeline').innerHTML = `
-      <div style="font-size:0.78rem;font-weight:700;color:var(--muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.06em">${methodLabel} ${es ? 'Orden de Pago' : 'Payoff Order'}</div>
+      <div style="font-size:0.78rem;font-weight:700;color:var(--muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.06em">${methodLabel} Payoff Order</div>
       ${sortedForTimeline.map((d, i) => {
         const m = extraResult.debtMonths[d.id] || extraResult.months;
         const pct = Math.max(5, (m / maxM) * 100);
         const payoffDate = new Date(); payoffDate.setMonth(payoffDate.getMonth() + m);
-        const dateStr = payoffDate.toLocaleDateString(es ? 'es-US' : 'en-US', {month:'short', year:'numeric'});
+        const dateStr = payoffDate.toLocaleDateString('en-US', {month:'short', year:'numeric'});
         return `<div class="pt-row" style="margin-bottom:0.4rem">
           <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.25rem">
             <span style="background:${colors[i%colors.length]};color:#fff;font-size:0.65rem;font-weight:800;padding:0.1rem 0.45rem;border-radius:10px">#${i+1}</span>
             <span class="pt-name" style="font-weight:600">${d.name}</span>
             <span style="font-size:0.72rem;color:var(--muted)">APR ${d.apr}%</span>
-            ${i === 0 ? `<span style="font-size:0.65rem;background:var(--accent);color:#fff;padding:0.1rem 0.4rem;border-radius:10px">${es ? 'Enfoque ahora' : 'Focus now'}</span>` : ''}
+            ${i === 0 ? `<span style="font-size:0.65rem;background:var(--accent);color:#fff;padding:0.1rem 0.4rem;border-radius:10px">Focus now</span>` : ''}
           </div>
           <div class="pt-bar-track"><div class="pt-bar-fill" style="width:${pct}%;background:${colors[i%colors.length]}">${fmtMonths(m)}</div></div>
-          <div style="font-size:0.72rem;color:var(--muted);margin-top:0.15rem">${es ? 'Pagada para' : 'Paid off by'} ${dateStr}</div>
+          <div style="font-size:0.72rem;color:var(--muted);margin-top:0.15rem">Paid off by ${dateStr}</div>
         </div>`;
       }).join('')}`;
 
@@ -7602,10 +7595,10 @@ Guidelines:
     const name = document.getElementById('profile-name-input').value.trim();
     const email = document.getElementById('profile-email-input').value.trim();
     const msg = document.getElementById('account-msg');
-    if (!name || !email) { showProfileMsg('account-msg', currentLang === 'es' ? 'Completa todos los campos.' : 'Please fill in all fields.', 'error'); return; }
+    if (!name || !email) { showProfileMsg('account-msg', 'Please fill in all fields.', 'error'); return; }
 
     const btn = event.target;
-    btn.disabled = true; btn.textContent = currentLang === 'es' ? 'Guardando...' : 'Saving...';
+    btn.disabled = true; btn.textContent = 'Saving...';
 
     try {
       if (!sbClient) throw new Error('Not connected');
@@ -7616,22 +7609,22 @@ Guidelines:
       currentUser.user_metadata = { ...currentUser.user_metadata, full_name: name };
       loadProfileUI();
       setUserUI(currentUser);
-      showProfileMsg('account-msg', currentLang === 'es' ? '✅ Cuenta actualizada correctamente.' : '✅ Account updated successfully!', 'success');
+      showProfileMsg('account-msg', '✅ Account updated successfully!', 'success');
     } catch (err) {
-      showProfileMsg('account-msg', err.message || (currentLang === 'es' ? 'No se pudo actualizar la cuenta.' : 'Failed to update account.'), 'error');
+      showProfileMsg('account-msg', err.message || 'Failed to update account.', 'error');
     }
-    btn.disabled = false; btn.textContent = currentLang === 'es' ? 'Guardar Cambios' : 'Save Changes';
+    btn.disabled = false; btn.textContent = 'Save Changes';
   }
 
   async function updatePassword() {
     const newPass = document.getElementById('new-password').value;
     const confirm = document.getElementById('confirm-password').value;
-    if (!newPass || !confirm) { showProfileMsg('password-msg', currentLang === 'es' ? 'Completa ambos campos.' : 'Please fill in both fields.', 'error'); return; }
-    if (newPass.length < 8) { showProfileMsg('password-msg', currentLang === 'es' ? 'La contraseña debe tener al menos 8 caracteres.' : 'Password must be at least 8 characters.', 'error'); return; }
-    if (newPass !== confirm) { showProfileMsg('password-msg', currentLang === 'es' ? 'Las contraseñas no coinciden.' : 'Passwords do not match.', 'error'); return; }
+    if (!newPass || !confirm) { showProfileMsg('password-msg', 'Please fill in both fields.', 'error'); return; }
+    if (newPass.length < 8) { showProfileMsg('password-msg', 'Password must be at least 8 characters.', 'error'); return; }
+    if (newPass !== confirm) { showProfileMsg('password-msg', 'Passwords do not match.', 'error'); return; }
 
     const btn = event.target;
-    btn.disabled = true; btn.textContent = currentLang === 'es' ? 'Actualizando...' : 'Updating...';
+    btn.disabled = true; btn.textContent = 'Updating...';
 
     try {
       if (!sbClient) throw new Error('Not connected');
@@ -7639,17 +7632,17 @@ Guidelines:
       if (error) throw error;
       document.getElementById('new-password').value = '';
       document.getElementById('confirm-password').value = '';
-      showProfileMsg('password-msg', currentLang === 'es' ? '✅ Contraseña actualizada correctamente.' : '✅ Password updated successfully!', 'success');
+      showProfileMsg('password-msg', '✅ Password updated successfully!', 'success');
     } catch (err) {
-      showProfileMsg('password-msg', err.message || (currentLang === 'es' ? 'No se pudo actualizar la contraseña.' : 'Failed to update password.'), 'error');
+      showProfileMsg('password-msg', err.message || 'Failed to update password.', 'error');
     }
-    btn.disabled = false; btn.textContent = currentLang === 'es' ? 'Actualizar Contraseña' : 'Update Password';
+    btn.disabled = false; btn.textContent = 'Update Password';
   }
 
   async function toggle2FA() {
     if (!sbClient || !currentUser) return;
     const btn = document.getElementById('2fa-btn');
-    btn.disabled = true; btn.textContent = currentLang === 'es' ? 'Enviando...' : 'Sending...';
+    btn.disabled = true; btn.textContent = 'Sending...';
 
     try {
       // Send OTP to email
@@ -7659,16 +7652,16 @@ Guidelines:
       });
       if (error) throw error;
       document.getElementById('otp-verify-box').classList.add('visible');
-      showProfileMsg('security-msg', currentLang === 'es' ? `✅ Código de verificación enviado a ${currentUser.email}` : `✅ Verification code sent to ${currentUser.email}`, 'success');
+      showProfileMsg('security-msg', `✅ Verification code sent to ${currentUser.email}`, 'success');
     } catch (err) {
-      showProfileMsg('security-msg', err.message || (currentLang === 'es' ? 'No se pudo enviar el código.' : 'Failed to send code.'), 'error');
+      showProfileMsg('security-msg', err.message || 'Failed to send code.', 'error');
     }
-    btn.disabled = false; btn.textContent = currentLang === 'es' ? 'Reenviar Código' : 'Resend Code';
+    btn.disabled = false; btn.textContent = 'Resend Code';
   }
 
   async function verify2FA() {
     const otp = document.getElementById('otp-input').value.trim();
-    if (otp.length !== 6) { showProfileMsg('otp-msg', currentLang === 'es' ? 'Ingresa el código de 6 dígitos.' : 'Please enter the 6-digit code.', 'error'); return; }
+    if (otp.length !== 6) { showProfileMsg('otp-msg', 'Please enter the 6-digit code.', 'error'); return; }
 
     try {
       if (!sbClient) throw new Error('Not connected');
@@ -7679,23 +7672,23 @@ Guidelines:
       });
       if (error) throw error;
       twoFAEnabled = true;
-      document.getElementById('2fa-status').textContent = currentLang === 'es' ? 'Activado' : 'Enabled';
+      document.getElementById('2fa-status').textContent = 'Enabled';
       document.getElementById('2fa-status').className = 'si-status enabled';
-      document.getElementById('2fa-btn').textContent = currentLang === 'es' ? 'Desactivar' : 'Disable';
+      document.getElementById('2fa-btn').textContent = 'Disable';
       document.getElementById('otp-verify-box').classList.remove('visible');
-      showProfileMsg('security-msg', currentLang === 'es' ? '🛡️ La autenticación de dos factores está activada.' : '🛡️ Two-factor authentication is now enabled!', 'success');
+      showProfileMsg('security-msg', '🛡️ Two-factor authentication is now enabled!', 'success');
     } catch (err) {
-      showProfileMsg('otp-msg', currentLang === 'es' ? 'Código inválido. Inténtalo de nuevo.' : 'Invalid code. Please try again.', 'error');
+      showProfileMsg('otp-msg', 'Invalid code. Please try again.', 'error');
     }
   }
 
   function saveNotifPrefs() {
-    showProfileMsg('notif-prefs-msg', currentLang === 'es' ? '✅ Preferencias de notificación guardadas.' : '✅ Notification preferences saved!', 'success');
+    showProfileMsg('notif-prefs-msg', '✅ Notification preferences saved!', 'success');
   }
 
   function confirmDeleteAccount() {
-    if (confirm(currentLang === 'es' ? '¿Estás completamente seguro? Esto eliminará permanentemente tu cuenta y TODOS los datos. Esta acción no se puede deshacer.' : 'Are you absolutely sure? This will permanently delete your account and ALL data. This cannot be undone.')) {
-      if (confirm(currentLang === 'es' ? 'Última oportunidad — ¿eliminar todo?' : 'Last chance — delete everything?')) {
+    if (confirm('Are you absolutely sure? This will permanently delete your account and ALL data. This cannot be undone.')) {
+      if (confirm('Last chance — delete everything?')) {
         deleteAccount();
       }
     }
@@ -7707,18 +7700,18 @@ Guidelines:
         await sbClient.from('user_data').delete().eq('user_id', currentUser.id);
       }
       await signOut();
-      alert(currentLang === 'es' ? 'Tu cuenta ha sido eliminada.' : 'Your account has been deleted.');
+      alert('Your account has been deleted.');
     } catch (err) {
-      alert((currentLang === 'es' ? 'Error al eliminar la cuenta: ' : 'Error deleting account: ') + err.message);
+      alert('Error deleting account: ' + err.message);
     }
   }
 
   function confirmClearData() {
-    if (confirm(currentLang === 'es' ? 'Esto borrará todas tus transacciones, facturas y metas. Tu cuenta seguirá activa.' : 'This will clear all your transactions, bills, and goals. Your account will remain active.')) {
+    if (confirm('This will clear all your transactions, bills, and goals. Your account will remain active.')) {
       transactions = []; bills = []; goals = [];
       render(); renderBillList(); renderSchedule(); renderGoals();
       saveUserData();
-      alert(currentLang === 'es' ? '✅ Todos los datos se borraron correctamente.' : '✅ All data cleared successfully.');
+      alert('✅ All data cleared successfully.');
     }
   }
 
@@ -7731,8 +7724,7 @@ Guidelines:
   }
 
   function downloadBudgetPDF() {
-    const es = currentLang === 'es';
-    if (transactions.length === 0) { alert(es ? 'Agrega algunas transacciones antes de guardar tu reporte de presupuesto.' : 'Add some transactions first before saving your budget report.'); return; }
+    if (transactions.length === 0) { alert('Add some transactions first before saving your budget report.'); return; }
 
     const income = transactions.filter(t => t.type === 'income').reduce((s,t) => s+t.amount, 0);
     const expenses = transactions.filter(t => t.type === 'expense').reduce((s,t) => s+t.amount, 0);
@@ -7746,34 +7738,34 @@ Guidelines:
     });
 
     const html = `
-      <h1>📊 ${es ? 'Reporte de Presupuesto' : 'Budget Report'}</h1>
-      <p style="color:#888;margin-bottom:1.5rem">${es ? 'Generado para' : 'Generated for'} ${currentUser?.email || (es ? 'Usuario' : 'User')}</p>
+      <h1>📊 Budget Report</h1>
+      <p style="color:#888;margin-bottom:1.5rem">Generated for ${currentUser?.email || 'User'}</p>
 
       <div class="summary-box">
-        <div class="summary-item"><div class="summary-val good">$${income.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div><div class="summary-label">${es ? 'Ingresos Totales' : 'Total Income'}</div></div>
-        <div class="summary-item"><div class="summary-val bad">$${expenses.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div><div class="summary-label">${es ? 'Gastos Totales' : 'Total Expenses'}</div></div>
-        <div class="summary-item"><div class="summary-val" style="color:${balance >= 0 ? '#00b894' : '#f05555'}">$${Math.abs(balance).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div><div class="summary-label">${balance >= 0 ? (es ? 'Ahorro Neto' : 'Net Savings') : (es ? 'Sobre Presupuesto' : 'Over Budget')}</div></div>
+        <div class="summary-item"><div class="summary-val good">$${income.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div><div class="summary-label">Total Income</div></div>
+        <div class="summary-item"><div class="summary-val bad">$${expenses.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div><div class="summary-label">Total Expenses</div></div>
+        <div class="summary-item"><div class="summary-val" style="color:${balance >= 0 ? '#00b894' : '#f05555'}">$${Math.abs(balance).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div><div class="summary-label">${balance >= 0 ? 'Net Savings' : 'Over Budget'}</div></div>
       </div>
 
       <p style="background:#f0f9f6;border-left:3px solid #00b894;padding:0.6rem 1rem;border-radius:0 6px 6px 0;font-size:0.85rem;margin-bottom:1.5rem">
-        💰 ${es ? 'Tasa de ahorro' : 'Savings Rate'}: <strong>${savingsRate}%</strong> ${parseFloat(savingsRate) >= 20 ? (es ? '🎉 ¡Muy bien! Estás alcanzando la meta de ahorro del 20%.' : '🎉 Great job! You\'re hitting the 20% savings goal.') : (es ? '— Apunta al 20% para construir seguridad financiera.' : '— Aim for 20% to build financial security.')}
+        💰 Savings Rate: <strong>${savingsRate}%</strong> ${parseFloat(savingsRate) >= 20 ? '🎉 Great job! You\'re hitting the 20% savings goal.' : '— Aim for 20% to build financial security.'}
       </p>
 
-      <h2>${es ? 'Todas las Transacciones' : 'All Transactions'}</h2>
+      <h2>All Transactions</h2>
       <table>
-        <tr><th>${es ? 'Descripción' : 'Description'}</th><th>${es ? 'Categoría' : 'Category'}</th><th>${es ? 'Tipo' : 'Type'}</th><th>${es ? 'Monto' : 'Amount'}</th></tr>
+        <tr><th>Description</th><th>Category</th><th>Type</th><th>Amount</th></tr>
         ${[...transactions].reverse().map(t => `
           <tr>
             <td>${escHtml(t.desc)}</td>
             <td>${t.category}</td>
-            <td>${t.type === 'income' ? (es ? '✅ Ingreso' : '✅ Income') : (es ? '💸 Gasto' : '💸 Expense')}</td>
+            <td>${t.type === 'income' ? '✅ Income' : '💸 Expense'}</td>
             <td class="${t.type === 'income' ? 'good' : 'bad'}">${t.type === 'income' ? '+' : '-'}$${t.amount.toFixed(2)}</td>
           </tr>`).join('')}
       </table>
 
-      <h2>${es ? 'Gastos por Categoría' : 'Spending by Category'}</h2>
+      <h2>Spending by Category</h2>
       <table>
-        <tr><th>${es ? 'Categoría' : 'Category'}</th><th>${es ? 'Monto' : 'Amount'}</th><th>${es ? '% de Gastos' : '% of Expenses'}</th></tr>
+        <tr><th>Category</th><th>Amount</th><th>% of Expenses</th></tr>
         ${Object.entries(byCategory).sort((a,b) => b[1]-a[1]).map(([cat, amt]) => `
           <tr>
             <td>${cat}</td>
@@ -7782,19 +7774,18 @@ Guidelines:
           </tr>`).join('')}
       </table>
 
-      <h2>${es ? 'Análisis de la Regla 50/30/20' : '50/30/20 Rule Analysis'}</h2>
+      <h2>50/30/20 Rule Analysis</h2>
       <table>
-        <tr><th>${es ? 'Categoría' : 'Category'}</th><th>${es ? 'Recomendado' : 'Recommended'}</th><th>${es ? 'Tu Monto' : 'Your Amount'}</th><th>${es ? 'Estado' : 'Status'}</th></tr>
-        <tr><td>${es ? 'Necesidades (50%)' : 'Needs (50%)'}</td><td>$${(income*0.5).toFixed(2)}</td><td>$${expenses.toFixed(2)}</td><td>${expenses <= income*0.5 ? `<span style="color:#00b894">✅ ${es ? 'Al día' : 'On track'}</span>` : `<span style="color:#f05555">⚠️ ${es ? 'Excedido' : 'Over'}</span>`}</td></tr>
-        <tr><td>${es ? 'Ahorros (20%)' : 'Savings (20%)'}</td><td>$${(income*0.2).toFixed(2)}</td><td>$${Math.max(0,balance).toFixed(2)}</td><td>${balance >= income*0.2 ? `<span style="color:#00b894">✅ ${es ? 'Al día' : 'On track'}</span>` : `<span style="color:#f05555">⚠️ ${es ? 'Bajo' : 'Under'}</span>`}</td></tr>
+        <tr><th>Category</th><th>Recommended</th><th>Your Amount</th><th>Status</th></tr>
+        <tr><td>Needs (50%)</td><td>$${(income*0.5).toFixed(2)}</td><td>$${expenses.toFixed(2)}</td><td>${expenses <= income*0.5 ? '<span style="color:#00b894">✅ On track</span>' : '<span style="color:#f05555">⚠️ Over</span>'}</td></tr>
+        <tr><td>Savings (20%)</td><td>$${(income*0.2).toFixed(2)}</td><td>$${Math.max(0,balance).toFixed(2)}</td><td>${balance >= income*0.2 ? '<span style="color:#00b894">✅ On track</span>' : '<span style="color:#f05555">⚠️ Under</span>'}</td></tr>
       </table>`;
 
-    generatePDF(es ? 'Fintrail - Reporte de Presupuesto' : 'Fintrail - Budget Report', html);
+    generatePDF('Fintrail - Budget Report', html);
   }
 
   // PDF DOWNLOADS
   function generatePDF(title, htmlContent) {
-    const es = currentLang === 'es';
     const printWindow = window.open('', '_blank');
     printWindow.document.write(`
       <!DOCTYPE html>
@@ -7842,10 +7833,10 @@ Guidelines:
       <body>
         <div class="pdf-header">
           <div class="pdf-logo">Fin<span>trail Pro</span></div>
-          <div class="pdf-date">${es ? 'Generado' : 'Generated'} ${new Date().toLocaleDateString(es ? 'es-US' : 'en-US', {weekday:'long', year:'numeric', month:'long', day:'numeric'})}</div>
+          <div class="pdf-date">Generated ${new Date().toLocaleDateString('en-US', {weekday:'long', year:'numeric', month:'long', day:'numeric'})}</div>
         </div>
         ${htmlContent}
-        <div class="footer">${es ? 'Generado por Fintrail · fintrail.app · Solo para uso personal · No es asesoría financiera' : 'Generated by Fintrail · fintrail.app · For personal use only · Not financial advice'}</div>
+        <div class="footer">Generated by Fintrail · fintrail.app · For personal use only · Not financial advice</div>
       
 
 
@@ -7857,8 +7848,7 @@ Guidelines:
   }
 
   function downloadBillSchedulePDF() {
-    const es = currentLang === 'es';
-    if (bills.length === 0) { alert(es ? 'Agrega algunas facturas antes de guardar tu horario.' : 'Add some bills first before saving your schedule.'); return; }
+    if (bills.length === 0) { alert('Add some bills first before saving your schedule.'); return; }
     const frequency = document.getElementById('pay-frequency').value;
     const paydayInput = document.getElementById('next-payday').value;
     let startDate = paydayInput ? new Date(paydayInput + 'T00:00:00') : new Date();
@@ -7867,9 +7857,7 @@ Guidelines:
     const monthNames = currentLang === 'es'
       ? ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
       : ['January','February','March','April','May','June','July','August','September','October','November','December'];
-    const freqLabels = es
-      ? { biweekly: 'Quincenal', semimonthly: 'Dos veces al mes', monthly: 'Mensual', weekly: 'Semanal' }
-      : { biweekly: 'Bi-weekly', semimonthly: 'Semi-monthly', monthly: 'Monthly', weekly: 'Weekly' };
+    const freqLabels = { biweekly: 'Bi-weekly', semimonthly: 'Semi-monthly', monthly: 'Monthly', weekly: 'Weekly' };
 
     const byMonth = {};
     paydays.forEach((pd, i) => {
@@ -7878,37 +7866,36 @@ Guidelines:
       byMonth[key].push({ pd, next: paydays[i+1] || null });
     });
 
-    let html = `<h1>📅 ${es ? 'Horario de Pago de Facturas de 6 Meses' : '6-Month Bill Payment Schedule'}</h1>
-      <p style="color:#888;margin-bottom:1.5rem">${es ? 'Frecuencia de pago' : 'Pay frequency'}: <strong>${freqLabels[frequency]}</strong> · ${es ? 'Comienza' : 'Starting'}: <strong>${startDate.toLocaleDateString(es ? 'es-US' : 'en-US',{month:'long',day:'numeric',year:'numeric'})}</strong></p>`;
+    let html = `<h1>📅 6-Month Bill Payment Schedule</h1>
+      <p style="color:#888;margin-bottom:1.5rem">Pay frequency: <strong>${freqLabels[frequency]}</strong> · Starting: <strong>${startDate.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</strong></p>`;
 
     Object.entries(byMonth).forEach(([key, entries]) => {
       const [yr, mo] = key.split('-');
       const monthBills = entries.flatMap(e => billsDueThisPeriod(e.pd, e.next, frequency));
       const monthTotal = monthBills.reduce((s,b) => s + b.displayAmount, 0);
-      html += `<h2>${monthNames[mo]} ${yr} — $${monthTotal.toFixed(2)} ${es ? 'total adeudado' : 'total due'}</h2>
-        <table><tr><th>${es ? 'Factura' : 'Bill'}</th><th>${es ? 'Categoría' : 'Category'}</th><th>${es ? 'Vence' : 'Due Date'}</th><th>${es ? 'Parte' : 'Portion'}</th><th>${es ? 'Monto' : 'Amount'}</th><th>${es ? 'Día de Pago' : 'Payday'}</th></tr>`;
+      html += `<h2>${monthNames[mo]} ${yr} — $${monthTotal.toFixed(2)} total due</h2>
+        <table><tr><th>Bill</th><th>Category</th><th>Due Date</th><th>Portion</th><th>Amount</th><th>Payday</th></tr>`;
       entries.forEach(({ pd, next }) => {
         const dueBills = billsDueThisPeriod(pd, next, frequency);
         dueBills.forEach(b => {
           html += `<tr>
             <td><strong>${b.name}</strong></td>
             <td>${b.cat.split(' ').slice(1).join(' ')}</td>
-            <td>${b.dueDate ? b.dueDate.toLocaleDateString(es ? 'es-US' : 'en-US',{month:'short',day:'numeric'}) : '-'}</td>
-            <td>${b.splitLabel || (es ? 'Completo' : 'Full')}</td>
+            <td>${b.dueDate ? b.dueDate.toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '-'}</td>
+            <td>${b.splitLabel || 'Full'}</td>
             <td class="bad">$${b.displayAmount.toFixed(2)}</td>
-            <td>${pd.toLocaleDateString(es ? 'es-US' : 'en-US',{month:'short',day:'numeric'})}</td>
+            <td>${pd.toLocaleDateString('en-US',{month:'short',day:'numeric'})}</td>
           </tr>`;
         });
       });
       html += `</table>`;
     });
 
-    generatePDF(es ? 'Fintrail - Horario de Facturas' : 'Fintrail - Bill Schedule', html);
+    generatePDF('Fintrail - Bill Schedule', html);
   }
 
   function downloadDebtPlanPDF() {
-    const es = currentLang === 'es';
-    if (planDebts.length === 0) { alert(es ? 'Agrega algunas deudas antes de guardar tu plan.' : 'Add some debts first before saving your plan.'); return; }
+    if (planDebts.length === 0) { alert('Add some debts first before saving your plan.'); return; }
     const extra = parseFloat(document.getElementById('extra-payment').value) || 0;
 
     function simulate(extraPayment) {
@@ -7937,24 +7924,20 @@ Guidelines:
     const interestSaved = minResult.totalInterest - extraResult.totalInterest;
     const monthsSaved = minResult.months - extraResult.months;
 
-    function fmtM(m) {
-      const y=Math.floor(m/12), mo=m%12;
-      if (!es) return y>0?(mo>0?`${y}yr ${mo}mo`:`${y}yr`):`${mo}mo`;
-      return y>0?(mo>0?`${y} año${y===1?'':'s'} ${mo} mes${mo===1?'':'es'}`:`${y} año${y===1?'':'s'}`):`${mo} mes${mo===1?'':'es'}`;
-    }
+    function fmtM(m) { const y=Math.floor(m/12),mo=m%12; return y>0?(mo>0?`${y}yr ${mo}mo`:`${y}yr`):`${mo}mo`; }
 
-    let html = `<h1>🎯 ${es ? 'Plan de Pago de Deudas' : 'Debt Payoff Plan'}</h1>
-      <p style="color:#888;margin-bottom:1.25rem">${es ? 'Estrategia' : 'Strategy'}: <strong>${payoffMethod === 'avalanche' ? (es ? '🔥 Avalancha (interés más alto primero)' : '🔥 Avalanche (highest interest first)') : (es ? '⛄ Bola de Nieve (saldo más pequeño primero)' : '⛄ Snowball (smallest balance first)')}</strong> · ${es ? 'Pago adicional' : 'Extra payment'}: <strong>$${extra}/${es ? 'mes' : 'mo'}</strong></p>
+    let html = `<h1>🎯 Debt Payoff Plan</h1>
+      <p style="color:#888;margin-bottom:1.25rem">Strategy: <strong>${payoffMethod === 'avalanche' ? '🔥 Avalanche (highest interest first)' : '⛄ Snowball (smallest balance first)'}</strong> · Extra payment: <strong>$${extra}/mo</strong></p>
 
       <div class="summary-box">
-        <div class="summary-item"><div class="summary-val">${fmtM(extraResult.months)}</div><div class="summary-label">${es ? 'Libre de Deudas En' : 'Debt Free In'}</div></div>
-        <div class="summary-item"><div class="summary-val">$${Math.round(interestSaved).toLocaleString()}</div><div class="summary-label">${es ? 'Interés Ahorrado' : 'Interest Saved'}</div></div>
-        <div class="summary-item"><div class="summary-val">${fmtM(monthsSaved)}</div><div class="summary-label">${es ? 'Tiempo Ahorrado' : 'Months Saved'}</div></div>
+        <div class="summary-item"><div class="summary-val">${fmtM(extraResult.months)}</div><div class="summary-label">Debt Free In</div></div>
+        <div class="summary-item"><div class="summary-val">$${Math.round(interestSaved).toLocaleString()}</div><div class="summary-label">Interest Saved</div></div>
+        <div class="summary-item"><div class="summary-val">${monthsSaved}mo</div><div class="summary-label">Months Saved</div></div>
       </div>
 
-      <h2>${es ? 'Tus Deudas' : 'Your Debts'}</h2>
+      <h2>Your Debts</h2>
       <table>
-        <tr><th>${es ? 'Nombre de la Deuda' : 'Debt Name'}</th><th>${es ? 'Saldo' : 'Balance'}</th><th>APR</th><th>${es ? 'Pago Mínimo' : 'Min Payment'}</th><th>${es ? 'Fecha de Pago' : 'Payoff Date'}</th><th>${es ? 'Con Extra' : 'With Extra'}</th></tr>
+        <tr><th>Debt Name</th><th>Balance</th><th>APR</th><th>Min Payment</th><th>Payoff Date</th><th>With Extra</th></tr>
         ${planDebts.map(d => {
           const minMonths = minResult.debtMonths[d.id] || minResult.months;
           const extraMonths = extraResult.debtMonths[d.id] || extraResult.months;
@@ -7970,17 +7953,17 @@ Guidelines:
         }).join('')}
       </table>
 
-      <h2>${es ? 'Pagos Mínimos vs Pagos Adicionales' : 'Minimum Payments vs Extra Payments'}</h2>
+      <h2>Minimum Payments vs Extra Payments</h2>
       <table>
-        <tr><th>${es ? 'Escenario' : 'Scenario'}</th><th>${es ? 'Tiempo para estar libre de deudas' : 'Time to Debt Free'}</th><th>${es ? 'Interés Total' : 'Total Interest'}</th><th>${es ? 'Total Pagado' : 'Total Paid'}</th></tr>
+        <tr><th>Scenario</th><th>Time to Debt Free</th><th>Total Interest</th><th>Total Paid</th></tr>
         <tr class="highlight">
-          <td>💳 ${es ? 'Solo Pagos Mínimos' : 'Minimum Payments Only'}</td>
+          <td>💳 Minimum Payments Only</td>
           <td class="bad">${fmtM(minResult.months)}</td>
           <td class="bad">$${Math.round(minResult.totalInterest).toLocaleString()}</td>
           <td>$${Math.round(totalDebt + minResult.totalInterest).toLocaleString()}</td>
         </tr>
         <tr>
-          <td>🚀 ${es ? `Con $${extra}/mes Extra` : `With $${extra}/mo Extra`}</td>
+          <td>🚀 With $${extra}/mo Extra</td>
           <td class="good">${fmtM(extraResult.months)}</td>
           <td class="good">$${Math.round(extraResult.totalInterest).toLocaleString()}</td>
           <td>$${Math.round(totalDebt + extraResult.totalInterest).toLocaleString()}</td>
@@ -7988,10 +7971,10 @@ Guidelines:
       </table>
 
       <p style="background:#e8f5f0;border-left:3px solid #00b894;padding:0.75rem 1rem;border-radius:0 6px 6px 0;font-size:0.85rem;margin-top:1rem">
-        💡 ${es ? `Al pagar <strong>$${extra}/mes</strong> extra, ahorras <strong>$${Math.round(interestSaved).toLocaleString()}</strong> en intereses y terminas tus deudas <strong>${fmtM(monthsSaved)} antes.</strong>` : `By paying an extra <strong>$${extra}/mo</strong> you save <strong>$${Math.round(interestSaved).toLocaleString()}</strong> in interest and become debt free <strong>${monthsSaved} months sooner!</strong>`}
+        💡 By paying an extra <strong>$${extra}/mo</strong> you save <strong>$${Math.round(interestSaved).toLocaleString()}</strong> in interest and become debt free <strong>${monthsSaved} months sooner!</strong>
       </p>`;
 
-    generatePDF(es ? 'Fintrail - Plan de Pago de Deudas' : 'Fintrail - Debt Payoff Plan', html);
+    generatePDF('Fintrail - Debt Payoff Plan', html);
   }
 
   // CREDIT SCORE SIMULATOR
@@ -8464,15 +8447,11 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     uploadZone.classList.remove('has-file');
     submitBtn.disabled = true;
     if (type === 'bill') {
-      title.textContent = currentLang === 'es' ? '📄 Verificar Pago de Factura' : '📄 Verify Bill Payment';
-      desc.textContent = currentLang === 'es'
-        ? 'Sube una captura o foto de tu confirmación de pago. Tu XP se acreditará después de 48 horas.'
-        : 'Upload a screenshot or photo of your payment confirmation. Your XP will be credited after 48 hours.';
+      title.textContent = '📄 Verify Bill Payment';
+      desc.textContent = 'Upload a screenshot or photo of your payment confirmation. Your XP will be credited after 48 hours.';
     } else {
-      title.textContent = currentLang === 'es' ? '💰 Verificar Depósito de Ahorro' : '💰 Verify Savings Deposit';
-      desc.textContent = currentLang === 'es'
-        ? `Sube comprobante de tu depósito de $${amount?.toFixed(2)} para "${name}". Tu XP se acreditará después de 48 horas.`
-        : `Upload proof of your $${amount?.toFixed(2)} deposit to "${name}". Your XP will be credited after 48 hours.`;
+      title.textContent = '💰 Verify Savings Deposit';
+      desc.textContent = `Upload proof of your $${amount?.toFixed(2)} deposit to "${name}". Your XP will be credited after 48 hours.`;
     }
     modal.style.display = 'flex';
   }
@@ -8714,10 +8693,10 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       const prev  = nwHistory[nwHistory.length - 2].value;
       const delta = netWorth - prev;
       const sign  = delta >= 0 ? '+' : '';
-      change.textContent = sign + '$' + Math.abs(delta).toLocaleString(undefined, {maximumFractionDigits:0}) + (currentLang === 'es' ? ' vs mes pasado' : ' vs last month');
+      change.textContent = sign + '$' + Math.abs(delta).toLocaleString(undefined, {maximumFractionDigits:0}) + ' vs last month';
       change.style.color = delta >= 0 ? 'rgba(6,214,160,0.85)' : 'rgba(240,85,85,0.85)';
     } else {
-      change.textContent = currentLang === 'es' ? 'Agrega tus activos y pasivos abajo' : 'Add your assets and liabilities below';
+      change.textContent = 'Add your assets and liabilities below';
       change.style.color = 'rgba(255,255,255,0.55)';
     }
 
@@ -8744,8 +8723,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
         <div class="nw-item">
           <span class="nw-item-name">${escHtml(a.name)}</span>
           <span class="nw-item-value asset">$${parseFloat(a.value).toLocaleString(undefined,{maximumFractionDigits:0})}</span>
-          <button type="button" class="nw-item-edit" onclick="event.stopPropagation();editNWItem('asset','${a.id}')">${currentLang==='es'?'Editar':'Edit'}</button>
-          <button type="button" class="nw-item-del" onclick="event.stopPropagation();deleteNWItem('asset','${a.id}')" title="${currentLang==='es'?'Eliminar':'Delete'}">&times;</button>
+          <button type="button" class="nw-item-edit" onclick="event.stopPropagation();editNWItem('asset','${a.id}')">Edit</button>
+          <button type="button" class="nw-item-del" onclick="event.stopPropagation();deleteNWItem('asset','${a.id}')" title="Delete">&times;</button>
         </div>`).join('');
 
     lList.innerHTML = nwLiabilities.length === 0 ? `<div style="font-size:0.8rem;color:var(--muted);text-align:center;padding:0.5rem">${currentLang==='es'?'Aún no hay pasivos':'No liabilities yet'}</div>` :
@@ -8753,8 +8732,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
         <div class="nw-item">
           <span class="nw-item-name">${escHtml(l.name)}</span>
           <span class="nw-item-value liability">$${parseFloat(l.value).toLocaleString(undefined,{maximumFractionDigits:0})}</span>
-          <button type="button" class="nw-item-edit" onclick="event.stopPropagation();editNWItem('liability','${l.id}')">${currentLang==='es'?'Editar':'Edit'}</button>
-          <button type="button" class="nw-item-del" onclick="event.stopPropagation();deleteNWItem('liability','${l.id}')" title="${currentLang==='es'?'Eliminar':'Delete'}">&times;</button>
+          <button type="button" class="nw-item-edit" onclick="event.stopPropagation();editNWItem('liability','${l.id}')">Edit</button>
+          <button type="button" class="nw-item-del" onclick="event.stopPropagation();deleteNWItem('liability','${l.id}')" title="Delete">&times;</button>
         </div>`).join('');
   }
 
@@ -8762,7 +8741,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const el = document.getElementById('nw-breakdown');
     if (!el) return;
     const total = totalAssets + totalLiabilities;
-    if (total === 0) { el.innerHTML = `<div style="text-align:center;color:var(--muted);font-size:0.82rem;padding:1rem">${currentLang==='es'?'Agrega activos y pasivos para ver tu desglose':'Add assets and liabilities to see your breakdown'}</div>`; return; }
+    if (total === 0) { el.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:0.82rem;padding:1rem">Add assets and liabilities to see your breakdown</div>'; return; }
 
     const allItems = [
       ...nwAssets.map(a => ({ name: a.name, value: parseFloat(a.value)||0, type:'asset' })),
@@ -8886,7 +8865,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     pts.forEach((p,i) => {
       if (i % step === 0 || i === pts.length-1) {
         const [y,m] = nwHistory[i].month.split('-');
-        const label = new Date(parseInt(y), parseInt(m)-1).toLocaleDateString(currentLang==='es'?'es-US':'en-US', {month:'short', year:'2-digit'});
+        const label = new Date(parseInt(y), parseInt(m)-1).toLocaleDateString('en-US', {month:'short', year:'2-digit'});
         ctx.fillText(label, p.x, H - 8);
       }
     });
@@ -8895,7 +8874,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   function renderNWHistory() {
     const el = document.getElementById('nw-history-list');
     if (!el) return;
-    if (nwHistory.length === 0) { el.innerHTML = `<div style="text-align:center;color:var(--muted);font-size:0.82rem;padding:1rem">${currentLang==='es'?'Aún no hay historial':'No history yet'}</div>`; return; }
+    if (nwHistory.length === 0) { el.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:0.82rem;padding:1rem">No history yet</div>'; return; }
     const sorted = [...nwHistory].reverse();
     el.innerHTML = sorted.map((h, i) => {
       const prev  = sorted[i+1];
@@ -8903,7 +8882,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       const sign  = delta !== null ? (delta >= 0 ? '+' : '') : '';
       const color = delta === null ? 'var(--muted)' : delta >= 0 ? 'var(--income-color)' : 'var(--accent)';
       const [y,m] = h.month.split('-');
-      const label = new Date(parseInt(y), parseInt(m)-1).toLocaleDateString(currentLang==='es'?'es-US':'en-US', {month:'long', year:'numeric'});
+      const label = new Date(parseInt(y), parseInt(m)-1).toLocaleDateString('en-US', {month:'long', year:'numeric'});
       return `<div style="display:flex;align-items:center;justify-content:space-between;padding:0.45rem 0.6rem;background:var(--bg);border-radius:8px;border:1px solid var(--border)">
         <span style="font-size:0.8rem;color:var(--text-soft)">${label}</span>
         <div style="display:flex;align-items:center;gap:0.6rem">
@@ -9013,7 +8992,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   }
 
   function clearNWHistory() {
-    if (!confirm(currentLang === 'es' ? '¿Borrar todas las capturas del historial mensual?' : 'Clear all monthly history snapshots?')) return;
+    if (!confirm('Clear all monthly history snapshots?')) return;
     nwHistory = []; saveNWData(); renderNWHistory(); renderNWChart();
   }
 
@@ -9390,7 +9369,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       document.getElementById('script-box').textContent = negotiationScripts[tab];
       document.getElementById('script-box').classList.remove('loading');
     } else {
-      document.getElementById('script-box').textContent = currentLang === 'es' ? 'Genera tu guion primero para ver esta sección.' : 'Generate your script first to see this section.';
+      document.getElementById('script-box').textContent = 'Generate your script first to see this section.';
     }
   }
 
@@ -9488,7 +9467,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       saved: ['Tus metas están guardadas', 'Tu experiencia está personalizada', 'Comencemos a construir tu futuro financiero'],
       feedbackTitle: '¿Cómo te está funcionando Fintrail hasta ahora?',
       feedbackSubtitle: 'Nos encantaría conocer tu opinión para seguir mejorando la experiencia para todos.',
-      leave: 'Enviar comentarios',
+      leave: 'Enviar Comentarios',
       remind: 'Recordarme Más Tarde'
     }
   };
@@ -9654,7 +9633,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const subtitle = c.steps[step][1];
     const head = `<h2 class="ft-onboarding-v5-title" id="ft-onboarding-v5-title">${title}</h2><p class="ft-onboarding-v5-subtitle">${subtitle}</p>`;
     if (step === 0) {
-      body.innerHTML = head + `<div class="ft-onboarding-v5-language-grid">${c.langs.map(lang => `<button type="button" class="ft-onboarding-v5-lang ${ftOnboardingV5State.lang === lang[0] ? 'active' : ''}" onclick="ftOnboardingV5SelectLanguage('${lang[0]}')"><span class="ft-onboarding-v5-lang-main"><span class="ft-onboarding-v5-flag">${lang[0] === 'en' ? '🇺🇸' : '🇪🇸'}</span><span><span class="ft-onboarding-v5-lang-title">${lang[1]}</span><span class="ft-onboarding-v5-lang-sub">${lang[2]}</span></span></span><span>›</span></button>`).join('')}</div>`;
+      body.innerHTML = head + `<div class="ft-onboarding-v5-language-grid">${c.langs.map(lang => `<button type="button" class="ft-onboarding-v5-lang ${ftOnboardingV5State.lang === lang[0] ? 'active' : ''}" onclick="ftOnboardingV5SelectLanguage('${lang[0]}')"><span class="ft-onboarding-v5-lang-main"><span class="ft-onboarding-v5-flag">${lang[0] === 'en' ? '🇬🇧' : '🇪🇸'}</span><span><span class="ft-onboarding-v5-lang-title">${lang[1]}</span><span class="ft-onboarding-v5-lang-sub">${lang[2]}</span></span></span><span>›</span></button>`).join('')}</div>`;
     } else if (step === 1) {
       body.innerHTML = head + `<div class="ft-onboarding-v5-goal-grid">${c.goals.map(goal => `<button type="button" class="ft-onboarding-v5-goal ${ftOnboardingV5State.goals.includes(goal[0]) ? 'active' : ''}" onclick="ftOnboardingV5ToggleGoal('${goal[0]}')"><span class="ft-onboarding-v5-goal-icon">${goal[1]}</span><span class="ft-onboarding-v5-goal-label">${goal[2]}</span></button>`).join('')}</div><div class="ft-onboarding-v5-selection-note">${c.selected(ftOnboardingV5State.goals.length)}</div>${ftOnboardingV5State.error ? `<div class="ft-onboarding-v5-error">${ftOnboardingV5State.error}</div>` : ''}`;
     } else if (step === 2) {
@@ -9968,9 +9947,6 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const descInput = document.getElementById('desc');
     if (descInput) descInput.placeholder = isEs ? 'ej. Salario, Renta, Comida' : 'e.g. Salary, Rent, Groceries';
 
-    const budgetCategoryInput = document.getElementById('category');
-    if (budgetCategoryInput) budgetCategoryInput.placeholder = isEs ? 'Buscar o elegir una categoría' : 'Search or choose a category';
-
     // Add transaction button
     const addTxBtn = document.getElementById('btn-add-transaction');
     if (addTxBtn) addTxBtn.textContent = isEs ? '+ Agregar Transacción' : '+ Add Transaction';
@@ -10126,7 +10102,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       'Personalized progress based on the savings, debt, credit, and AI activity you have entered in Fintrail.',
       'Progreso personalizado basado en los ahorros, deudas, crédito y actividad de IA que has ingresado en Fintrail.'
     ));
-    reportSetText('report-health-heading', t('Financial Health Score', 'Salud Financiera'));
+    reportSetText('report-health-heading', t('Financial Health Score', 'Puntaje de Salud Financiera'));
     reportSetText('report-savings-heading', t('Savings Progress', 'Progreso de Ahorros'));
     reportSetText('report-complete-label', t('complete', 'completo'));
     reportSetText('report-savings-ai-label', t('✦ AI Insight', '✦ Consejo de IA'));
@@ -10376,9 +10352,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       eventMap[e.date].push(e);
     });
 
-    const dayNames = currentLang === 'es'
-      ? ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb']
-      : ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
     let html = dayNames.map(d => `<div class="cal-day-header">${d}</div>`).join('');
 
     // Prev month days
@@ -10400,7 +10374,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
         <div class="cal-day-num">${d}</div>
         <div class="cal-events">
           ${shown.map(e => `<div class="cal-event ${e.type}" title="${e.title}">${e.icon} ${e.title}</div>`).join('')}
-          ${more > 0 ? `<div class="cal-more">+${more} ${currentLang === 'es' ? 'más' : 'more'}</div>` : ''}
+          ${more > 0 ? `<div class="cal-more">+${more} more</div>` : ''}
         </div>
       </div>`;
     }
@@ -10418,9 +10392,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const today = new Date();
     const startOfWeek = new Date(calCurrentDate);
     startOfWeek.setDate(calCurrentDate.getDate() - calCurrentDate.getDay());
-    const dayNames = currentLang === 'es'
-      ? ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb']
-      : ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
     let headerHtml = `<div class="cal-week-header" style="background:var(--surface)"></div>`;
     const weekDays = [];
@@ -10435,8 +10407,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       </div>`;
     }
 
-    const allDayLabel = currentLang === 'es' ? 'Todo el día' : 'All Day';
-    const hours = [allDayLabel,'8 AM','9 AM','10 AM','11 AM','12 PM','1 PM','2 PM','3 PM','4 PM','5 PM','6 PM','7 PM','8 PM'];
+    const hours = ['All Day','8 AM','9 AM','10 AM','11 AM','12 PM','1 PM','2 PM','3 PM','4 PM','5 PM','6 PM','7 PM','8 PM'];
     let bodyHtml = '';
     hours.forEach(h => {
       bodyHtml += `<div class="cal-time-slot">${h}</div>`;
@@ -10444,7 +10415,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
         const dateStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
         const events = getCalEvents(d.getFullYear(), d.getMonth()).filter(e => e.date === dateStr);
         bodyHtml += `<div class="cal-week-slot">
-          ${h === allDayLabel ? events.map(e => `<div class="cal-week-event ${e.type}">${e.icon} ${e.title}</div>`).join('') : ''}
+          ${h === 'All Day' ? events.map(e => `<div class="cal-week-event ${e.type}">${e.icon} ${e.title}</div>`).join('') : ''}
         </div>`;
       });
     });
@@ -10474,16 +10445,12 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
 
     const colors = { bill:'#f05555', payday:'#00b894', goal:'#f5a623', debt:'#818cf8', custom:'#06d6a0', reminder:'#06d6a0', milestone:'#818cf8' };
     const container = document.getElementById('cal-upcoming-list');
-    if (upcoming.length === 0) { container.innerHTML = `<div class="empty-state" style="font-size:0.82rem">${currentLang === 'es' ? 'No hay próximos eventos — agrega facturas, metas o eventos personalizados.' : 'No upcoming events — add bills, goals or custom events!'}</div>`; return; }
+    if (upcoming.length === 0) { container.innerHTML = '<div class="empty-state" style="font-size:0.82rem">No upcoming events — add bills, goals or custom events!</div>'; return; }
 
     container.innerHTML = upcoming.map(e => {
       const eDate = new Date(e.date);
       const diff = Math.ceil((eDate - today) / (1000*60*60*24));
-      const dateLabel = diff === 0
-        ? (currentLang === 'es' ? 'Hoy' : 'Today')
-        : diff === 1
-          ? (currentLang === 'es' ? 'Mañana' : 'Tomorrow')
-          : `${diff} ${currentLang === 'es' ? 'días' : 'days'}`;
+      const dateLabel = diff === 0 ? 'Today' : diff === 1 ? 'Tomorrow' : `${diff} days`;
       return `<div class="cal-upcoming-item">
         <div class="cal-upcoming-dot" style="background:${colors[e.type]||'#888'}"></div>
         <div class="cal-upcoming-info">
@@ -10510,8 +10477,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     popup.style.cssText = 'top:50%;left:50%;transform:translate(-50%,-50%)';
     popup.innerHTML = `
       <button class="cal-popup-close" onclick="this.parentElement.remove()">✕</button>
-      <div class="cal-popup-title">${new Date(dateStr+'T00:00:00').toLocaleDateString(currentLang === 'es' ? 'es-US' : 'en-US',{weekday:'long',month:'long',day:'numeric'})}</div>
-      <div class="cal-popup-meta">${events.length} ${currentLang === 'es' ? (events.length === 1 ? 'evento' : 'eventos') : `event${events.length!==1?'s':''}`}</div>
+      <div class="cal-popup-title">${new Date(dateStr+'T00:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}</div>
+      <div class="cal-popup-meta">${events.length} event${events.length!==1?'s':''}</div>
       ${events.map(e => `
         <div style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0;border-bottom:1px solid var(--border)">
           <div style="width:8px;height:8px;border-radius:50%;background:${colors[e.type]||'#888'};flex-shrink:0"></div>
@@ -10521,7 +10488,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
             ${e.note ? `<div style="font-size:0.75rem;color:var(--muted)">${e.note}</div>` : ''}
           </div>
         </div>`).join('')}
-      <button onclick="showAddEventModal('${dateStr}');this.closest('.cal-popup').remove()" style="width:100%;margin-top:0.75rem;background:none;border:1.5px solid var(--border);border-radius:8px;padding:0.45rem;font-family:'Sora',sans-serif;font-size:0.78rem;cursor:pointer;color:var(--text-soft)">${currentLang === 'es' ? '+ Agregar Evento Aquí' : '+ Add Event Here'}</button>`;
+      <button onclick="showAddEventModal('${dateStr}');this.closest('.cal-popup').remove()" style="width:100%;margin-top:0.75rem;background:none;border:1.5px solid var(--border);border-radius:8px;padding:0.45rem;font-family:'Sora',sans-serif;font-size:0.78rem;cursor:pointer;color:var(--text-soft)">+ Add Event Here</button>`;
     document.body.appendChild(popup);
     setTimeout(() => document.addEventListener('click', function rm(e) { if(!popup.contains(e.target)){popup.remove(); document.removeEventListener('click',rm);} }), 100);
   }
@@ -10570,7 +10537,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const name = document.getElementById('cal-event-name').value.trim();
     const date = document.getElementById('cal-event-date').value;
     const note = document.getElementById('cal-event-note').value.trim();
-    if (!name || !date) { alert(currentLang === 'es' ? 'Ingresa el nombre y la fecha del evento.' : 'Please enter an event name and date.'); return; }
+    if (!name || !date) { alert('Please enter an event name and date.'); return; }
     calCustomEvents.push({ id: Date.now(), title: name, date, note, type: selectedEventType });
     saveCalendarEvents();
     document.getElementById('cal-event-modal').style.display = 'none';
@@ -10651,7 +10618,7 @@ function applyFoundingFeedbackLanguage(){
     'fm-feature-label': es ? '¿Qué función te gustaría ver próximamente?' : 'What feature would you like to see next?',
     'fm-feedback-label': es ? '¿Qué podemos mejorar?' : 'What can we improve?',
     'fm-later-btn': es ? 'Tal vez después' : 'Maybe Later',
-    'fm-submit-btn': es ? 'Enviar comentarios' : 'Submit Feedback'
+    'fm-submit-btn': es ? 'Enviar Comentarios' : 'Submit Feedback'
   };
   Object.entries(labels).forEach(([id,val]) => { const el = document.getElementById(id); if (el) el.textContent = val; });
   const sel = document.getElementById('fm-feature-request');
@@ -10801,7 +10768,7 @@ window.addEventListener('load', function(){
       "Generate Script": "Generar Guion",
       "Regenerate": "Regenerar",
       "Add Event": "Agregar Evento",
-      "Submit Feedback": "Enviar comentarios",
+      "Submit Feedback": "Enviar Comentarios",
       "Become Founding Member": "Convertirme en Miembro Fundador",
       "Maybe Later": "Tal vez Después",
       "Get Started": "Comenzar",
@@ -11111,7 +11078,7 @@ window.addEventListener('load', function(){
     'Back to Insights':'Volver a Informes',
     '← Back to Insights':'← Volver a Informes',
     'Current Month':'Mes Actual',
-    'Financial Health Score':'Salud Financiera',
+    'Financial Health Score':'Puntaje de Salud Financiera',
     'Savings Progress':'Progreso de Ahorros',
     'Debt Progress':'Progreso de Deudas',
     'Credit Progress':'Progreso de Crédito',
@@ -11878,7 +11845,7 @@ window.addEventListener('load', function(){
     ['Cancel anytime · No hidden fees', 'Cancela cuando quieras · Sin cargos ocultos'],
     ['Everything in Free', 'Todo lo incluido en Gratis'],
     ['AI Financial Advisor — unlimited chat', 'Asesor Financiero IA — chat ilimitado'],
-    ['Financial Health Score & tracking', 'Salud Financiera y seguimiento'],
+    ['Financial Health Score & tracking', 'Puntaje de Salud Financiera y seguimiento'],
     ['Personalized Debt Payoff Planner', 'Planificador personalizado de pago de deudas'],
     ['Budget Alerts & Bill Reminders', 'Alertas de presupuesto y recordatorios de facturas'],
     ['Full Credit Score Improvement Guide', 'Guía completa para mejorar tu crédito'],
@@ -13942,7 +13909,7 @@ window.addEventListener('load', function(){
       if (typeof applyLanguage === 'function') setTimeout(applyLanguage, 50);
     } catch(err) {
       console.error('Add transaction failed:', err);
-      alert(isEs ? 'No se pudo agregar la transacción. Inténtalo de nuevo.' : 'Could not add transaction. Please try again.');
+      alert('Could not add transaction. Please try again.');
     }
   };
 
@@ -14238,509 +14205,197 @@ window.addEventListener('load', function(){
 
 
 
+
+<!-- === FINTRAIL FINAL TRANSLATION POLISH PATCH 2026-06-12 === -->
+<style>
+  /* Prevent longer Spanish category labels like "Entretenimiento" from clipping. */
+  #chart-section .bar-label,
+  .chart-section .bar-label {
+    width: 142px !important;
+    max-width: 142px !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    line-height: 1.25 !important;
+  }
+  @media (max-width:700px) {
+    #bsub-tracker .bar-row {
+      grid-template-columns: 112px minmax(70px,1fr) auto !important;
+    }
+    #bsub-tracker .bar-label {
+      width: auto !important;
+      max-width: none !important;
+      white-space: normal !important;
+      overflow: visible !important;
+      line-height: 1.2 !important;
+    }
+  }
+</style>
 <script>
-/* === BUDGET CATEGORY SEARCHABLE DROPDOWN — SAFE UI POLISH === */
 (function(){
-  var categories = {
-    en: ['Housing','Transportation','Food','Utilities','Healthcare','Insurance','Debt Payments','Entertainment','Shopping','Education','Savings','Other'],
-    es: ['Vivienda','Transporte','Comida','Servicios Públicos','Salud','Seguros','Pago de Deudas','Entretenimiento','Compras','Educación','Ahorros','Otro']
-  };
+  'use strict';
 
-  function isEs(){
-    try { return typeof currentLang !== 'undefined' && currentLang === 'es'; } catch(e) { return false; }
-  }
+  var monthsEN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var monthsES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  var monthsESLower = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  var daysEN = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  var daysES = ['DOM','LUN','MAR','MIÉ','JUE','VIE','SÁB'];
 
-  function getEls(){
-    return {
-      picker: document.getElementById('budget-category-picker'),
-      input: document.getElementById('category'),
-      toggle: document.getElementById('budget-category-toggle'),
-      menu: document.getElementById('budget-category-menu')
-    };
-  }
-
-  function list(){ return isEs() ? categories.es : categories.en; }
-  function placeholder(){ return isEs() ? 'Buscar o elegir una categoría' : 'Search or choose a category'; }
-  function other(){ return isEs() ? 'Otro' : 'Other'; }
-
-  function renderMenu(filter){
-    var els = getEls();
-    if (!els.menu) return;
-    var q = String(filter || '').trim().toLowerCase();
-    var matches = list().filter(function(cat){ return cat.toLowerCase().indexOf(q) !== -1; });
-    if (!matches.length) {
-      els.menu.innerHTML = '<div class="ft-budget-category-empty">' + (isEs() ? 'No hay coincidencias. Puedes escribir una categoría personalizada.' : 'No matches. You can type a custom category.') + '</div>';
-      return;
-    }
-    els.menu.innerHTML = matches.map(function(cat){
-      return '<button type="button" class="ft-budget-category-option" role="option" data-category="' + cat.replace(/&/g,'&amp;').replace(/"/g,'&quot;') + '">' + cat + '</button>';
-    }).join('');
-  }
-
-  function openMenu(){
-    var els = getEls();
-    if (!els.picker || !els.input) return;
-    renderMenu(els.input.value === other() ? '' : els.input.value);
-    els.picker.classList.add('open');
-    els.input.setAttribute('aria-expanded','true');
-  }
-
-  function closeMenu(){
-    var els = getEls();
-    if (!els.picker || !els.input) return;
-    els.picker.classList.remove('open');
-    els.input.setAttribute('aria-expanded','false');
-  }
-
-  function syncLanguage(){
-    var els = getEls();
-    if (!els.input) return;
-    els.input.placeholder = placeholder();
-    if (!els.input.value || /^(Other|Otro)$/.test(els.input.value)) els.input.value = other();
-    renderMenu('');
-  }
-
-  function initBudgetCategoryPicker(){
-    var els = getEls();
-    if (!els.picker || !els.input || !els.menu || els.picker.dataset.ftBudgetCategoryReady === 'true') { syncLanguage(); return; }
-    els.picker.dataset.ftBudgetCategoryReady = 'true';
-    els.input.removeAttribute('list');
-    syncLanguage();
-
-    els.input.addEventListener('focus', function(){ openMenu(); });
-    els.input.addEventListener('click', function(){ openMenu(); });
-    els.input.addEventListener('input', function(){ openMenu(); renderMenu(els.input.value); });
-
-    if (els.toggle) {
-      els.toggle.addEventListener('click', function(e){
-        e.preventDefault();
-        e.stopPropagation();
-        if (els.picker.classList.contains('open')) closeMenu();
-        else { openMenu(); els.input.focus(); }
-      });
-    }
-
-    els.menu.addEventListener('click', function(e){
-      var btn = e.target.closest('.ft-budget-category-option');
-      if (!btn) return;
-      els.input.value = btn.getAttribute('data-category') || btn.textContent.trim();
-      closeMenu();
-      els.input.dispatchEvent(new Event('change', { bubbles: true }));
-    });
-
-    document.addEventListener('click', function(e){
-      if (!els.picker.contains(e.target)) closeMenu();
-    });
-
-    els.input.addEventListener('keydown', function(e){
-      if (e.key === 'Escape') closeMenu();
-      if (e.key === 'ArrowDown') { openMenu(); var first = els.menu.querySelector('.ft-budget-category-option'); if (first) first.focus(); e.preventDefault(); }
-    });
-
-    els.menu.addEventListener('keydown', function(e){
-      var current = document.activeElement && document.activeElement.classList.contains('ft-budget-category-option') ? document.activeElement : null;
-      if (!current) return;
-      if (e.key === 'ArrowDown') { var n = current.nextElementSibling; if (n) n.focus(); e.preventDefault(); }
-      if (e.key === 'ArrowUp') { var p = current.previousElementSibling; if (p) p.focus(); else els.input.focus(); e.preventDefault(); }
-      if (e.key === 'Enter' || e.key === ' ') { current.click(); e.preventDefault(); }
-      if (e.key === 'Escape') { closeMenu(); els.input.focus(); }
-    });
-  }
-
-  function wrapLanguageFunction(name){
+  function getLang(){
     try {
-      var fn = window[name];
-      if (typeof fn === 'function' && !fn.__ftBudgetCategoryWrapped) {
-        var wrapped = function(){
-          var result = fn.apply(this, arguments);
-          setTimeout(syncLanguage, 50);
-          setTimeout(syncLanguage, 250);
-          return result;
-        };
-        wrapped.__ftBudgetCategoryWrapped = true;
-        window[name] = wrapped;
-      }
-    } catch(e) {}
+      if (typeof currentLang !== 'undefined' && currentLang) return currentLang;
+      return localStorage.getItem('fintrail_lang') || document.documentElement.lang || 'en';
+    } catch(e) { return document.documentElement.lang || 'en'; }
   }
+  function isSpanish(){ return String(getLang()).toLowerCase().slice(0,2) === 'es'; }
 
-  window.fintrailInitBudgetCategoryPicker = initBudgetCategoryPicker;
-  document.addEventListener('DOMContentLoaded', function(){
-    initBudgetCategoryPicker();
-    ['applyLanguage','setLanguage','switchLanguage'].forEach(wrapLanguageFunction);
-  });
-  window.addEventListener('load', function(){
-    initBudgetCategoryPicker();
-    setTimeout(initBudgetCategoryPicker, 500);
-    setTimeout(initBudgetCategoryPicker, 1500);
-  });
-})();
-</script>
-
-<script>
-/* === FINAL BILINGUAL TRANSLATION QA PASS === */
-(function(){
-  var qaTimer = null;
-
-  function isSpanish(){
-    try { return typeof currentLang !== 'undefined' && currentLang === 'es'; } catch(e) { return false; }
-  }
-
-  var exactPairs = [
-    ['Budget', 'Presupuesto'],
-    ['Budget Tracker', 'Rastreador de Presupuesto'],
-    ['Bill Schedule', 'Facturas'],
-    ['Bills', 'Facturas'],
-    ['Savings', 'Ahorros'],
-    ['Savings Goals', 'Metas de Ahorro'],
-    ['Net Worth', 'Patrimonio Neto'],
-    ['Net Worth Tracker', 'Rastreador de Patrimonio Neto'],
-    ['Health Score', 'Salud Financiera'],
-    ['Health Score & Alerts', 'Salud Financiera y Alertas'],
-    ['Financial Health Score & tracking', 'Salud Financiera y seguimiento'],
-    ['Founding Member', 'Miembro Fundador'],
-    ['Become Founding Member', 'Convertirme en Miembro Fundador'],
-    ['Submit Feedback', 'Enviar comentarios'],
-    ['Leave Feedback', 'Enviar comentarios'],
-    ['Maybe Later', 'Tal vez más tarde'],
-    ['Remind Me Later', 'Recordarme Más Tarde'],
-    ['This month', 'Este mes'],
-    ['This Month', 'Este mes'],
-    ['Add', 'Agregar'],
-    ['+ Add', '+ Agregar'],
-    ['Save', 'Guardar'],
-    ['Save Changes', 'Guardar cambios'],
-    ['Cancel', 'Cancelar'],
-    ['Edit', 'Editar'],
-    ['Delete', 'Eliminar'],
-    ['Remove', 'Eliminar'],
-    ['Close', 'Cerrar'],
-    ['Today', 'Hoy'],
-    ['Month', 'Mes'],
-    ['Week', 'Semana'],
-    ['Upcoming Events', 'Próximos eventos'],
-    ['No upcoming events', 'No hay próximos eventos'],
-    ['Savings Goals', 'Metas de Ahorro'],
-    ['Debt Milestones', 'Metas de Deuda'],
-    ['Custom Events', 'Eventos Personalizados'],
-    ['Add Custom Event', 'Agregar Evento Personalizado'],
-    ['Custom', 'Personalizado'],
-    ['Reminder', 'Recordatorio'],
-    ['Milestone', 'Meta'],
-    ['EVENT NAME', 'NOMBRE DEL EVENTO'],
-    ['DATE', 'FECHA'],
-    ['NOTE (optional)', 'NOTA (opcional)'],
-    ['Any additional details', 'Detalles adicionales'],
-    ['Add to Calendar', 'Agregar al Calendario'],
-    ['Edit Item', 'Editar Elemento'],
-    ['Edit Debt', 'Editar Deuda'],
-    ['Debt Name', 'Nombre de la Deuda'],
-    ['Name', 'Nombre'],
-    ['Value ($)', 'Valor ($)'],
-    ['Current Balance ($)', 'Saldo Actual ($)'],
-    ['Minimum Payment ($)', 'Pago Mínimo ($)'],
-    ['Payment Receipts', 'Recibos de Pago'],
-    ['Goal Milestones', 'Metas de Ahorro'],
-    ['Notification Preferences', 'Preferencias de Notificación'],
-    ['Bill Reminders', 'Recordatorios de Facturas'],
-    ['Fintrail Newsletter', 'Boletín de Fintrail'],
-    ['Save Preferences', 'Guardar preferencias'],
-    ['Security Settings', 'Configuración de Seguridad'],
-    ['Password Protection', 'Protección de Contraseña'],
-    ['Google Sign In', 'Inicio de Sesión con Google'],
-    ['Active', 'Activo'],
-    ['Connected', 'Conectado'],
-    ['Danger Zone', 'Zona de Riesgo'],
-    ['Delete Account', 'Eliminar Cuenta'],
-    ['Delete My Account', 'Eliminar Mi Cuenta'],
-    ['Clear All Data', 'Borrar Todos los Datos'],
-    ['Legal', 'Legal'],
-    ['Privacy Policy', 'Política de Privacidad'],
-    ['Terms of Service', 'Términos de Servicio'],
-    ['Questions?', '¿Preguntas?'],
-    ['Dashboard', 'Panel'],
-    ['On Track', 'Al Día'],
-    ['Score', 'Puntaje'],
-    ['Current', 'Actual'],
-    ['Simulated', 'Simulado'],
-    ['No change', 'Sin cambios'],
-    ['Poor', 'Bajo'],
-    ['Fair', 'Regular'],
-    ['Good', 'Bueno'],
-    ['Very Good', 'Muy Bueno'],
-    ['Excellent', 'Excelente'],
-    ['Exceptional', 'Excepcional'],
-    ['Total Income', 'Ingresos Totales'],
-    ['Total Expenses', 'Gastos Totales'],
-    ['Net Savings', 'Ahorro Neto'],
-    ['Over Budget', 'Sobre Presupuesto'],
-    ['Spending by Category', 'Gastos por Categoría'],
-    ['No transactions yet.', 'Aún no hay transacciones.'],
-    ['Add one to get started!', '¡Agrega una para comenzar!'],
-    ['Add expenses to see your spending breakdown.', 'Agrega gastos para ver tu desglose.'],
-    ['No bills added yet.', 'Aún no hay facturas.'],
-    ['Pay Frequency', 'Frecuencia de Pago'],
-    ['Semi-monthly (1st & 15th)', 'Dos veces al mes (1 y 15)'],
-    ['Bi-weekly', 'Quincenal'],
-    ['Monthly', 'Mensual'],
-    ['Weekly', 'Semanal'],
-    ['Partner Lender Rates', 'Tasas de Prestamistas Socios'],
-    ['Unlock with Pro — $4.99/mo', 'Desbloquear con Pro — $4.99/mes'],
-    ['Start Pro — $4.99/mo', 'Comenzar Pro — $4.99/mes'],
-    ['Upgrade to Pro', 'Actualizar a Pro'],
-    ['Upgrade to Pro →', 'Actualizar a Pro →'],
-    ['Manage Subscription', 'Administrar Suscripción'],
-    ['Free Plan', 'Plan Gratuito'],
-    ['Pro Plan', 'Plan Pro'],
-    ['Create Free Account', 'Crear Cuenta Gratis'],
-    ['Please wait...', 'Espera por favor...']
-  ];
-
-  var exactEnToEs = {};
-  var exactEsToEn = {};
-  exactPairs.forEach(function(pair){
-    exactEnToEs[pair[0]] = pair[1];
-    exactEsToEn[pair[1]] = pair[0];
-  });
-
-  var phrasePairs = [
-    ['Upload Payment Proof', 'Subir Comprobante de Pago'],
-    ['Upload a screenshot or photo of your payment confirmation to verify and earn XP. Your XP will be credited after a 48-hour review period.', 'Sube una captura o foto de tu confirmación de pago para verificarla y ganar XP. Tu XP se acreditará después de una revisión de 48 horas.'],
-    ['Enter less than the full amount to split across paychecks', 'Ingresa menos del monto total para dividirlo entre pagos'],
-    ['Access exclusive mortgage, personal loan, auto loan, and refinance rates from top lenders — plus our loan payment calculator and rate comparison tools.', 'Accede a tasas exclusivas de hipotecas, préstamos personales, préstamos de auto y refinanciamiento de prestamistas destacados, además de nuestra calculadora de pagos y herramientas de comparación.'],
-    ['Get step-by-step credit score improvement plans, spending factor breakdowns, and advanced debt-to-income reduction strategies — all in one place.', 'Obtén planes paso a paso para mejorar tu crédito, desgloses de factores de gasto y estrategias avanzadas para reducir tu deuda-ingreso, todo en un solo lugar.'],
-    ['Email reminders 3 days before bills are due', 'Recordatorios por correo 3 días antes del vencimiento de tus facturas'],
-    ['Email confirmation when your Pro subscription renews', 'Confirmación por correo cuando se renueve tu suscripción Pro'],
-    ['Celebrate when you hit savings milestones', 'Celebra cuando alcances metas de ahorro'],
-    ['Tips, updates and new features', 'Consejos, actualizaciones y nuevas funciones'],
-    ['Permanently delete your Fintrail account and all associated data including transactions, bills, goals and subscription. This action cannot be undone.', 'Elimina permanentemente tu cuenta de Fintrail y todos los datos asociados, incluyendo transacciones, facturas, metas y suscripción. Esta acción no se puede deshacer.'],
-    ['Remove all your transactions, bills, and goals while keeping your account active.', 'Elimina todas tus transacciones, facturas y metas mientras mantienes tu cuenta activa.'],
-    ['Enter the 6-digit code sent to your email to verify and enable 2FA:', 'Ingresa el código de 6 dígitos enviado a tu correo para verificar y activar 2FA:'],
-    ['Verify & Enable 2FA', 'Verificar y Activar 2FA'],
-    ['Your account is protected with a hashed password', 'Tu cuenta está protegida con una contraseña cifrada'],
-    ['Sign in quickly with your Google account', 'Inicia sesión rápidamente con tu cuenta de Google'],
-    ['How is Fintrail working for you so far?', '¿Cómo te está funcionando Fintrail hasta ahora?'],
-    ["We'd love your feedback to help improve the experience for everyone.", 'Nos encantaría conocer tu opinión para seguir mejorando la experiencia para todos.'],
-    ['What can we improve?', '¿Qué podemos mejorar?'],
-    ['How would you rate your experience so far?', '¿Cómo calificarías tu experiencia hasta ahora?'],
-    ['What feature would you like to see next?', '¿Qué función te gustaría ver próximamente?'],
-    ['Share your ideas, suggestions, bugs, or feedback...', 'Comparte tus ideas, sugerencias, errores o comentarios...'],
-    ['Choose one', 'Elige una opción'],
-    ['Budgeting Tools', 'Herramientas de presupuesto'],
-    ['Debt Payoff Planning', 'Planificación de deudas'],
-    ['Credit Improvement', 'Mejorar crédito'],
-    ['Investing Tools', 'Herramientas de inversión'],
-    ['Other', 'Otro']
-  ];
-
-  function applyPairs(text, reverse){
-    var out = String(text || '');
-    var pairs = reverse ? phrasePairs.map(function(p){ return [p[1], p[0]]; }) : phrasePairs;
-    pairs.forEach(function(pair){ out = out.split(pair[0]).join(pair[1]); });
-    return out;
-  }
-
-  function translateExact(text){
-    var raw = String(text || '');
-    var trimmed = raw.trim();
-    if (!trimmed) return raw;
-    var map = isSpanish() ? exactEnToEs : exactEsToEn;
-    if (Object.prototype.hasOwnProperty.call(map, trimmed)) {
-      return raw.replace(trimmed, map[trimmed]);
+  function replaceMonthsForLang(text){
+    if (!text) return text;
+    var s = String(text);
+    if (isSpanish()) {
+      monthsEN.forEach(function(m, i){ s = s.replace(new RegExp('\\b' + m + '\\b', 'g'), monthsES[i]); });
+      monthsESLower.forEach(function(m, i){ s = s.replace(new RegExp('\\b' + m + '\\b', 'g'), monthsES[i]); });
+    } else {
+      monthsES.forEach(function(m, i){ s = s.replace(new RegExp('\\b' + m + '\\b', 'g'), monthsEN[i]); });
+      monthsESLower.forEach(function(m, i){ s = s.replace(new RegExp('\\b' + m + '\\b', 'g'), monthsEN[i]); });
     }
-    return applyPairs(raw, !isSpanish());
+    return s;
   }
 
-  function translateNodeText(node){
-    var next = translateExact(node.textContent);
-    if (next !== node.textContent) node.textContent = next;
+  function patchBudgetChart(){
+    var enToEs = {
+      'Housing':'Vivienda', 'Transportation':'Transporte', 'Transport':'Transport', 'Food':'Comida', 'Utilities':'Servicios Públicos',
+      'Healthcare':'Salud', 'Insurance':'Seguros', 'Debt Payments':'Pago de Deudas', 'Entertainment':'Entretenimiento',
+      'Shopping':'Compras', 'Education':'Educación', 'Savings':'Ahorros', 'Other':'Otro'
+    };
+    var esToEn = {
+      'Vivienda':'Housing', 'Transporte':'Transport', 'Comida':'Food', 'Servicios Públicos':'Utilities', 'Servicios':'Utilities',
+      'Salud':'Healthcare', 'Seguros':'Insurance', 'Pago de Deudas':'Debt Payments', 'Entretenimiento':'Entertainment',
+      'Compras':'Shopping', 'Educación':'Education', 'Ahorros':'Savings', 'Otro':'Other'
+    };
+    document.querySelectorAll('#chart-section .bar-label, .chart-section .bar-label').forEach(function(el){
+      var txt = (el.textContent || '').trim();
+      if (!txt) return;
+      if (isSpanish() && enToEs[txt]) el.textContent = enToEs[txt];
+      if (!isSpanish() && esToEn[txt]) el.textContent = esToEn[txt];
+    });
   }
 
-  function shouldSkipElement(el){
-    if (!el || !el.tagName) return true;
-    var tag = el.tagName;
-    if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'NOSCRIPT') return true;
-    if (el.closest && el.closest('.ft-budget-category-menu')) return true;
-    return false;
+  function patchNetWorth(){
+    document.querySelectorAll('#tab-networth *').forEach(function(el){
+      if (!el || el.children.length) return;
+      var txt = (el.textContent || '').trim();
+      if (!txt) return;
+      if (txt === 'YOUR NET WORTH' || txt === 'TU PATRIMONIO NETO') {
+        el.textContent = isSpanish() ? 'TU PATRIMONIO NETO' : 'YOUR NET WORTH';
+        return;
+      }
+      var fixed = replaceMonthsForLang(el.textContent);
+      if (fixed !== el.textContent) el.textContent = fixed;
+    });
   }
 
-  function walk(root){
+  function patchCalendar(){
+    var label = document.getElementById('cal-month-label');
+    if (label) {
+      var fixed = replaceMonthsForLang(label.textContent || '');
+      if (fixed !== label.textContent) label.textContent = fixed;
+    }
+    document.querySelectorAll('#tab-calendar .cal-day-header').forEach(function(el, idx){
+      if (idx >= 0 && idx < 7) el.textContent = isSpanish() ? daysES[idx] : daysEN[idx];
+    });
+    document.querySelectorAll('#tab-calendar .cal-week-day-name').forEach(function(el, idx){
+      if (idx >= 0 && idx < 7) el.textContent = isSpanish() ? daysES[idx] : daysEN[idx];
+    });
+  }
+
+  function patchResources(){
+    document.querySelectorAll('#tab-resources .filter-btn, #tab-resources button').forEach(function(btn){
+      var txt = (btn.textContent || '').trim();
+      if (isSpanish()) {
+        if (/Tools\s*$/.test(txt)) btn.textContent = txt.replace(/Tools\s*$/, 'Herramientas');
+        if (/Education\s*$/.test(txt)) btn.textContent = txt.replace(/Education\s*$/, 'Educación');
+      } else {
+        if (/Herramientas\s*$/.test(txt)) btn.textContent = txt.replace(/Herramientas\s*$/, 'Tools');
+        if (/Educación\s*$/.test(txt)) btn.textContent = txt.replace(/Educación\s*$/, 'Education');
+      }
+    });
+  }
+
+  function patchMonthlyReport(){
+    var title = document.getElementById('report-title');
+    if (title) {
+      var fixed = replaceMonthsForLang(title.textContent || '');
+      if (fixed !== title.textContent) title.textContent = fixed;
+    }
+  }
+
+  function patchGlobalVisibleMonths(){
+    var root = document.body;
     if (!root) return;
     var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
       acceptNode: function(node){
-        var parent = node.parentElement;
-        if (!parent || shouldSkipElement(parent)) return NodeFilter.FILTER_REJECT;
-        if (!node.textContent || !node.textContent.trim()) return NodeFilter.FILTER_REJECT;
+        var p = node.parentElement;
+        if (!p) return NodeFilter.FILTER_REJECT;
+        if (/^(SCRIPT|STYLE|OPTION|TEXTAREA)$/i.test(p.tagName)) return NodeFilter.FILTER_REJECT;
+        var txt = node.nodeValue || '';
+        if (!/(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre|Enero|Febrero|Marzo|Abril|Mayo|Junio|Julio|Agosto|Septiembre|Octubre|Noviembre|Diciembre|January|February|March|April|May|June|July|August|September|October|November|December)/.test(txt)) return NodeFilter.FILTER_REJECT;
         return NodeFilter.FILTER_ACCEPT;
       }
     });
     var nodes = [];
     while (walker.nextNode()) nodes.push(walker.currentNode);
-    nodes.forEach(translateNodeText);
-  }
-
-  function setText(selector, en, es){
-    document.querySelectorAll(selector).forEach(function(el){
-      if (shouldSkipElement(el)) return;
-      el.textContent = isSpanish() ? es : en;
+    nodes.forEach(function(node){
+      var fixed = replaceMonthsForLang(node.nodeValue || '');
+      if (fixed !== node.nodeValue) node.nodeValue = fixed;
     });
   }
 
-  function setAttr(selector, attr, en, es){
-    document.querySelectorAll(selector).forEach(function(el){
-      el.setAttribute(attr, isSpanish() ? es : en);
-    });
-  }
-
-  function translatePlaceholders(){
-    var ph = isSpanish() ? {
-      'e.g. Rent, Netflix, Car Payment': 'ej. Renta, Netflix, Pago del Auto',
-      'How much you pay each paycheck': 'Cuánto pagas en cada cheque',
-      'e.g. Salary, Rent, Groceries': 'ej. Salario, Renta, Comida',
-      'Search or choose a category': 'Buscar o elegir una categoría',
-      'Repeat new password': 'Repite la nueva contraseña',
-      'e.g. Pay credit card': 'ej. Pagar tarjeta de crédito',
-      'Any additional details': 'Detalles adicionales',
-      'e.g. Chase Visa': 'ej. Chase Visa'
-    } : {
-      'ej. Renta, Netflix, Pago del Auto': 'e.g. Rent, Netflix, Car Payment',
-      'Cuánto pagas en cada cheque': 'How much you pay each paycheck',
-      'ej. Salario, Renta, Comida': 'e.g. Salary, Rent, Groceries',
-      'Buscar o elegir una categoría': 'Search or choose a category',
-      'Repite la nueva contraseña': 'Repeat new password',
-      'ej. Pagar tarjeta de crédito': 'e.g. Pay credit card',
-      'Detalles adicionales': 'Any additional details',
-      'ej. Chase Visa': 'e.g. Chase Visa'
-    };
-    document.querySelectorAll('input[placeholder], textarea[placeholder]').forEach(function(el){
-      var fromData = el.getAttribute(isSpanish() ? 'data-es-placeholder' : 'data-en-placeholder');
-      if (fromData) {
-        el.placeholder = fromData;
-        return;
-      }
-      var current = el.placeholder || '';
-      if (ph[current]) el.placeholder = ph[current];
-      else el.placeholder = applyPairs(current, !isSpanish());
-    });
-  }
-
-  function translateSelects(){
-    document.querySelectorAll('option[data-en]').forEach(function(opt){
-      opt.textContent = opt.getAttribute(isSpanish() ? 'data-es' : 'data-en') || opt.textContent;
-    });
-    document.querySelectorAll('#pay-frequency option').forEach(function(opt){
-      if (opt.value === 'semimonthly') opt.textContent = isSpanish() ? 'Dos veces al mes (1 y 15)' : 'Semi-monthly (1st & 15th)';
-    });
-    document.querySelectorAll('#cmp-term option').forEach(function(opt){
-      var years = parseInt(opt.value, 10) / 12;
-      if (years >= 1) opt.textContent = isSpanish() ? years + (years === 1 ? ' año' : ' años') : years + (years === 1 ? ' year' : ' years');
-    });
-  }
-
-  function translateTooltips(){
-    setAttr('[title="My Profile"], [title="Mi Perfil"]', 'title', 'My Profile', 'Mi Perfil');
-    setAttr('[title="Profile"], [title="Perfil"]', 'title', 'Profile', 'Perfil');
-    setAttr('[title="Delete"], [title="Eliminar"]', 'title', 'Delete', 'Eliminar');
-    setAttr('[title="Mark paid"], [title="Marcar como pagada"]', 'title', 'Mark paid', 'Marcar como pagada');
-    setAttr('[aria-label="Open category list"], [aria-label="Abrir lista de categorías"]', 'aria-label', 'Open category list', 'Abrir lista de categorías');
-    setAttr('[aria-label="Back"], [aria-label="Atrás"]', 'aria-label', 'Back', 'Atrás');
-    setAttr('[aria-label="Close"], [aria-label="Cerrar"]', 'aria-label', 'Close', 'Cerrar');
-  }
-
-  function translateDynamicLabels(){
-    setText('button[onclick="goToToday()"]', 'Today', 'Hoy');
-    setText('#fm-submit-btn', 'Submit Feedback', 'Enviar comentarios');
-    setText('#fm-later-btn', 'Maybe Later', 'Tal vez más tarde');
-    setText('#budget-category-toggle', '⌄', '⌄');
-
-    var categoryInput = document.getElementById('category');
-    if (categoryInput && /^(Other|Otro)$/.test(categoryInput.value || '')) categoryInput.value = isSpanish() ? 'Otro' : 'Other';
-
-    document.querySelectorAll('.ft-onboarding-v5-final-preview, #fm-feedback-overlay, #receipt-modal, #edit-nw-modal, #edit-debt-modal, #cal-event-modal').forEach(walk);
-    document.querySelectorAll('.empty-state, .summary-label, .plan-stat-label, .bsd-rating, #result-current-rating, #result-change, #credit-sim-usage, #ai-usage, #cal-upcoming-list').forEach(walk);
-  }
-
-  function translateMessages(){
-    if (window.alert && !window.alert.__fintrailTranslationQA) {
-      var nativeAlert = window.alert;
-      var wrapped = function(message){
-        nativeAlert.call(window, translateExact(String(message || '')));
-      };
-      wrapped.__fintrailTranslationQA = true;
-      window.alert = wrapped;
-    }
-    if (window.confirm && !window.confirm.__fintrailTranslationQA) {
-      var nativeConfirm = window.confirm;
-      var wrappedConfirm = function(message){
-        return nativeConfirm.call(window, translateExact(String(message || '')));
-      };
-      wrappedConfirm.__fintrailTranslationQA = true;
-      window.confirm = wrappedConfirm;
-    }
-  }
-
-  function applyFinalTranslationQA(){
+  function applyPolishPatch(){
     try {
-      document.documentElement.lang = isSpanish() ? 'es' : 'en';
-      document.title = isSpanish() ? 'Fintrail Pro — Presupuesta Mejor, Vive Mejor' : 'Fintrail Pro — Budget Smarter, Live Better';
-      document.querySelectorAll('[data-en]').forEach(function(el){
-        var html = el.getAttribute(isSpanish() ? 'data-es-html' : 'data-en-html');
-        var text = el.getAttribute(isSpanish() ? 'data-es' : 'data-en');
-        if (html) el.innerHTML = html;
-        else if (text && !el.children.length) el.textContent = text;
-      });
-      document.querySelectorAll('[data-en-html]:not([data-en])').forEach(function(el){
-        var html = el.getAttribute(isSpanish() ? 'data-es-html' : 'data-en-html');
-        if (html) el.innerHTML = html;
-      });
-      walk(document.body);
-      translatePlaceholders();
-      translateSelects();
-      translateTooltips();
-      document.querySelectorAll('[data-en-title]').forEach(function(el){
-        el.setAttribute('title', el.getAttribute(isSpanish() ? 'data-es-title' : 'data-en-title') || el.getAttribute('title') || '');
-      });
-      translateDynamicLabels();
-      translateMessages();
-      if (typeof fintrailInitBudgetCategoryPicker === 'function') fintrailInitBudgetCategoryPicker();
-    } catch(e) {
-      console.log('Final bilingual QA pass skipped:', e.message);
-    }
+      patchBudgetChart();
+      patchNetWorth();
+      patchCalendar();
+      patchResources();
+      patchMonthlyReport();
+      patchGlobalVisibleMonths();
+    } catch(e) { console.log('Fintrail final translation polish skipped:', e.message); }
   }
 
-  function scheduleFinalTranslationQA(){
-    clearTimeout(qaTimer);
-    qaTimer = setTimeout(applyFinalTranslationQA, 80);
+  function schedule(){
+    clearTimeout(window.__fintrailPolishTimer);
+    window.__fintrailPolishTimer = setTimeout(applyPolishPatch, 90);
   }
 
-  function wrapFunction(name){
+  function wrapRender(name){
     try {
       var fn = window[name];
-      if (typeof fn === 'function' && !fn.__fintrailTranslationQA) {
+      if (typeof fn === 'function' && !fn.__fintrailFinalPolishWrapped) {
         var wrapped = function(){
           var result = fn.apply(this, arguments);
-          scheduleFinalTranslationQA();
-          setTimeout(applyFinalTranslationQA, 300);
+          schedule();
+          setTimeout(applyPolishPatch, 300);
           return result;
         };
-        wrapped.__fintrailTranslationQA = true;
+        wrapped.__fintrailFinalPolishWrapped = true;
         window[name] = wrapped;
       }
     } catch(e) {}
   }
 
-  window.fintrailFinalTranslationQA = applyFinalTranslationQA;
+  window.fintrailApplyFinalTranslationPolish = applyPolishPatch;
 
   window.addEventListener('load', function(){
-    ['applyLanguage','render','renderBillList','renderSchedule','renderGoals','renderDebtList','renderDebtPlan','initNetWorth','renderCalendar','renderMonthView','renderWeekView','renderActionCards','updateSimulator','generateNegotiationScript','openFoundingFeedback','showAddEventModal','forceShowOnboardingForTesting'].forEach(wrapFunction);
-    applyFinalTranslationQA();
-    setTimeout(applyFinalTranslationQA, 700);
-    setTimeout(applyFinalTranslationQA, 1800);
+    ['applyLanguage','render','renderBudgetChart','renderCalendar','renderMonthView','renderWeekView','renderMonthlyReport','initNetWorth','filterResources'].forEach(wrapRender);
+    applyPolishPatch();
+    setTimeout(applyPolishPatch, 500);
+    setTimeout(applyPolishPatch, 1500);
+    setTimeout(applyPolishPatch, 3000);
   });
-
-  document.addEventListener('click', function(){ scheduleFinalTranslationQA(); }, true);
-  document.addEventListener('input', function(){ scheduleFinalTranslationQA(); }, true);
-  document.addEventListener('change', function(){ scheduleFinalTranslationQA(); }, true);
+  document.addEventListener('click', schedule, true);
+  document.addEventListener('change', schedule, true);
+  document.addEventListener('input', schedule, true);
 })();
 </script>
+
 </body>
 </html>
