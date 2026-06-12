@@ -3643,7 +3643,7 @@
         </button>
         <button class="nav-dropdown-item" onclick="navTo('networth', this)">
           <span class="ndi-icon">💎</span>
-          <div class="ndi-info"><span class="ndi-label" data-en="Net Worth Tracker" data-es="Rastreador de Patrimonio">Net Worth Tracker</span><span class="ndi-desc" data-en="Assets minus liabilities" data-es="Activos menos pasivos">Assets minus liabilities</span></div>
+          <div class="ndi-info"><span class="ndi-label" data-en="Net Worth Tracker" data-es="Rastreador de Patrimonio Neto">Net Worth Tracker</span><span class="ndi-desc" data-en="Assets minus liabilities" data-es="Activos menos pasivos">Assets minus liabilities</span></div>
         </button>
         <button class="nav-dropdown-item" onclick="guardedNavTo('debtplan', this)">
           <span class="ndi-icon">💳</span>
@@ -3687,7 +3687,7 @@
         </button>
         <button class="nav-dropdown-item" onclick="guardedNavTo('healthscore', this)">
           <span class="ndi-icon">🏆</span>
-          <div class="ndi-info"><span class="ndi-label" data-en="Health Score & Alerts" data-es="Puntaje de Salud & Alertas">Health Score & Alerts <span class="pro-pill">PRO</span></span><span class="ndi-desc" data-en="Financial health tracking" data-es="Seguimiento de salud financiera">Financial health tracking</span></div>
+          <div class="ndi-info"><span class="ndi-label" data-en="Health Score & Alerts" data-es="Salud Financiera y Alertas">Health Score & Alerts <span class="pro-pill">PRO</span></span><span class="ndi-desc" data-en="Financial health tracking" data-es="Seguimiento de salud financiera">Financial health tracking</span></div>
         </button>
         <button class="nav-dropdown-item" onclick="guardedNavTo('reports', this)">
           <span class="ndi-icon">📈</span>
@@ -3739,7 +3739,7 @@
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem;padding:0 0.75rem 0.5rem">
     <button class="mobile-nav-tile" onclick="mobileTab('savings')">🎯<span data-en="Goals" data-es="Metas">Goals</span></button>
     <button class="mobile-nav-tile" onclick="mobileTab('invest')">📈<span data-en="Investment" data-es="Inversión">Investment</span></button>
-    <button class="mobile-nav-tile" onclick="mobileTab('networth');closeMobileNav()">💎<span data-en="Net Worth" data-es="Patrimonio">Net Worth</span></button>
+    <button class="mobile-nav-tile" onclick="mobileTab('networth');closeMobileNav()">💎<span data-en="Net Worth" data-es="Patrimonio Neto">Net Worth</span></button>
     <button class="mobile-nav-tile" onclick="mobileTab('calendar')">📅<span data-en="Calendar" data-es="Calendario">Calendar</span></button>
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('debtplan')">💳<span data-en="Debt Planner" data-es="Plan de Deuda">Debt Planner</span></button>
   </div>
@@ -3757,7 +3757,7 @@
   <div style="font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);padding:0.3rem 1rem 0.2rem" data-en="💡 Insights" data-es="💡 Análisis">💡 Insights</div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem;padding:0 0.75rem 0.5rem">
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('ai')">💬<span data-en="AI Advisor" data-es="Asesor IA">AI Advisor</span></button>
-    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('healthscore')">🏆<span data-en="Health Score" data-es="Salud">Health Score</span></button>
+    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('healthscore')">🏆<span data-en="Health Score" data-es="Salud Financiera">Health Score</span></button>
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('reports')">📈<span data-en="Reports" data-es="Reportes">Reports</span></button>
     <button class="mobile-nav-tile" onclick="mobileTab('streaks');closeMobileNav()">🔥🏅<span data-en="Streaks &amp; Milestones" data-es="Rachas y Logros">Streaks &amp; Milestones</span></button>
   </div>
@@ -4497,7 +4497,7 @@
 
         <!-- FINANCIAL HEALTH SCORE -->
         <div class="health-score-card">
-          <h2 data-en="🏆 Financial Health Score" data-es="🏆 Puntaje de Salud Financiera">🏆 Financial Health Score</h2>
+        <h2 data-en="🏆 Financial Health Score" data-es="🏆 Salud Financiera">🏆 Financial Health Score</h2>
           <div class="score-gauge">
             <svg viewBox="0 0 200 110" width="100%">
               <path class="gauge-bg" d="M20,100 A80,80 0 0,1 180,100"/>
@@ -9443,7 +9443,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       saved: ['Tus metas están guardadas', 'Tu experiencia está personalizada', 'Comencemos a construir tu futuro financiero'],
       feedbackTitle: '¿Cómo te está funcionando Fintrail hasta ahora?',
       feedbackSubtitle: 'Nos encantaría conocer tu opinión para seguir mejorando la experiencia para todos.',
-      leave: 'Enviar Comentarios',
+      leave: 'Enviar comentarios',
       remind: 'Recordarme Más Tarde'
     }
   };
@@ -10081,7 +10081,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       'Personalized progress based on the savings, debt, credit, and AI activity you have entered in Fintrail.',
       'Progreso personalizado basado en los ahorros, deudas, crédito y actividad de IA que has ingresado en Fintrail.'
     ));
-    reportSetText('report-health-heading', t('Financial Health Score', 'Puntaje de Salud Financiera'));
+    reportSetText('report-health-heading', t('Financial Health Score', 'Salud Financiera'));
     reportSetText('report-savings-heading', t('Savings Progress', 'Progreso de Ahorros'));
     reportSetText('report-complete-label', t('complete', 'completo'));
     reportSetText('report-savings-ai-label', t('✦ AI Insight', '✦ Consejo de IA'));
@@ -10597,7 +10597,7 @@ function applyFoundingFeedbackLanguage(){
     'fm-feature-label': es ? '¿Qué función te gustaría ver próximamente?' : 'What feature would you like to see next?',
     'fm-feedback-label': es ? '¿Qué podemos mejorar?' : 'What can we improve?',
     'fm-later-btn': es ? 'Tal vez después' : 'Maybe Later',
-    'fm-submit-btn': es ? 'Enviar Comentarios' : 'Submit Feedback'
+    'fm-submit-btn': es ? 'Enviar comentarios' : 'Submit Feedback'
   };
   Object.entries(labels).forEach(([id,val]) => { const el = document.getElementById(id); if (el) el.textContent = val; });
   const sel = document.getElementById('fm-feature-request');
@@ -10747,7 +10747,7 @@ window.addEventListener('load', function(){
       "Generate Script": "Generar Guion",
       "Regenerate": "Regenerar",
       "Add Event": "Agregar Evento",
-      "Submit Feedback": "Enviar Comentarios",
+      "Submit Feedback": "Enviar comentarios",
       "Become Founding Member": "Convertirme en Miembro Fundador",
       "Maybe Later": "Tal vez Después",
       "Get Started": "Comenzar",
@@ -11057,7 +11057,7 @@ window.addEventListener('load', function(){
     'Back to Insights':'Volver a Informes',
     '← Back to Insights':'← Volver a Informes',
     'Current Month':'Mes Actual',
-    'Financial Health Score':'Puntaje de Salud Financiera',
+    'Financial Health Score':'Salud Financiera',
     'Savings Progress':'Progreso de Ahorros',
     'Debt Progress':'Progreso de Deudas',
     'Credit Progress':'Progreso de Crédito',
@@ -11824,7 +11824,7 @@ window.addEventListener('load', function(){
     ['Cancel anytime · No hidden fees', 'Cancela cuando quieras · Sin cargos ocultos'],
     ['Everything in Free', 'Todo lo incluido en Gratis'],
     ['AI Financial Advisor — unlimited chat', 'Asesor Financiero IA — chat ilimitado'],
-    ['Financial Health Score & tracking', 'Puntaje de Salud Financiera y seguimiento'],
+    ['Financial Health Score & tracking', 'Salud Financiera y seguimiento'],
     ['Personalized Debt Payoff Planner', 'Planificador personalizado de pago de deudas'],
     ['Budget Alerts & Bill Reminders', 'Alertas de presupuesto y recordatorios de facturas'],
     ['Full Credit Score Improvement Guide', 'Guía completa para mejorar tu crédito'],
@@ -14319,6 +14319,362 @@ window.addEventListener('load', function(){
     setTimeout(initBudgetCategoryPicker, 500);
     setTimeout(initBudgetCategoryPicker, 1500);
   });
+})();
+</script>
+
+<script>
+/* === FINAL BILINGUAL TRANSLATION QA PASS === */
+(function(){
+  var qaTimer = null;
+
+  function isSpanish(){
+    try { return typeof currentLang !== 'undefined' && currentLang === 'es'; } catch(e) { return false; }
+  }
+
+  var exactPairs = [
+    ['Budget', 'Presupuesto'],
+    ['Budget Tracker', 'Rastreador de Presupuesto'],
+    ['Bill Schedule', 'Facturas'],
+    ['Bills', 'Facturas'],
+    ['Savings', 'Ahorros'],
+    ['Savings Goals', 'Metas de Ahorro'],
+    ['Net Worth', 'Patrimonio Neto'],
+    ['Net Worth Tracker', 'Rastreador de Patrimonio Neto'],
+    ['Health Score', 'Salud Financiera'],
+    ['Health Score & Alerts', 'Salud Financiera y Alertas'],
+    ['Financial Health Score & tracking', 'Salud Financiera y seguimiento'],
+    ['Founding Member', 'Miembro Fundador'],
+    ['Become Founding Member', 'Convertirme en Miembro Fundador'],
+    ['Submit Feedback', 'Enviar comentarios'],
+    ['Leave Feedback', 'Enviar comentarios'],
+    ['Maybe Later', 'Tal vez más tarde'],
+    ['Remind Me Later', 'Recordarme Más Tarde'],
+    ['This month', 'Este mes'],
+    ['This Month', 'Este mes'],
+    ['Add', 'Agregar'],
+    ['+ Add', '+ Agregar'],
+    ['Save', 'Guardar'],
+    ['Save Changes', 'Guardar cambios'],
+    ['Cancel', 'Cancelar'],
+    ['Edit', 'Editar'],
+    ['Delete', 'Eliminar'],
+    ['Remove', 'Eliminar'],
+    ['Close', 'Cerrar'],
+    ['Today', 'Hoy'],
+    ['Month', 'Mes'],
+    ['Week', 'Semana'],
+    ['Upcoming Events', 'Próximos eventos'],
+    ['No upcoming events', 'No hay próximos eventos'],
+    ['Savings Goals', 'Metas de Ahorro'],
+    ['Debt Milestones', 'Metas de Deuda'],
+    ['Custom Events', 'Eventos Personalizados'],
+    ['Add Custom Event', 'Agregar Evento Personalizado'],
+    ['Custom', 'Personalizado'],
+    ['Reminder', 'Recordatorio'],
+    ['Milestone', 'Meta'],
+    ['EVENT NAME', 'NOMBRE DEL EVENTO'],
+    ['DATE', 'FECHA'],
+    ['NOTE (optional)', 'NOTA (opcional)'],
+    ['Any additional details', 'Detalles adicionales'],
+    ['Add to Calendar', 'Agregar al Calendario'],
+    ['Edit Item', 'Editar Elemento'],
+    ['Edit Debt', 'Editar Deuda'],
+    ['Debt Name', 'Nombre de la Deuda'],
+    ['Name', 'Nombre'],
+    ['Value ($)', 'Valor ($)'],
+    ['Current Balance ($)', 'Saldo Actual ($)'],
+    ['Minimum Payment ($)', 'Pago Mínimo ($)'],
+    ['Payment Receipts', 'Recibos de Pago'],
+    ['Goal Milestones', 'Metas de Ahorro'],
+    ['Notification Preferences', 'Preferencias de Notificación'],
+    ['Bill Reminders', 'Recordatorios de Facturas'],
+    ['Fintrail Newsletter', 'Boletín de Fintrail'],
+    ['Save Preferences', 'Guardar preferencias'],
+    ['Security Settings', 'Configuración de Seguridad'],
+    ['Password Protection', 'Protección de Contraseña'],
+    ['Google Sign In', 'Inicio de Sesión con Google'],
+    ['Active', 'Activo'],
+    ['Connected', 'Conectado'],
+    ['Danger Zone', 'Zona de Riesgo'],
+    ['Delete Account', 'Eliminar Cuenta'],
+    ['Delete My Account', 'Eliminar Mi Cuenta'],
+    ['Clear All Data', 'Borrar Todos los Datos'],
+    ['Legal', 'Legal'],
+    ['Privacy Policy', 'Política de Privacidad'],
+    ['Terms of Service', 'Términos de Servicio'],
+    ['Questions?', '¿Preguntas?'],
+    ['Dashboard', 'Panel'],
+    ['On Track', 'Al Día'],
+    ['Score', 'Puntaje'],
+    ['Current', 'Actual'],
+    ['Simulated', 'Simulado'],
+    ['No change', 'Sin cambios'],
+    ['Poor', 'Bajo'],
+    ['Fair', 'Regular'],
+    ['Good', 'Bueno'],
+    ['Very Good', 'Muy Bueno'],
+    ['Excellent', 'Excelente'],
+    ['Exceptional', 'Excepcional'],
+    ['Total Income', 'Ingresos Totales'],
+    ['Total Expenses', 'Gastos Totales'],
+    ['Net Savings', 'Ahorro Neto'],
+    ['Over Budget', 'Sobre Presupuesto'],
+    ['Spending by Category', 'Gastos por Categoría'],
+    ['No transactions yet.', 'Aún no hay transacciones.'],
+    ['Add one to get started!', '¡Agrega una para comenzar!'],
+    ['Add expenses to see your spending breakdown.', 'Agrega gastos para ver tu desglose.'],
+    ['No bills added yet.', 'Aún no hay facturas.'],
+    ['Pay Frequency', 'Frecuencia de Pago'],
+    ['Semi-monthly (1st & 15th)', 'Dos veces al mes (1 y 15)'],
+    ['Bi-weekly', 'Quincenal'],
+    ['Monthly', 'Mensual'],
+    ['Weekly', 'Semanal'],
+    ['Partner Lender Rates', 'Tasas de Prestamistas Socios'],
+    ['Unlock with Pro — $4.99/mo', 'Desbloquear con Pro — $4.99/mes'],
+    ['Start Pro — $4.99/mo', 'Comenzar Pro — $4.99/mes'],
+    ['Upgrade to Pro', 'Actualizar a Pro'],
+    ['Upgrade to Pro →', 'Actualizar a Pro →'],
+    ['Manage Subscription', 'Administrar Suscripción'],
+    ['Free Plan', 'Plan Gratuito'],
+    ['Pro Plan', 'Plan Pro'],
+    ['Create Free Account', 'Crear Cuenta Gratis'],
+    ['Please wait...', 'Espera por favor...']
+  ];
+
+  var exactEnToEs = {};
+  var exactEsToEn = {};
+  exactPairs.forEach(function(pair){
+    exactEnToEs[pair[0]] = pair[1];
+    exactEsToEn[pair[1]] = pair[0];
+  });
+
+  var phrasePairs = [
+    ['Upload Payment Proof', 'Subir Comprobante de Pago'],
+    ['Upload a screenshot or photo of your payment confirmation to verify and earn XP. Your XP will be credited after a 48-hour review period.', 'Sube una captura o foto de tu confirmación de pago para verificarla y ganar XP. Tu XP se acreditará después de una revisión de 48 horas.'],
+    ['Enter less than the full amount to split across paychecks', 'Ingresa menos del monto total para dividirlo entre pagos'],
+    ['Access exclusive mortgage, personal loan, auto loan, and refinance rates from top lenders — plus our loan payment calculator and rate comparison tools.', 'Accede a tasas exclusivas de hipotecas, préstamos personales, préstamos de auto y refinanciamiento de prestamistas destacados, además de nuestra calculadora de pagos y herramientas de comparación.'],
+    ['Get step-by-step credit score improvement plans, spending factor breakdowns, and advanced debt-to-income reduction strategies — all in one place.', 'Obtén planes paso a paso para mejorar tu crédito, desgloses de factores de gasto y estrategias avanzadas para reducir tu deuda-ingreso, todo en un solo lugar.'],
+    ['Email reminders 3 days before bills are due', 'Recordatorios por correo 3 días antes del vencimiento de tus facturas'],
+    ['Email confirmation when your Pro subscription renews', 'Confirmación por correo cuando se renueve tu suscripción Pro'],
+    ['Celebrate when you hit savings milestones', 'Celebra cuando alcances metas de ahorro'],
+    ['Tips, updates and new features', 'Consejos, actualizaciones y nuevas funciones'],
+    ['Permanently delete your Fintrail account and all associated data including transactions, bills, goals and subscription. This action cannot be undone.', 'Elimina permanentemente tu cuenta de Fintrail y todos los datos asociados, incluyendo transacciones, facturas, metas y suscripción. Esta acción no se puede deshacer.'],
+    ['Remove all your transactions, bills, and goals while keeping your account active.', 'Elimina todas tus transacciones, facturas y metas mientras mantienes tu cuenta activa.'],
+    ['Enter the 6-digit code sent to your email to verify and enable 2FA:', 'Ingresa el código de 6 dígitos enviado a tu correo para verificar y activar 2FA:'],
+    ['Verify & Enable 2FA', 'Verificar y Activar 2FA'],
+    ['Your account is protected with a hashed password', 'Tu cuenta está protegida con una contraseña cifrada'],
+    ['Sign in quickly with your Google account', 'Inicia sesión rápidamente con tu cuenta de Google'],
+    ['How is Fintrail working for you so far?', '¿Cómo te está funcionando Fintrail hasta ahora?'],
+    ["We'd love your feedback to help improve the experience for everyone.", 'Nos encantaría conocer tu opinión para seguir mejorando la experiencia para todos.'],
+    ['What can we improve?', '¿Qué podemos mejorar?'],
+    ['How would you rate your experience so far?', '¿Cómo calificarías tu experiencia hasta ahora?'],
+    ['What feature would you like to see next?', '¿Qué función te gustaría ver próximamente?'],
+    ['Share your ideas, suggestions, bugs, or feedback...', 'Comparte tus ideas, sugerencias, errores o comentarios...'],
+    ['Choose one', 'Elige una opción'],
+    ['Budgeting Tools', 'Herramientas de presupuesto'],
+    ['Debt Payoff Planning', 'Planificación de deudas'],
+    ['Credit Improvement', 'Mejorar crédito'],
+    ['Investing Tools', 'Herramientas de inversión'],
+    ['Other', 'Otro']
+  ];
+
+  function applyPairs(text, reverse){
+    var out = String(text || '');
+    var pairs = reverse ? phrasePairs.map(function(p){ return [p[1], p[0]]; }) : phrasePairs;
+    pairs.forEach(function(pair){ out = out.split(pair[0]).join(pair[1]); });
+    return out;
+  }
+
+  function translateExact(text){
+    var raw = String(text || '');
+    var trimmed = raw.trim();
+    if (!trimmed) return raw;
+    var map = isSpanish() ? exactEnToEs : exactEsToEn;
+    if (Object.prototype.hasOwnProperty.call(map, trimmed)) {
+      return raw.replace(trimmed, map[trimmed]);
+    }
+    return applyPairs(raw, !isSpanish());
+  }
+
+  function translateNodeText(node){
+    var next = translateExact(node.textContent);
+    if (next !== node.textContent) node.textContent = next;
+  }
+
+  function shouldSkipElement(el){
+    if (!el || !el.tagName) return true;
+    var tag = el.tagName;
+    if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'NOSCRIPT') return true;
+    if (el.closest && el.closest('.ft-budget-category-menu')) return true;
+    return false;
+  }
+
+  function walk(root){
+    if (!root) return;
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(node){
+        var parent = node.parentElement;
+        if (!parent || shouldSkipElement(parent)) return NodeFilter.FILTER_REJECT;
+        if (!node.textContent || !node.textContent.trim()) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(translateNodeText);
+  }
+
+  function setText(selector, en, es){
+    document.querySelectorAll(selector).forEach(function(el){
+      if (shouldSkipElement(el)) return;
+      el.textContent = isSpanish() ? es : en;
+    });
+  }
+
+  function setAttr(selector, attr, en, es){
+    document.querySelectorAll(selector).forEach(function(el){
+      el.setAttribute(attr, isSpanish() ? es : en);
+    });
+  }
+
+  function translatePlaceholders(){
+    var ph = isSpanish() ? {
+      'e.g. Rent, Netflix, Car Payment': 'ej. Renta, Netflix, Pago del Auto',
+      'How much you pay each paycheck': 'Cuánto pagas en cada cheque',
+      'e.g. Salary, Rent, Groceries': 'ej. Salario, Renta, Comida',
+      'Search or choose a category': 'Buscar o elegir una categoría',
+      'Repeat new password': 'Repite la nueva contraseña',
+      'e.g. Pay credit card': 'ej. Pagar tarjeta de crédito',
+      'Any additional details': 'Detalles adicionales',
+      'e.g. Chase Visa': 'ej. Chase Visa'
+    } : {
+      'ej. Renta, Netflix, Pago del Auto': 'e.g. Rent, Netflix, Car Payment',
+      'Cuánto pagas en cada cheque': 'How much you pay each paycheck',
+      'ej. Salario, Renta, Comida': 'e.g. Salary, Rent, Groceries',
+      'Buscar o elegir una categoría': 'Search or choose a category',
+      'Repite la nueva contraseña': 'Repeat new password',
+      'ej. Pagar tarjeta de crédito': 'e.g. Pay credit card',
+      'Detalles adicionales': 'Any additional details',
+      'ej. Chase Visa': 'e.g. Chase Visa'
+    };
+    document.querySelectorAll('input[placeholder], textarea[placeholder]').forEach(function(el){
+      var fromData = el.getAttribute(isSpanish() ? 'data-es-placeholder' : 'data-en-placeholder');
+      if (fromData) {
+        el.placeholder = fromData;
+        return;
+      }
+      var current = el.placeholder || '';
+      if (ph[current]) el.placeholder = ph[current];
+      else el.placeholder = applyPairs(current, !isSpanish());
+    });
+  }
+
+  function translateSelects(){
+    document.querySelectorAll('option[data-en]').forEach(function(opt){
+      opt.textContent = opt.getAttribute(isSpanish() ? 'data-es' : 'data-en') || opt.textContent;
+    });
+    document.querySelectorAll('#pay-frequency option').forEach(function(opt){
+      if (opt.value === 'semimonthly') opt.textContent = isSpanish() ? 'Dos veces al mes (1 y 15)' : 'Semi-monthly (1st & 15th)';
+    });
+    document.querySelectorAll('#cmp-term option').forEach(function(opt){
+      var years = parseInt(opt.value, 10) / 12;
+      if (years >= 1) opt.textContent = isSpanish() ? years + (years === 1 ? ' año' : ' años') : years + (years === 1 ? ' year' : ' years');
+    });
+  }
+
+  function translateTooltips(){
+    setAttr('[title="My Profile"], [title="Mi Perfil"]', 'title', 'My Profile', 'Mi Perfil');
+    setAttr('[title="Profile"], [title="Perfil"]', 'title', 'Profile', 'Perfil');
+    setAttr('[title="Delete"], [title="Eliminar"]', 'title', 'Delete', 'Eliminar');
+    setAttr('[title="Mark paid"], [title="Marcar como pagada"]', 'title', 'Mark paid', 'Marcar como pagada');
+    setAttr('[aria-label="Open category list"], [aria-label="Abrir lista de categorías"]', 'aria-label', 'Open category list', 'Abrir lista de categorías');
+    setAttr('[aria-label="Back"], [aria-label="Atrás"]', 'aria-label', 'Back', 'Atrás');
+    setAttr('[aria-label="Close"], [aria-label="Cerrar"]', 'aria-label', 'Close', 'Cerrar');
+  }
+
+  function translateDynamicLabels(){
+    setText('button[onclick="goToToday()"]', 'Today', 'Hoy');
+    setText('#fm-submit-btn', 'Submit Feedback', 'Enviar comentarios');
+    setText('#fm-later-btn', 'Maybe Later', 'Tal vez más tarde');
+    setText('#budget-category-toggle', '⌄', '⌄');
+
+    var categoryInput = document.getElementById('category');
+    if (categoryInput && /^(Other|Otro)$/.test(categoryInput.value || '')) categoryInput.value = isSpanish() ? 'Otro' : 'Other';
+
+    document.querySelectorAll('.ft-onboarding-v5-final-preview, #fm-feedback-overlay, #receipt-modal, #edit-nw-modal, #edit-debt-modal, #cal-event-modal').forEach(walk);
+    document.querySelectorAll('.empty-state, .summary-label, .plan-stat-label, .bsd-rating, #result-current-rating, #result-change, #credit-sim-usage, #ai-usage, #cal-upcoming-list').forEach(walk);
+  }
+
+  function translateMessages(){
+    if (window.alert && !window.alert.__fintrailTranslationQA) {
+      var nativeAlert = window.alert;
+      var wrapped = function(message){
+        nativeAlert.call(window, translateExact(String(message || '')));
+      };
+      wrapped.__fintrailTranslationQA = true;
+      window.alert = wrapped;
+    }
+  }
+
+  function applyFinalTranslationQA(){
+    try {
+      document.documentElement.lang = isSpanish() ? 'es' : 'en';
+      document.title = isSpanish() ? 'Fintrail Pro — Presupuesta Mejor, Vive Mejor' : 'Fintrail Pro — Budget Smarter, Live Better';
+      document.querySelectorAll('[data-en]').forEach(function(el){
+        var html = el.getAttribute(isSpanish() ? 'data-es-html' : 'data-en-html');
+        var text = el.getAttribute(isSpanish() ? 'data-es' : 'data-en');
+        if (html) el.innerHTML = html;
+        else if (text && !el.children.length) el.textContent = text;
+      });
+      document.querySelectorAll('[data-en-html]:not([data-en])').forEach(function(el){
+        var html = el.getAttribute(isSpanish() ? 'data-es-html' : 'data-en-html');
+        if (html) el.innerHTML = html;
+      });
+      walk(document.body);
+      translatePlaceholders();
+      translateSelects();
+      translateTooltips();
+      translateDynamicLabels();
+      translateMessages();
+      if (typeof fintrailInitBudgetCategoryPicker === 'function') fintrailInitBudgetCategoryPicker();
+    } catch(e) {
+      console.log('Final bilingual QA pass skipped:', e.message);
+    }
+  }
+
+  function scheduleFinalTranslationQA(){
+    clearTimeout(qaTimer);
+    qaTimer = setTimeout(applyFinalTranslationQA, 80);
+  }
+
+  function wrapFunction(name){
+    try {
+      var fn = window[name];
+      if (typeof fn === 'function' && !fn.__fintrailTranslationQA) {
+        var wrapped = function(){
+          var result = fn.apply(this, arguments);
+          scheduleFinalTranslationQA();
+          setTimeout(applyFinalTranslationQA, 300);
+          return result;
+        };
+        wrapped.__fintrailTranslationQA = true;
+        window[name] = wrapped;
+      }
+    } catch(e) {}
+  }
+
+  window.fintrailFinalTranslationQA = applyFinalTranslationQA;
+
+  window.addEventListener('load', function(){
+    ['applyLanguage','render','renderBillList','renderSchedule','renderGoals','renderDebtList','renderDebtPlan','initNetWorth','renderCalendar','renderMonthView','renderWeekView','renderActionCards','updateSimulator','generateNegotiationScript','openFoundingFeedback','showAddEventModal','forceShowOnboardingForTesting'].forEach(wrapFunction);
+    applyFinalTranslationQA();
+    setTimeout(applyFinalTranslationQA, 700);
+    setTimeout(applyFinalTranslationQA, 1800);
+  });
+
+  document.addEventListener('click', function(){ scheduleFinalTranslationQA(); }, true);
+  document.addEventListener('input', function(){ scheduleFinalTranslationQA(); }, true);
+  document.addEventListener('change', function(){ scheduleFinalTranslationQA(); }, true);
 })();
 </script>
 </body>
