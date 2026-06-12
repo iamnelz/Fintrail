@@ -3346,112 +3346,6 @@
 .fm-visible-badge{display:inline-flex;align-items:center;justify-content:center;gap:.35rem;background:linear-gradient(135deg,#1a1a2e,#2d1b4e);color:#ffd166;font-size:.68rem;font-weight:900;padding:.25rem .7rem;border-radius:999px;margin-top:.55rem;border:1px solid rgba(255,209,102,.45);text-transform:uppercase;letter-spacing:.04em}
 @media(max-width:520px){.fm-visible-actions{grid-template-columns:1fr}}
 
-
-/* === ONBOARDING SIDEBAR VISUAL POLISH — June 2026 === */
-.ft-onboarding-v5-tagline {
-  margin-top: 28px;
-  font-size: 1.18rem;
-  line-height: 1.45;
-  font-weight: 900;
-}
-.ft-onboarding-v5-accent-line {
-  width: 76px;
-  height: 3px;
-  border-radius: 99px;
-  margin-top: 22px;
-  background: #f05555;
-  box-shadow: 0 0 18px rgba(240,85,85,0.35);
-}
-.ft-onboarding-v5-visual {
-  margin: 42px 0 20px;
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-}
-.ft-onboarding-v5-mini-score { display: none !important; }
-.ft-onboarding-v5-mini-bars {
-  position: relative;
-  height: 165px;
-  gap: 14px;
-  padding: 12px 6px 0;
-  align-items: flex-end;
-  border-bottom: 2px solid rgba(255,255,255,0.08);
-}
-.ft-onboarding-v5-mini-bars span {
-  flex: 1;
-  max-width: 34px;
-  border-radius: 4px 4px 0 0;
-  background: rgba(255,255,255,0.12);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
-}
-.ft-onboarding-v5-mini-bars span:nth-child(5) {
-  background: linear-gradient(180deg, #f05555, #ff414f);
-  box-shadow: 0 10px 26px rgba(240,85,85,0.20);
-}
-.ft-onboarding-v5-growth-line {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 8px;
-  width: 100%;
-  height: 120px;
-  overflow: visible;
-  pointer-events: none;
-}
-.ft-onboarding-v5-growth-line polyline {
-  fill: none;
-  stroke: #f05555;
-  stroke-width: 4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  filter: drop-shadow(0 4px 10px rgba(240,85,85,0.22));
-}
-.ft-onboarding-v5-growth-line circle {
-  fill: #f05555;
-}
-.ft-onboarding-v5-brand-foot {
-  max-width: 245px;
-  color: rgba(255,255,255,0.80);
-  font-size: 0.92rem;
-  line-height: 1.6;
-  font-weight: 600;
-}
-.ft-onboarding-v5-lang-main {
-  gap: 18px;
-  min-width: 0;
-}
-.ft-onboarding-v5-lang-main > span:last-child {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  min-width: 0;
-  flex-wrap: wrap;
-}
-.ft-onboarding-v5-lang-title {
-  display: inline-block;
-  white-space: nowrap;
-}
-.ft-onboarding-v5-lang-sub {
-  display: inline-block;
-  margin-top: 0;
-  color: #596178;
-  font-size: 0.9rem;
-  white-space: nowrap;
-}
-.ft-onboarding-v5-flag {
-  font-size: 1.9rem;
-  line-height: 1;
-}
-@media(max-width: 560px) {
-  .ft-onboarding-v5-lang-main > span:last-child {
-    gap: 8px;
-  }
-  .ft-onboarding-v5-lang-sub {
-    font-size: 0.78rem;
-  }
-}
-
 </style>
 
 <style>
@@ -3545,26 +3439,18 @@
           <div class="ft-onboarding-v5-mark">FP</div>
           <div class="ft-onboarding-v5-name">Fintrail <span>Pro</span></div>
         </div>
-        <div class="ft-onboarding-v5-tagline">Budget Smarter,<br>Live Better.</div>
-        <div class="ft-onboarding-v5-accent-line" aria-hidden="true"></div>
-        <div class="ft-onboarding-v5-visual" aria-hidden="true">
+        <div class="ft-onboarding-v5-tagline">Budget smarter.<br>Build with confidence.</div>
+        <div class="ft-onboarding-v5-visual">
+          <div class="ft-onboarding-v5-mini-score"><span>Sample score</span><strong>79</strong></div>
           <div class="ft-onboarding-v5-mini-bars">
-            <span style="height:34%"></span>
-            <span style="height:52%"></span>
-            <span style="height:64%"></span>
-            <span style="height:86%"></span>
-            <span style="height:100%"></span>
-            <svg class="ft-onboarding-v5-growth-line" viewBox="0 0 220 110" preserveAspectRatio="none" aria-hidden="true">
-              <polyline points="8,86 55,58 88,66 125,26 158,28 210,4"></polyline>
-              <circle cx="55" cy="58" r="4"></circle>
-              <circle cx="88" cy="66" r="4"></circle>
-              <circle cx="125" cy="26" r="4"></circle>
-              <circle cx="158" cy="28" r="4"></circle>
-            </svg>
+            <span style="height:35%"></span>
+            <span style="height:58%"></span>
+            <span style="height:76%"></span>
+            <span style="height:96%"></span>
           </div>
         </div>
       </div>
-      <div class="ft-onboarding-v5-brand-foot">Your journey to financial freedom starts here.</div>
+      <div class="ft-onboarding-v5-brand-foot">Your dashboard will adapt around the goals you choose.</div>
     </aside>
     <main class="ft-onboarding-v5-main">
       <div class="ft-onboarding-v5-top">
@@ -3944,7 +3830,7 @@
         <h2 id="label-add-transaction">Add Transaction</h2>
         <div class="form-row">
           <div class="form-group">
-            <label>Type</label>
+            <label id="label-type">Type</label>
             <div class="type-toggle">
               <button class="type-btn income active" id="btn-income" onclick="setType('income')">+ Income</button>
               <button class="type-btn expense" id="btn-expense" onclick="setType('expense')">− Expense</button>
@@ -3958,7 +3844,25 @@
             <label id="label-amount" data-en="Amount ($)" data-es="Monto ($)">Amount ($)</label>
             <input type="number" id="amount" placeholder="0.00" min="0" step="0.01">
           </div>
-<button class="add-btn" id="btn-add-transaction" onclick="addTransaction()">Add Transaction</button>
+          <div class="form-group">
+            <label id="label-category" data-en="Category" data-es="Categoría">Category</label>
+            <input type="text" id="category" list="budget-category-options" placeholder="Search or choose a category" autocomplete="off">
+            <datalist id="budget-category-options">
+              <option value="Housing"></option>
+              <option value="Transportation"></option>
+              <option value="Food"></option>
+              <option value="Utilities"></option>
+              <option value="Healthcare"></option>
+              <option value="Insurance"></option>
+              <option value="Debt Payments"></option>
+              <option value="Entertainment"></option>
+              <option value="Shopping"></option>
+              <option value="Education"></option>
+              <option value="Savings"></option>
+              <option value="Other"></option>
+            </datalist>
+          </div>
+          <button class="add-btn" id="btn-add-transaction" onclick="addTransaction()">Add Transaction</button>
         </div>
       </div>
 
@@ -6354,11 +6258,13 @@
   function addTransaction() {
     const desc = document.getElementById('desc').value.trim();
     const amount = parseFloat(document.getElementById('amount').value);
-    const category = document.getElementById('category').value;
-    if (!desc || isNaN(amount) || amount <= 0) { alert('Please enter a description and valid amount.'); return; }
+    const categoryInput = document.getElementById('category');
+    const category = categoryInput && categoryInput.value.trim() ? categoryInput.value.trim() : 'Other';
+    if (!desc || isNaN(amount) || amount <= 0) { alert(currentLang === 'es' ? 'Por favor ingresa una descripción y un monto válido.' : 'Please enter a description and valid amount.'); return; }
     transactions.push({ id: Date.now(), type: currentType, desc, amount, category });
     document.getElementById('desc').value = '';
     document.getElementById('amount').value = '';
+    if (categoryInput) categoryInput.value = '';
     render();
     saveUserData();
     awardXPForAction('transaction');
@@ -6405,7 +6311,7 @@
     const expenseTransactions = transactions.filter(t => t.type === 'expense');
     if (expenseTransactions.length === 0) { chart.innerHTML = `<div class="empty-state">${currentLang === 'es' ? 'Agrega gastos para ver tu resumen de gastos.' : 'Add expenses to see your spending breakdown.'}</div>`; return; }
     const byCategory = {};
-    const catTranslations = { Salary:'Salario', Freelance:'Freelance', Investment:'Inversión', Housing:'Vivienda', Food:'Alimentación', Transport:'Transporte', Healthcare:'Salud', Entertainment:'Entretenimiento', Education:'Educación', Other:'Otro' };
+    const catTranslations = { Salary:'Salario', Freelance:'Freelance', Investment:'Inversión', Housing:'Vivienda', Transportation:'Transporte', Transport:'Transporte', Food:'Alimentación', Utilities:'Servicios', Healthcare:'Salud', Insurance:'Seguro', 'Debt Payments':'Pagos de Deuda', Entertainment:'Entretenimiento', Shopping:'Compras', Education:'Educación', Savings:'Ahorros', Other:'Otro' };
     expenseTransactions.forEach(t => { byCategory[t.category] = (byCategory[t.category] || 0) + t.amount; });
     const max = Math.max(...Object.values(byCategory));
     chart.innerHTML = Object.entries(byCategory).sort((a,b) => b[1]-a[1]).map(([cat, val]) => {
@@ -9633,7 +9539,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const subtitle = c.steps[step][1];
     const head = `<h2 class="ft-onboarding-v5-title" id="ft-onboarding-v5-title">${title}</h2><p class="ft-onboarding-v5-subtitle">${subtitle}</p>`;
     if (step === 0) {
-      body.innerHTML = head + `<div class="ft-onboarding-v5-language-grid">${c.langs.map(lang => `<button type="button" class="ft-onboarding-v5-lang ${ftOnboardingV5State.lang === lang[0] ? 'active' : ''}" onclick="ftOnboardingV5SelectLanguage('${lang[0]}')"><span class="ft-onboarding-v5-lang-main"><span class="ft-onboarding-v5-flag">${lang[0] === 'en' ? '🇬🇧' : '🇪🇸'}</span><span><span class="ft-onboarding-v5-lang-title">${lang[1]}</span><span class="ft-onboarding-v5-lang-sub">${lang[2]}</span></span></span><span>›</span></button>`).join('')}</div>`;
+      body.innerHTML = head + `<div class="ft-onboarding-v5-language-grid">${c.langs.map(lang => `<button type="button" class="ft-onboarding-v5-lang ${ftOnboardingV5State.lang === lang[0] ? 'active' : ''}" onclick="ftOnboardingV5SelectLanguage('${lang[0]}')"><span class="ft-onboarding-v5-lang-main"><span class="ft-onboarding-v5-flag">${lang[0] === 'en' ? '🇺🇸' : '🇪🇸'}</span><span><span class="ft-onboarding-v5-lang-title">${lang[1]}</span><span class="ft-onboarding-v5-lang-sub">${lang[2]}</span></span></span><span>›</span></button>`).join('')}</div>`;
     } else if (step === 1) {
       body.innerHTML = head + `<div class="ft-onboarding-v5-goal-grid">${c.goals.map(goal => `<button type="button" class="ft-onboarding-v5-goal ${ftOnboardingV5State.goals.includes(goal[0]) ? 'active' : ''}" onclick="ftOnboardingV5ToggleGoal('${goal[0]}')"><span class="ft-onboarding-v5-goal-icon">${goal[1]}</span><span class="ft-onboarding-v5-goal-label">${goal[2]}</span></button>`).join('')}</div><div class="ft-onboarding-v5-selection-note">${c.selected(ftOnboardingV5State.goals.length)}</div>${ftOnboardingV5State.error ? `<div class="ft-onboarding-v5-error">${ftOnboardingV5State.error}</div>` : ''}`;
     } else if (step === 2) {
@@ -9907,6 +9813,10 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     if (incomeBtn) incomeBtn.textContent = isEs ? '+ Ingreso' : '+ Income';
     const expenseBtn = document.getElementById('btn-expense');
     if (expenseBtn) expenseBtn.textContent = isEs ? '− Gasto' : '− Expense';
+    const descInput = document.getElementById('desc');
+    if (descInput) descInput.placeholder = isEs ? 'ej. Salario, Renta, Supermercado' : 'e.g. Salary, Rent, Groceries';
+    const categoryInput = document.getElementById('category');
+    if (categoryInput) categoryInput.placeholder = isEs ? 'Busca o elige una categoría' : 'Search or choose a category';
 
     // Add transaction button
 
