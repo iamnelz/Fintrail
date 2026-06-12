@@ -3830,7 +3830,7 @@
         <h2 id="label-add-transaction">Add Transaction</h2>
         <div class="form-row">
           <div class="form-group">
-            <label id="label-type">Type</label>
+            <label>Type</label>
             <div class="type-toggle">
               <button class="type-btn income active" id="btn-income" onclick="setType('income')">+ Income</button>
               <button class="type-btn expense" id="btn-expense" onclick="setType('expense')">− Expense</button>
@@ -3846,7 +3846,7 @@
           </div>
           <div class="form-group">
             <label id="label-category" data-en="Category" data-es="Categoría">Category</label>
-            <input type="text" id="category" list="budget-category-options" placeholder="Search or choose a category" autocomplete="off">
+            <input type="text" id="category" list="budget-category-options" placeholder="Search or choose a category" autocomplete="off" value="Other">
             <datalist id="budget-category-options">
               <option value="Housing"></option>
               <option value="Transportation"></option>
@@ -3862,7 +3862,7 @@
               <option value="Other"></option>
             </datalist>
           </div>
-          <button class="add-btn" id="btn-add-transaction" onclick="addTransaction()">Add Transaction</button>
+<button class="add-btn" id="btn-add-transaction" onclick="addTransaction()">Add Transaction</button>
         </div>
       </div>
 
@@ -6258,13 +6258,13 @@
   function addTransaction() {
     const desc = document.getElementById('desc').value.trim();
     const amount = parseFloat(document.getElementById('amount').value);
-    const categoryInput = document.getElementById('category');
-    const category = categoryInput && categoryInput.value.trim() ? categoryInput.value.trim() : 'Other';
-    if (!desc || isNaN(amount) || amount <= 0) { alert(currentLang === 'es' ? 'Por favor ingresa una descripción y un monto válido.' : 'Please enter a description and valid amount.'); return; }
+    const categoryEl = document.getElementById('category');
+    const category = (categoryEl && categoryEl.value.trim()) ? categoryEl.value.trim() : 'Other';
+    if (!desc || isNaN(amount) || amount <= 0) { alert('Please enter a description and valid amount.'); return; }
     transactions.push({ id: Date.now(), type: currentType, desc, amount, category });
     document.getElementById('desc').value = '';
     document.getElementById('amount').value = '';
-    if (categoryInput) categoryInput.value = '';
+    if (document.getElementById('category')) document.getElementById('category').value = 'Other';
     render();
     saveUserData();
     awardXPForAction('transaction');
@@ -6311,7 +6311,7 @@
     const expenseTransactions = transactions.filter(t => t.type === 'expense');
     if (expenseTransactions.length === 0) { chart.innerHTML = `<div class="empty-state">${currentLang === 'es' ? 'Agrega gastos para ver tu resumen de gastos.' : 'Add expenses to see your spending breakdown.'}</div>`; return; }
     const byCategory = {};
-    const catTranslations = { Salary:'Salario', Freelance:'Freelance', Investment:'Inversión', Housing:'Vivienda', Transportation:'Transporte', Transport:'Transporte', Food:'Alimentación', Utilities:'Servicios', Healthcare:'Salud', Insurance:'Seguro', 'Debt Payments':'Pagos de Deuda', Entertainment:'Entretenimiento', Shopping:'Compras', Education:'Educación', Savings:'Ahorros', Other:'Otro' };
+    const catTranslations = { Salary:'Salario', Freelance:'Freelance', Investment:'Inversión', Housing:'Vivienda', Food:'Alimentación', Transport:'Transporte', Healthcare:'Salud', Entertainment:'Entretenimiento', Education:'Educación', Other:'Otro' };
     expenseTransactions.forEach(t => { byCategory[t.category] = (byCategory[t.category] || 0) + t.amount; });
     const max = Math.max(...Object.values(byCategory));
     chart.innerHTML = Object.entries(byCategory).sort((a,b) => b[1]-a[1]).map(([cat, val]) => {
@@ -9813,10 +9813,6 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     if (incomeBtn) incomeBtn.textContent = isEs ? '+ Ingreso' : '+ Income';
     const expenseBtn = document.getElementById('btn-expense');
     if (expenseBtn) expenseBtn.textContent = isEs ? '− Gasto' : '− Expense';
-    const descInput = document.getElementById('desc');
-    if (descInput) descInput.placeholder = isEs ? 'ej. Salario, Renta, Supermercado' : 'e.g. Salary, Rent, Groceries';
-    const categoryInput = document.getElementById('category');
-    if (categoryInput) categoryInput.placeholder = isEs ? 'Busca o elige una categoría' : 'Search or choose a category';
 
     // Add transaction button
 
@@ -9856,6 +9852,9 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     // Description placeholder
     const descInput = document.getElementById('desc');
     if (descInput) descInput.placeholder = isEs ? 'ej. Salario, Renta, Comida' : 'e.g. Salary, Rent, Groceries';
+
+    const budgetCategoryInput = document.getElementById('category');
+    if (budgetCategoryInput) budgetCategoryInput.placeholder = isEs ? 'Buscar o elegir una categoría' : 'Search or choose a category';
 
     // Add transaction button
     const addTxBtn = document.getElementById('btn-add-transaction');
