@@ -3346,6 +3346,86 @@
 .fm-visible-badge{display:inline-flex;align-items:center;justify-content:center;gap:.35rem;background:linear-gradient(135deg,#1a1a2e,#2d1b4e);color:#ffd166;font-size:.68rem;font-weight:900;padding:.25rem .7rem;border-radius:999px;margin-top:.55rem;border:1px solid rgba(255,209,102,.45);text-transform:uppercase;letter-spacing:.04em}
 @media(max-width:520px){.fm-visible-actions{grid-template-columns:1fr}}
 
+
+
+/* === BUDGET CATEGORY SEARCHABLE DROPDOWN — POLISHED FINTRAIL STYLE === */
+.ft-budget-category-group { position: relative; }
+.ft-budget-category-picker { position: relative; width: 100%; }
+.ft-budget-category-picker input#category {
+  width: 100%;
+  padding-right: 2.75rem;
+  background: var(--surface2);
+}
+.ft-budget-category-toggle {
+  position: absolute;
+  right: 0.55rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text);
+  font-family: 'Sora', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  cursor: pointer;
+  line-height: 1;
+}
+.ft-budget-category-toggle:hover { background: rgba(240,85,85,0.08); color: var(--accent); }
+.ft-budget-category-menu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 80;
+  display: none;
+  max-height: 260px;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 16px 34px rgba(18,24,40,0.14);
+  padding: 0.4rem;
+}
+.ft-budget-category-picker.open .ft-budget-category-menu { display: block; }
+.ft-budget-category-option {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-family: 'Sora', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 650;
+  text-align: left;
+  padding: 0.72rem 0.85rem;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.ft-budget-category-option:hover,
+.ft-budget-category-option.active {
+  background: rgba(240,85,85,0.08);
+  color: var(--accent);
+}
+.ft-budget-category-empty {
+  padding: 0.85rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+@media (max-width:700px) {
+  #bsub-tracker .ft-budget-category-menu {
+    max-height: 230px;
+    border-radius: 13px;
+  }
+  #bsub-tracker .ft-budget-category-option {
+    min-height: 42px;
+    font-size: 0.84rem;
+    padding: 0.65rem 0.75rem;
+  }
+}
+
 </style>
 
 <style>
@@ -3844,23 +3924,13 @@
             <label id="label-amount" data-en="Amount ($)" data-es="Monto ($)">Amount ($)</label>
             <input type="number" id="amount" placeholder="0.00" min="0" step="0.01">
           </div>
-          <div class="form-group">
+          <div class="form-group ft-budget-category-group">
             <label id="label-category" data-en="Category" data-es="Categoría">Category</label>
-            <input type="text" id="category" list="budget-category-options" placeholder="Search or choose a category" autocomplete="off" value="Other">
-            <datalist id="budget-category-options">
-              <option value="Housing"></option>
-              <option value="Transportation"></option>
-              <option value="Food"></option>
-              <option value="Utilities"></option>
-              <option value="Healthcare"></option>
-              <option value="Insurance"></option>
-              <option value="Debt Payments"></option>
-              <option value="Entertainment"></option>
-              <option value="Shopping"></option>
-              <option value="Education"></option>
-              <option value="Savings"></option>
-              <option value="Other"></option>
-            </datalist>
+            <div class="ft-budget-category-picker" id="budget-category-picker">
+              <input type="text" id="category" placeholder="Search or choose a category" autocomplete="off" value="Other" aria-haspopup="listbox" aria-expanded="false">
+              <button type="button" class="ft-budget-category-toggle" id="budget-category-toggle" aria-label="Open category list">⌄</button>
+              <div class="ft-budget-category-menu" id="budget-category-menu" role="listbox"></div>
+            </div>
           </div>
 <button class="add-btn" id="btn-add-transaction" onclick="addTransaction()">Add Transaction</button>
         </div>
@@ -14113,5 +14183,143 @@ window.addEventListener('load', function(){
 
 
 
+
+<script>
+/* === BUDGET CATEGORY SEARCHABLE DROPDOWN — SAFE UI POLISH === */
+(function(){
+  var categories = {
+    en: ['Housing','Transportation','Food','Utilities','Healthcare','Insurance','Debt Payments','Entertainment','Shopping','Education','Savings','Other'],
+    es: ['Vivienda','Transporte','Comida','Servicios Públicos','Salud','Seguros','Pago de Deudas','Entretenimiento','Compras','Educación','Ahorros','Otro']
+  };
+
+  function isEs(){
+    try { return typeof currentLang !== 'undefined' && currentLang === 'es'; } catch(e) { return false; }
+  }
+
+  function getEls(){
+    return {
+      picker: document.getElementById('budget-category-picker'),
+      input: document.getElementById('category'),
+      toggle: document.getElementById('budget-category-toggle'),
+      menu: document.getElementById('budget-category-menu')
+    };
+  }
+
+  function list(){ return isEs() ? categories.es : categories.en; }
+  function placeholder(){ return isEs() ? 'Buscar o elegir una categoría' : 'Search or choose a category'; }
+  function other(){ return isEs() ? 'Otro' : 'Other'; }
+
+  function renderMenu(filter){
+    var els = getEls();
+    if (!els.menu) return;
+    var q = String(filter || '').trim().toLowerCase();
+    var matches = list().filter(function(cat){ return cat.toLowerCase().indexOf(q) !== -1; });
+    if (!matches.length) {
+      els.menu.innerHTML = '<div class="ft-budget-category-empty">' + (isEs() ? 'No hay coincidencias. Puedes escribir una categoría personalizada.' : 'No matches. You can type a custom category.') + '</div>';
+      return;
+    }
+    els.menu.innerHTML = matches.map(function(cat){
+      return '<button type="button" class="ft-budget-category-option" role="option" data-category="' + cat.replace(/&/g,'&amp;').replace(/"/g,'&quot;') + '">' + cat + '</button>';
+    }).join('');
+  }
+
+  function openMenu(){
+    var els = getEls();
+    if (!els.picker || !els.input) return;
+    renderMenu(els.input.value === other() ? '' : els.input.value);
+    els.picker.classList.add('open');
+    els.input.setAttribute('aria-expanded','true');
+  }
+
+  function closeMenu(){
+    var els = getEls();
+    if (!els.picker || !els.input) return;
+    els.picker.classList.remove('open');
+    els.input.setAttribute('aria-expanded','false');
+  }
+
+  function syncLanguage(){
+    var els = getEls();
+    if (!els.input) return;
+    els.input.placeholder = placeholder();
+    if (!els.input.value || /^(Other|Otro)$/.test(els.input.value)) els.input.value = other();
+    renderMenu('');
+  }
+
+  function initBudgetCategoryPicker(){
+    var els = getEls();
+    if (!els.picker || !els.input || !els.menu || els.picker.dataset.ftBudgetCategoryReady === 'true') { syncLanguage(); return; }
+    els.picker.dataset.ftBudgetCategoryReady = 'true';
+    els.input.removeAttribute('list');
+    syncLanguage();
+
+    els.input.addEventListener('focus', function(){ openMenu(); });
+    els.input.addEventListener('click', function(){ openMenu(); });
+    els.input.addEventListener('input', function(){ openMenu(); renderMenu(els.input.value); });
+
+    if (els.toggle) {
+      els.toggle.addEventListener('click', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        if (els.picker.classList.contains('open')) closeMenu();
+        else { openMenu(); els.input.focus(); }
+      });
+    }
+
+    els.menu.addEventListener('click', function(e){
+      var btn = e.target.closest('.ft-budget-category-option');
+      if (!btn) return;
+      els.input.value = btn.getAttribute('data-category') || btn.textContent.trim();
+      closeMenu();
+      els.input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+
+    document.addEventListener('click', function(e){
+      if (!els.picker.contains(e.target)) closeMenu();
+    });
+
+    els.input.addEventListener('keydown', function(e){
+      if (e.key === 'Escape') closeMenu();
+      if (e.key === 'ArrowDown') { openMenu(); var first = els.menu.querySelector('.ft-budget-category-option'); if (first) first.focus(); e.preventDefault(); }
+    });
+
+    els.menu.addEventListener('keydown', function(e){
+      var current = document.activeElement && document.activeElement.classList.contains('ft-budget-category-option') ? document.activeElement : null;
+      if (!current) return;
+      if (e.key === 'ArrowDown') { var n = current.nextElementSibling; if (n) n.focus(); e.preventDefault(); }
+      if (e.key === 'ArrowUp') { var p = current.previousElementSibling; if (p) p.focus(); else els.input.focus(); e.preventDefault(); }
+      if (e.key === 'Enter' || e.key === ' ') { current.click(); e.preventDefault(); }
+      if (e.key === 'Escape') { closeMenu(); els.input.focus(); }
+    });
+  }
+
+  function wrapLanguageFunction(name){
+    try {
+      var fn = window[name];
+      if (typeof fn === 'function' && !fn.__ftBudgetCategoryWrapped) {
+        var wrapped = function(){
+          var result = fn.apply(this, arguments);
+          setTimeout(syncLanguage, 50);
+          setTimeout(syncLanguage, 250);
+          return result;
+        };
+        wrapped.__ftBudgetCategoryWrapped = true;
+        window[name] = wrapped;
+      }
+    } catch(e) {}
+  }
+
+  window.fintrailInitBudgetCategoryPicker = initBudgetCategoryPicker;
+  document.addEventListener('DOMContentLoaded', function(){
+    initBudgetCategoryPicker();
+    ['applyLanguage','setLanguage','switchLanguage'].forEach(wrapLanguageFunction);
+  });
+  window.addEventListener('load', function(){
+    initBudgetCategoryPicker();
+    setTimeout(initBudgetCategoryPicker, 500);
+    setTimeout(initBudgetCategoryPicker, 1500);
+  });
+})();
+</script>
 </body>
 </html>
