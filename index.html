@@ -7895,6 +7895,108 @@ Guidelines:
       
 
 
+
+<script>
+/* === DEBT PLANNER LABEL STABILIZER — EXACT ONLY ===
+   Fixes repeated partial translations like Edit -> Editar -> Editarar and
+   mixed headings like ESTE MES'S PAYMENT PLAN without touching other app logic. */
+(function(){
+  var timer = null;
+
+  function lang(){
+    try { return (typeof currentLang !== 'undefined' && currentLang === 'es') ? 'es' : 'en'; }
+    catch(e) { return 'en'; }
+  }
+
+  function normalizeDebtPlannerLabels(){
+    try {
+      var root = document.getElementById('tab-debtplan');
+      if (!root) return;
+      var es = lang() === 'es';
+
+      // Fix edit buttons exactly. Handles Editar, Editarar, Editararar, etc.
+      root.querySelectorAll('button').forEach(function(btn){
+        var t = (btn.textContent || '').trim();
+        if (t === 'Edit' || t === 'Editar' || /^Editar(ar)+$/i.test(t) || /^Editarar+/i.test(t)) {
+          btn.textContent = es ? 'Editar' : 'Edit';
+        }
+      });
+
+      // Fix this month's payment plan heading exactly without partial replacements.
+      var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode: function(node){
+          var p = node.parentElement;
+          if (!p || p.tagName === 'SCRIPT' || p.tagName === 'STYLE') return NodeFilter.FILTER_REJECT;
+          var v = (node.textContent || '').trim();
+          if (!v) return NodeFilter.FILTER_REJECT;
+          if (/PAYMENT PLAN/i.test(v) || /PLAN DE PAGO/i.test(v) || /ESTE MES/i.test(v) || /^Editar/i.test(v) || v === 'Edit') {
+            return NodeFilter.FILTER_ACCEPT;
+          }
+          return NodeFilter.FILTER_SKIP;
+        }
+      });
+
+      var nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+
+      nodes.forEach(function(node){
+        var original = node.textContent || '';
+        var compact = original.replace(/\s+/g, ' ').trim();
+
+        if (/^(📋\s*)?(THIS MONTH'S PAYMENT PLAN|ESTE MES'S PAYMENT PLAN|PLAN DE PAGO DE ESTE MES|PLAN DE PAGO DE ESTE MES'S PAYMENT PLAN)$/i.test(compact)) {
+          var prefix = original.indexOf('📋') !== -1 ? '📋 ' : '';
+          node.textContent = prefix + (es ? 'PLAN DE PAGO DE ESTE MES' : "THIS MONTH'S PAYMENT PLAN");
+          return;
+        }
+
+        if (compact === 'Edit' || compact === 'Editar' || /^Editar(ar)+$/i.test(compact) || /^Editarar+/i.test(compact)) {
+          node.textContent = es ? 'Editar' : 'Edit';
+        }
+      });
+    } catch(e) {
+      console.warn('Debt planner label stabilizer skipped:', e);
+    }
+  }
+
+  function schedule(){
+    clearTimeout(timer);
+    timer = setTimeout(normalizeDebtPlannerLabels, 260);
+  }
+
+  window.fintrailDebtPlannerLabelStabilizer = normalizeDebtPlannerLabels;
+
+  ['load', 'click', 'change', 'input'].forEach(function(evt){
+    window.addEventListener(evt, function(){ schedule(); setTimeout(normalizeDebtPlannerLabels, 900); }, true);
+    document.addEventListener(evt, function(){ schedule(); setTimeout(normalizeDebtPlannerLabels, 900); }, true);
+  });
+
+  var originalRenderDebtList = window.renderDebtList;
+  if (typeof originalRenderDebtList === 'function' && !originalRenderDebtList.__fintrailStableLabelFix) {
+    window.renderDebtList = function(){
+      var result = originalRenderDebtList.apply(this, arguments);
+      setTimeout(normalizeDebtPlannerLabels, 80);
+      setTimeout(normalizeDebtPlannerLabels, 350);
+      return result;
+    };
+    window.renderDebtList.__fintrailStableLabelFix = true;
+  }
+
+  var originalRunPayoffPlan = window.runPayoffPlan;
+  if (typeof originalRunPayoffPlan === 'function' && !originalRunPayoffPlan.__fintrailStableLabelFix) {
+    window.runPayoffPlan = function(){
+      var result = originalRunPayoffPlan.apply(this, arguments);
+      setTimeout(normalizeDebtPlannerLabels, 80);
+      setTimeout(normalizeDebtPlannerLabels, 350);
+      return result;
+    };
+    window.runPayoffPlan.__fintrailStableLabelFix = true;
+  }
+
+  setTimeout(normalizeDebtPlannerLabels, 500);
+  setTimeout(normalizeDebtPlannerLabels, 1600);
+})();
+</script>
+
 </body>
       </html>
     `);
@@ -11749,7 +11851,6 @@ window.addEventListener('load', function(){
     ['e.g. Visa Card', 'ej. Tarjeta Visa'],
     ['Focus now', 'Prioridad ahora'],
     ['Focus', 'Prioridad'],
-    ['Edit', 'Editar'],
     ["THIS MONTH'S PAYMENT PLAN", 'PLAN DE PAGO DE ESTE MES'],
     ["This Month's Payment Plan", 'Plan de Pago de Este Mes'],
     ['Total Monthly Payment', 'Pago mensual total'],
@@ -14216,25 +14317,24 @@ window.addEventListener('load', function(){
       if (es) {
         replaceTextNodes(root, {
           'Total Monthly Payment': 'Pago Mensual Total',
-          'This Month': 'Este Mes',
-          'this month': 'Este Mes',
+          "THIS MONTH'S PAYMENT PLAN": 'PLAN DE PAGO DE ESTE MES',
+          "This Month's Payment Plan": 'Plan de Pago de Este Mes',
           'Balance:': 'Saldo:',
           'Balance': 'Saldo',
           'Min:': 'Mín.:',
           'Min': 'Mín.',
-          'Focus': 'Prioridad',
-          'Edit': 'Editar'
+          'Focus': 'Prioridad'
         });
       } else {
         replaceTextNodes(root, {
           'Pago Mensual Total': 'Total Monthly Payment',
-          'Este Mes': 'This Month',
+          'PLAN DE PAGO DE ESTE MES': "THIS MONTH'S PAYMENT PLAN",
+          'Plan de Pago de Este Mes': "This Month's Payment Plan",
           'Saldo:': 'Balance:',
           'Saldo': 'Balance',
           'Mín.:': 'Min:',
           'Mín.': 'Min',
-          'Prioridad': 'Focus',
-          'Editar': 'Edit'
+          'Prioridad': 'Focus'
         });
       }
     } catch(e) {}
@@ -14794,5 +14894,107 @@ window.addEventListener('load', function(){
   document.addEventListener('change', function(){ scheduleFinalTranslationQA(); }, true);
 })();
 </script>
+
+<script>
+/* === DEBT PLANNER LABEL STABILIZER — EXACT ONLY ===
+   Fixes repeated partial translations like Edit -> Editar -> Editarar and
+   mixed headings like ESTE MES'S PAYMENT PLAN without touching other app logic. */
+(function(){
+  var timer = null;
+
+  function lang(){
+    try { return (typeof currentLang !== 'undefined' && currentLang === 'es') ? 'es' : 'en'; }
+    catch(e) { return 'en'; }
+  }
+
+  function normalizeDebtPlannerLabels(){
+    try {
+      var root = document.getElementById('tab-debtplan');
+      if (!root) return;
+      var es = lang() === 'es';
+
+      // Fix edit buttons exactly. Handles Editar, Editarar, Editararar, etc.
+      root.querySelectorAll('button').forEach(function(btn){
+        var t = (btn.textContent || '').trim();
+        if (t === 'Edit' || t === 'Editar' || /^Editar(ar)+$/i.test(t) || /^Editarar+/i.test(t)) {
+          btn.textContent = es ? 'Editar' : 'Edit';
+        }
+      });
+
+      // Fix this month's payment plan heading exactly without partial replacements.
+      var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode: function(node){
+          var p = node.parentElement;
+          if (!p || p.tagName === 'SCRIPT' || p.tagName === 'STYLE') return NodeFilter.FILTER_REJECT;
+          var v = (node.textContent || '').trim();
+          if (!v) return NodeFilter.FILTER_REJECT;
+          if (/PAYMENT PLAN/i.test(v) || /PLAN DE PAGO/i.test(v) || /ESTE MES/i.test(v) || /^Editar/i.test(v) || v === 'Edit') {
+            return NodeFilter.FILTER_ACCEPT;
+          }
+          return NodeFilter.FILTER_SKIP;
+        }
+      });
+
+      var nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+
+      nodes.forEach(function(node){
+        var original = node.textContent || '';
+        var compact = original.replace(/\s+/g, ' ').trim();
+
+        if (/^(📋\s*)?(THIS MONTH'S PAYMENT PLAN|ESTE MES'S PAYMENT PLAN|PLAN DE PAGO DE ESTE MES|PLAN DE PAGO DE ESTE MES'S PAYMENT PLAN)$/i.test(compact)) {
+          var prefix = original.indexOf('📋') !== -1 ? '📋 ' : '';
+          node.textContent = prefix + (es ? 'PLAN DE PAGO DE ESTE MES' : "THIS MONTH'S PAYMENT PLAN");
+          return;
+        }
+
+        if (compact === 'Edit' || compact === 'Editar' || /^Editar(ar)+$/i.test(compact) || /^Editarar+/i.test(compact)) {
+          node.textContent = es ? 'Editar' : 'Edit';
+        }
+      });
+    } catch(e) {
+      console.warn('Debt planner label stabilizer skipped:', e);
+    }
+  }
+
+  function schedule(){
+    clearTimeout(timer);
+    timer = setTimeout(normalizeDebtPlannerLabels, 260);
+  }
+
+  window.fintrailDebtPlannerLabelStabilizer = normalizeDebtPlannerLabels;
+
+  ['load', 'click', 'change', 'input'].forEach(function(evt){
+    window.addEventListener(evt, function(){ schedule(); setTimeout(normalizeDebtPlannerLabels, 900); }, true);
+    document.addEventListener(evt, function(){ schedule(); setTimeout(normalizeDebtPlannerLabels, 900); }, true);
+  });
+
+  var originalRenderDebtList = window.renderDebtList;
+  if (typeof originalRenderDebtList === 'function' && !originalRenderDebtList.__fintrailStableLabelFix) {
+    window.renderDebtList = function(){
+      var result = originalRenderDebtList.apply(this, arguments);
+      setTimeout(normalizeDebtPlannerLabels, 80);
+      setTimeout(normalizeDebtPlannerLabels, 350);
+      return result;
+    };
+    window.renderDebtList.__fintrailStableLabelFix = true;
+  }
+
+  var originalRunPayoffPlan = window.runPayoffPlan;
+  if (typeof originalRunPayoffPlan === 'function' && !originalRunPayoffPlan.__fintrailStableLabelFix) {
+    window.runPayoffPlan = function(){
+      var result = originalRunPayoffPlan.apply(this, arguments);
+      setTimeout(normalizeDebtPlannerLabels, 80);
+      setTimeout(normalizeDebtPlannerLabels, 350);
+      return result;
+    };
+    window.runPayoffPlan.__fintrailStableLabelFix = true;
+  }
+
+  setTimeout(normalizeDebtPlannerLabels, 500);
+  setTimeout(normalizeDebtPlannerLabels, 1600);
+})();
+</script>
+
 </body>
 </html>
