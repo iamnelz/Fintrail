@@ -7997,6 +7997,76 @@ Guidelines:
 })();
 </script>
 
+
+
+<script>
+/* === ACCOUNT BAR EMAIL RESTORE FIX ===
+   Keeps plan label accurate while showing the logged-in email in the top account banner.
+   Does not change auth, Stripe, admin access, paywall, or subscription detection. */
+(function(){
+  function fintrailAccountBannerEmailFix(){
+    try {
+      var statusEl = document.getElementById('ab-status');
+      var actionBtn = document.getElementById('ab-action-btn');
+      var badge = document.getElementById('ab-plan-badge');
+      if (!statusEl) return;
+
+      var lang = (typeof currentLang !== 'undefined' && currentLang === 'es') ? 'es' : 'en';
+      var email = '';
+      try { email = currentUser && currentUser.email ? currentUser.email : ''; } catch(e) {}
+      var name = '';
+      try { name = currentUser && currentUser.user_metadata && currentUser.user_metadata.full_name ? currentUser.user_metadata.full_name : ''; } catch(e) {}
+      var identity = email || name || (lang === 'es' ? 'Usuario' : 'User');
+      var pro = false;
+      try { pro = !!isPro; } catch(e) { pro = false; }
+
+      if (pro) {
+        statusEl.textContent = (lang === 'es' ? 'Plan Pro' : 'Pro Plan') + ' — ' + identity;
+      } else {
+        statusEl.textContent = (lang === 'es' ? 'Plan Gratis' : 'Free Plan') + ' — ' + identity;
+      }
+      statusEl.title = identity;
+
+      if (badge && !pro) {
+        badge.textContent = lang === 'es' ? 'Gratis' : 'Free';
+        badge.classList.remove('premium-plan');
+      }
+      if (actionBtn && !pro) {
+        actionBtn.textContent = lang === 'es' ? 'Mejorar a Pro →' : 'Upgrade to Pro →';
+      }
+    } catch(e) {}
+  }
+
+  window.fintrailAccountBannerEmailFix = fintrailAccountBannerEmailFix;
+
+  function wrapOnce(fnName){
+    try {
+      var original = window[fnName];
+      if (typeof original !== 'function' || original.__fintrailAccountBannerEmailWrapped) return;
+      window[fnName] = function(){
+        var result = original.apply(this, arguments);
+        setTimeout(fintrailAccountBannerEmailFix, 0);
+        setTimeout(fintrailAccountBannerEmailFix, 75);
+        return result;
+      };
+      window[fnName].__fintrailAccountBannerEmailWrapped = true;
+    } catch(e) {}
+  }
+
+  wrapOnce('setUserUI');
+  wrapOnce('setProUI');
+  wrapOnce('applyLanguage');
+  wrapOnce('loadUserData');
+
+  window.addEventListener('load', function(){
+    setTimeout(fintrailAccountBannerEmailFix, 300);
+    setTimeout(fintrailAccountBannerEmailFix, 900);
+    setTimeout(fintrailAccountBannerEmailFix, 1800);
+  });
+  document.addEventListener('click', function(){ setTimeout(fintrailAccountBannerEmailFix, 80); });
+})();
+</script>
+
 </body>
       </html>
     `);
