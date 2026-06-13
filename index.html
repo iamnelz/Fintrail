@@ -13751,6 +13751,11 @@ window.addEventListener('load', function(){
   }
 
   function applyTranslations(){
+    // Only run these Spanish polish replacements in Spanish mode.
+    // This prevents English pages like Financial Calendar from being converted
+    // to Spanish after render (ex: June -> Junio).
+    try { if (window.currentLang !== 'es' && currentLang !== 'es') return; } catch(e) { return; }
+
     var replacements = [
       [
         "Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.",
@@ -13760,9 +13765,8 @@ window.addEventListener('load', function(){
         "Pay minimums on all debts, then put ALL extra money toward the smallest balance debt first. Gives you quick wins and motivation to keep going.",
         "Paga los mínimos en todas tus deudas y destina TODO el dinero extra a la deuda con el saldo más pequeño primero. Te brinda victorias rápidas y motivación para seguir avanzando."
       ],
-      ["June 2026", "Junio de 2026"],
-      ["june 2026", "Junio de 2026"],
-      ["mayo de 2026", "Mayo de 2026"]
+      ["mayo de 2026", "Mayo de 2026"],
+      ["junio de 2026", "Junio de 2026"]
     ];
 
     replaceInTextNodes(document.body, replacements);
