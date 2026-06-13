@@ -2258,7 +2258,7 @@
   #bsub-tracker .bar-chart { gap:0.9rem; }
   #bsub-tracker .bar-row {
     display:grid;
-    grid-template-columns:78px minmax(80px,1fr) auto;
+    grid-template-columns:142px minmax(80px,1fr) auto;
     gap:0.6rem;
     align-items:center;
   }
@@ -2268,6 +2268,9 @@
     color:var(--text);
     font-size:0.78rem;
     font-weight:600;
+    white-space:normal;
+    overflow:visible;
+    line-height:1.2;
   }
   #bsub-tracker .bar-label::before {
     content:'•••';
@@ -4779,7 +4782,7 @@
     <!-- HEADLINE -->
     <div class="card" style="background:linear-gradient(135deg,#1a1a2e 0%,#2d1b4e 100%);color:#fff;margin-bottom:1.5rem;text-align:center;padding:2rem 1.5rem;position:relative;overflow:hidden">
       <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(240,85,85,0.18) 0%,transparent 70%);pointer-events:none"></div>
-      <div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.5);margin-bottom:0.5rem">YOUR NET WORTH</div>
+      <div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.5);margin-bottom:0.5rem" data-en="YOUR NET WORTH" data-es="TU PATRIMONIO NETO">YOUR NET WORTH</div>
       <div id="nw-headline" style="font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:700;color:#fff;line-height:1">$0</div>
       <div id="nw-headline-change" style="font-size:0.82rem;margin-top:0.4rem;color:rgba(255,255,255,0.55)">Add your assets and liabilities below</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem;max-width:400px;margin-left:auto;margin-right:auto">
@@ -6405,29 +6408,22 @@
     const expenseTransactions = transactions.filter(t => t.type === 'expense');
     if (expenseTransactions.length === 0) { chart.innerHTML = `<div class="empty-state">${currentLang === 'es' ? 'Agrega gastos para ver tu resumen de gastos.' : 'Add expenses to see your spending breakdown.'}</div>`; return; }
     const byCategory = {};
-    const categoryNames = {
-      en: {
-        'Vivienda':'Housing', 'Transporte':'Transportation', 'Transport':'Transportation', 'Comida':'Food', 'Alimentación':'Food',
-        'Servicios Públicos':'Utilities', 'Salud':'Healthcare', 'Seguros':'Insurance', 'Pago de Deudas':'Debt Payments',
-        'Entretenimiento':'Entertainment', 'Compras':'Shopping', 'Educación':'Education', 'Ahorros':'Savings', 'Otro':'Other',
-        'Housing':'Housing', 'Transportation':'Transportation', 'Food':'Food', 'Utilities':'Utilities', 'Healthcare':'Healthcare',
-        'Insurance':'Insurance', 'Debt Payments':'Debt Payments', 'Entertainment':'Entertainment', 'Shopping':'Shopping',
-        'Education':'Education', 'Savings':'Savings', 'Other':'Other'
-      },
-      es: {
-        'Housing':'Vivienda', 'Transportation':'Transporte', 'Transport':'Transporte', 'Food':'Comida', 'Utilities':'Servicios Públicos',
-        'Healthcare':'Salud', 'Insurance':'Seguros', 'Debt Payments':'Pago de Deudas', 'Entertainment':'Entretenimiento',
-        'Shopping':'Compras', 'Education':'Educación', 'Savings':'Ahorros', 'Other':'Otro',
-        'Vivienda':'Vivienda', 'Transporte':'Transporte', 'Comida':'Comida', 'Alimentación':'Comida', 'Servicios Públicos':'Servicios Públicos',
-        'Salud':'Salud', 'Seguros':'Seguros', 'Pago de Deudas':'Pago de Deudas', 'Entretenimiento':'Entretenimiento',
-        'Compras':'Compras', 'Educación':'Educación', 'Ahorros':'Ahorros', 'Otro':'Otro'
-      }
+    const catTranslations = {
+      Housing:'Vivienda', Transportation:'Transporte', Transport:'Transporte', Food:'Comida', Utilities:'Servicios Públicos',
+      Healthcare:'Salud', Insurance:'Seguros', 'Debt Payments':'Pago de Deudas', Entertainment:'Entretenimiento',
+      Shopping:'Compras', Education:'Educación', Savings:'Ahorros', Other:'Otro',
+      Salary:'Salario', Freelance:'Freelance', Investment:'Inversión'
+    };
+    const catTranslationsEn = {
+      Vivienda:'Housing', Transporte:'Transportation', Comida:'Food', 'Servicios Públicos':'Utilities',
+      Salud:'Healthcare', Seguros:'Insurance', 'Pago de Deudas':'Debt Payments', Entretenimiento:'Entertainment',
+      Compras:'Shopping', Educación:'Education', Ahorros:'Savings', Otro:'Other',
+      Alimentación:'Food'
     };
     expenseTransactions.forEach(t => { byCategory[t.category] = (byCategory[t.category] || 0) + t.amount; });
     const max = Math.max(...Object.values(byCategory));
     chart.innerHTML = Object.entries(byCategory).sort((a,b) => b[1]-a[1]).map(([cat, val]) => {
-      const langMap = currentLang === 'es' ? categoryNames.es : categoryNames.en;
-      const displayCat = langMap[cat] || cat;
+      const displayCat = currentLang === 'es' ? (catTranslations[cat] || cat) : (catTranslationsEn[cat] || cat);
       return `<div class="bar-row">
         <div class="bar-label">${displayCat}</div>
         <div class="bar-track"><div class="bar-fill" style="width:${(val/max)*100}%;background:var(--expense-color);opacity:${0.5+0.5*(val/max)}"></div></div>
@@ -8789,6 +8785,18 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     }
   }
 
+  function formatFintrailMonthYear(year, monthIndex, opts = {}) {
+    const monthsEN = opts.short
+      ? ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+      : ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const monthsES = opts.short
+      ? ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']
+      : ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    return currentLang === 'es'
+      ? `${monthsES[monthIndex]} de ${year}`
+      : `${monthsEN[monthIndex]} ${year}`;
+  }
+
   function renderNWChart() {
     const canvas = document.getElementById('nw-chart');
     const emptyEl = document.getElementById('nw-chart-empty');
@@ -8883,7 +8891,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     pts.forEach((p,i) => {
       if (i % step === 0 || i === pts.length-1) {
         const [y,m] = nwHistory[i].month.split('-');
-        const label = new Date(parseInt(y), parseInt(m)-1).toLocaleDateString(currentLang === 'es' ? 'es-US' : 'en-US', {month:'short', year:'2-digit'}).replace(/^./, c => c.toUpperCase());
+        const label = formatFintrailMonthYear(parseInt(y), parseInt(m)-1, { short: true });
         ctx.fillText(label, p.x, H - 8);
       }
     });
@@ -8900,7 +8908,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       const sign  = delta !== null ? (delta >= 0 ? '+' : '') : '';
       const color = delta === null ? 'var(--muted)' : delta >= 0 ? 'var(--income-color)' : 'var(--accent)';
       const [y,m] = h.month.split('-');
-      const label = new Date(parseInt(y), parseInt(m)-1).toLocaleDateString(currentLang === 'es' ? 'es-US' : 'en-US', {month:'long', year:'numeric'}).replace(/^./, c => c.toUpperCase());
+      const label = formatFintrailMonthYear(parseInt(y), parseInt(m)-1);
       return `<div style="display:flex;align-items:center;justify-content:space-between;padding:0.45rem 0.6rem;background:var(--bg);border-radius:8px;border:1px solid var(--border)">
         <span style="font-size:0.8rem;color:var(--text-soft)">${label}</span>
         <div style="display:flex;align-items:center;gap:0.6rem">
@@ -10140,7 +10148,10 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     reportSetText('report-download-btn', t('⇩ Download Report (PDF)', '⇩ Descargar Reporte (PDF)'));
     reportSetText('report-share-btn', t('⇧ Share Your Progress', '⇧ Comparte Tu Progreso'));
 
-    const monthName = new Date().toLocaleDateString(isEs ? 'es-US' : 'en-US', { month:'long', year:'numeric' }).replace(/^./, c => c.toUpperCase());
+    const nowForReport = new Date();
+    const monthName = typeof formatFintrailMonthYear === 'function'
+      ? formatFintrailMonthYear(nowForReport.getFullYear(), nowForReport.getMonth())
+      : new Date().toLocaleDateString(isEs ? 'es-US' : 'en-US', { month:'long', year:'numeric' }).replace(/^\w/, c => c.toUpperCase());
     reportSetText('report-title', isEs ? `Tu Reporte Financiero de ${monthName} 🎉` : `Your ${monthName} Financial Progress Report 🎉`);
 
     // Health score
@@ -10370,7 +10381,9 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       eventMap[e.date].push(e);
     });
 
-    const dayNames = currentLang === 'es' ? ['DOM','LUN','MAR','MIÉ','JUE','VIE','SÁB'] : ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+    const dayNames = currentLang === 'es'
+      ? ['DOM','LUN','MAR','MIÉ','JUE','VIE','SÁB']
+      : ['SUN','MON','TUE','WED','THU','FRI','SAT'];
     let html = dayNames.map(d => `<div class="cal-day-header">${d}</div>`).join('');
 
     // Prev month days
@@ -10410,7 +10423,9 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const today = new Date();
     const startOfWeek = new Date(calCurrentDate);
     startOfWeek.setDate(calCurrentDate.getDate() - calCurrentDate.getDay());
-    const dayNames = currentLang === 'es' ? ['DOM','LUN','MAR','MIÉ','JUE','VIE','SÁB'] : ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+    const dayNames = currentLang === 'es'
+      ? ['DOM','LUN','MAR','MIÉ','JUE','VIE','SÁB']
+      : ['SUN','MON','TUE','WED','THU','FRI','SAT'];
 
     let headerHtml = `<div class="cal-week-header" style="background:var(--surface)"></div>`;
     const weekDays = [];
@@ -13273,7 +13288,7 @@ window.addEventListener('load', function(){
     ['A monthly snapshot is saved each time you visit this tab.', 'Se guarda una captura mensual cada vez que visitas esta pestaña.'],
     ['Total Assets', 'Activos Totales'],
     ['Total Liabilities', 'Pasivos Totales'],
-    ['May 2026', 'Mayo de 2026']
+    ['May 2026', 'mayo de 2026']
   ];
 
   function fixBrokenEditText(s){
@@ -14224,22 +14239,20 @@ window.addEventListener('load', function(){
 
 
 
-
-
-<!-- === FINTRAIL TARGETED TRANSLATION POLISH PATCH 2026-06-12 === -->
+<!-- === FINTRAIL FINAL TRANSLATION POLISH PATCH 2026-06-12 === -->
 <style>
-  /* Prevent longer category labels like “Entretenimiento” from clipping. */
+  /* Prevent longer Spanish category labels like "Entretenimiento" from clipping. */
   #chart-section .bar-label,
   .chart-section .bar-label {
-    width: 150px !important;
-    max-width: 150px !important;
+    width: 142px !important;
+    max-width: 142px !important;
     white-space: normal !important;
     overflow: visible !important;
     line-height: 1.25 !important;
   }
   @media (max-width:700px) {
     #bsub-tracker .bar-row {
-      grid-template-columns: 118px minmax(70px,1fr) auto !important;
+      grid-template-columns: minmax(132px, 40%) minmax(70px,1fr) auto !important;
     }
     #bsub-tracker .bar-label {
       width: auto !important;
@@ -14252,30 +14265,172 @@ window.addEventListener('load', function(){
 </style>
 <script>
 (function(){
-  function isEs(){ try { return currentLang === 'es'; } catch(e) { return false; } }
-  function patchNetWorthHeading(){
-    var root = document.getElementById('tab-networth');
-    if (!root) return;
-    root.querySelectorAll('h1,h2,h3,div,span').forEach(function(el){
-      if (el.children.length) return;
+  'use strict';
+
+  var monthsEN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var monthsES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  var monthsESLower = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  var daysEN = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  var daysES = ['DOM','LUN','MAR','MIÉ','JUE','VIE','SÁB'];
+
+  function getLang(){
+    try {
+      if (typeof currentLang !== 'undefined' && currentLang) return currentLang;
+      return localStorage.getItem('fintrail_lang') || document.documentElement.lang || 'en';
+    } catch(e) { return document.documentElement.lang || 'en'; }
+  }
+  function isSpanish(){ return String(getLang()).toLowerCase().slice(0,2) === 'es'; }
+
+  function replaceMonthsForLang(text){
+    if (!text) return text;
+    var s = String(text);
+    if (isSpanish()) {
+      monthsEN.forEach(function(m, i){ s = s.replace(new RegExp('\\b' + m + '\\b', 'g'), monthsES[i]); });
+      monthsESLower.forEach(function(m, i){ s = s.replace(new RegExp('\\b' + m + '\\b', 'g'), monthsES[i]); });
+    } else {
+      monthsES.forEach(function(m, i){ s = s.replace(new RegExp('\\b' + m + '\\s+de\\s+(\\d{4})\\b', 'g'), monthsEN[i] + ' $1'); });
+      monthsESLower.forEach(function(m, i){ s = s.replace(new RegExp('\\b' + m + '\\s+de\\s+(\\d{4})\\b', 'g'), monthsEN[i] + ' $1'); });
+      monthsES.forEach(function(m, i){ s = s.replace(new RegExp('\\b' + m + '\\b', 'g'), monthsEN[i]); });
+      monthsESLower.forEach(function(m, i){ s = s.replace(new RegExp('\\b' + m + '\\b', 'g'), monthsEN[i]); });
+    }
+    return s;
+  }
+
+  function patchBudgetChart(){
+    var enToEs = {
+      'Housing':'Vivienda', 'Transportation':'Transporte', 'Transport':'Transporte', 'Food':'Comida', 'Utilities':'Servicios Públicos',
+      'Healthcare':'Salud', 'Insurance':'Seguros', 'Debt Payments':'Pago de Deudas', 'Entertainment':'Entretenimiento',
+      'Shopping':'Compras', 'Education':'Educación', 'Savings':'Ahorros', 'Other':'Otro'
+    };
+    var esToEn = {
+      'Vivienda':'Housing', 'Transporte':'Transport', 'Comida':'Food', 'Servicios Públicos':'Utilities', 'Servicios':'Utilities',
+      'Salud':'Healthcare', 'Seguros':'Insurance', 'Pago de Deudas':'Debt Payments', 'Entretenimiento':'Entertainment',
+      'Compras':'Shopping', 'Educación':'Education', 'Ahorros':'Savings', 'Otro':'Other'
+    };
+    document.querySelectorAll('#chart-section .bar-label, .chart-section .bar-label').forEach(function(el){
       var txt = (el.textContent || '').trim();
-      if (txt === 'YOUR NET WORTH' || txt === 'Your Net Worth' || txt === 'TU PATRIMONIO NETO' || txt === 'Tu Patrimonio Neto') {
-        el.textContent = isEs() ? 'TU PATRIMONIO NETO' : 'YOUR NET WORTH';
+      if (!txt) return;
+      if (isSpanish() && enToEs[txt]) el.textContent = enToEs[txt];
+      if (!isSpanish() && esToEn[txt]) el.textContent = esToEn[txt];
+    });
+  }
+
+  function patchNetWorth(){
+    document.querySelectorAll('#tab-networth *').forEach(function(el){
+      if (!el || el.children.length) return;
+      var txt = (el.textContent || '').trim();
+      if (!txt) return;
+      if (txt === 'YOUR NET WORTH' || txt === 'TU PATRIMONIO NETO') {
+        el.textContent = isSpanish() ? 'TU PATRIMONIO NETO' : 'YOUR NET WORTH';
+        return;
+      }
+      var fixed = replaceMonthsForLang(el.textContent);
+      if (fixed !== el.textContent) el.textContent = fixed;
+    });
+  }
+
+  function patchCalendar(){
+    var label = document.getElementById('cal-month-label');
+    if (label) {
+      var fixed = replaceMonthsForLang(label.textContent || '');
+      if (fixed !== label.textContent) label.textContent = fixed;
+    }
+    document.querySelectorAll('#tab-calendar .cal-day-header').forEach(function(el, idx){
+      if (idx >= 0 && idx < 7) el.textContent = isSpanish() ? daysES[idx] : daysEN[idx];
+    });
+    document.querySelectorAll('#tab-calendar .cal-week-day-name').forEach(function(el, idx){
+      if (idx >= 0 && idx < 7) el.textContent = isSpanish() ? daysES[idx] : daysEN[idx];
+    });
+  }
+
+  function patchResources(){
+    document.querySelectorAll('#tab-resources .filter-btn, #tab-resources button').forEach(function(btn){
+      var txt = (btn.textContent || '').trim();
+      if (isSpanish()) {
+        if (/Tools\s*$/.test(txt)) btn.textContent = txt.replace(/Tools\s*$/, 'Herramientas');
+        if (/Education\s*$/.test(txt)) btn.textContent = txt.replace(/Education\s*$/, 'Educación');
+      } else {
+        if (/Herramientas\s*$/.test(txt)) btn.textContent = txt.replace(/Herramientas\s*$/, 'Tools');
+        if (/Educación\s*$/.test(txt)) btn.textContent = txt.replace(/Educación\s*$/, 'Education');
       }
     });
   }
-  function patchResourceTabs(){
-    var tools = document.querySelector('#tab-resources button[onclick*="tools"]');
-    var edu = document.querySelector('#tab-resources button[onclick*="education"]');
-    if (tools) tools.textContent = isEs() ? '🛠 Herramientas' : '🛠 Tools';
-    if (edu) edu.textContent = isEs() ? '📚 Educación' : '📚 Education';
+
+  function patchMonthlyReport(){
+    var title = document.getElementById('report-title');
+    if (title) {
+      var fixed = replaceMonthsForLang(title.textContent || '');
+      if (fixed !== title.textContent) title.textContent = fixed;
+    }
   }
-  function run(){ patchNetWorthHeading(); patchResourceTabs(); }
-  window.fintrailRunTargetedTranslationPolish = run;
-  window.addEventListener('load', function(){ run(); setTimeout(run,300); setTimeout(run,1000); });
-  document.addEventListener('click', function(){ setTimeout(run,80); }, true);
-  document.addEventListener('change', function(){ setTimeout(run,80); }, true);
+
+  function patchGlobalVisibleMonths(){
+    var root = document.body;
+    if (!root) return;
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(node){
+        var p = node.parentElement;
+        if (!p) return NodeFilter.FILTER_REJECT;
+        if (/^(SCRIPT|STYLE|OPTION|TEXTAREA)$/i.test(p.tagName)) return NodeFilter.FILTER_REJECT;
+        var txt = node.nodeValue || '';
+        if (!/(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre|Enero|Febrero|Marzo|Abril|Mayo|Junio|Julio|Agosto|Septiembre|Octubre|Noviembre|Diciembre|January|February|March|April|May|June|July|August|September|October|November|December)/.test(txt)) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(function(node){
+      var fixed = replaceMonthsForLang(node.nodeValue || '');
+      if (fixed !== node.nodeValue) node.nodeValue = fixed;
+    });
+  }
+
+  function applyPolishPatch(){
+    try {
+      patchBudgetChart();
+      patchNetWorth();
+      patchCalendar();
+      patchResources();
+      patchMonthlyReport();
+      patchGlobalVisibleMonths();
+    } catch(e) { console.log('Fintrail final translation polish skipped:', e.message); }
+  }
+
+  function schedule(){
+    clearTimeout(window.__fintrailPolishTimer);
+    window.__fintrailPolishTimer = setTimeout(applyPolishPatch, 90);
+  }
+
+  function wrapRender(name){
+    try {
+      var fn = window[name];
+      if (typeof fn === 'function' && !fn.__fintrailFinalPolishWrapped) {
+        var wrapped = function(){
+          var result = fn.apply(this, arguments);
+          schedule();
+          setTimeout(applyPolishPatch, 300);
+          return result;
+        };
+        wrapped.__fintrailFinalPolishWrapped = true;
+        window[name] = wrapped;
+      }
+    } catch(e) {}
+  }
+
+  window.fintrailApplyFinalTranslationPolish = applyPolishPatch;
+
+  window.addEventListener('load', function(){
+    ['applyLanguage','render','renderBudgetChart','renderCalendar','renderMonthView','renderWeekView','renderMonthlyReport','initNetWorth','filterResources'].forEach(wrapRender);
+    applyPolishPatch();
+    setTimeout(applyPolishPatch, 500);
+    setTimeout(applyPolishPatch, 1500);
+    setTimeout(applyPolishPatch, 3000);
+  });
+  document.addEventListener('click', schedule, true);
+  document.addEventListener('change', schedule, true);
+  document.addEventListener('input', schedule, true);
 })();
 </script>
+
 </body>
 </html>
