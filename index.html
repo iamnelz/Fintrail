@@ -7726,6 +7726,334 @@ Guidelines:
       
 
 
+
+<script>
+/* === FINAL SAFE REPAIR: Budget Category + Debt Planner Labels === */
+(function(){
+  function isEs(){
+    try { return typeof currentLang !== 'undefined' && currentLang === 'es'; } catch(e) { return false; }
+  }
+
+  var cats = [
+    ['Housing','Vivienda'],
+    ['Transportation','Transporte'],
+    ['Food','Comida'],
+    ['Utilities','Servicios'],
+    ['Healthcare','Salud'],
+    ['Insurance','Seguro'],
+    ['Debt Payments','Pago de Deudas'],
+    ['Entertainment','Entretenimiento'],
+    ['Shopping','Compras'],
+    ['Education','Educación'],
+    ['Savings','Ahorros'],
+    ['Other','Otro']
+  ];
+
+  function ensureBudgetCategory(){
+    try {
+      var amount = document.getElementById('amount');
+      if (!amount) return;
+      var existing = document.getElementById('category');
+      var field = document.getElementById('budget-category-field');
+      if (!existing) {
+        field = document.createElement('div');
+        field.className = 'form-group';
+        field.id = 'budget-category-field';
+        field.innerHTML = '<label id="label-category" data-en="Category" data-es="Categoría">Category</label>' +
+          '<input type="text" id="category" list="budget-category-options" autocomplete="off" placeholder="Search or choose a category">' +
+          '<datalist id="budget-category-options"></datalist>';
+        var amountGroup = amount.closest ? amount.closest('.form-group') : amount.parentNode;
+        if (amountGroup && amountGroup.parentNode) amountGroup.parentNode.insertBefore(field, amountGroup.nextSibling);
+      }
+      var input = document.getElementById('category');
+      var label = document.getElementById('label-category');
+      var list = document.getElementById('budget-category-options');
+      if (!input || !list) return;
+      var spanish = isEs();
+      if (label) label.textContent = spanish ? 'CATEGORÍA' : 'CATEGORY';
+      input.placeholder = spanish ? 'Buscar o elegir una categoría' : 'Search or choose a category';
+      list.innerHTML = cats.map(function(c){
+        var value = spanish ? c[1] : c[0];
+        return '<option value="' + value.replace(/&/g,'&amp;').replace(/"/g,'&quot;') + '"></option>';
+      }).join('');
+      // Keep category empty if user clears it; default is applied only on submit.
+      // if (!input.value) input.value = spanish ? 'Otro' : 'Other';
+    } catch(e) { console.warn('Budget category repair skipped:', e); }
+  }
+
+  function normalizeCategoryValue(value){
+    var v = String(value || '').trim();
+    if (!v) return '';
+    // Keep user-entered custom values, but normalize the built-in bilingual pair when language changes.
+    cats.forEach(function(c){
+      if (v === c[0] || v === c[1]) v = isEs() ? c[1] : c[0];
+    });
+    return v;
+  }
+
+  function repairDebtTextValue(value){
+    var s = String(value || '');
+    if (isEs()) {
+      s = s.replace(/Editarar+/g, 'Editar');
+      s = s.replace(/\bEdit\b/g, 'Editar');
+      s = s.replace(/ESTE MES'S PAYMENT PLAN/g, 'PLAN DE PAGO DE ESTE MES');
+      s = s.replace(/THIS MONTH'S PAYMENT PLAN/g, 'PLAN DE PAGO DE ESTE MES');
+      s = s.replace(/This Month's Payment Plan/g, 'Plan de Pago de Este Mes');
+      s = s.replace(/MÍN\.IMUMS ONLY/g, 'SOLO PAGOS MÍNIMOS');
+      s = s.replace(/Mín\.imums Only/g, 'Solo pagos mínimos');
+      s = s.replace(/MINIMUMS ONLY/g, 'SOLO PAGOS MÍNIMOS');
+      s = s.replace(/Minimums Only/g, 'Solo pagos mínimos');
+    } else {
+      s = s.replace(/Editarar+/g, 'Edit');
+      s = s.replace(/\bEditar\b/g, 'Edit');
+      s = s.replace(/PLAN DE PAGO DE ESTE MES/g, "THIS MONTH'S PAYMENT PLAN");
+      s = s.replace(/Plan de Pago de Este Mes/g, "This Month's Payment Plan");
+      s = s.replace(/MÍN\.IMUMS ONLY/g, 'MINIMUMS ONLY');
+      s = s.replace(/SOLO PAGOS MÍNIMOS/g, 'MINIMUMS ONLY');
+      s = s.replace(/SOLO MÍNIMOS/g, 'MINIMUMS ONLY');
+      s = s.replace(/Solo pagos mínimos/g, 'Minimums Only');
+    }
+    return s;
+  }
+
+  function repairDebtPlannerLabels(){
+    try {
+      var root = document.getElementById('tab-debtplan');
+      if (!root) return;
+      var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode: function(node){
+          var p = node.parentElement;
+          if (!p || p.tagName === 'SCRIPT' || p.tagName === 'STYLE') return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      var nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach(function(node){
+        var next = repairDebtTextValue(node.textContent);
+        if (next !== node.textContent) node.textContent = next;
+      });
+      root.querySelectorAll('button, input, textarea').forEach(function(el){
+        if (el.tagName === 'BUTTON') {
+          var t = repairDebtTextValue(el.textContent);
+          if (t !== el.textContent) el.textContent = t;
+        }
+        if (el.placeholder) el.placeholder = repairDebtTextValue(el.placeholder);
+        if (el.value && /Editarar|ESTE MES|MÍN\.IMUMS|SOLO PAGOS MÍNIMOS|PLAN DE PAGO/.test(el.value)) {
+          el.value = repairDebtTextValue(el.value);
+        }
+      });
+    } catch(e) { console.warn('Debt planner label repair skipped:', e); }
+  }
+
+  function repairAll(){
+    ensureBudgetCategory();
+    var cat = document.getElementById('category');
+    if (cat) cat.value = normalizeCategoryValue(cat.value);
+    repairDebtPlannerLabels();
+  }
+
+  // Make the existing addTransaction fallback use Other/Otro instead of a blank category.
+  function wrapAddTransaction(){
+    try {
+      if (typeof window.addTransaction === 'function' && !window.addTransaction.__fintrailCategorySafeWrapped) {
+        var original = window.addTransaction;
+        window.addTransaction = function(){
+          ensureBudgetCategory();
+          var cat = document.getElementById('category');
+          if (cat) cat.value = normalizeCategoryValue(cat.value) || (isEs() ? 'Otro' : 'Other');
+          return original.apply(this, arguments);
+        };
+        window.addTransaction.__fintrailCategorySafeWrapped = true;
+      }
+    } catch(e) {}
+  }
+
+  function schedule(){
+    setTimeout(function(){ wrapAddTransaction(); repairAll(); }, 30);
+    setTimeout(repairAll, 180);
+    setTimeout(repairAll, 600);
+  }
+
+  window.fintrailFinalSafeRepair = schedule;
+  window.addEventListener('load', schedule);
+  document.addEventListener('DOMContentLoaded', schedule);
+  document.addEventListener('click', function(e){
+    var t = e.target;
+    if (t && t.closest && (t.closest('#tab-budget') || t.closest('#tab-debtplan') || /EN|ES|English|Español|Spanish/.test(String(t.textContent || '')))) schedule();
+  });
+  document.addEventListener('input', function(e){
+    if (e.target && e.target.closest && (e.target.closest('#tab-budget') || e.target.closest('#tab-debtplan'))) schedule();
+  });
+})();
+</script>
+
+
+
+<style>
+/* === BUDGET CATEGORY CUSTOM DROPDOWN REPAIR === */
+#budget-category-field { position: relative; }
+.fintrail-budget-category-menu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 9999;
+  display: none;
+  max-height: 260px;
+  overflow-y: auto;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 14px 35px rgba(18,24,40,0.18);
+  padding: 0.35rem;
+}
+.fintrail-budget-category-menu.open { display: block; }
+.fintrail-budget-category-option {
+  padding: 0.7rem 0.85rem;
+  border-radius: 9px;
+  cursor: pointer;
+  color: var(--text);
+  font-family: 'Sora', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+.fintrail-budget-category-option:hover,
+.fintrail-budget-category-option.active {
+  background: rgba(240,85,85,0.08);
+  color: var(--accent);
+}
+.fintrail-budget-category-empty {
+  padding: 0.7rem 0.85rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+</style>
+<script>
+/* === FINAL BUDGET CATEGORY SEARCHABLE DROPDOWN FIX === */
+(function(){
+  var categories = [
+    ['Housing','Vivienda'],
+    ['Transportation','Transporte'],
+    ['Food','Comida'],
+    ['Utilities','Servicios'],
+    ['Healthcare','Salud'],
+    ['Insurance','Seguro'],
+    ['Debt Payments','Pago de Deudas'],
+    ['Entertainment','Entretenimiento'],
+    ['Shopping','Compras'],
+    ['Education','Educación'],
+    ['Savings','Ahorros'],
+    ['Other','Otro']
+  ];
+
+  function isEs(){
+    try { return typeof currentLang !== 'undefined' && currentLang === 'es'; } catch(e) { return false; }
+  }
+
+  function labels(){ return categories.map(function(c){ return isEs() ? c[1] : c[0]; }); }
+
+  function normalize(value){
+    var v = String(value || '').trim();
+    if (!v) return '';
+    categories.forEach(function(c){ if (v === c[0] || v === c[1]) v = isEs() ? c[1] : c[0]; });
+    return v;
+  }
+
+  function ensureMenu(){
+    var input = document.getElementById('category');
+    var field = document.getElementById('budget-category-field') || (input && input.closest && input.closest('.form-group'));
+    if (!input || !field) return null;
+    field.style.position = 'relative';
+    input.setAttribute('autocomplete','off');
+    input.removeAttribute('list');
+    input.placeholder = isEs() ? 'Buscar o elegir una categoría' : 'Search or choose a category';
+
+    var menu = document.getElementById('fintrail-budget-category-menu');
+    if (!menu) {
+      menu = document.createElement('div');
+      menu.id = 'fintrail-budget-category-menu';
+      menu.className = 'fintrail-budget-category-menu';
+      field.appendChild(menu);
+    }
+    return { input: input, menu: menu };
+  }
+
+  function renderMenu(filter){
+    var bundle = ensureMenu();
+    if (!bundle) return;
+    var input = bundle.input, menu = bundle.menu;
+    var q = String(filter == null ? input.value : filter).trim().toLowerCase();
+    var items = labels().filter(function(label){ return !q || label.toLowerCase().indexOf(q) !== -1; });
+    menu.innerHTML = items.length ? items.map(function(label){
+      return '<div class="fintrail-budget-category-option" data-value="' + String(label).replace(/&/g,'&amp;').replace(/"/g,'&quot;') + '">' + label + '</div>';
+    }).join('') : '<div class="fintrail-budget-category-empty">' + (isEs() ? 'No hay categorías' : 'No categories found') + '</div>';
+    menu.classList.add('open');
+  }
+
+  function closeMenu(){
+    var menu = document.getElementById('fintrail-budget-category-menu');
+    if (menu) menu.classList.remove('open');
+  }
+
+  function install(){
+    var bundle = ensureMenu();
+    if (!bundle) return;
+    var input = bundle.input, menu = bundle.menu;
+    if (input.__fintrailBudgetCategoryDropdownInstalled) {
+      input.placeholder = isEs() ? 'Buscar o elegir una categoría' : 'Search or choose a category';
+      if (input.value) input.value = normalize(input.value);
+      return;
+    }
+    input.__fintrailBudgetCategoryDropdownInstalled = true;
+
+    input.addEventListener('focus', function(){ renderMenu(''); });
+    input.addEventListener('click', function(){ renderMenu(input.value); });
+    input.addEventListener('input', function(){ renderMenu(input.value); });
+    input.addEventListener('keydown', function(e){
+      if (e.key === 'Escape') closeMenu();
+      if (e.key === 'ArrowDown') {
+        var first = menu.querySelector('.fintrail-budget-category-option');
+        if (first) { e.preventDefault(); first.classList.add('active'); first.focus && first.focus(); }
+      }
+    });
+    menu.addEventListener('mousedown', function(e){
+      var opt = e.target.closest && e.target.closest('.fintrail-budget-category-option');
+      if (!opt) return;
+      e.preventDefault();
+      input.value = opt.getAttribute('data-value') || opt.textContent || '';
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      closeMenu();
+    });
+  }
+
+  function safeInstall(){ setTimeout(install, 60); setTimeout(install, 250); setTimeout(install, 800); }
+
+  window.fintrailBudgetCategoryDropdownFix = safeInstall;
+  window.addEventListener('load', safeInstall);
+  document.addEventListener('DOMContentLoaded', safeInstall);
+  document.addEventListener('click', function(e){
+    var input = document.getElementById('category');
+    var menu = document.getElementById('fintrail-budget-category-menu');
+    if (!input || !menu) { safeInstall(); return; }
+    if (e.target === input || (menu.contains && menu.contains(e.target))) return;
+    closeMenu();
+  });
+
+  try {
+    if (typeof window.addTransaction === 'function' && !window.addTransaction.__fintrailBudgetDropdownDefaultWrapped) {
+      var originalAddTransaction = window.addTransaction;
+      window.addTransaction = function(){
+        var input = document.getElementById('category');
+        if (input) input.value = normalize(input.value) || (isEs() ? 'Otro' : 'Other');
+        return originalAddTransaction.apply(this, arguments);
+      };
+      window.addTransaction.__fintrailBudgetDropdownDefaultWrapped = true;
+    }
+  } catch(e) {}
+})();
+</script>
+
 </body>
       </html>
     `);
@@ -14237,8 +14565,6 @@ window.addEventListener('load', function(){
     ['Other','Otro']
   ];
 
-  function escapeAttr(value){ return String(value).replace(/&/g,'&amp;').replace(/"/g,'&quot;'); }
-
   function ensureBudgetCategory(){
     try {
       var amount = document.getElementById('amount');
@@ -14264,15 +14590,17 @@ window.addEventListener('load', function(){
       input.placeholder = spanish ? 'Buscar o elegir una categoría' : 'Search or choose a category';
       list.innerHTML = cats.map(function(c){
         var value = spanish ? c[1] : c[0];
-        return '<option value="' + escapeAttr(value) + '"></option>';
+        return '<option value="' + value.replace(/&/g,'&amp;').replace(/"/g,'&quot;') + '"></option>';
       }).join('');
-      if (!input.value) input.value = spanish ? 'Otro' : 'Other';
+      // Keep category empty if user clears it; default is applied only on submit.
+      // if (!input.value) input.value = spanish ? 'Otro' : 'Other';
     } catch(e) { console.warn('Budget category repair skipped:', e); }
   }
 
   function normalizeCategoryValue(value){
     var v = String(value || '').trim();
     if (!v) return isEs() ? 'Otro' : 'Other';
+    // Keep user-entered custom values, but normalize the built-in bilingual pair when language changes.
     cats.forEach(function(c){
       if (v === c[0] || v === c[1]) v = isEs() ? c[1] : c[0];
     });
@@ -14327,6 +14655,9 @@ window.addEventListener('load', function(){
           if (t !== el.textContent) el.textContent = t;
         }
         if (el.placeholder) el.placeholder = repairDebtTextValue(el.placeholder);
+        if (el.value && /Editarar|ESTE MES|MÍN\.IMUMS|SOLO PAGOS MÍNIMOS|PLAN DE PAGO/.test(el.value)) {
+          el.value = repairDebtTextValue(el.value);
+        }
       });
     } catch(e) { console.warn('Debt planner label repair skipped:', e); }
   }
@@ -14338,6 +14669,7 @@ window.addEventListener('load', function(){
     repairDebtPlannerLabels();
   }
 
+  // Make the existing addTransaction fallback use Other/Otro instead of a blank category.
   function wrapAddTransaction(){
     try {
       if (typeof window.addTransaction === 'function' && !window.addTransaction.__fintrailCategorySafeWrapped) {
@@ -14345,7 +14677,7 @@ window.addEventListener('load', function(){
         window.addTransaction = function(){
           ensureBudgetCategory();
           var cat = document.getElementById('category');
-          if (cat) cat.value = normalizeCategoryValue(cat.value);
+          if (cat) cat.value = normalizeCategoryValue(cat.value) || (isEs() ? 'Otro' : 'Other');
           return original.apply(this, arguments);
         };
         window.addTransaction.__fintrailCategorySafeWrapped = true;
@@ -14369,6 +14701,172 @@ window.addEventListener('load', function(){
   document.addEventListener('input', function(e){
     if (e.target && e.target.closest && (e.target.closest('#tab-budget') || e.target.closest('#tab-debtplan'))) schedule();
   });
+})();
+</script>
+
+
+
+<style>
+/* === BUDGET CATEGORY CUSTOM DROPDOWN REPAIR === */
+#budget-category-field { position: relative; }
+.fintrail-budget-category-menu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 9999;
+  display: none;
+  max-height: 260px;
+  overflow-y: auto;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 14px 35px rgba(18,24,40,0.18);
+  padding: 0.35rem;
+}
+.fintrail-budget-category-menu.open { display: block; }
+.fintrail-budget-category-option {
+  padding: 0.7rem 0.85rem;
+  border-radius: 9px;
+  cursor: pointer;
+  color: var(--text);
+  font-family: 'Sora', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+.fintrail-budget-category-option:hover,
+.fintrail-budget-category-option.active {
+  background: rgba(240,85,85,0.08);
+  color: var(--accent);
+}
+.fintrail-budget-category-empty {
+  padding: 0.7rem 0.85rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+</style>
+<script>
+/* === FINAL BUDGET CATEGORY SEARCHABLE DROPDOWN FIX === */
+(function(){
+  var categories = [
+    ['Housing','Vivienda'],
+    ['Transportation','Transporte'],
+    ['Food','Comida'],
+    ['Utilities','Servicios'],
+    ['Healthcare','Salud'],
+    ['Insurance','Seguro'],
+    ['Debt Payments','Pago de Deudas'],
+    ['Entertainment','Entretenimiento'],
+    ['Shopping','Compras'],
+    ['Education','Educación'],
+    ['Savings','Ahorros'],
+    ['Other','Otro']
+  ];
+
+  function isEs(){
+    try { return typeof currentLang !== 'undefined' && currentLang === 'es'; } catch(e) { return false; }
+  }
+
+  function labels(){ return categories.map(function(c){ return isEs() ? c[1] : c[0]; }); }
+
+  function normalize(value){
+    var v = String(value || '').trim();
+    if (!v) return '';
+    categories.forEach(function(c){ if (v === c[0] || v === c[1]) v = isEs() ? c[1] : c[0]; });
+    return v;
+  }
+
+  function ensureMenu(){
+    var input = document.getElementById('category');
+    var field = document.getElementById('budget-category-field') || (input && input.closest && input.closest('.form-group'));
+    if (!input || !field) return null;
+    field.style.position = 'relative';
+    input.setAttribute('autocomplete','off');
+    input.removeAttribute('list');
+    input.placeholder = isEs() ? 'Buscar o elegir una categoría' : 'Search or choose a category';
+
+    var menu = document.getElementById('fintrail-budget-category-menu');
+    if (!menu) {
+      menu = document.createElement('div');
+      menu.id = 'fintrail-budget-category-menu';
+      menu.className = 'fintrail-budget-category-menu';
+      field.appendChild(menu);
+    }
+    return { input: input, menu: menu };
+  }
+
+  function renderMenu(filter){
+    var bundle = ensureMenu();
+    if (!bundle) return;
+    var input = bundle.input, menu = bundle.menu;
+    var q = String(filter == null ? input.value : filter).trim().toLowerCase();
+    var items = labels().filter(function(label){ return !q || label.toLowerCase().indexOf(q) !== -1; });
+    menu.innerHTML = items.length ? items.map(function(label){
+      return '<div class="fintrail-budget-category-option" data-value="' + String(label).replace(/&/g,'&amp;').replace(/"/g,'&quot;') + '">' + label + '</div>';
+    }).join('') : '<div class="fintrail-budget-category-empty">' + (isEs() ? 'No hay categorías' : 'No categories found') + '</div>';
+    menu.classList.add('open');
+  }
+
+  function closeMenu(){
+    var menu = document.getElementById('fintrail-budget-category-menu');
+    if (menu) menu.classList.remove('open');
+  }
+
+  function install(){
+    var bundle = ensureMenu();
+    if (!bundle) return;
+    var input = bundle.input, menu = bundle.menu;
+    if (input.__fintrailBudgetCategoryDropdownInstalled) {
+      input.placeholder = isEs() ? 'Buscar o elegir una categoría' : 'Search or choose a category';
+      if (input.value) input.value = normalize(input.value);
+      return;
+    }
+    input.__fintrailBudgetCategoryDropdownInstalled = true;
+
+    input.addEventListener('focus', function(){ renderMenu(''); });
+    input.addEventListener('click', function(){ renderMenu(input.value); });
+    input.addEventListener('input', function(){ renderMenu(input.value); });
+    input.addEventListener('keydown', function(e){
+      if (e.key === 'Escape') closeMenu();
+      if (e.key === 'ArrowDown') {
+        var first = menu.querySelector('.fintrail-budget-category-option');
+        if (first) { e.preventDefault(); first.classList.add('active'); first.focus && first.focus(); }
+      }
+    });
+    menu.addEventListener('mousedown', function(e){
+      var opt = e.target.closest && e.target.closest('.fintrail-budget-category-option');
+      if (!opt) return;
+      e.preventDefault();
+      input.value = opt.getAttribute('data-value') || opt.textContent || '';
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      closeMenu();
+    });
+  }
+
+  function safeInstall(){ setTimeout(install, 60); setTimeout(install, 250); setTimeout(install, 800); }
+
+  window.fintrailBudgetCategoryDropdownFix = safeInstall;
+  window.addEventListener('load', safeInstall);
+  document.addEventListener('DOMContentLoaded', safeInstall);
+  document.addEventListener('click', function(e){
+    var input = document.getElementById('category');
+    var menu = document.getElementById('fintrail-budget-category-menu');
+    if (!input || !menu) { safeInstall(); return; }
+    if (e.target === input || (menu.contains && menu.contains(e.target))) return;
+    closeMenu();
+  });
+
+  try {
+    if (typeof window.addTransaction === 'function' && !window.addTransaction.__fintrailBudgetDropdownDefaultWrapped) {
+      var originalAddTransaction = window.addTransaction;
+      window.addTransaction = function(){
+        var input = document.getElementById('category');
+        if (input) input.value = normalize(input.value) || (isEs() ? 'Otro' : 'Other');
+        return originalAddTransaction.apply(this, arguments);
+      };
+      window.addTransaction.__fintrailBudgetDropdownDefaultWrapped = true;
+    }
+  } catch(e) {}
 })();
 </script>
 
