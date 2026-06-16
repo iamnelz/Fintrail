@@ -5045,7 +5045,7 @@
 
       <div class="report-actions-row">
         <button class="report-action-btn" id="report-download-btn" onclick="downloadMonthlyReportPDF()">⇩ Download Report (PDF)</button>
-        <button class="report-action-btn primary" id="report-share-btn" onclick="alert(currentLang === 'es' ? '¡Compartir tu progreso estará disponible pronto!' : 'Sharing progress will be available soon!')">⇧ Share Your Progress</button>
+        <button class="report-action-btn primary" id="report-share-btn" onclick="shareMonthlyReportPDF()">⇧ Share Your Progress</button>
       </div>
     </div>
   </div>
@@ -8329,11 +8329,25 @@ Guidelines:
 
   function getSavedCreditScore() {
     const uid = currentUser?.id || 'demo';
-    const fromGame = parseInt(gameData?.creditScore || gameData?.credit_score || 0);
-    if (!isNaN(fromGame) && fromGame >= 300 && fromGame <= 850) return fromGame;
     const saved = parseInt(safeGet('fintrail_credit_score_' + uid) || safeGet('fintrail_credit_score_local') || '0');
     if (!isNaN(saved) && saved >= 300 && saved <= 850) return saved;
+    const fromGame = parseInt(gameData?.creditScore || gameData?.credit_score || 0);
+    if (!isNaN(fromGame) && fromGame >= 300 && fromGame <= 850) return fromGame;
     return 680;
+  }
+
+  function hasSavedCreditScore() {
+    const uid = currentUser?.id || 'demo';
+    const candidates = [
+      safeGet('fintrail_credit_score_' + uid),
+      safeGet('fintrail_credit_score_local'),
+      gameData?.creditScore,
+      gameData?.credit_score
+    ];
+    return candidates.some(score => {
+      const n = parseInt(score);
+      return !isNaN(n) && n >= 300 && n <= 850;
+    });
   }
 
   function applySavedCreditScore() {
@@ -8350,8 +8364,11 @@ Guidelines:
     const val = Math.min(850, Math.max(300, parseInt(score) || 680));
     const uid = currentUser?.id || 'demo';
     gameData.creditScore = val;
+    gameData.credit_score = val;
+    gameData.creditScoreUpdatedAt = new Date().toISOString();
     safeSet('fintrail_credit_score_' + uid, String(val));
     safeSet('fintrail_credit_score_local', String(val));
+    safeSet('fintrail_credit_score_updated_' + uid, gameData.creditScoreUpdatedAt);
     if (creditScoreSaveTimer) clearTimeout(creditScoreSaveTimer);
     creditScoreSaveTimer = setTimeout(async () => {
       if (!sbClient || !currentUser) return;
@@ -10280,11 +10297,145 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     if (el) el.innerHTML = value;
   }
 
+  function getMonthlyReportStorageKey() {
+    return 'fintrail_monthly_reports_' + (currentUser?.id || 'demo');
+  }
+
+  function getMonthlyReportMonthKey(date = new Date()) {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+  }
+
+  function getMonthlyReportSnapshots() {
+    try {
+      const raw = safeGet(getMonthlyReportStorageKey());
+      const parsed = raw ? JSON.parse(raw) : {};
+      const synced = (gameData && gameData.monthlyReports && typeof gameData.monthlyReports === 'object') ? gameData.monthlyReports : {};
+      return Object.assign({}, synced, parsed && typeof parsed === 'object' ? parsed : {});
+    } catch(e) {
+      return (gameData && gameData.monthlyReports && typeof gameData.monthlyReports === 'object') ? gameData.monthlyReports : {};
+    }
+  }
+
+  function saveMonthlyReportSnapshots(snapshots) {
+    safeSet(getMonthlyReportStorageKey(), JSON.stringify(snapshots || {}));
+    if (typeof gameData === 'object' && gameData) {
+      gameData.monthlyReports = snapshots || {};
+      try { safeSet('fintrail_game_' + (currentUser?.id || 'demo'), JSON.stringify(gameData)); } catch(e) {}
+      if (typeof saveGameData === 'function') saveGameData();
+    }
+  }
+
+  function formatMonthlyReportMonth(monthKey, isEs) {
+    const parts = String(monthKey || getMonthlyReportMonthKey()).split('-');
+    const year = parseInt(parts[0], 10) || new Date().getFullYear();
+    const monthIndex = Math.max(0, Math.min(11, (parseInt(parts[1], 10) || 1) - 1));
+    const esMonths = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    if (isEs) return `${esMonths[monthIndex]} de ${year}`;
+    return new Date(year, monthIndex, 1).toLocaleDateString('en-US', { month:'long', year:'numeric' });
+  }
+
+  function monthlyReportHasRealData() {
+    const hasToolUse = !!(gameData?.askedAI || gameData?.usedCreditSim || gameData?.usedInvestCalc);
+    return !!(
+      (transactions || []).length ||
+      (bills || []).length ||
+      (goals || []).length ||
+      getReportDebts().length ||
+      hasSavedCreditScore() ||
+      hasToolUse
+    );
+  }
+
+  function populateMonthlyReportDropdown(snapshots, currentMonthKey) {
+    const select = document.getElementById('report-month-select');
+    if (!select) return 'current';
+    const isEs = currentLang === 'es';
+    const previousValue = select.value || 'current';
+    const savedKeys = Object.keys(snapshots || {})
+      .filter(key => /^\d{4}-\d{2}$/.test(key) && key !== currentMonthKey)
+      .sort()
+      .reverse();
+    select.innerHTML = `<option value="current" id="report-current-month-option">${isEs ? 'Mes Actual' : 'Current Month'}</option>` +
+      savedKeys.map(key => `<option value="${key}">${formatMonthlyReportMonth(key, isEs)}</option>`).join('');
+    select.value = savedKeys.includes(previousValue) ? previousValue : 'current';
+    return select.value;
+  }
+
+  function getPreviousMonthlyReportSnapshot(snapshots, currentMonthKey) {
+    const key = Object.keys(snapshots || {})
+      .filter(k => /^\d{4}-\d{2}$/.test(k) && k < currentMonthKey)
+      .sort()
+      .pop();
+    return key ? snapshots[key] : null;
+  }
+
+  function getMonthlyReportFieldIds() {
+    return [
+      'report-title','report-subtitle','report-health-heading','report-score-prev','report-score-current',
+      'report-score-note','report-gauge-num','report-gauge-label','report-hero-text','report-savings-heading',
+      'report-savings-goal-name','report-savings-saved','report-savings-target','report-savings-pct',
+      'report-complete-label','report-savings-note','report-savings-ai-label','report-savings-insight',
+      'report-debt-heading','report-total-debt-label','report-debt-total','report-payoff-focus-label',
+      'report-debt-focus','report-debt-note','report-debt-ai-label','report-debt-insight',
+      'report-credit-heading','report-credit-range-label','report-credit-current','report-credit-simulated',
+      'report-credit-factor-label','report-credit-factor','report-credit-next-label','report-credit-insight',
+      'report-ai-heading','report-next-focus-label','report-next-focus','report-monthly-achievement-label',
+      'report-achievement-unlocked-label','report-achievement-title','report-achievement-desc','report-summary-text'
+    ];
+  }
+
+  function captureMonthlyReportSnapshot(monthKey, metrics) {
+    if (!monthlyReportHasRealData()) return;
+    const fields = {};
+    getMonthlyReportFieldIds().forEach(id => {
+      const el = document.getElementById(id);
+      if (el) fields[id] = el.textContent || '';
+    });
+    const aiList = document.getElementById('report-ai-list');
+    const snapshots = getMonthlyReportSnapshots();
+    snapshots[monthKey] = {
+      month: monthKey,
+      savedAt: new Date().toISOString(),
+      lang: currentLang,
+      metrics,
+      fields,
+      aiListHTML: aiList ? aiList.innerHTML : '',
+      savingsWidth: document.getElementById('report-savings-progress')?.style.width || '',
+      creditWidth: document.getElementById('report-credit-progress')?.style.width || '',
+      gaugeBackground: document.getElementById('report-gauge')?.style.background || ''
+    };
+    saveMonthlyReportSnapshots(snapshots);
+    populateMonthlyReportDropdown(snapshots, monthKey);
+  }
+
+  function renderSavedMonthlyReportSnapshot(snapshot) {
+    if (!snapshot) return;
+    Object.entries(snapshot.fields || {}).forEach(([id, value]) => reportSetText(id, value));
+    const aiList = document.getElementById('report-ai-list');
+    if (aiList) aiList.innerHTML = snapshot.aiListHTML || '';
+    const savings = document.getElementById('report-savings-progress');
+    if (savings) savings.style.width = snapshot.savingsWidth || '0%';
+    const credit = document.getElementById('report-credit-progress');
+    if (credit) credit.style.width = snapshot.creditWidth || '0%';
+    const gauge = document.getElementById('report-gauge');
+    if (gauge && snapshot.gaugeBackground) gauge.style.background = snapshot.gaugeBackground;
+    reportSetText('report-download-btn', currentLang === 'es' ? '⇩ Descargar Reporte (PDF)' : '⇩ Download Report (PDF)');
+    reportSetText('report-share-btn', currentLang === 'es' ? '⇧ Comparte Tu Progreso' : '⇧ Share Your Progress');
+  }
+
   function renderMonthlyReport() {
     // Refresh the same arrays the rest of the app uses, in case the report tab loads first.
     const uid = currentUser?.id || 'demo';
     const isEs = currentLang === 'es';
     const t = (en, es) => isEs ? es : en;
+    const currentMonthKey = getMonthlyReportMonthKey();
+    const snapshots = getMonthlyReportSnapshots();
+    const selectedMonth = populateMonthlyReportDropdown(snapshots, currentMonthKey);
+
+    if (selectedMonth !== 'current' && snapshots[selectedMonth]) {
+      renderSavedMonthlyReportSnapshot(snapshots[selectedMonth]);
+      return;
+    }
 
     try { const raw = safeGet('fintrail_goals_' + uid); if (raw && (!goals || !goals.length)) goals = JSON.parse(raw) || []; } catch(e) {}
     try { const raw = safeGet('fintrail_debts_' + uid); if (raw && (!planDebts || !planDebts.length)) planDebts = JSON.parse(raw) || []; } catch(e) {}
@@ -10318,19 +10469,21 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     reportSetText('report-download-btn', t('⇩ Download Report (PDF)', '⇩ Descargar Reporte (PDF)'));
     reportSetText('report-share-btn', t('⇧ Share Your Progress', '⇧ Comparte Tu Progreso'));
 
-    const monthName = new Date().toLocaleDateString(isEs ? 'es-US' : 'en-US', { month:'long', year:'numeric' });
+    const monthName = formatMonthlyReportMonth(currentMonthKey, isEs);
     reportSetText('report-title', isEs ? `Tu Reporte Financiero de ${monthName} 🎉` : `Your ${monthName} Financial Progress Report 🎉`);
 
     // Health score
     const health = getReportHealthScore();
-    const prev = Math.max(0, health - 6);
+    const previousReport = getPreviousMonthlyReportSnapshot(snapshots, currentMonthKey);
+    const previousHealth = parseInt(previousReport?.metrics?.health);
+    const prev = (!isNaN(previousHealth) && previousHealth >= 0 && previousHealth <= 100) ? previousHealth : health;
     reportSetText('report-score-prev', prev);
     reportSetText('report-score-current', health);
     const pointDelta = health - prev;
-    reportSetText('report-score-note', t(
-      `${pointDelta >= 0 ? '+' : ''}${pointDelta} points this month`,
-      `${pointDelta >= 0 ? '+' : ''}${pointDelta} puntos este mes`
-    ));
+    reportSetText('report-score-note', previousReport ? t(
+      `${pointDelta >= 0 ? '+' : ''}${pointDelta} points since ${formatMonthlyReportMonth(previousReport.month, false)}`,
+      `${pointDelta >= 0 ? '+' : ''}${pointDelta} puntos desde ${formatMonthlyReportMonth(previousReport.month, true)}`
+    ) : t('No prior saved report to compare yet.', 'Aún no hay un reporte anterior guardado para comparar.'));
     reportSetText('report-gauge-num', health);
     reportSetText('report-gauge-label',
       health >= 80 ? t('Excellent', 'Excelente') :
@@ -10340,9 +10493,12 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     );
     const gauge = document.getElementById('report-gauge');
     if (gauge) gauge.style.background = `conic-gradient(${health >= 70 ? 'var(--income-color)' : health >= 50 ? 'var(--accent2)' : 'var(--accent)'} 0 ${health}%, #e9edf3 ${health}% 100%)`;
-    reportSetText('report-hero-text', t(
-      'Great progress! Your debt reduction and consistent savings improved your overall financial health.',
-      '¡Gran progreso! La reducción de tus deudas y tus ahorros constantes mejoraron tu salud financiera general.'
+    reportSetText('report-hero-text', previousReport ? t(
+      'This month is compared with your latest saved Monthly Report snapshot.',
+      'Este mes se compara con tu captura guardada más reciente del Reporte Mensual.'
+    ) : t(
+      'This is your first saved Monthly Report snapshot. Future reports will compare against saved history.',
+      'Esta es tu primera captura guardada del Reporte Mensual. Los reportes futuros se compararán con el historial guardado.'
     ));
 
     // Savings
@@ -10443,10 +10599,139 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       `This report is now using your live Fintrail data: ${debts.length} debt${debts.length===1?'':'s'} tracked, credit score ${credit}, and ${goals.length} savings goal${goals.length===1?'':'s'}.`,
       `Este reporte ahora usa tus datos activos de Fintrail: ${debts.length} deuda${debts.length===1?'':'s'} registrada${debts.length===1?'':'s'}, puntaje de crédito ${credit} y ${goals.length} meta${goals.length===1?'':'s'} de ahorro.`
     ));
+    captureMonthlyReportSnapshot(currentMonthKey, {
+      health,
+      previousHealth: prev,
+      credit,
+      simulatedCredit: simulated,
+      totalDebt,
+      savingsGoals: goals.length,
+      debts: debts.length
+    });
   }
+  function getMonthlyReportPdfLines() {
+    const text = id => (document.getElementById(id)?.textContent || '').trim();
+    const aiText = (document.getElementById('report-ai-list')?.innerText || '').trim();
+    return [
+      text('report-title'),
+      text('report-subtitle'),
+      '',
+      `${text('report-health-heading')}: ${text('report-score-current')} (${text('report-score-note')})`,
+      `${text('report-savings-heading')}: ${text('report-savings-goal-name')} - ${text('report-savings-saved')} / ${text('report-savings-target')} (${text('report-savings-pct')})`,
+      `${text('report-debt-heading')}: ${text('report-debt-total')} - ${text('report-debt-focus')}`,
+      `${text('report-credit-heading')}: ${text('report-credit-current')} -> ${text('report-credit-simulated')}`,
+      `${text('report-credit-factor-label')}: ${text('report-credit-factor')}`,
+      '',
+      text('report-ai-heading'),
+      aiText,
+      '',
+      `${text('report-next-focus-label')}: ${text('report-next-focus')}`,
+      `${text('report-monthly-achievement-label')}: ${text('report-achievement-title')} - ${text('report-achievement-desc')}`,
+      '',
+      text('report-summary-text')
+    ].filter(line => line !== undefined);
+  }
+
+  function normalizePdfText(text) {
+    return String(text || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^\x20-\x7E]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function splitPdfLine(line, maxLen = 92) {
+    const words = normalizePdfText(line).split(' ');
+    const lines = [];
+    let current = '';
+    words.forEach(word => {
+      if ((current + ' ' + word).trim().length > maxLen) {
+        if (current) lines.push(current);
+        current = word;
+      } else {
+        current = (current + ' ' + word).trim();
+      }
+    });
+    if (current) lines.push(current);
+    return lines.length ? lines : [''];
+  }
+
+  function escapePdfText(text) {
+    return normalizePdfText(text).replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)');
+  }
+
+  function createMonthlyReportPDFBlob() {
+    const rawLines = getMonthlyReportPdfLines();
+    const lines = [];
+    rawLines.forEach(line => splitPdfLine(line).forEach(part => lines.push(part)));
+    const contentLines = ['BT', '/F1 16 Tf', '50 760 Td', `(${escapePdfText(lines.shift() || 'Fintrail Pro Monthly Report')}) Tj`, '/F1 10 Tf', '0 -24 Td'];
+    lines.slice(0, 54).forEach(line => {
+      contentLines.push(`(${escapePdfText(line)}) Tj`);
+      contentLines.push('0 -14 Td');
+    });
+    contentLines.push('ET');
+    const stream = contentLines.join('\n');
+    const objects = [
+      '<< /Type /Catalog /Pages 2 0 R >>',
+      '<< /Type /Pages /Kids [3 0 R] /Count 1 >>',
+      '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>',
+      '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>',
+      `<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`
+    ];
+    let pdf = '%PDF-1.4\n';
+    const offsets = [0];
+    objects.forEach((obj, index) => {
+      offsets.push(pdf.length);
+      pdf += `${index + 1} 0 obj\n${obj}\nendobj\n`;
+    });
+    const xrefOffset = pdf.length;
+    pdf += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
+    offsets.slice(1).forEach(offset => { pdf += `${String(offset).padStart(10, '0')} 00000 n \n`; });
+    pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
+    return new Blob([pdf], { type: 'application/pdf' });
+  }
+
+  function getMonthlyReportPDFName() {
+    const select = document.getElementById('report-month-select');
+    const key = select && select.value !== 'current' ? select.value : getMonthlyReportMonthKey();
+    return `Fintrail-Pro-Monthly-Report-${key}.pdf`;
+  }
+
+  function downloadBlob(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
   function downloadMonthlyReportPDF() {
     try { renderMonthlyReport(); } catch(e) {}
-    window.print();
+    downloadBlob(createMonthlyReportPDFBlob(), getMonthlyReportPDFName());
+  }
+
+  async function shareMonthlyReportPDF() {
+    try { renderMonthlyReport(); } catch(e) {}
+    const blob = createMonthlyReportPDFBlob();
+    const filename = getMonthlyReportPDFName();
+    let file = null;
+    try { file = new File([blob], filename, { type: 'application/pdf' }); } catch(e) {}
+    try {
+      if (file && navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
+        await navigator.share({ files: [file], title: 'Fintrail Pro Monthly Report' });
+      } else {
+        downloadBlob(blob, filename);
+      }
+      alert(currentLang === 'es' ? 'Tu reporte PDF está listo para compartir.' : 'Your report PDF is ready to share.');
+    } catch(e) {
+      if (e && e.name === 'AbortError') return;
+      downloadBlob(blob, filename);
+      alert(currentLang === 'es' ? 'Tu reporte PDF está listo para compartir.' : 'Your report PDF is ready to share.');
+    }
   }
 
 
