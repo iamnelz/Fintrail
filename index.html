@@ -1173,7 +1173,11 @@
   .sb-row-left { display:flex; align-items:center; gap:0.5rem; font-size:0.82rem; color:var(--text-soft); }
   .sb-bar-track { flex:1; height:6px; background:var(--border); border-radius:3px; overflow:hidden; }
   .sb-bar-fill { height:100%; border-radius:3px; transition:width 0.8s ease; }
-  .sb-score { font-size:0.78rem; font-weight:700; width:32px; text-align:right; }
+  .sb-score { font-size:0.78rem; font-weight:700; width:48px; text-align:right; }
+  .score-recommendations { margin-top:1.1rem; display:flex; flex-direction:column; gap:0.65rem; text-align:left; }
+  .score-rec-item { border:1px solid var(--border); border-radius:10px; padding:0.75rem 0.85rem; background:rgba(255,255,255,0.62); }
+  .score-rec-title { font-size:0.82rem; font-weight:700; color:var(--text); margin-bottom:0.25rem; }
+  .score-rec-body { font-size:0.76rem; line-height:1.45; color:var(--text-soft); }
 
   /* DEBT PAYOFF PLANNER */
   .planner-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:1.75rem; }
@@ -4608,6 +4612,7 @@
             </div>
           </div>
           <div class="score-breakdown" id="score-breakdown"></div>
+          <div class="score-recommendations" id="score-recommendations"></div>
           <button class="add-btn" style="margin-top:1rem;width:100%" onclick="calculateHealthScore()" data-en="Recalculate Score" data-es="Recalcular Puntaje">Recalculate Score</button>
         </div>
 
@@ -6047,6 +6052,7 @@
     safeSet('fintrail_goals_ts_' + _uid2,    safeGet('fintrail_goals_ts_' + _uid2) || String(_ts));
     safeSet('fintrail_bills_' + _uid2,       JSON.stringify(bills));
     safeSet('fintrail_txns_' + _uid2,        JSON.stringify(transactions));
+    refreshHealthScoreIfVisible();
 
     if (!sbClient || !currentUser) return;
     try {
@@ -7407,21 +7413,132 @@ Guidelines:
   // =============================================
   // FINANCIAL HEALTH SCORE
   // =============================================
+  function refreshHealthScoreIfVisible() {
+    const tab = document.getElementById('tab-healthscore');
+    if (tab && tab.classList.contains('visible')) {
+      try { calculateHealthScore(); } catch(e) { console.error('Health score refresh failed:', e); }
+    }
+  }
+
+  function healthAmount(value) {
+    const n = parseFloat(value);
+    return isNaN(n) ? 0 : n;
+  }
+
+  function clampHealthScore(value, max) {
+    return Math.max(0, Math.min(max, Math.round(value)));
+  }
+
+  function getHealthScoreSnapshot() {
+    const txns = Array.isArray(transactions) ? transactions : [];
+    const goalList = Array.isArray(goals) ? goals : [];
+    const debtList = Array.isArray(planDebts) ? planDebts : [];
+    const billList = Array.isArray(bills) ? bills : [];
+    const assets = Array.isArray(nwAssets) ? nwAssets : [];
+    const liabilities = Array.isArray(nwLiabilities) ? nwLiabilities : [];
+    const income = txns.filter(t => t.type === 'income').reduce((s,t) => s + healthAmount(t.amount), 0);
+    const expenses = txns.filter(t => t.type === 'expense').reduce((s,t) => s + healthAmount(t.amount), 0);
+    const totalGoalTarget = goalList.reduce((s,g) => s + healthAmount(g.target), 0);
+    const totalGoalSaved = goalList.reduce((s,g) => s + healthAmount(g.saved), 0);
+    const totalDebt = debtList.reduce((s,d) => s + healthAmount(d.balance), 0);
+    const totalAssets = assets.reduce((s,a) => s + healthAmount(a.value), 0);
+    const totalLiabilities = liabilities.reduce((s,l) => s + healthAmount(l.value), 0);
+    const creditScore = (typeof hasSavedCreditScore === 'function' && hasSavedCreditScore()) ? getSavedCreditScore() : null;
+    return {
+      txns,
+      goalList,
+      debtList,
+      billList,
+      income,
+      expenses,
+      balance: income - expenses,
+      totalGoalTarget,
+      totalGoalSaved,
+      totalDebt,
+      totalAssets,
+      totalLiabilities,
+      netWorth: totalAssets - totalLiabilities,
+      creditScore
+    };
+  }
+
+  function getHealthRecommendations(data, scores) {
+    const es = currentLang === 'es';
+    const recs = [];
+    const add = (enTitle, enBody, esTitle, esBody) => recs.push({
+      title: es ? esTitle : enTitle,
+      body: es ? esBody : enBody
+    });
+
+    if (!data.txns.length) {
+      add('Start with your cash flow', 'Add your income and recent expenses so your score can measure whether money is staying available each month.',
+          'Empieza con tu flujo de efectivo', 'Agrega tus ingresos y gastos recientes para medir si queda dinero disponible cada mes.');
+    } else if (data.income > 0 && data.balance < 0) {
+      add('Close the monthly gap', `Your expenses are $${Math.abs(data.balance).toLocaleString('en-US', {maximumFractionDigits:0})} above income. Trim one flexible category or add income before taking on new debt.`,
+          'Cierra la brecha mensual', `Tus gastos superan tus ingresos por $${Math.abs(data.balance).toLocaleString('en-US', {maximumFractionDigits:0})}. Reduce una categoria flexible o aumenta ingresos antes de tomar nueva deuda.`);
+    } else if (scores.budget.score < scores.budget.max) {
+      add('Build a stronger monthly cushion', 'Aim to keep at least 10% of income unspent so bills, savings, and debt payments do not compete with each other.',
+          'Crea un margen mensual mas fuerte', 'Intenta dejar al menos 10% de tus ingresos sin gastar para que facturas, ahorros y deudas no compitan entre si.');
+    }
+
+    if (!data.goalList.length) {
+      add('Add one savings goal', 'Create a starter emergency fund or short-term goal. Even a small target gives the score real savings progress to track.',
+          'Agrega una meta de ahorro', 'Crea un fondo de emergencia inicial o una meta a corto plazo. Incluso una meta pequena permite medir progreso real.');
+    } else if (data.totalGoalTarget > 0 && (data.totalGoalSaved / data.totalGoalTarget) < 0.5) {
+      add('Increase savings momentum', 'Your goals are under 50% funded. Add a recurring deposit amount that fits your current monthly balance.',
+          'Aumenta el ritmo de ahorro', 'Tus metas estan por debajo del 50%. Agrega un deposito recurrente que encaje con tu balance mensual.');
+    }
+
+    if (data.totalDebt > 0 && data.income > 0 && data.totalDebt > data.income * 6) {
+      add('Prioritize a debt payoff plan', 'Your debt balance is high compared with current income. Focus extra payments on one debt while keeping minimums current.',
+          'Prioriza un plan de pago de deudas', 'Tu deuda es alta comparada con tus ingresos actuales. Enfoca pagos extra en una deuda y mantente al dia con los minimos.');
+    } else if (data.debtList.length && scores.debt.score < scores.debt.max) {
+      add('Keep debt moving down', 'Review your debt planner and direct any monthly surplus toward the focus debt to improve this factor faster.',
+          'Sigue reduciendo deuda', 'Revisa tu planificador de deudas y dirige cualquier sobrante mensual a la deuda prioritaria.');
+    }
+
+    if (!data.billList.length) {
+      add('Track upcoming bills', 'Add recurring bills so Fintrail can measure payment readiness and help prevent missed due dates.',
+          'Registra tus proximas facturas', 'Agrega facturas recurrentes para medir preparacion de pagos y evitar fechas vencidas.');
+    }
+
+    if (data.creditScore === null) {
+      add('Save your credit score', 'Enter your current score in Credit Simulator so this health score can include credit readiness.',
+          'Guarda tu puntaje de credito', 'Ingresa tu puntaje actual en el Simulador de Credito para incluir preparacion crediticia.');
+    } else if (data.creditScore < 680) {
+      add('Protect credit basics', 'Keep utilization low and pay every bill on time. Those two habits usually move credit readiness first.',
+          'Protege las bases del credito', 'Manten baja la utilizacion y paga cada factura a tiempo. Esos dos habitos suelen mejorar primero la preparacion crediticia.');
+    }
+
+    if ((data.totalAssets || data.totalLiabilities) && data.netWorth < 0) {
+      add('Improve net worth step by step', 'Your liabilities are higher than your assets. Pair debt payoff with small savings deposits to move net worth upward.',
+          'Mejora tu patrimonio paso a paso', 'Tus pasivos superan tus activos. Combina pago de deuda con pequenos depositos de ahorro para subir tu patrimonio.');
+    }
+
+    if (!recs.length) {
+      add('Keep compounding your progress', 'Your core factors look steady. Continue updating transactions, bills, goals, and debts so the score stays current.',
+          'Sigue acumulando progreso', 'Tus factores principales se ven estables. Sigue actualizando transacciones, facturas, metas y deudas para mantener el puntaje al dia.');
+    }
+
+    return recs.slice(0, 4);
+  }
+
   function calculateHealthScore() {
     if (!document.getElementById('gauge-fill')) return;
-    const income = transactions.filter(t => t.type === 'income').reduce((s,t) => s+t.amount, 0);
-    const expenses = transactions.filter(t => t.type === 'expense').reduce((s,t) => s+t.amount, 0);
-    const balance = income - expenses;
-    const totalGoalTarget = goals.reduce((s,g) => s+g.target, 0);
-    const totalGoalSaved = goals.reduce((s,g) => s+g.saved, 0);
-    const totalDebt = planDebts.reduce((s,d) => s+d.balance, 0);
+    const data = getHealthScoreSnapshot();
+    const savingsRate = data.income > 0 ? data.balance / data.income : 0;
+    const debtRatio = data.income > 0 ? data.totalDebt / (data.income * 12) : 0;
+    const savingsProgress = data.totalGoalTarget > 0 ? data.totalGoalSaved / data.totalGoalTarget : 0;
+    const creditRatio = data.creditScore === null ? null : (data.creditScore - 300) / 550;
 
-    // Score components (each out of 25)
-    const budgetScore = income > 0 ? Math.min(25, Math.round((balance / income) * 100)) : 0;
-    const savingsScore = totalGoalTarget > 0 ? Math.min(25, Math.round((totalGoalSaved / totalGoalTarget) * 25)) : 0;
-    const debtScore = income > 0 ? Math.max(0, 25 - Math.round((totalDebt / (income * 12)) * 10)) : 25;
-    const billScore = bills.length > 0 ? 25 : 10;
-    const total = Math.min(100, Math.max(0, budgetScore + savingsScore + debtScore + billScore));
+    const scores = {
+      budget: { label: currentLang==='es' ? 'Balance de Presupuesto' : 'Budget Balance', score: data.income > 0 ? clampHealthScore((savingsRate + 0.05) / 0.25 * 25, 25) : 5, max: 25, color: '#00b894' },
+      savings: { label: currentLang==='es' ? 'Progreso de Ahorros' : 'Savings Progress', score: data.totalGoalTarget > 0 ? clampHealthScore(savingsProgress * 20, 20) : 5, max: 20, color: '#f5a623' },
+      debt: { label: currentLang==='es' ? 'Carga de Deuda' : 'Debt Load', score: data.totalDebt <= 0 ? 20 : (data.income > 0 ? clampHealthScore((1 - Math.min(debtRatio, 1)) * 20, 20) : 8), max: 20, color: '#f05555' },
+      bills: { label: currentLang==='es' ? 'Seguimiento de Facturas' : 'Bill Tracking', score: data.billList.length > 0 ? 15 : 7, max: 15, color: '#818cf8' },
+      credit: { label: currentLang==='es' ? 'Credito' : 'Credit Readiness', score: creditRatio === null ? 8 : clampHealthScore(creditRatio * 20, 20), max: 20, color: '#2196a3' },
+    };
+    const total = Math.min(100, Math.max(0, Object.values(scores).reduce((s,item) => s + item.score, 0)));
 
     // Update gauge
     const circumference = 251.2;
@@ -7435,25 +7552,30 @@ Guidelines:
 
     let label;
     if (currentLang === 'es') {
-      label = total >= 80 ? 'Excelente 🌟' : total >= 65 ? 'Bueno 👍' : total >= 50 ? 'Regular ⚡' : 'Necesita Mejorar 💪';
+      label = total >= 80 ? 'Excelente' : total >= 65 ? 'Bueno' : total >= 50 ? 'Regular' : 'Necesita Mejorar';
     } else {
-      label = total >= 80 ? 'Excellent 🌟' : total >= 65 ? 'Good 👍' : total >= 50 ? 'Fair ⚡' : 'Needs Work 💪';
+      label = total >= 80 ? 'Excellent' : total >= 65 ? 'Good' : total >= 50 ? 'Fair' : 'Needs Work';
     }
     document.getElementById('health-score-label').textContent = label;
 
     const breakdown = document.getElementById('score-breakdown');
-    const items = [
-      { label: currentLang==='es' ? '💰 Balance de Presupuesto' : '💰 Budget Balance', score: budgetScore, max: 25, color: '#00b894' },
-      { label: currentLang==='es' ? '🎯 Progreso de Ahorros' : '🎯 Savings Progress', score: savingsScore, max: 25, color: '#f5a623' },
-      { label: currentLang==='es' ? '💳 Carga de Deuda' : '💳 Debt Load', score: debtScore, max: 25, color: '#f05555' },
-      { label: currentLang==='es' ? '📅 Seguimiento de Facturas' : '📅 Bill Tracking', score: billScore, max: 25, color: '#818cf8' },
-    ];
+    const items = Object.values(scores);
     breakdown.innerHTML = items.map(item => `
       <div class="sb-row">
         <div class="sb-row-left">${item.label}</div>
         <div class="sb-bar-track"><div class="sb-bar-fill" style="width:${(item.score/item.max)*100}%;background:${item.color}"></div></div>
-        <div class="sb-score" style="color:${item.color}">${item.score}</div>
+        <div class="sb-score" style="color:${item.color}">${item.score}/${item.max}</div>
       </div>`).join('');
+
+    const recBox = document.getElementById('score-recommendations');
+    if (recBox) {
+      const recs = getHealthRecommendations(data, scores);
+      recBox.innerHTML = recs.map(rec => `
+        <div class="score-rec-item">
+          <div class="score-rec-title">${escHtml(rec.title)}</div>
+          <div class="score-rec-body">${escHtml(rec.body)}</div>
+        </div>`).join('');
+    }
 
     // Check goal milestone alerts
     if (alertPrefs.goals) checkGoalMilestones();
