@@ -6998,9 +6998,29 @@ Guidelines:
   function monthsUntil(dateStr) {
     if (!dateStr) return null;
     const target = new Date(dateStr);
+    if (isNaN(target.getTime())) return null;
     const now = new Date();
     const months = (target.getFullYear() - now.getFullYear()) * 12 + (target.getMonth() - now.getMonth());
-    return Math.max(months, 0);
+    return Math.max(months, 1);
+  }
+
+  function goalMonthlyGuidance(goal) {
+    const isEs = currentLang === 'es';
+    const target = parseFloat(goal?.target) || 0;
+    const saved = parseFloat(goal?.saved) || 0;
+    const remaining = Math.max(0, target - saved);
+    if (target > 0 && remaining <= 0) return isEs ? '¡Meta completada!' : 'Goal complete!';
+    const months = monthsUntil(goal?.date);
+    if (!months || !isFinite(months)) {
+      return isEs ? 'Agrega una fecha objetivo para calcular el ahorro mensual.' : 'Add a target date to calculate monthly savings.';
+    }
+    const monthlyNeeded = remaining / months;
+    if (!isFinite(monthlyNeeded) || monthlyNeeded < 0) {
+      return isEs ? 'Agrega una fecha objetivo para calcular el ahorro mensual.' : 'Add a target date to calculate monthly savings.';
+    }
+    return isEs
+      ? `Ahorra <strong>$${monthlyNeeded.toFixed(0)}/mes</strong> para alcanzar tu meta en <strong>${months} ${months === 1 ? 'mes' : 'meses'}</strong>`
+      : `Save <strong>$${monthlyNeeded.toFixed(0)}/mo</strong> to reach your goal in <strong>${months} ${months === 1 ? 'month' : 'months'}</strong>`;
   }
 
   function goalColor(pct) {
@@ -7027,8 +7047,7 @@ Guidelines:
     const pct = Math.min(((parseFloat(goal.saved) || 0) / Math.max(parseFloat(goal.target) || 1, 1)) * 100, 100);
     const color = goalColor(pct);
     const remaining = Math.max(0, (parseFloat(goal.target) || 0) - (parseFloat(goal.saved) || 0));
-    const months = monthsUntil(goal.date);
-    const monthlyNeeded = (months && months > 0 && remaining > 0) ? (remaining / months) : null;
+    const monthlyGuidance = goalMonthlyGuidance(goal);
     const savedEl = card.querySelector('.goal-saved');
     const targetEl = card.querySelector('.goal-target');
     const remainingEl = card.querySelector('.goal-remaining');
@@ -7050,12 +7069,8 @@ Guidelines:
       pctEl.style.color = color;
     }
     if (monthlyEl) {
-      monthlyEl.style.display = monthlyNeeded ? '' : 'none';
-      if (monthlyNeeded) {
-        monthlyEl.innerHTML = currentLang === 'es'
-          ? `Ahorra <strong>$${monthlyNeeded.toFixed(0)}/mes</strong> para alcanzar tu meta en <strong>${months} ${months === 1 ? 'mes' : 'meses'}</strong>`
-          : `Save <strong>$${monthlyNeeded.toFixed(0)}/mo</strong> to reach your goal in <strong>${months} ${months === 1 ? 'month' : 'months'}</strong>`;
-      }
+      monthlyEl.style.display = '';
+      monthlyEl.innerHTML = monthlyGuidance;
     }
   }
 
@@ -7079,8 +7094,7 @@ Guidelines:
       const pct = Math.min((g.saved / g.target) * 100, 100);
       const color = goalColor(pct);
       const remaining = g.target - g.saved;
-      const months = monthsUntil(g.date);
-      const monthlyNeeded = (months && months > 0 && remaining > 0) ? (remaining / months) : null;
+      const monthlyGuidance = goalMonthlyGuidance(g);
       const complete = pct >= 100;
       const dateLabel = g.date ? new Date(g.date).toLocaleDateString('en-US', {month:'short', year:'numeric'}) : 'No deadline';
 
@@ -7114,7 +7128,7 @@ Guidelines:
           <span class="goal-deadline">📅 ${dateLabel}</span>
         </div>
         ${complete ? '<div class="goal-complete-badge">🎉 Goal Reached!</div>' : ''}
-        <div class="goal-monthly" style="${monthlyNeeded ? '' : 'display:none'}">${monthlyNeeded ? `${currentLang === 'es' ? 'Ahorra' : 'Save'} <strong>$${monthlyNeeded.toFixed(0)}${currentLang === 'es' ? '/mes' : '/mo'}</strong> ${currentLang === 'es' ? 'para alcanzar tu meta en' : 'to reach your goal in'} <strong>${months} ${currentLang === 'es' ? (months === 1 ? 'mes' : 'meses') : ('month' + (months !== 1 ? 's' : ''))}</strong>` : ''}</div>
+        <div class="goal-monthly">${monthlyGuidance}</div>
         ${!complete ? `
         <div class="add-deposit-row">
           <input class="deposit-input" id="dep-${g.id}" type="number" placeholder="${currentLang === 'es' ? 'Agregar ahorro...' : 'Add savings...'}" min="0" onkeydown="if(event.key==='Enter')deposit('${g.id}')">
