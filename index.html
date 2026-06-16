@@ -203,6 +203,69 @@
     box-shadow: 0 0 0 3px var(--glow-red);
   }
   .form-group select option { background: var(--surface2); }
+  #budget-category-group { position: relative; }
+  .budget-category-combobox { position: relative; }
+  .budget-category-combobox input[type="text"] {
+    width: 100%;
+    padding-right: 2.55rem;
+  }
+  .budget-category-clear {
+    position: absolute;
+    right: 0.45rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.75rem;
+    height: 1.75rem;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Sora', sans-serif;
+    font-size: 1.15rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .budget-category-clear:hover,
+  .budget-category-clear:focus {
+    color: var(--accent);
+    background: rgba(240,85,85,0.08);
+    outline: none;
+  }
+  .budget-category-options {
+    position: absolute;
+    z-index: 60;
+    left: 0;
+    right: 0;
+    top: calc(100% + 0.25rem);
+    max-height: 220px;
+    overflow-y: auto;
+    display: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 14px 32px rgba(18,24,40,0.16);
+  }
+  .budget-category-combobox.open .budget-category-options { display: block; }
+  .budget-category-option,
+  .budget-category-empty {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    font-size: 0.86rem;
+    text-align: left;
+    padding: 0.62rem 0.82rem;
+  }
+  .budget-category-option { cursor: pointer; }
+  .budget-category-option:hover,
+  .budget-category-option:focus,
+  .budget-category-option.active {
+    background: rgba(240,85,85,0.08);
+    color: var(--accent);
+    outline: none;
+  }
+  .budget-category-empty { color: var(--muted); }
   .type-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
   .type-btn {
     padding: 0.55rem;
@@ -3346,6 +3409,112 @@
 .fm-visible-badge{display:inline-flex;align-items:center;justify-content:center;gap:.35rem;background:linear-gradient(135deg,#1a1a2e,#2d1b4e);color:#ffd166;font-size:.68rem;font-weight:900;padding:.25rem .7rem;border-radius:999px;margin-top:.55rem;border:1px solid rgba(255,209,102,.45);text-transform:uppercase;letter-spacing:.04em}
 @media(max-width:520px){.fm-visible-actions{grid-template-columns:1fr}}
 
+
+/* === ONBOARDING SIDEBAR VISUAL POLISH — June 2026 === */
+.ft-onboarding-v5-tagline {
+  margin-top: 28px;
+  font-size: 1.18rem;
+  line-height: 1.45;
+  font-weight: 900;
+}
+.ft-onboarding-v5-accent-line {
+  width: 76px;
+  height: 3px;
+  border-radius: 99px;
+  margin-top: 22px;
+  background: #f05555;
+  box-shadow: 0 0 18px rgba(240,85,85,0.35);
+}
+.ft-onboarding-v5-visual {
+  margin: 42px 0 20px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.ft-onboarding-v5-mini-score { display: none !important; }
+.ft-onboarding-v5-mini-bars {
+  position: relative;
+  height: 165px;
+  gap: 14px;
+  padding: 12px 6px 0;
+  align-items: flex-end;
+  border-bottom: 2px solid rgba(255,255,255,0.08);
+}
+.ft-onboarding-v5-mini-bars span {
+  flex: 1;
+  max-width: 34px;
+  border-radius: 4px 4px 0 0;
+  background: rgba(255,255,255,0.12);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+}
+.ft-onboarding-v5-mini-bars span:nth-child(5) {
+  background: linear-gradient(180deg, #f05555, #ff414f);
+  box-shadow: 0 10px 26px rgba(240,85,85,0.20);
+}
+.ft-onboarding-v5-growth-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 8px;
+  width: 100%;
+  height: 120px;
+  overflow: visible;
+  pointer-events: none;
+}
+.ft-onboarding-v5-growth-line polyline {
+  fill: none;
+  stroke: #f05555;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 4px 10px rgba(240,85,85,0.22));
+}
+.ft-onboarding-v5-growth-line circle {
+  fill: #f05555;
+}
+.ft-onboarding-v5-brand-foot {
+  max-width: 245px;
+  color: rgba(255,255,255,0.80);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  font-weight: 600;
+}
+.ft-onboarding-v5-lang-main {
+  gap: 18px;
+  min-width: 0;
+}
+.ft-onboarding-v5-lang-main > span:last-child {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+.ft-onboarding-v5-lang-title {
+  display: inline-block;
+  white-space: nowrap;
+}
+.ft-onboarding-v5-lang-sub {
+  display: inline-block;
+  margin-top: 0;
+  color: #596178;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+.ft-onboarding-v5-flag {
+  font-size: 1.9rem;
+  line-height: 1;
+}
+@media(max-width: 560px) {
+  .ft-onboarding-v5-lang-main > span:last-child {
+    gap: 8px;
+  }
+  .ft-onboarding-v5-lang-sub {
+    font-size: 0.78rem;
+  }
+}
+
 </style>
 
 <style>
@@ -3439,18 +3608,26 @@
           <div class="ft-onboarding-v5-mark">FP</div>
           <div class="ft-onboarding-v5-name">Fintrail <span>Pro</span></div>
         </div>
-        <div class="ft-onboarding-v5-tagline">Budget smarter.<br>Build with confidence.</div>
-        <div class="ft-onboarding-v5-visual">
-          <div class="ft-onboarding-v5-mini-score"><span>Sample score</span><strong>79</strong></div>
+        <div class="ft-onboarding-v5-tagline">Budget Smarter,<br>Live Better.</div>
+        <div class="ft-onboarding-v5-accent-line" aria-hidden="true"></div>
+        <div class="ft-onboarding-v5-visual" aria-hidden="true">
           <div class="ft-onboarding-v5-mini-bars">
-            <span style="height:35%"></span>
-            <span style="height:58%"></span>
-            <span style="height:76%"></span>
-            <span style="height:96%"></span>
+            <span style="height:34%"></span>
+            <span style="height:52%"></span>
+            <span style="height:64%"></span>
+            <span style="height:86%"></span>
+            <span style="height:100%"></span>
+            <svg class="ft-onboarding-v5-growth-line" viewBox="0 0 220 110" preserveAspectRatio="none" aria-hidden="true">
+              <polyline points="8,86 55,58 88,66 125,26 158,28 210,4"></polyline>
+              <circle cx="55" cy="58" r="4"></circle>
+              <circle cx="88" cy="66" r="4"></circle>
+              <circle cx="125" cy="26" r="4"></circle>
+              <circle cx="158" cy="28" r="4"></circle>
+            </svg>
           </div>
         </div>
       </div>
-      <div class="ft-onboarding-v5-brand-foot">Your dashboard will adapt around the goals you choose.</div>
+      <div class="ft-onboarding-v5-brand-foot">Your journey to financial freedom starts here.</div>
     </aside>
     <main class="ft-onboarding-v5-main">
       <div class="ft-onboarding-v5-top">
@@ -3843,6 +4020,15 @@
           <div class="form-group">
             <label id="label-amount" data-en="Amount ($)" data-es="Monto ($)">Amount ($)</label>
             <input type="number" id="amount" placeholder="0.00" min="0" step="0.01">
+          </div>
+          <div class="form-group" id="budget-category-group">
+            <label id="label-category" data-en="Category" data-es="Categoría">Category</label>
+            <div class="budget-category-combobox" id="budget-category-combobox">
+              <input type="hidden" id="category" value="">
+              <input type="text" id="category-search" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="category-options" autocomplete="off" placeholder="Search category">
+              <button type="button" class="budget-category-clear" id="category-clear" aria-label="Clear category">×</button>
+              <div class="budget-category-options" id="category-options" role="listbox"></div>
+            </div>
           </div>
 <button class="add-btn" id="btn-add-transaction" onclick="addTransaction()">Add Transaction</button>
         </div>
@@ -6236,15 +6422,122 @@
     document.getElementById('btn-expense').textContent = isEs ? '− Gasto' : '− Expense';
   }
 
+  const budgetCategoryOptions = [
+    { value: 'Housing', en: 'Housing', es: 'Vivienda' },
+    { value: 'Utilities', en: 'Utilities', es: 'Servicios' },
+    { value: 'Groceries', en: 'Groceries', es: 'Comestibles' },
+    { value: 'Transportation', en: 'Transportation', es: 'Transporte' },
+    { value: 'Dining', en: 'Dining', es: 'Restaurantes' },
+    { value: 'Entertainment', en: 'Entertainment', es: 'Entretenimiento' },
+    { value: 'Healthcare', en: 'Healthcare', es: 'Salud' },
+    { value: 'Debt Payments', en: 'Debt Payments', es: 'Pago de Deudas' },
+    { value: 'Savings', en: 'Savings', es: 'Ahorros' },
+    { value: 'Personal', en: 'Personal', es: 'Personal' },
+    { value: 'Other', en: 'Other', es: 'Otro' }
+  ];
+
+  function getBudgetCategoryLabel(value) {
+    const found = budgetCategoryOptions.find(cat => cat.value === value || cat.en === value || cat.es === value);
+    if (!found) return value || '';
+    return currentLang === 'es' ? found.es : found.en;
+  }
+
+  function normalizeBudgetCategory(value) {
+    const raw = String(value || '').trim();
+    if (!raw) return '';
+    const match = budgetCategoryOptions.find(cat => [cat.value, cat.en, cat.es].some(label => label.toLowerCase() === raw.toLowerCase()));
+    return match ? match.value : raw;
+  }
+
+  function getBudgetTrackerCategoryValue() {
+    const hidden = document.getElementById('category');
+    const search = document.getElementById('category-search');
+    const normalized = normalizeBudgetCategory((hidden && hidden.value) || (search && search.value) || '');
+    return budgetCategoryOptions.some(cat => cat.value === normalized) ? normalized : 'Other';
+  }
+
+  function renderBudgetCategoryOptions(filterText) {
+    const list = document.getElementById('category-options');
+    if (!list) return;
+    const filter = String(filterText || '').trim().toLowerCase();
+    const matches = budgetCategoryOptions.filter(cat => {
+      const label = currentLang === 'es' ? cat.es : cat.en;
+      return !filter || label.toLowerCase().includes(filter) || cat.en.toLowerCase().includes(filter) || cat.es.toLowerCase().includes(filter);
+    });
+    list.innerHTML = matches.length ? matches.map(cat => {
+      const label = currentLang === 'es' ? cat.es : cat.en;
+      return `<button type="button" class="budget-category-option" role="option" data-value="${cat.value}">${label}</button>`;
+    }).join('') : `<div class="budget-category-empty">${currentLang === 'es' ? 'Sin resultados' : 'No results'}</div>`;
+  }
+
+  function openBudgetCategoryDropdown() {
+    const box = document.getElementById('budget-category-combobox');
+    const input = document.getElementById('category-search');
+    if (!box || !input) return;
+    renderBudgetCategoryOptions(input.value);
+    box.classList.add('open');
+    input.setAttribute('aria-expanded', 'true');
+  }
+
+  function closeBudgetCategoryDropdown() {
+    const box = document.getElementById('budget-category-combobox');
+    const input = document.getElementById('category-search');
+    if (box) box.classList.remove('open');
+    if (input) input.setAttribute('aria-expanded', 'false');
+  }
+
+  function setBudgetCategory(value) {
+    const normalized = normalizeBudgetCategory(value);
+    const hidden = document.getElementById('category');
+    const input = document.getElementById('category-search');
+    if (hidden) hidden.value = normalized;
+    if (input) input.value = getBudgetCategoryLabel(normalized);
+  }
+
+  function initBudgetCategoryDropdown() {
+    const box = document.getElementById('budget-category-combobox');
+    const input = document.getElementById('category-search');
+    const hidden = document.getElementById('category');
+    const clear = document.getElementById('category-clear');
+    const list = document.getElementById('category-options');
+    if (!box || !input || !hidden || !clear || !list || box.dataset.ready === 'true') return;
+    box.dataset.ready = 'true';
+    input.placeholder = currentLang === 'es' ? 'Buscar categoría' : 'Search category';
+    renderBudgetCategoryOptions('');
+    input.addEventListener('focus', openBudgetCategoryDropdown);
+    input.addEventListener('input', function(){
+      hidden.value = normalizeBudgetCategory(input.value);
+      openBudgetCategoryDropdown();
+    });
+    clear.addEventListener('click', function(){
+      hidden.value = '';
+      input.value = '';
+      openBudgetCategoryDropdown();
+      input.focus();
+    });
+    list.addEventListener('mousedown', function(e){ e.preventDefault(); });
+    list.addEventListener('click', function(e){
+      const opt = e.target.closest('.budget-category-option');
+      if (!opt) return;
+      setBudgetCategory(opt.getAttribute('data-value'));
+      closeBudgetCategoryDropdown();
+      input.focus();
+    });
+    document.addEventListener('click', function(e){
+      if (!box.contains(e.target)) closeBudgetCategoryDropdown();
+    });
+  }
+
   // ADD TRANSACTION
   function addTransaction() {
     const desc = document.getElementById('desc').value.trim();
     const amount = parseFloat(document.getElementById('amount').value);
-    const category = document.getElementById('category').value;
+    const category = getBudgetTrackerCategoryValue();
     if (!desc || isNaN(amount) || amount <= 0) { alert('Please enter a description and valid amount.'); return; }
     transactions.push({ id: Date.now(), type: currentType, desc, amount, category });
     document.getElementById('desc').value = '';
     document.getElementById('amount').value = '';
+    setBudgetCategory('');
     render();
     saveUserData();
     awardXPForAction('transaction');
@@ -6275,7 +6568,7 @@
         <div class="transaction-item ${t.type}">
           <div class="t-info">
             <span class="t-name">${escHtml(t.desc)}</span>
-            <span class="t-cat">${t.category}</span>
+            <span class="t-cat">${getBudgetCategoryLabel(t.category)}</span>
           </div>
           <div class="t-right">
             <span class="t-amount">${t.type === 'income' ? '+' : '−'}${fmt(t.amount)}</span>
@@ -6291,11 +6584,22 @@
     const expenseTransactions = transactions.filter(t => t.type === 'expense');
     if (expenseTransactions.length === 0) { chart.innerHTML = `<div class="empty-state">${currentLang === 'es' ? 'Agrega gastos para ver tu resumen de gastos.' : 'Add expenses to see your spending breakdown.'}</div>`; return; }
     const byCategory = {};
-    const catTranslations = { Salary:'Salario', Freelance:'Freelance', Investment:'Inversión', Housing:'Vivienda', Food:'Alimentación', Transport:'Transporte', Healthcare:'Salud', Entertainment:'Entretenimiento', Education:'Educación', Other:'Otro' };
+    const catTranslations = {
+      Housing:'Vivienda', Utilities:'Servicios', Groceries:'Comestibles', Transportation:'Transporte',
+      Dining:'Restaurantes', Entertainment:'Entretenimiento', Healthcare:'Salud',
+      'Debt Payments':'Pago de Deudas', Savings:'Ahorros', Personal:'Personal', Other:'Otro',
+      Food:'Comestibles', Transport:'Transporte'
+    };
+    const catTranslationsEn = {
+      Vivienda:'Housing', Servicios:'Utilities', Comestibles:'Groceries', Transporte:'Transportation',
+      Restaurantes:'Dining', Entretenimiento:'Entertainment', Salud:'Healthcare',
+      'Pago de Deudas':'Debt Payments', Ahorros:'Savings', Personal:'Personal', Otro:'Other',
+      Alimentación:'Groceries'
+    };
     expenseTransactions.forEach(t => { byCategory[t.category] = (byCategory[t.category] || 0) + t.amount; });
     const max = Math.max(...Object.values(byCategory));
     chart.innerHTML = Object.entries(byCategory).sort((a,b) => b[1]-a[1]).map(([cat, val]) => {
-      const displayCat = currentLang === 'es' ? (catTranslations[cat] || cat) : cat;
+      const displayCat = currentLang === 'es' ? (catTranslations[cat] || cat) : (catTranslationsEn[cat] || cat);
       return `<div class="bar-row">
         <div class="bar-label">${displayCat}</div>
         <div class="bar-track"><div class="bar-fill" style="width:${(val/max)*100}%;background:var(--expense-color);opacity:${0.5+0.5*(val/max)}"></div></div>
@@ -7725,334 +8029,6 @@ Guidelines:
         <div class="footer">Generated by Fintrail · fintrail.app · For personal use only · Not financial advice</div>
       
 
-
-
-<script>
-/* === FINAL SAFE REPAIR: Budget Category + Debt Planner Labels === */
-(function(){
-  function isEs(){
-    try { return typeof currentLang !== 'undefined' && currentLang === 'es'; } catch(e) { return false; }
-  }
-
-  var cats = [
-    ['Housing','Vivienda'],
-    ['Transportation','Transporte'],
-    ['Food','Comida'],
-    ['Utilities','Servicios'],
-    ['Healthcare','Salud'],
-    ['Insurance','Seguro'],
-    ['Debt Payments','Pago de Deudas'],
-    ['Entertainment','Entretenimiento'],
-    ['Shopping','Compras'],
-    ['Education','Educación'],
-    ['Savings','Ahorros'],
-    ['Other','Otro']
-  ];
-
-  function ensureBudgetCategory(){
-    try {
-      var amount = document.getElementById('amount');
-      if (!amount) return;
-      var existing = document.getElementById('category');
-      var field = document.getElementById('budget-category-field');
-      if (!existing) {
-        field = document.createElement('div');
-        field.className = 'form-group';
-        field.id = 'budget-category-field';
-        field.innerHTML = '<label id="label-category" data-en="Category" data-es="Categoría">Category</label>' +
-          '<input type="text" id="category" list="budget-category-options" autocomplete="off" placeholder="Search or choose a category">' +
-          '<datalist id="budget-category-options"></datalist>';
-        var amountGroup = amount.closest ? amount.closest('.form-group') : amount.parentNode;
-        if (amountGroup && amountGroup.parentNode) amountGroup.parentNode.insertBefore(field, amountGroup.nextSibling);
-      }
-      var input = document.getElementById('category');
-      var label = document.getElementById('label-category');
-      var list = document.getElementById('budget-category-options');
-      if (!input || !list) return;
-      var spanish = isEs();
-      if (label) label.textContent = spanish ? 'CATEGORÍA' : 'CATEGORY';
-      input.placeholder = spanish ? 'Buscar o elegir una categoría' : 'Search or choose a category';
-      list.innerHTML = cats.map(function(c){
-        var value = spanish ? c[1] : c[0];
-        return '<option value="' + value.replace(/&/g,'&amp;').replace(/"/g,'&quot;') + '"></option>';
-      }).join('');
-      // Keep category empty if user clears it; default is applied only on submit.
-      // if (!input.value) input.value = spanish ? 'Otro' : 'Other';
-    } catch(e) { console.warn('Budget category repair skipped:', e); }
-  }
-
-  function normalizeCategoryValue(value){
-    var v = String(value || '').trim();
-    if (!v) return '';
-    // Keep user-entered custom values, but normalize the built-in bilingual pair when language changes.
-    cats.forEach(function(c){
-      if (v === c[0] || v === c[1]) v = isEs() ? c[1] : c[0];
-    });
-    return v;
-  }
-
-  function repairDebtTextValue(value){
-    var s = String(value || '');
-    if (isEs()) {
-      s = s.replace(/Editarar+/g, 'Editar');
-      s = s.replace(/\bEdit\b/g, 'Editar');
-      s = s.replace(/ESTE MES'S PAYMENT PLAN/g, 'PLAN DE PAGO DE ESTE MES');
-      s = s.replace(/THIS MONTH'S PAYMENT PLAN/g, 'PLAN DE PAGO DE ESTE MES');
-      s = s.replace(/This Month's Payment Plan/g, 'Plan de Pago de Este Mes');
-      s = s.replace(/MÍN\.IMUMS ONLY/g, 'SOLO PAGOS MÍNIMOS');
-      s = s.replace(/Mín\.imums Only/g, 'Solo pagos mínimos');
-      s = s.replace(/MINIMUMS ONLY/g, 'SOLO PAGOS MÍNIMOS');
-      s = s.replace(/Minimums Only/g, 'Solo pagos mínimos');
-    } else {
-      s = s.replace(/Editarar+/g, 'Edit');
-      s = s.replace(/\bEditar\b/g, 'Edit');
-      s = s.replace(/PLAN DE PAGO DE ESTE MES/g, "THIS MONTH'S PAYMENT PLAN");
-      s = s.replace(/Plan de Pago de Este Mes/g, "This Month's Payment Plan");
-      s = s.replace(/MÍN\.IMUMS ONLY/g, 'MINIMUMS ONLY');
-      s = s.replace(/SOLO PAGOS MÍNIMOS/g, 'MINIMUMS ONLY');
-      s = s.replace(/SOLO MÍNIMOS/g, 'MINIMUMS ONLY');
-      s = s.replace(/Solo pagos mínimos/g, 'Minimums Only');
-    }
-    return s;
-  }
-
-  function repairDebtPlannerLabels(){
-    try {
-      var root = document.getElementById('tab-debtplan');
-      if (!root) return;
-      var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
-        acceptNode: function(node){
-          var p = node.parentElement;
-          if (!p || p.tagName === 'SCRIPT' || p.tagName === 'STYLE') return NodeFilter.FILTER_REJECT;
-          return NodeFilter.FILTER_ACCEPT;
-        }
-      });
-      var nodes = [];
-      while (walker.nextNode()) nodes.push(walker.currentNode);
-      nodes.forEach(function(node){
-        var next = repairDebtTextValue(node.textContent);
-        if (next !== node.textContent) node.textContent = next;
-      });
-      root.querySelectorAll('button, input, textarea').forEach(function(el){
-        if (el.tagName === 'BUTTON') {
-          var t = repairDebtTextValue(el.textContent);
-          if (t !== el.textContent) el.textContent = t;
-        }
-        if (el.placeholder) el.placeholder = repairDebtTextValue(el.placeholder);
-        if (el.value && /Editarar|ESTE MES|MÍN\.IMUMS|SOLO PAGOS MÍNIMOS|PLAN DE PAGO/.test(el.value)) {
-          el.value = repairDebtTextValue(el.value);
-        }
-      });
-    } catch(e) { console.warn('Debt planner label repair skipped:', e); }
-  }
-
-  function repairAll(){
-    ensureBudgetCategory();
-    var cat = document.getElementById('category');
-    if (cat) cat.value = normalizeCategoryValue(cat.value);
-    repairDebtPlannerLabels();
-  }
-
-  // Make the existing addTransaction fallback use Other/Otro instead of a blank category.
-  function wrapAddTransaction(){
-    try {
-      if (typeof window.addTransaction === 'function' && !window.addTransaction.__fintrailCategorySafeWrapped) {
-        var original = window.addTransaction;
-        window.addTransaction = function(){
-          ensureBudgetCategory();
-          var cat = document.getElementById('category');
-          if (cat) cat.value = normalizeCategoryValue(cat.value) || (isEs() ? 'Otro' : 'Other');
-          return original.apply(this, arguments);
-        };
-        window.addTransaction.__fintrailCategorySafeWrapped = true;
-      }
-    } catch(e) {}
-  }
-
-  function schedule(){
-    setTimeout(function(){ wrapAddTransaction(); repairAll(); }, 30);
-    setTimeout(repairAll, 180);
-    setTimeout(repairAll, 600);
-  }
-
-  window.fintrailFinalSafeRepair = schedule;
-  window.addEventListener('load', schedule);
-  document.addEventListener('DOMContentLoaded', schedule);
-  document.addEventListener('click', function(e){
-    var t = e.target;
-    if (t && t.closest && (t.closest('#tab-budget') || t.closest('#tab-debtplan') || /EN|ES|English|Español|Spanish/.test(String(t.textContent || '')))) schedule();
-  });
-  document.addEventListener('input', function(e){
-    if (e.target && e.target.closest && (e.target.closest('#tab-budget') || e.target.closest('#tab-debtplan'))) schedule();
-  });
-})();
-</script>
-
-
-
-<style>
-/* === BUDGET CATEGORY CUSTOM DROPDOWN REPAIR === */
-#budget-category-field { position: relative; }
-.fintrail-budget-category-menu {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: calc(100% + 6px);
-  z-index: 9999;
-  display: none;
-  max-height: 260px;
-  overflow-y: auto;
-  background: #ffffff;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  box-shadow: 0 14px 35px rgba(18,24,40,0.18);
-  padding: 0.35rem;
-}
-.fintrail-budget-category-menu.open { display: block; }
-.fintrail-budget-category-option {
-  padding: 0.7rem 0.85rem;
-  border-radius: 9px;
-  cursor: pointer;
-  color: var(--text);
-  font-family: 'Sora', sans-serif;
-  font-size: 0.88rem;
-  font-weight: 600;
-}
-.fintrail-budget-category-option:hover,
-.fintrail-budget-category-option.active {
-  background: rgba(240,85,85,0.08);
-  color: var(--accent);
-}
-.fintrail-budget-category-empty {
-  padding: 0.7rem 0.85rem;
-  color: var(--muted);
-  font-size: 0.82rem;
-}
-</style>
-<script>
-/* === FINAL BUDGET CATEGORY SEARCHABLE DROPDOWN FIX === */
-(function(){
-  var categories = [
-    ['Housing','Vivienda'],
-    ['Transportation','Transporte'],
-    ['Food','Comida'],
-    ['Utilities','Servicios'],
-    ['Healthcare','Salud'],
-    ['Insurance','Seguro'],
-    ['Debt Payments','Pago de Deudas'],
-    ['Entertainment','Entretenimiento'],
-    ['Shopping','Compras'],
-    ['Education','Educación'],
-    ['Savings','Ahorros'],
-    ['Other','Otro']
-  ];
-
-  function isEs(){
-    try { return typeof currentLang !== 'undefined' && currentLang === 'es'; } catch(e) { return false; }
-  }
-
-  function labels(){ return categories.map(function(c){ return isEs() ? c[1] : c[0]; }); }
-
-  function normalize(value){
-    var v = String(value || '').trim();
-    if (!v) return '';
-    categories.forEach(function(c){ if (v === c[0] || v === c[1]) v = isEs() ? c[1] : c[0]; });
-    return v;
-  }
-
-  function ensureMenu(){
-    var input = document.getElementById('category');
-    var field = document.getElementById('budget-category-field') || (input && input.closest && input.closest('.form-group'));
-    if (!input || !field) return null;
-    field.style.position = 'relative';
-    input.setAttribute('autocomplete','off');
-    input.removeAttribute('list');
-    input.placeholder = isEs() ? 'Buscar o elegir una categoría' : 'Search or choose a category';
-
-    var menu = document.getElementById('fintrail-budget-category-menu');
-    if (!menu) {
-      menu = document.createElement('div');
-      menu.id = 'fintrail-budget-category-menu';
-      menu.className = 'fintrail-budget-category-menu';
-      field.appendChild(menu);
-    }
-    return { input: input, menu: menu };
-  }
-
-  function renderMenu(filter){
-    var bundle = ensureMenu();
-    if (!bundle) return;
-    var input = bundle.input, menu = bundle.menu;
-    var q = String(filter == null ? input.value : filter).trim().toLowerCase();
-    var items = labels().filter(function(label){ return !q || label.toLowerCase().indexOf(q) !== -1; });
-    menu.innerHTML = items.length ? items.map(function(label){
-      return '<div class="fintrail-budget-category-option" data-value="' + String(label).replace(/&/g,'&amp;').replace(/"/g,'&quot;') + '">' + label + '</div>';
-    }).join('') : '<div class="fintrail-budget-category-empty">' + (isEs() ? 'No hay categorías' : 'No categories found') + '</div>';
-    menu.classList.add('open');
-  }
-
-  function closeMenu(){
-    var menu = document.getElementById('fintrail-budget-category-menu');
-    if (menu) menu.classList.remove('open');
-  }
-
-  function install(){
-    var bundle = ensureMenu();
-    if (!bundle) return;
-    var input = bundle.input, menu = bundle.menu;
-    if (input.__fintrailBudgetCategoryDropdownInstalled) {
-      input.placeholder = isEs() ? 'Buscar o elegir una categoría' : 'Search or choose a category';
-      if (input.value) input.value = normalize(input.value);
-      return;
-    }
-    input.__fintrailBudgetCategoryDropdownInstalled = true;
-
-    input.addEventListener('focus', function(){ renderMenu(''); });
-    input.addEventListener('click', function(){ renderMenu(input.value); });
-    input.addEventListener('input', function(){ renderMenu(input.value); });
-    input.addEventListener('keydown', function(e){
-      if (e.key === 'Escape') closeMenu();
-      if (e.key === 'ArrowDown') {
-        var first = menu.querySelector('.fintrail-budget-category-option');
-        if (first) { e.preventDefault(); first.classList.add('active'); first.focus && first.focus(); }
-      }
-    });
-    menu.addEventListener('mousedown', function(e){
-      var opt = e.target.closest && e.target.closest('.fintrail-budget-category-option');
-      if (!opt) return;
-      e.preventDefault();
-      input.value = opt.getAttribute('data-value') || opt.textContent || '';
-      input.dispatchEvent(new Event('change', { bubbles: true }));
-      closeMenu();
-    });
-  }
-
-  function safeInstall(){ setTimeout(install, 60); setTimeout(install, 250); setTimeout(install, 800); }
-
-  window.fintrailBudgetCategoryDropdownFix = safeInstall;
-  window.addEventListener('load', safeInstall);
-  document.addEventListener('DOMContentLoaded', safeInstall);
-  document.addEventListener('click', function(e){
-    var input = document.getElementById('category');
-    var menu = document.getElementById('fintrail-budget-category-menu');
-    if (!input || !menu) { safeInstall(); return; }
-    if (e.target === input || (menu.contains && menu.contains(e.target))) return;
-    closeMenu();
-  });
-
-  try {
-    if (typeof window.addTransaction === 'function' && !window.addTransaction.__fintrailBudgetDropdownDefaultWrapped) {
-      var originalAddTransaction = window.addTransaction;
-      window.addTransaction = function(){
-        var input = document.getElementById('category');
-        if (input) input.value = normalize(input.value) || (isEs() ? 'Otro' : 'Other');
-        return originalAddTransaction.apply(this, arguments);
-      };
-      window.addTransaction.__fintrailBudgetDropdownDefaultWrapped = true;
-    }
-  } catch(e) {}
-})();
-</script>
 
 </body>
       </html>
@@ -9847,7 +9823,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const subtitle = c.steps[step][1];
     const head = `<h2 class="ft-onboarding-v5-title" id="ft-onboarding-v5-title">${title}</h2><p class="ft-onboarding-v5-subtitle">${subtitle}</p>`;
     if (step === 0) {
-      body.innerHTML = head + `<div class="ft-onboarding-v5-language-grid">${c.langs.map(lang => `<button type="button" class="ft-onboarding-v5-lang ${ftOnboardingV5State.lang === lang[0] ? 'active' : ''}" onclick="ftOnboardingV5SelectLanguage('${lang[0]}')"><span class="ft-onboarding-v5-lang-main"><span class="ft-onboarding-v5-flag">${lang[0] === 'en' ? '🇺🇸' : '🇪🇸'}</span><span><span class="ft-onboarding-v5-lang-title">${lang[1]}</span><span class="ft-onboarding-v5-lang-sub">${lang[2]}</span></span></span><span>›</span></button>`).join('')}</div>`;
+      body.innerHTML = head + `<div class="ft-onboarding-v5-language-grid">${c.langs.map(lang => `<button type="button" class="ft-onboarding-v5-lang ${ftOnboardingV5State.lang === lang[0] ? 'active' : ''}" onclick="ftOnboardingV5SelectLanguage('${lang[0]}')"><span class="ft-onboarding-v5-lang-main"><span class="ft-onboarding-v5-flag">${lang[0] === 'en' ? '🇬🇧' : '🇪🇸'}</span><span><span class="ft-onboarding-v5-lang-title">${lang[1]}</span><span class="ft-onboarding-v5-lang-sub">${lang[2]}</span></span></span><span>›</span></button>`).join('')}</div>`;
     } else if (step === 1) {
       body.innerHTML = head + `<div class="ft-onboarding-v5-goal-grid">${c.goals.map(goal => `<button type="button" class="ft-onboarding-v5-goal ${ftOnboardingV5State.goals.includes(goal[0]) ? 'active' : ''}" onclick="ftOnboardingV5ToggleGoal('${goal[0]}')"><span class="ft-onboarding-v5-goal-icon">${goal[1]}</span><span class="ft-onboarding-v5-goal-label">${goal[2]}</span></button>`).join('')}</div><div class="ft-onboarding-v5-selection-note">${c.selected(ftOnboardingV5State.goals.length)}</div>${ftOnboardingV5State.error ? `<div class="ft-onboarding-v5-error">${ftOnboardingV5State.error}</div>` : ''}`;
     } else if (step === 2) {
@@ -10169,6 +10145,12 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     document.querySelectorAll('#category option[data-en]').forEach(opt => {
       opt.textContent = opt.getAttribute(`data-${currentLang}`) || opt.getAttribute('data-en');
     });
+    if (typeof initBudgetCategoryDropdown === 'function') initBudgetCategoryDropdown();
+    const categorySearch = document.getElementById('category-search');
+    const selectedCategory = document.getElementById('category');
+    if (categorySearch) categorySearch.placeholder = isEs ? 'Buscar categoría' : 'Search category';
+    if (selectedCategory && categorySearch && selectedCategory.value) categorySearch.value = getBudgetCategoryLabel(selectedCategory.value);
+    if (typeof renderBudgetCategoryOptions === 'function') renderBudgetCategoryOptions(categorySearch ? categorySearch.value : '');
 
     // Translate investment calculator frequency options
     document.querySelectorAll('#inv-frequency option[data-en]').forEach(opt => {
@@ -14085,7 +14067,7 @@ window.addEventListener('load', function(){
 
       var desc = descEl ? String(descEl.value || '').trim() : '';
       var amount = amountEl ? parseFloat(amountEl.value) : NaN;
-      var category = catEl ? String(catEl.value || '') : 'Other';
+      var category = (typeof getBudgetTrackerCategoryValue === 'function') ? getBudgetTrackerCategoryValue() : (catEl ? String(catEl.value || '') : 'Other');
       var type = getSelectedTransactionType();
 
       var isEs = false;
@@ -14115,6 +14097,7 @@ window.addEventListener('load', function(){
 
       if (descEl) descEl.value = '';
       if (amountEl) amountEl.value = '';
+      if (typeof setBudgetCategory === 'function') setBudgetCategory('');
 
       if (typeof render === 'function') render();
       if (typeof saveUserData === 'function') saveUserData();
@@ -14129,6 +14112,7 @@ window.addEventListener('load', function(){
 
   window.addEventListener('load', function(){
     try {
+      if (typeof initBudgetCategoryDropdown === 'function') initBudgetCategoryDropdown();
       var btn = document.getElementById('btn-add-transaction');
       if (btn) {
         btn.onclick = function(e) {
@@ -14350,6 +14334,7 @@ window.addEventListener('load', function(){
           'Balance:': 'Saldo:',
           'Balance': 'Saldo',
           'Min:': 'Mín.:',
+          'Min': 'Mín.',
           'Focus': 'Prioridad',
           'Edit': 'Editar'
         });
@@ -14360,6 +14345,7 @@ window.addEventListener('load', function(){
           'Saldo:': 'Balance:',
           'Saldo': 'Balance',
           'Mín.:': 'Min:',
+          'Mín.': 'Min',
           'Prioridad': 'Focus',
           'Editar': 'Edit'
         });
@@ -14415,460 +14401,6 @@ window.addEventListener('load', function(){
 
 
 
-
-
-
-<script>
-/* === FINAL SAFE UI POLISH PATCH — inserted before actual closing body only ===
-   Fixes Debt Planner duplicated Spanish labels, Calendar English month/weekdays,
-   and restores email in account banner. Does not touch auth, Stripe, onboarding,
-   Supabase, dropdown calculations, or saved data. */
-(function(){
-  function lang(){ try { return currentLang === 'es' ? 'es' : 'en'; } catch(e) { return 'en'; } }
-  function userEmail(){
-    try { if (window.currentUser && currentUser.email) return currentUser.email; } catch(e) {}
-    try { var el = document.querySelector('.profile-email'); if (el && el.textContent.indexOf('@') !== -1) return el.textContent.trim(); } catch(e) {}
-    return '';
-  }
-
-  function fixDebtPlannerLabels(){
-    try {
-      var root = document.getElementById('tab-debtplan');
-      if (!root) return;
-      var es = lang() === 'es';
-
-      // Buttons: force exact label, never append/replace repeatedly.
-      root.querySelectorAll('button').forEach(function(btn){
-        var text = (btn.textContent || '').replace(/\s+/g,' ').trim();
-        if (text === 'Edit' || text === 'Editar' || /^Editar(ar)+$/i.test(text) || /^Editarar+/i.test(text)) {
-          btn.textContent = es ? 'Editar' : 'Edit';
-        }
-      });
-
-      // Text nodes: correct mixed-language heading and repeated Edit strings only.
-      var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
-        acceptNode: function(node){
-          var p = node.parentElement;
-          if (!p || p.tagName === 'SCRIPT' || p.tagName === 'STYLE') return NodeFilter.FILTER_REJECT;
-          var t = (node.textContent || '').trim();
-          if (!t) return NodeFilter.FILTER_REJECT;
-          return (/PAYMENT PLAN/i.test(t) || /PLAN DE PAGO/i.test(t) || /ESTE MES/i.test(t) || /^Editar/i.test(t) || t === 'Edit') ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
-        }
-      });
-      var nodes = [];
-      while (walker.nextNode()) nodes.push(walker.currentNode);
-      nodes.forEach(function(node){
-        var original = node.textContent || '';
-        var compact = original.replace(/\s+/g,' ').trim();
-        if (/^(📋\s*)?(THIS MONTH'S PAYMENT PLAN|THIS MONTHS PAYMENT PLAN|ESTE MES'S PAYMENT PLAN|PLAN DE PAGO DE ESTE MES|PLAN DE PAGO DE ESTE MES'S PAYMENT PLAN)$/i.test(compact)) {
-          var prefix = original.indexOf('📋') !== -1 ? '📋 ' : '';
-          node.textContent = prefix + (es ? 'PLAN DE PAGO DE ESTE MES' : "THIS MONTH'S PAYMENT PLAN");
-          return;
-        }
-        if (compact === 'Edit' || compact === 'Editar' || /^Editar(ar)+$/i.test(compact) || /^Editarar+/i.test(compact)) {
-          node.textContent = es ? 'Editar' : 'Edit';
-        }
-      });
-    } catch(e) { console.warn('Debt planner label polish skipped:', e); }
-  }
-
-  function fixCalendarLanguage(){
-    try {
-      var root = document.getElementById('tab-calendar');
-      if (!root) return;
-      var es = lang() === 'es';
-      var monthEl = root.querySelector('.cal-month-label');
-      var enMonths = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-      var esMonths = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-      if (monthEl) {
-        var text = monthEl.textContent || '';
-        var yearMatch = text.match(/\b(20\d{2})\b/);
-        var year = yearMatch ? yearMatch[1] : (new Date()).getFullYear();
-        var idx = -1;
-        enMonths.concat(esMonths).forEach(function(m,i){ if (idx < 0 && text.toLowerCase().indexOf(m.toLowerCase()) !== -1) idx = i % 12; });
-        if (idx >= 0) monthEl.textContent = (es ? esMonths[idx] : enMonths[idx]) + ' ' + year;
-      }
-      var days = es ? ['DOM','LUN','MAR','MIÉ','JUE','VIE','SÁB'] : ['SUN','MON','TUE','WED','THU','FRI','SAT'];
-      root.querySelectorAll('.cal-day-header').forEach(function(el, i){ if (i < 7) el.textContent = days[i]; });
-      root.querySelectorAll('.cal-week-day-name').forEach(function(el, i){ if (i < 7) el.textContent = days[i]; });
-    } catch(e) { console.warn('Calendar language polish skipped:', e); }
-  }
-
-  function fixAccountBannerEmail(){
-    try {
-      var statusEl = document.getElementById('ab-status');
-      if (!statusEl) return;
-      var es = lang() === 'es';
-      var email = userEmail();
-      if (!email) return;
-      var pro = false;
-      try { pro = !!isPro; } catch(e) { pro = false; }
-      statusEl.textContent = (pro ? (es ? 'Plan Pro' : 'Pro Plan') : (es ? 'Plan Gratis' : 'Free Plan')) + ' — ' + email;
-      statusEl.title = email;
-      var badge = document.getElementById('ab-plan-badge');
-      if (badge && !pro) { badge.textContent = es ? 'Gratis' : 'Free'; badge.classList.remove('premium-plan'); }
-      var actionBtn = document.getElementById('ab-action-btn');
-      if (actionBtn && !pro) actionBtn.textContent = es ? 'Mejorar a Pro →' : 'Upgrade to Pro →';
-    } catch(e) { console.warn('Account banner polish skipped:', e); }
-  }
-
-  function runPolish(){
-    fixDebtPlannerLabels();
-    fixCalendarLanguage();
-    fixAccountBannerEmail();
-  }
-  function schedule(){ setTimeout(runPolish, 30); setTimeout(runPolish, 350); setTimeout(runPolish, 1000); }
-
-  ['load','click','change','input'].forEach(function(evt){
-    window.addEventListener(evt, schedule, true);
-    document.addEventListener(evt, schedule, true);
-  });
-
-  ['applyLanguage','renderCalendar','loadCalendarEvents','renderDebtList','runPayoffPlan','setUserUI','setProUI','loadUserData'].forEach(function(fnName){
-    try {
-      var original = window[fnName];
-      if (typeof original !== 'function' || original.__fintrailSafePolishWrapped) return;
-      window[fnName] = function(){
-        var result = original.apply(this, arguments);
-        schedule();
-        return result;
-      };
-      window[fnName].__fintrailSafePolishWrapped = true;
-    } catch(e) {}
-  });
-
-  window.fintrailRunSafePolish = runPolish;
-  schedule();
-})();
-</script>
-
-
-<script>
-/* === FINAL SAFE REPAIR: Budget Category + Debt Planner Labels === */
-(function(){
-  function isEs(){
-    try { return typeof currentLang !== 'undefined' && currentLang === 'es'; } catch(e) { return false; }
-  }
-
-  var cats = [
-    ['Housing','Vivienda'],
-    ['Transportation','Transporte'],
-    ['Food','Comida'],
-    ['Utilities','Servicios'],
-    ['Healthcare','Salud'],
-    ['Insurance','Seguro'],
-    ['Debt Payments','Pago de Deudas'],
-    ['Entertainment','Entretenimiento'],
-    ['Shopping','Compras'],
-    ['Education','Educación'],
-    ['Savings','Ahorros'],
-    ['Other','Otro']
-  ];
-
-  function ensureBudgetCategory(){
-    try {
-      var amount = document.getElementById('amount');
-      if (!amount) return;
-      var existing = document.getElementById('category');
-      var field = document.getElementById('budget-category-field');
-      if (!existing) {
-        field = document.createElement('div');
-        field.className = 'form-group';
-        field.id = 'budget-category-field';
-        field.innerHTML = '<label id="label-category" data-en="Category" data-es="Categoría">Category</label>' +
-          '<input type="text" id="category" list="budget-category-options" autocomplete="off" placeholder="Search or choose a category">' +
-          '<datalist id="budget-category-options"></datalist>';
-        var amountGroup = amount.closest ? amount.closest('.form-group') : amount.parentNode;
-        if (amountGroup && amountGroup.parentNode) amountGroup.parentNode.insertBefore(field, amountGroup.nextSibling);
-      }
-      var input = document.getElementById('category');
-      var label = document.getElementById('label-category');
-      var list = document.getElementById('budget-category-options');
-      if (!input || !list) return;
-      var spanish = isEs();
-      if (label) label.textContent = spanish ? 'CATEGORÍA' : 'CATEGORY';
-      input.placeholder = spanish ? 'Buscar o elegir una categoría' : 'Search or choose a category';
-      list.innerHTML = cats.map(function(c){
-        var value = spanish ? c[1] : c[0];
-        return '<option value="' + value.replace(/&/g,'&amp;').replace(/"/g,'&quot;') + '"></option>';
-      }).join('');
-      // Keep category empty if user clears it; default is applied only on submit.
-      // if (!input.value) input.value = spanish ? 'Otro' : 'Other';
-    } catch(e) { console.warn('Budget category repair skipped:', e); }
-  }
-
-  function normalizeCategoryValue(value){
-    var v = String(value || '').trim();
-    if (!v) return isEs() ? 'Otro' : 'Other';
-    // Keep user-entered custom values, but normalize the built-in bilingual pair when language changes.
-    cats.forEach(function(c){
-      if (v === c[0] || v === c[1]) v = isEs() ? c[1] : c[0];
-    });
-    return v;
-  }
-
-  function repairDebtTextValue(value){
-    var s = String(value || '');
-    if (isEs()) {
-      s = s.replace(/Editarar+/g, 'Editar');
-      s = s.replace(/\bEdit\b/g, 'Editar');
-      s = s.replace(/ESTE MES'S PAYMENT PLAN/g, 'PLAN DE PAGO DE ESTE MES');
-      s = s.replace(/THIS MONTH'S PAYMENT PLAN/g, 'PLAN DE PAGO DE ESTE MES');
-      s = s.replace(/This Month's Payment Plan/g, 'Plan de Pago de Este Mes');
-      s = s.replace(/MÍN\.IMUMS ONLY/g, 'SOLO PAGOS MÍNIMOS');
-      s = s.replace(/Mín\.imums Only/g, 'Solo pagos mínimos');
-      s = s.replace(/MINIMUMS ONLY/g, 'SOLO PAGOS MÍNIMOS');
-      s = s.replace(/Minimums Only/g, 'Solo pagos mínimos');
-    } else {
-      s = s.replace(/Editarar+/g, 'Edit');
-      s = s.replace(/\bEditar\b/g, 'Edit');
-      s = s.replace(/PLAN DE PAGO DE ESTE MES/g, "THIS MONTH'S PAYMENT PLAN");
-      s = s.replace(/Plan de Pago de Este Mes/g, "This Month's Payment Plan");
-      s = s.replace(/MÍN\.IMUMS ONLY/g, 'MINIMUMS ONLY');
-      s = s.replace(/SOLO PAGOS MÍNIMOS/g, 'MINIMUMS ONLY');
-      s = s.replace(/SOLO MÍNIMOS/g, 'MINIMUMS ONLY');
-      s = s.replace(/Solo pagos mínimos/g, 'Minimums Only');
-    }
-    return s;
-  }
-
-  function repairDebtPlannerLabels(){
-    try {
-      var root = document.getElementById('tab-debtplan');
-      if (!root) return;
-      var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
-        acceptNode: function(node){
-          var p = node.parentElement;
-          if (!p || p.tagName === 'SCRIPT' || p.tagName === 'STYLE') return NodeFilter.FILTER_REJECT;
-          return NodeFilter.FILTER_ACCEPT;
-        }
-      });
-      var nodes = [];
-      while (walker.nextNode()) nodes.push(walker.currentNode);
-      nodes.forEach(function(node){
-        var next = repairDebtTextValue(node.textContent);
-        if (next !== node.textContent) node.textContent = next;
-      });
-      root.querySelectorAll('button, input, textarea').forEach(function(el){
-        if (el.tagName === 'BUTTON') {
-          var t = repairDebtTextValue(el.textContent);
-          if (t !== el.textContent) el.textContent = t;
-        }
-        if (el.placeholder) el.placeholder = repairDebtTextValue(el.placeholder);
-        if (el.value && /Editarar|ESTE MES|MÍN\.IMUMS|SOLO PAGOS MÍNIMOS|PLAN DE PAGO/.test(el.value)) {
-          el.value = repairDebtTextValue(el.value);
-        }
-      });
-    } catch(e) { console.warn('Debt planner label repair skipped:', e); }
-  }
-
-  function repairAll(){
-    ensureBudgetCategory();
-    var cat = document.getElementById('category');
-    if (cat) cat.value = normalizeCategoryValue(cat.value);
-    repairDebtPlannerLabels();
-  }
-
-  // Make the existing addTransaction fallback use Other/Otro instead of a blank category.
-  function wrapAddTransaction(){
-    try {
-      if (typeof window.addTransaction === 'function' && !window.addTransaction.__fintrailCategorySafeWrapped) {
-        var original = window.addTransaction;
-        window.addTransaction = function(){
-          ensureBudgetCategory();
-          var cat = document.getElementById('category');
-          if (cat) cat.value = normalizeCategoryValue(cat.value) || (isEs() ? 'Otro' : 'Other');
-          return original.apply(this, arguments);
-        };
-        window.addTransaction.__fintrailCategorySafeWrapped = true;
-      }
-    } catch(e) {}
-  }
-
-  function schedule(){
-    setTimeout(function(){ wrapAddTransaction(); repairAll(); }, 30);
-    setTimeout(repairAll, 180);
-    setTimeout(repairAll, 600);
-  }
-
-  window.fintrailFinalSafeRepair = schedule;
-  window.addEventListener('load', schedule);
-  document.addEventListener('DOMContentLoaded', schedule);
-  document.addEventListener('click', function(e){
-    var t = e.target;
-    if (t && t.closest && (t.closest('#tab-budget') || t.closest('#tab-debtplan') || /EN|ES|English|Español|Spanish/.test(String(t.textContent || '')))) schedule();
-  });
-  document.addEventListener('input', function(e){
-    if (e.target && e.target.closest && (e.target.closest('#tab-budget') || e.target.closest('#tab-debtplan'))) schedule();
-  });
-})();
-</script>
-
-
-
-<style>
-/* === BUDGET CATEGORY CUSTOM DROPDOWN REPAIR === */
-#budget-category-field { position: relative; }
-.fintrail-budget-category-menu {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: calc(100% + 6px);
-  z-index: 9999;
-  display: none;
-  max-height: 260px;
-  overflow-y: auto;
-  background: #ffffff;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  box-shadow: 0 14px 35px rgba(18,24,40,0.18);
-  padding: 0.35rem;
-}
-.fintrail-budget-category-menu.open { display: block; }
-.fintrail-budget-category-option {
-  padding: 0.7rem 0.85rem;
-  border-radius: 9px;
-  cursor: pointer;
-  color: var(--text);
-  font-family: 'Sora', sans-serif;
-  font-size: 0.88rem;
-  font-weight: 600;
-}
-.fintrail-budget-category-option:hover,
-.fintrail-budget-category-option.active {
-  background: rgba(240,85,85,0.08);
-  color: var(--accent);
-}
-.fintrail-budget-category-empty {
-  padding: 0.7rem 0.85rem;
-  color: var(--muted);
-  font-size: 0.82rem;
-}
-</style>
-<script>
-/* === FINAL BUDGET CATEGORY SEARCHABLE DROPDOWN FIX === */
-(function(){
-  var categories = [
-    ['Housing','Vivienda'],
-    ['Transportation','Transporte'],
-    ['Food','Comida'],
-    ['Utilities','Servicios'],
-    ['Healthcare','Salud'],
-    ['Insurance','Seguro'],
-    ['Debt Payments','Pago de Deudas'],
-    ['Entertainment','Entretenimiento'],
-    ['Shopping','Compras'],
-    ['Education','Educación'],
-    ['Savings','Ahorros'],
-    ['Other','Otro']
-  ];
-
-  function isEs(){
-    try { return typeof currentLang !== 'undefined' && currentLang === 'es'; } catch(e) { return false; }
-  }
-
-  function labels(){ return categories.map(function(c){ return isEs() ? c[1] : c[0]; }); }
-
-  function normalize(value){
-    var v = String(value || '').trim();
-    if (!v) return '';
-    categories.forEach(function(c){ if (v === c[0] || v === c[1]) v = isEs() ? c[1] : c[0]; });
-    return v;
-  }
-
-  function ensureMenu(){
-    var input = document.getElementById('category');
-    var field = document.getElementById('budget-category-field') || (input && input.closest && input.closest('.form-group'));
-    if (!input || !field) return null;
-    field.style.position = 'relative';
-    input.setAttribute('autocomplete','off');
-    input.removeAttribute('list');
-    input.placeholder = isEs() ? 'Buscar o elegir una categoría' : 'Search or choose a category';
-
-    var menu = document.getElementById('fintrail-budget-category-menu');
-    if (!menu) {
-      menu = document.createElement('div');
-      menu.id = 'fintrail-budget-category-menu';
-      menu.className = 'fintrail-budget-category-menu';
-      field.appendChild(menu);
-    }
-    return { input: input, menu: menu };
-  }
-
-  function renderMenu(filter){
-    var bundle = ensureMenu();
-    if (!bundle) return;
-    var input = bundle.input, menu = bundle.menu;
-    var q = String(filter == null ? input.value : filter).trim().toLowerCase();
-    var items = labels().filter(function(label){ return !q || label.toLowerCase().indexOf(q) !== -1; });
-    menu.innerHTML = items.length ? items.map(function(label){
-      return '<div class="fintrail-budget-category-option" data-value="' + String(label).replace(/&/g,'&amp;').replace(/"/g,'&quot;') + '">' + label + '</div>';
-    }).join('') : '<div class="fintrail-budget-category-empty">' + (isEs() ? 'No hay categorías' : 'No categories found') + '</div>';
-    menu.classList.add('open');
-  }
-
-  function closeMenu(){
-    var menu = document.getElementById('fintrail-budget-category-menu');
-    if (menu) menu.classList.remove('open');
-  }
-
-  function install(){
-    var bundle = ensureMenu();
-    if (!bundle) return;
-    var input = bundle.input, menu = bundle.menu;
-    if (input.__fintrailBudgetCategoryDropdownInstalled) {
-      input.placeholder = isEs() ? 'Buscar o elegir una categoría' : 'Search or choose a category';
-      if (input.value) input.value = normalize(input.value);
-      return;
-    }
-    input.__fintrailBudgetCategoryDropdownInstalled = true;
-
-    input.addEventListener('focus', function(){ renderMenu(''); });
-    input.addEventListener('click', function(){ renderMenu(input.value); });
-    input.addEventListener('input', function(){ renderMenu(input.value); });
-    input.addEventListener('keydown', function(e){
-      if (e.key === 'Escape') closeMenu();
-      if (e.key === 'ArrowDown') {
-        var first = menu.querySelector('.fintrail-budget-category-option');
-        if (first) { e.preventDefault(); first.classList.add('active'); first.focus && first.focus(); }
-      }
-    });
-    menu.addEventListener('mousedown', function(e){
-      var opt = e.target.closest && e.target.closest('.fintrail-budget-category-option');
-      if (!opt) return;
-      e.preventDefault();
-      input.value = opt.getAttribute('data-value') || opt.textContent || '';
-      input.dispatchEvent(new Event('change', { bubbles: true }));
-      closeMenu();
-    });
-  }
-
-  function safeInstall(){ setTimeout(install, 60); setTimeout(install, 250); setTimeout(install, 800); }
-
-  window.fintrailBudgetCategoryDropdownFix = safeInstall;
-  window.addEventListener('load', safeInstall);
-  document.addEventListener('DOMContentLoaded', safeInstall);
-  document.addEventListener('click', function(e){
-    var input = document.getElementById('category');
-    var menu = document.getElementById('fintrail-budget-category-menu');
-    if (!input || !menu) { safeInstall(); return; }
-    if (e.target === input || (menu.contains && menu.contains(e.target))) return;
-    closeMenu();
-  });
-
-  try {
-    if (typeof window.addTransaction === 'function' && !window.addTransaction.__fintrailBudgetDropdownDefaultWrapped) {
-      var originalAddTransaction = window.addTransaction;
-      window.addTransaction = function(){
-        var input = document.getElementById('category');
-        if (input) input.value = normalize(input.value) || (isEs() ? 'Otro' : 'Other');
-        return originalAddTransaction.apply(this, arguments);
-      };
-      window.addTransaction.__fintrailBudgetDropdownDefaultWrapped = true;
-    }
-  } catch(e) {}
-})();
-</script>
 
 </body>
 </html>
