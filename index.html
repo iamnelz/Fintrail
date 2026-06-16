@@ -6841,19 +6841,54 @@ Guidelines:
     const target = parseFloat(document.getElementById('g-target').value);
     const saved = parseFloat(document.getElementById('g-saved').value) || 0;
     const date = document.getElementById('g-date').value;
-    const category = document.getElementById('g-category').value;
-    if (!name || isNaN(target) || target <= 0) { alert('Please enter a goal name and target amount.'); return; }
-    goals.push({ id: String(Date.now()), name, icon: selectedEmoji, target, saved: Math.min(saved, target), date, category });
+    const catEl = document.getElementById('g-category');
+    const category = catEl ? String(catEl.value || '').trim() : '';
+    const isEs = currentLang === 'es';
+    if (!name || isNaN(target) || target <= 0) { alert(isEs ? 'Ingresa un nombre de meta y un monto objetivo válido.' : 'Please enter a goal name and target amount.'); return; }
+    if (saved < 0) { alert(isEs ? 'El monto ahorrado no puede ser negativo.' : 'Saved amount cannot be negative.'); return; }
+    goals.push({ id: String(Date.now()), name, icon: selectedEmoji || '🎯', target, saved: Math.min(saved, target), date, category });
     document.getElementById('g-name').value = '';
     document.getElementById('g-target').value = '';
     document.getElementById('g-saved').value = '';
     document.getElementById('g-date').value = '';
+    if (catEl) catEl.value = '';
     // Save to localStorage immediately (sync) before async Supabase write
     const _gUid = currentUser?.id || 'demo';
     safeSet('fintrail_goals_' + _gUid, JSON.stringify(goals));
     safeSet('fintrail_goals_ts_' + _gUid, String(Date.now()));
     renderGoals(); saveUserData();
     awardXPForAction('goal');
+  }
+
+  function editGoal(id) {
+    const goal = goals.find(g => String(g.id) === String(id));
+    if (!goal) return;
+    const isEs = currentLang === 'es';
+    const name = prompt(isEs ? 'Nombre de la meta:' : 'Goal name:', goal.name || '');
+    if (name === null) return;
+    const cleanName = name.trim();
+    if (!cleanName) { alert(isEs ? 'Ingresa un nombre de meta.' : 'Please enter a goal name.'); return; }
+    const targetInput = prompt(isEs ? 'Monto objetivo ($):' : 'Target amount ($):', goal.target);
+    if (targetInput === null) return;
+    const target = parseFloat(targetInput);
+    if (isNaN(target) || target <= 0) { alert(isEs ? 'Ingresa un monto objetivo válido.' : 'Please enter a valid target amount.'); return; }
+    const savedInput = prompt(isEs ? 'Ahorrado hasta ahora ($):' : 'Saved so far ($):', goal.saved);
+    if (savedInput === null) return;
+    const saved = parseFloat(savedInput) || 0;
+    if (saved < 0) { alert(isEs ? 'El monto ahorrado no puede ser negativo.' : 'Saved amount cannot be negative.'); return; }
+    const dateInput = prompt(isEs ? 'Fecha objetivo (AAAA-MM-DD, opcional):' : 'Target date (YYYY-MM-DD, optional):', goal.date || '');
+    if (dateInput === null) return;
+
+    goal.name = cleanName;
+    goal.target = target;
+    goal.saved = Math.min(saved, target);
+    goal.date = String(dateInput || '').trim();
+
+    const _editUid = currentUser?.id || 'demo';
+    safeSet('fintrail_goals_' + _editUid, JSON.stringify(goals));
+    safeSet('fintrail_goals_ts_' + _editUid, String(Date.now()));
+    renderGoals();
+    saveUserData();
   }
 
   function deleteGoal(id) {
@@ -6943,6 +6978,7 @@ Guidelines:
             </div>
           </div>
           <div class="goal-actions">
+            <button class="goal-action-btn" onclick="editGoal('${g.id}')" title="${currentLang === 'es' ? 'Editar' : 'Edit'}">✎</button>
             <button class="goal-action-btn del" onclick="deleteGoal('${g.id}')" title="Delete">✕</button>
           </div>
         </div>
@@ -6961,7 +6997,7 @@ Guidelines:
         ${monthlyNeeded ? `<div class="goal-monthly">${currentLang === 'es' ? 'Ahorra' : 'Save'} <strong>$${monthlyNeeded.toFixed(0)}${currentLang === 'es' ? '/mes' : '/mo'}</strong> ${currentLang === 'es' ? 'para alcanzar tu meta en' : 'to reach your goal in'} <strong>${months} ${currentLang === 'es' ? (months === 1 ? 'mes' : 'meses') : ('month' + (months !== 1 ? 's' : ''))}</strong></div>` : ''}
         ${!complete ? `
         <div class="add-deposit-row">
-          <input class="deposit-input" id="dep-${g.id}" type="number" placeholder="${currentLang === 'es' ? 'Agregar ahorro...' : 'Add savings...'}" min="0" onkeydown="if(event.key==='Enter')deposit(${g.id})">
+          <input class="deposit-input" id="dep-${g.id}" type="number" placeholder="${currentLang === 'es' ? 'Agregar ahorro...' : 'Add savings...'}" min="0" onkeydown="if(event.key==='Enter')deposit('${g.id}')">
           <button class="deposit-btn" onclick="deposit('${g.id}')">+ Agregar</button>
         </div>` : ''}
       </div>`;
