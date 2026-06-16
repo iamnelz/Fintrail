@@ -6973,13 +6973,18 @@ Guidelines:
     if (isNaN(amount) || amount <= 0) return;
     const goal = goals.find(g => String(g.id) === String(id));
     if (goal) {
+      const activeCard = input && input.closest ? input.closest('.goal-card') : null;
       goal.saved = Math.min((parseFloat(goal.saved) || 0) + amount, parseFloat(goal.target) || 0);
       input.value = '';
       persistGoals();
+      updateGoalsSummary();
+      refreshGoalCard(activeCard, goal);
       saveUserData();
+      renderGoals();
+      if (typeof requestAnimationFrame === 'function') requestAnimationFrame(renderGoals);
+      else setTimeout(renderGoals, 0);
       // Require receipt for XP
       if (typeof showReceiptModal === 'function') showReceiptModal('goal', id, null, amount, goal.name);
-      renderGoals();
       setTimeout(renderGoals, 80);
     }
   }
@@ -6999,13 +7004,8 @@ Guidelines:
     return '#c1440e';
   }
 
-  function renderGoals() {
-    const grid = document.getElementById('goals-grid');
-    const empty = document.getElementById('goals-empty');
-    if (!grid) return; // Tab not in DOM yet
+  function updateGoalsSummary() {
     goals = normalizeGoalsList(goals);
-
-    // Stats
     const totalSaved = goals.reduce((s, g) => s + g.saved, 0);
     const totalTarget = goals.reduce((s, g) => s + g.target, 0);
     const gsCount = document.getElementById('gs-count');
@@ -7014,6 +7014,52 @@ Guidelines:
     if (gsCount) gsCount.textContent = goals.length;
     if (gsSaved) gsSaved.textContent = '$' + totalSaved.toLocaleString('en-US', {maximumFractionDigits:0});
     if (gsTarget) gsTarget.textContent = '$' + totalTarget.toLocaleString('en-US', {maximumFractionDigits:0});
+  }
+
+  function refreshGoalCard(card, goal) {
+    if (!card || !goal) return;
+    const pct = Math.min(((parseFloat(goal.saved) || 0) / Math.max(parseFloat(goal.target) || 1, 1)) * 100, 100);
+    const color = goalColor(pct);
+    const remaining = Math.max(0, (parseFloat(goal.target) || 0) - (parseFloat(goal.saved) || 0));
+    const months = monthsUntil(goal.date);
+    const monthlyNeeded = (months && months > 0 && remaining > 0) ? (remaining / months) : null;
+    const savedEl = card.querySelector('.goal-saved');
+    const targetEl = card.querySelector('.goal-target');
+    const remainingEl = card.querySelector('.goal-remaining');
+    const fillEl = card.querySelector('.goal-progress-fill');
+    const pctEl = card.querySelector('.goal-pct');
+    const monthlyEl = card.querySelector('.goal-monthly');
+    if (savedEl) {
+      savedEl.textContent = '$' + goal.saved.toLocaleString('en-US', {maximumFractionDigits:0});
+      savedEl.style.color = color;
+    }
+    if (targetEl) targetEl.textContent = 'of $' + goal.target.toLocaleString('en-US', {maximumFractionDigits:0});
+    if (remainingEl) remainingEl.textContent = (currentLang === 'es' ? 'Restante' : 'Remaining') + ': $' + remaining.toLocaleString('en-US', {maximumFractionDigits:0});
+    if (fillEl) {
+      fillEl.style.width = pct + '%';
+      fillEl.style.background = color;
+    }
+    if (pctEl) {
+      pctEl.textContent = pct.toFixed(0) + (currentLang === 'es' ? '% completado' : '% complete');
+      pctEl.style.color = color;
+    }
+    if (monthlyEl) {
+      monthlyEl.style.display = monthlyNeeded ? '' : 'none';
+      if (monthlyNeeded) {
+        monthlyEl.innerHTML = currentLang === 'es'
+          ? `Ahorra <strong>$${monthlyNeeded.toFixed(0)}/mes</strong> para alcanzar tu meta en <strong>${months} ${months === 1 ? 'mes' : 'meses'}</strong>`
+          : `Save <strong>$${monthlyNeeded.toFixed(0)}/mo</strong> to reach your goal in <strong>${months} ${months === 1 ? 'month' : 'months'}</strong>`;
+      }
+    }
+  }
+
+  function renderGoals() {
+    const grid = document.getElementById('goals-grid');
+    const empty = document.getElementById('goals-empty');
+    if (!grid) return; // Tab not in DOM yet
+    goals = normalizeGoalsList(goals);
+
+    updateGoalsSummary();
 
     if (goals.length === 0) {
       grid.innerHTML = '';
@@ -7033,7 +7079,7 @@ Guidelines:
       const dateLabel = g.date ? new Date(g.date).toLocaleDateString('en-US', {month:'short', year:'numeric'}) : 'No deadline';
 
       return `
-      <div class="goal-card">
+      <div class="goal-card" data-goal-id="${g.id}">
         <div class="goal-card-header">
           <div class="goal-card-title">
             <span class="goal-icon">${g.icon}</span>
@@ -7052,7 +7098,7 @@ Guidelines:
           <span class="goal-target">of $${g.target.toLocaleString('en-US',{maximumFractionDigits:0})}</span>
         </div>
         <div class="goal-meta" style="margin-bottom:0.45rem">
-          <span>${currentLang === 'es' ? 'Restante' : 'Remaining'}: $${Math.max(0, remaining).toLocaleString('en-US',{maximumFractionDigits:0})}</span>
+          <span class="goal-remaining">${currentLang === 'es' ? 'Restante' : 'Remaining'}: $${Math.max(0, remaining).toLocaleString('en-US',{maximumFractionDigits:0})}</span>
         </div>
         <div class="goal-progress-track">
           <div class="goal-progress-fill" style="width:${pct}%;background:${color}"></div>
@@ -7062,7 +7108,7 @@ Guidelines:
           <span class="goal-deadline">📅 ${dateLabel}</span>
         </div>
         ${complete ? '<div class="goal-complete-badge">🎉 Goal Reached!</div>' : ''}
-        ${monthlyNeeded ? `<div class="goal-monthly">${currentLang === 'es' ? 'Ahorra' : 'Save'} <strong>$${monthlyNeeded.toFixed(0)}${currentLang === 'es' ? '/mes' : '/mo'}</strong> ${currentLang === 'es' ? 'para alcanzar tu meta en' : 'to reach your goal in'} <strong>${months} ${currentLang === 'es' ? (months === 1 ? 'mes' : 'meses') : ('month' + (months !== 1 ? 's' : ''))}</strong></div>` : ''}
+        <div class="goal-monthly" style="${monthlyNeeded ? '' : 'display:none'}">${monthlyNeeded ? `${currentLang === 'es' ? 'Ahorra' : 'Save'} <strong>$${monthlyNeeded.toFixed(0)}${currentLang === 'es' ? '/mes' : '/mo'}</strong> ${currentLang === 'es' ? 'para alcanzar tu meta en' : 'to reach your goal in'} <strong>${months} ${currentLang === 'es' ? (months === 1 ? 'mes' : 'meses') : ('month' + (months !== 1 ? 's' : ''))}</strong>` : ''}</div>
         ${!complete ? `
         <div class="add-deposit-row">
           <input class="deposit-input" id="dep-${g.id}" type="number" placeholder="${currentLang === 'es' ? 'Agregar ahorro...' : 'Add savings...'}" min="0" onkeydown="if(event.key==='Enter')deposit('${g.id}')">
