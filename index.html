@@ -6044,7 +6044,7 @@
     const _ts = Date.now();
     safeSet('fintrail_debts_' + _uid2,       JSON.stringify(planDebts));
     safeSet('fintrail_goals_' + _uid2,       JSON.stringify(goals));
-    safeSet('fintrail_goals_ts_' + _uid2,    String(_ts));
+    safeSet('fintrail_goals_ts_' + _uid2,    safeGet('fintrail_goals_ts_' + _uid2) || String(_ts));
     safeSet('fintrail_bills_' + _uid2,       JSON.stringify(bills));
     safeSet('fintrail_txns_' + _uid2,        JSON.stringify(transactions));
 
@@ -6129,19 +6129,13 @@
 
   async function loadUserData() {
     if (!sbClient || !currentUser) return;
+    loadGoalsFromAccountData.usedAccount = false;
     try {
       const { data } = await sbClient.from('user_data').select('*').eq('user_id', currentUser.id).single();
       if (data) {
         transactions = data.transactions || [];
         bills = data.bills || [];
-        // Use timestamp to decide: if local is newer than Supabase, keep local
-        // This prevents a stale Supabase row from wiping recent mobile changes
-        const _goalsTs = parseInt(safeGet('fintrail_goals_ts_' + currentUser.id) || '0');
-        const _supaTs = data.updated_at ? new Date(data.updated_at).getTime() : 0;
-        if (_supaTs > _goalsTs) {
-          goals = data.goals || [];
-        }
-        // else keep existing goals (localStorage will restore below)
+        loadGoalsFromAccountData(data);
         if (data.plan_debts?.length) {
           planDebts = data.plan_debts;
           safeSet('fintrail_debts_' + currentUser.id, JSON.stringify(planDebts));
@@ -6186,10 +6180,9 @@
     } catch (err) {
       console.log('No existing user data:', err.message);
     }
-    // localStorage is the source of truth for goals/bills (always written on every save)
-    // This ensures deletions persist even if Supabase is slow or column missing
+    // localStorage is the source of truth for bills; Savings Goals reconcile with Supabase above.
     const _fuid = currentUser?.id || 'demo';
-    try { const lg = safeGet('fintrail_goals_' + _fuid); if (lg) goals = JSON.parse(lg); } catch(e) {}
+    if ((!Array.isArray(goals) || !goals.length) && !loadGoalsFromAccountData.usedAccount) loadGoalsFromLocal();
     try { const lb = safeGet('fintrail_bills_' + _fuid); if (lb) bills = JSON.parse(lb); } catch(e) {}
     try { const lt = safeGet('fintrail_txns_' + _fuid); if (lt) transactions = JSON.parse(lt); } catch(e) {}
     if (!planDebts.length) {
@@ -6830,6 +6823,81 @@ Guidelines:
   let goals = [];
   let selectedEmoji = '🎯';
 
+  function normalizeGoal(goal) {
+    return {
+      id: String(goal.id || Date.now()),
+      name: String(goal.name || '').trim(),
+      icon: goal.icon || '🎯',
+      target: Math.max(0, parseFloat(goal.target) || 0),
+      saved: Math.max(0, parseFloat(goal.saved) || 0),
+      date: goal.date || '',
+      category: goal.category || ''
+    };
+  }
+
+  function normalizeGoalsList(list) {
+    return (Array.isArray(list) ? list : []).map(normalizeGoal).filter(g => g.name && g.target > 0).map(g => ({
+      ...g,
+      saved: Math.min(g.saved, g.target)
+    }));
+  }
+
+  function currentGoalsTimestamp() {
+    return Date.now();
+  }
+
+  function persistGoals() {
+    goals = normalizeGoalsList(goals);
+    const uid = currentUser?.id || 'demo';
+    const ts = currentGoalsTimestamp();
+    safeSet('fintrail_goals_' + uid, JSON.stringify(goals));
+    safeSet('fintrail_goals_ts_' + uid, String(ts));
+    if (typeof gameData === 'object' && gameData) {
+      gameData.goalsUpdatedAt = new Date(ts).toISOString();
+      gameData.goalsRevision = ts;
+      try { safeSet('fintrail_game_' + uid, JSON.stringify(gameData)); } catch(e) {}
+    }
+  }
+
+  function loadGoalsFromLocal() {
+    const uid = currentUser?.id || 'demo';
+    try {
+      const raw = safeGet('fintrail_goals_' + uid);
+      if (raw) goals = normalizeGoalsList(JSON.parse(raw));
+    } catch(e) {}
+  }
+
+  function loadGoalsFromAccountData(data) {
+    loadGoalsFromAccountData.usedAccount = false;
+    const uid = currentUser?.id || 'demo';
+    const localRaw = safeGet('fintrail_goals_' + uid);
+    let localGoals = [];
+    try { localGoals = localRaw ? normalizeGoalsList(JSON.parse(localRaw)) : []; } catch(e) {}
+    const localTs = parseInt(safeGet('fintrail_goals_ts_' + uid) || '0', 10);
+    const remoteGoals = normalizeGoalsList(data && data.goals);
+    const hasRemoteGoals = Array.isArray(data && data.goals);
+    const remoteGame = (data && data.game_data) || {};
+    const remoteTs = parseInt(remoteGame.goalsRevision || '0', 10) ||
+      (remoteGame.goalsUpdatedAt ? Date.parse(remoteGame.goalsUpdatedAt) : 0) ||
+      (data && data.updated_at ? Date.parse(data.updated_at) : 0);
+
+    if (hasRemoteGoals && (!localRaw || (remoteGoals.length && !localGoals.length) || (remoteTs && remoteTs >= localTs))) {
+      goals = remoteGoals;
+      safeSet('fintrail_goals_' + uid, JSON.stringify(goals));
+      safeSet('fintrail_goals_ts_' + uid, String(remoteTs));
+      loadGoalsFromAccountData.usedAccount = true;
+      return;
+    }
+
+    if (localRaw) loadGoalsFromLocal();
+    else if (hasRemoteGoals) {
+      goals = remoteGoals;
+      safeSet('fintrail_goals_' + uid, JSON.stringify(goals));
+      if (remoteTs) safeSet('fintrail_goals_ts_' + uid, String(remoteTs));
+      loadGoalsFromAccountData.usedAccount = true;
+    }
+  }
+
   function selectEmoji(el) {
     document.querySelectorAll('.emoji-opt').forEach(e => e.classList.remove('selected'));
     el.classList.add('selected');
@@ -6853,9 +6921,7 @@ Guidelines:
     document.getElementById('g-date').value = '';
     if (catEl) catEl.value = '';
     // Save to localStorage immediately (sync) before async Supabase write
-    const _gUid = currentUser?.id || 'demo';
-    safeSet('fintrail_goals_' + _gUid, JSON.stringify(goals));
-    safeSet('fintrail_goals_ts_' + _gUid, String(Date.now()));
+    persistGoals();
     renderGoals(); saveUserData();
     awardXPForAction('goal');
   }
@@ -6878,15 +6944,16 @@ Guidelines:
     if (saved < 0) { alert(isEs ? 'El monto ahorrado no puede ser negativo.' : 'Saved amount cannot be negative.'); return; }
     const dateInput = prompt(isEs ? 'Fecha objetivo (AAAA-MM-DD, opcional):' : 'Target date (YYYY-MM-DD, optional):', goal.date || '');
     if (dateInput === null) return;
+    const iconInput = prompt(isEs ? 'Icono de la meta:' : 'Goal icon:', goal.icon || '🎯');
+    if (iconInput === null) return;
 
     goal.name = cleanName;
     goal.target = target;
     goal.saved = Math.min(saved, target);
     goal.date = String(dateInput || '').trim();
+    goal.icon = String(iconInput || '').trim() || '🎯';
 
-    const _editUid = currentUser?.id || 'demo';
-    safeSet('fintrail_goals_' + _editUid, JSON.stringify(goals));
-    safeSet('fintrail_goals_ts_' + _editUid, String(Date.now()));
+    persistGoals();
     renderGoals();
     saveUserData();
   }
@@ -6895,9 +6962,7 @@ Guidelines:
     if (!confirm('Delete this savings goal?')) return;
     goals = goals.filter(g => String(g.id) !== String(id));
     // Save immediately to localStorage before async Supabase write
-    const _dUid = currentUser?.id || 'demo';
-    safeSet('fintrail_goals_' + _dUid, JSON.stringify(goals));
-    safeSet('fintrail_goals_ts_' + _dUid, String(Date.now()));
+    persistGoals();
     saveUserData();
     renderGoals();
   }
@@ -6908,15 +6973,14 @@ Guidelines:
     if (isNaN(amount) || amount <= 0) return;
     const goal = goals.find(g => String(g.id) === String(id));
     if (goal) {
-      goal.saved = Math.min(goal.saved + amount, goal.target);
+      goal.saved = Math.min((parseFloat(goal.saved) || 0) + amount, parseFloat(goal.target) || 0);
       input.value = '';
-      const _depUid = currentUser?.id || 'demo';
-      safeSet('fintrail_goals_' + _depUid, JSON.stringify(goals));
-      safeSet('fintrail_goals_ts_' + _depUid, String(Date.now()));
-      renderGoals();
+      persistGoals();
       saveUserData();
       // Require receipt for XP
-      showReceiptModal('goal', id, null, amount, goal.name);
+      if (typeof showReceiptModal === 'function') showReceiptModal('goal', id, null, amount, goal.name);
+      renderGoals();
+      setTimeout(renderGoals, 80);
     }
   }
 
@@ -6939,6 +7003,7 @@ Guidelines:
     const grid = document.getElementById('goals-grid');
     const empty = document.getElementById('goals-empty');
     if (!grid) return; // Tab not in DOM yet
+    goals = normalizeGoalsList(goals);
 
     // Stats
     const totalSaved = goals.reduce((s, g) => s + g.saved, 0);
@@ -6986,6 +7051,9 @@ Guidelines:
           <span class="goal-saved" style="color:${color}">$${g.saved.toLocaleString('en-US',{maximumFractionDigits:0})}</span>
           <span class="goal-target">of $${g.target.toLocaleString('en-US',{maximumFractionDigits:0})}</span>
         </div>
+        <div class="goal-meta" style="margin-bottom:0.45rem">
+          <span>${currentLang === 'es' ? 'Restante' : 'Remaining'}: $${Math.max(0, remaining).toLocaleString('en-US',{maximumFractionDigits:0})}</span>
+        </div>
         <div class="goal-progress-track">
           <div class="goal-progress-fill" style="width:${pct}%;background:${color}"></div>
         </div>
@@ -6998,7 +7066,7 @@ Guidelines:
         ${!complete ? `
         <div class="add-deposit-row">
           <input class="deposit-input" id="dep-${g.id}" type="number" placeholder="${currentLang === 'es' ? 'Agregar ahorro...' : 'Add savings...'}" min="0" onkeydown="if(event.key==='Enter')deposit('${g.id}')">
-          <button class="deposit-btn" onclick="deposit('${g.id}')">+ Agregar</button>
+          <button class="deposit-btn" onclick="deposit('${g.id}')">${currentLang === 'es' ? '+ Agregar' : '+ Add'}</button>
         </div>` : ''}
       </div>`;
     }).join('');
