@@ -7510,6 +7510,11 @@ Guidelines:
           'Protege las bases del credito', 'Manten baja la utilizacion y paga cada factura a tiempo. Esos dos habitos suelen mejorar primero la preparacion crediticia.');
     }
 
+    if (!data.totalAssets && !data.totalLiabilities) {
+      add('Track net worth', 'Add assets and liabilities so the score can include your full financial position, not only monthly cash flow.',
+          'Registra tu patrimonio', 'Agrega activos y pasivos para incluir tu posicion financiera completa, no solo el flujo mensual.');
+    }
+
     if ((data.totalAssets || data.totalLiabilities) && data.netWorth < 0) {
       add('Improve net worth step by step', 'Your liabilities are higher than your assets. Pair debt payoff with small savings deposits to move net worth upward.',
           'Mejora tu patrimonio paso a paso', 'Tus pasivos superan tus activos. Combina pago de deuda con pequenos depositos de ahorro para subir tu patrimonio.');
@@ -7530,13 +7535,16 @@ Guidelines:
     const debtRatio = data.income > 0 ? data.totalDebt / (data.income * 12) : 0;
     const savingsProgress = data.totalGoalTarget > 0 ? data.totalGoalSaved / data.totalGoalTarget : 0;
     const creditRatio = data.creditScore === null ? null : (data.creditScore - 300) / 550;
+    const hasNetWorthData = !!(data.totalAssets || data.totalLiabilities);
+    const netWorthRatio = data.income > 0 ? data.netWorth / (data.income * 12) : (data.netWorth > 0 ? 1 : 0);
 
     const scores = {
       budget: { label: currentLang==='es' ? 'Balance de Presupuesto' : 'Budget Balance', score: data.income > 0 ? clampHealthScore((savingsRate + 0.05) / 0.25 * 25, 25) : 5, max: 25, color: '#00b894' },
-      savings: { label: currentLang==='es' ? 'Progreso de Ahorros' : 'Savings Progress', score: data.totalGoalTarget > 0 ? clampHealthScore(savingsProgress * 20, 20) : 5, max: 20, color: '#f5a623' },
+      savings: { label: currentLang==='es' ? 'Progreso de Ahorros' : 'Savings Progress', score: data.totalGoalTarget > 0 ? clampHealthScore(savingsProgress * 15, 15) : 4, max: 15, color: '#f5a623' },
       debt: { label: currentLang==='es' ? 'Carga de Deuda' : 'Debt Load', score: data.totalDebt <= 0 ? 20 : (data.income > 0 ? clampHealthScore((1 - Math.min(debtRatio, 1)) * 20, 20) : 8), max: 20, color: '#f05555' },
-      bills: { label: currentLang==='es' ? 'Seguimiento de Facturas' : 'Bill Tracking', score: data.billList.length > 0 ? 15 : 7, max: 15, color: '#818cf8' },
-      credit: { label: currentLang==='es' ? 'Credito' : 'Credit Readiness', score: creditRatio === null ? 8 : clampHealthScore(creditRatio * 20, 20), max: 20, color: '#2196a3' },
+      bills: { label: currentLang==='es' ? 'Seguimiento de Facturas' : 'Bill Tracking', score: data.billList.length > 0 ? 10 : 5, max: 10, color: '#818cf8' },
+      credit: { label: currentLang==='es' ? 'Credito' : 'Credit Readiness', score: creditRatio === null ? 6 : clampHealthScore(creditRatio * 15, 15), max: 15, color: '#2196a3' },
+      netWorth: { label: currentLang==='es' ? 'Patrimonio Neto' : 'Net Worth Position', score: hasNetWorthData ? clampHealthScore((Math.max(-0.25, Math.min(netWorthRatio, 0.75)) + 0.25) / 1 * 15, 15) : 5, max: 15, color: '#7c3aed' },
     };
     const total = Math.min(100, Math.max(0, Object.values(scores).reduce((s,item) => s + item.score, 0)));
 
