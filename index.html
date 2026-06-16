@@ -6409,6 +6409,7 @@
     document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
     document.getElementById('tab-' + tab).classList.add('visible');
     btn.classList.add('active');
+    if (tab === 'healthscore') { try { calculateHealthScore(); } catch(e) { console.error('Health score render failed:', e); } }
   }
 
   // TRANSACTION TYPE
@@ -7551,6 +7552,7 @@ Guidelines:
     const creditRatio = data.creditScore === null ? null : (data.creditScore - 300) / 550;
     const hasNetWorthData = !!(data.totalAssets || data.totalLiabilities);
     const netWorthRatio = data.income > 0 ? data.netWorth / (data.income * 12) : (data.netWorth > 0 ? 1 : 0);
+    const balance = data.balance;
 
     const scores = {
       budget: { label: currentLang==='es' ? 'Balance de Presupuesto' : 'Budget Balance', score: data.income > 0 ? clampHealthScore((savingsRate + 0.05) / 0.25 * 25, 25) : 5, max: 25, color: '#00b894' },
@@ -8663,6 +8665,7 @@ Guidelines:
     safeSet('fintrail_credit_score_' + uid, String(val));
     safeSet('fintrail_credit_score_local', String(val));
     safeSet('fintrail_credit_score_updated_' + uid, gameData.creditScoreUpdatedAt);
+    refreshHealthScoreIfVisible();
     if (creditScoreSaveTimer) clearTimeout(creditScoreSaveTimer);
     creditScoreSaveTimer = setTimeout(async () => {
       if (!sbClient || !currentUser) return;
@@ -9158,6 +9161,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     safeSet('fintrail_nw_liabilities_local',   JSON.stringify(nwLiabilities));
     safeSet('fintrail_nw_history_local',       JSON.stringify(nwHistory));
     safeSet('fintrail_nw_ts_' + uid,           String(Date.now()));
+    refreshHealthScoreIfVisible();
     // Supabase sync — async/await avoids PostgREST .catch() crashes in Supabase v2
     if (sbClient && currentUser) {
       (async () => {
