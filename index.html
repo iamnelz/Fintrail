@@ -6260,6 +6260,7 @@
         }
         // Sync game data (XP, level, achievements) across devices
         if (data.game_data) {
+          const remoteAlertPrefs = data.game_data.alertPrefs || data.game_data.alert_prefs || null;
           const localGame = safeGet('fintrail_game_' + currentUser.id);
           const localXP = localGame ? (JSON.parse(localGame).totalXP || 0) : 0;
           const supaXP  = data.game_data.totalXP || 0;
@@ -6283,8 +6284,9 @@
             safeSet('fintrail_credit_score_' + currentUser.id, 'null');
             safeSet('fintrail_credit_score_local', 'null');
           }
-          if (data.game_data.alertPrefs || data.game_data.alert_prefs) {
-            alertPrefs = normalizeAlertPrefs(data.game_data.alertPrefs || data.game_data.alert_prefs);
+          if (remoteAlertPrefs) {
+            alertPrefs = normalizeAlertPrefs(remoteAlertPrefs);
+            if (typeof gameData === 'object' && gameData) gameData.alertPrefs = alertPrefs;
             saveAlertPrefsLocal();
           }
         }
@@ -6998,6 +7000,15 @@ Guidelines:
   let goals = [];
   let selectedEmoji = '🎯';
 
+  function normalizeGoalMilestones(goal) {
+    const raw = goal && typeof goal.notifiedMilestones === 'object' ? goal.notifiedMilestones : {};
+    const normalized = {};
+    [25, 50, 75, 100].forEach(m => {
+      if (raw[m] === true || raw[String(m)] === true) normalized[String(m)] = true;
+    });
+    return normalized;
+  }
+
   function normalizeGoal(goal) {
     return {
       id: String(goal.id || Date.now()),
@@ -7006,7 +7017,9 @@ Guidelines:
       target: Math.max(0, parseFloat(goal.target) || 0),
       saved: Math.max(0, parseFloat(goal.saved) || 0),
       date: goal.date || '',
-      category: goal.category || ''
+      category: goal.category || '',
+      notifiedMilestones: normalizeGoalMilestones(goal),
+      milestoneNotificationsInitialized: goal?.milestoneNotificationsInitialized === true
     };
   }
 
@@ -7107,7 +7120,13 @@ Guidelines:
     const isEs = currentLang === 'es';
     if (!name || isNaN(target) || target <= 0) { alert(isEs ? 'Ingresa un nombre de meta y un monto objetivo válido.' : 'Please enter a goal name and target amount.'); return; }
     if (saved < 0) { alert(isEs ? 'El monto ahorrado no puede ser negativo.' : 'Saved amount cannot be negative.'); return; }
-    goals.push({ id: String(Date.now()), name, icon: selectedEmoji || '🎯', target, saved: Math.min(saved, target), date, category });
+    const initialSaved = Math.min(saved, target);
+    const initialPct = Math.min((initialSaved / Math.max(target, 1)) * 100, 100);
+    const notifiedMilestones = {};
+    [25, 50, 75, 100].forEach(milestone => {
+      if (initialPct >= milestone) notifiedMilestones[String(milestone)] = true;
+    });
+    goals.push({ id: String(Date.now()), name, icon: selectedEmoji || '🎯', target, saved: initialSaved, date, category, notifiedMilestones, milestoneNotificationsInitialized: true });
     document.getElementById('g-name').value = '';
     document.getElementById('g-target').value = '';
     document.getElementById('g-saved').value = '';
@@ -8183,13 +8202,46 @@ Guidelines:
   }
 
   function checkGoalMilestones() {
-    if (notifPermission !== 'granted') return;
+    let changed = false;
+    const permission = syncNotificationPermission();
     goals.forEach(g => {
-      const pct = (g.saved / g.target) * 100;
+      if (!g || !g.target) return;
+      if (!g.notifiedMilestones || typeof g.notifiedMilestones !== 'object') {
+        g.notifiedMilestones = {};
+        changed = true;
+      }
+      const pct = Math.min(((parseFloat(g.saved) || 0) / Math.max(parseFloat(g.target) || 1, 1)) * 100, 100);
+      if (g.milestoneNotificationsInitialized !== true) {
+        [25, 50, 75, 100].forEach(milestone => {
+          if (pct >= milestone && g.notifiedMilestones[String(milestone)] !== true) {
+            g.notifiedMilestones[String(milestone)] = true;
+            changed = true;
+          }
+        });
+        g.milestoneNotificationsInitialized = true;
+        changed = true;
+        return;
+      }
       [25, 50, 75, 100].forEach(milestone => {
-        if (pct >= milestone) sendAlert('🎯 Goal Milestone!', `${g.name} is ${milestone}% funded! Keep going!`);
+        const key = String(milestone);
+        if (pct >= milestone && g.notifiedMilestones[key] !== true) {
+          g.notifiedMilestones[key] = true;
+          changed = true;
+          if (permission === 'granted') {
+            const title = notifText('Goal Milestone!', '¡Hito de Meta!');
+            const body = notifText(
+              `${g.name} is ${milestone}% funded! Keep going!`,
+              `¡${g.name} tiene ${milestone}% financiado! Sigue adelante.`
+            );
+            sendAlert(title, body);
+          }
+        }
       });
     });
+    if (changed) {
+      persistGoals();
+      saveUserData();
+    }
   }
 
   function updatePremiumTab() {
