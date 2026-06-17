@@ -7134,7 +7134,12 @@ Guidelines:
     if (catEl) catEl.value = '';
     // Save to localStorage immediately (sync) before async Supabase write
     persistGoals();
-    renderGoals(); saveUserData();
+    updateGoalsSummary();
+    renderGoals();
+    if (typeof requestAnimationFrame === 'function') requestAnimationFrame(renderGoals);
+    else setTimeout(renderGoals, 0);
+    saveUserData();
+    setTimeout(renderGoals, 80);
     awardXPForAction('goal');
   }
 
@@ -7290,12 +7295,14 @@ Guidelines:
 
     if (goals.length === 0) {
       grid.innerHTML = '';
-      empty.style.display = 'block';
-      grid.appendChild(empty);
+      if (empty) {
+        empty.style.display = 'block';
+        grid.appendChild(empty);
+      }
       return;
     }
 
-    empty.style.display = 'none';
+    if (empty) empty.style.display = 'none';
     grid.innerHTML = goals.map(g => {
       const pct = Math.min((g.saved / g.target) * 100, 100);
       const color = goalColor(pct);
