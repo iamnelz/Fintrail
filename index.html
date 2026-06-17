@@ -361,6 +361,55 @@
   }
   .filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
   .filter-btn:hover:not(.active) { border-color: var(--accent); color: var(--accent); }
+  .resource-shortcuts {
+    position: sticky;
+    top: 72px;
+    z-index: 30;
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding: 0.65rem 0;
+    margin-top: 1rem;
+    background: var(--bg);
+    scrollbar-width: none;
+  }
+  .resource-shortcuts::-webkit-scrollbar { display:none; }
+  .resource-shortcut {
+    flex: 0 0 auto;
+    border: 1.5px solid var(--border);
+    border-radius: 999px;
+    padding: 0.45rem 0.8rem;
+    background: var(--surface);
+    color: var(--text-soft);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .resource-shortcut:hover { border-color: var(--accent); color: var(--accent); }
+  .resource-section { scroll-margin-top: 140px; margin-bottom: 2rem; }
+  .resource-section-header { margin: 1.6rem 0 0.85rem; }
+  .resource-section-header h2 { font-family:'Playfair Display',serif; color:var(--text); font-size:1.2rem; margin-bottom:0.25rem; }
+  .resource-section-header p { color:var(--text-soft); font-size:0.84rem; line-height:1.55; max-width:760px; }
+  .resource-section-disclosure {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.65rem 0.85rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+    line-height: 1.5;
+    margin: 0.65rem 0 1rem;
+  }
+  .resource-partner-placeholder {
+    background: var(--surface);
+    border: 1px dashed var(--border);
+    border-radius: 14px;
+    padding: 1.25rem;
+    color: var(--text-soft);
+  }
+  .resource-partner-cats { display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.85rem; }
+  .resource-partner-cats span { background:var(--surface2); border:1px solid var(--border); border-radius:999px; padding:0.35rem 0.7rem; font-size:0.76rem; font-weight:700; color:var(--muted); }
   .resources-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -4171,64 +4220,18 @@
     <!-- HERO -->
     <div class="resources-hero">
       <div>
-        <h2 data-en="Financial Resources &amp; Partner Rates" data-es="Recursos Financieros y Tasas">Financial Resources & Partner Rates</h2>
-        <p data-en="Curated lenders, grants, tools &amp; education. Compare rates and find the best fit for you." data-es="Prestamistas, becas, herramientas y educación. Compara tasas y encuentra la mejor opción para ti.">Curated lenders, grants, tools & education. Compare rates and find the best fit for you.</p>
-      </div>
-      <div class="filter-row" id="filter-row">
-        <button class="filter-btn active" onclick="filterResources('all', this)">All</button>
-        <button class="filter-btn" onclick="filterResources('mortgage', this)" data-en="🏠 Mortgages" data-es="🏠 Hipotecas">🏠 Mortgages</button>
-        <button class="filter-btn" onclick="filterResources('personal', this)" data-en="💳 Personal Loans" data-es="💳 Préstamos Personales">💳 Personal Loans</button>
-        <button class="filter-btn" onclick="filterResources('auto', this)" data-en="🚗 Auto Loans" data-es="🚗 Préstamos de Auto">🚗 Auto Loans</button>
-        <button class="filter-btn" onclick="filterResources('refi', this)" data-en="🔄 Refinance" data-es="🔄 Refinanciar">🔄 Refinance</button>
-        <button class="filter-btn" onclick="filterResources('grants', this)" data-en="🎁 Grants" data-es="🎁 Becas y Ayudas">🎁 Grants</button>
-        <button class="filter-btn" onclick="filterResources('tools', this)">🛠 Tools</button>
-        <button class="filter-btn" onclick="filterResources('education', this)">📚 Education</button>
-        <button class="filter-btn" onclick="filterResources('credit', this)" data-en="📊 Credit Scores" data-es="📊 Puntajes de Crédito">📊 Credit Scores</button>
+        <h2 data-en="Resource Center" data-es="Centro de Recursos">Resource Center</h2>
+        <p data-en="Products, education, hardship help, grants, and trusted tools to help you budget better, eliminate debt, and build lasting financial health." data-es="Productos, educación, ayuda financiera, becas y herramientas confiables para presupuestar mejor, eliminar deudas y construir salud financiera duradera.">Products, education, hardship help, grants, and trusted tools to help you budget better, eliminate debt, and build lasting financial health.</p>
       </div>
     </div>
 
-    <!-- LOAN COMPARISON CALCULATOR -->
-    <div class="compare-tool">
-      <h2 data-en="🧮 Loan Payment Calculator" data-es="🧮 Calculadora de Préstamos">🧮 Loan Payment Calculator</h2>
-      <p data-en="Estimate your monthly payment before you apply. Adjust the numbers to compare scenarios." data-es="Estima tu pago mensual antes de aplicar. Ajusta los números para comparar escenarios.">Estimate your monthly payment before you apply. Adjust the numbers to compare scenarios.</p>
-      <div class="compare-inputs">
-        <div class="form-group"><label data-en="Loan Amount ($)" data-es="Monto del Préstamo ($)">Loan Amount ($)</label><input type="number" id="cmp-amount" value="25000" oninput="calcLoan()"></div>
-        <div class="form-group"><label data-en="Interest Rate (% APR)" data-es="Tasa de Interés (% APR)">Interest Rate (% APR)</label><input type="number" id="cmp-rate" value="6.99" step="0.01" oninput="calcLoan()"></div>
-        <div class="form-group"><label data-en="Loan Term" data-es="Plazo del Préstamo">Loan Term</label>
-          <select id="cmp-term" onchange="calcLoan()">
-            <option value="12" data-en="1 year" data-es="1 año">1 year</option>
-            <option value="24" data-en="2 years" data-es="2 años">2 years</option>
-            <option value="36" selected data-en="3 years" data-es="3 años">3 years</option>
-            <option value="48" data-en="4 years" data-es="4 años">4 years</option>
-            <option value="60" data-en="5 years" data-es="5 años">5 years</option>
-            <option value="84" data-en="7 years" data-es="7 años">7 years</option>
-            <option value="120">10 years</option>
-            <option value="180">15 years</option>
-            <option value="240">20 years</option>
-            <option value="360">30 years</option>
-          </select>
-        </div>
-      </div>
-      <div class="compare-results" id="compare-results"></div>
-    </div>
-
-    <!-- FEATURED RATE BANNER + AFFILIATE (Pro only) -->
-    <div id="affiliate-gate">
-      <div class="lock-gate" style="margin-bottom:1.5rem;">
-        <div class="lg-icon">🏦</div>
-        <h3>Partner Lender Rates <span class="premium-badge">PRO</span></h3>
-        <p>Access exclusive mortgage, personal loan, auto loan, and refinance rates from top lenders — plus our loan payment calculator and rate comparison tools.</p>
-        <button class="lock-gate-btn" onclick="showPaywall('resources')">Unlock with Pro — $4.99/mo</button>
-        <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--muted)" data-en="7-day free trial · Cancel anytime" data-es="Prueba gratis de 7 días · Cancela cuando quieras">7-day free trial · Cancel anytime</div>
-      </div>
-    </div>
-
-    <div id="affiliate-content" style="display:none">
-      <div id="rate-banner" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1.75rem;"></div>
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0.65rem 1rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:0.6rem;">
-        <span style="font-size:1rem;">ℹ️</span>
-        <p style="font-size:0.75rem;color:var(--muted);line-height:1.5;"><strong style="color:var(--dark);" data-en="Affiliate Disclosure:" data-es="Divulgación de Afiliados:">Affiliate Disclosure:</strong> <span data-en="Fintrail may earn a commission when you apply through our partner links, at no extra cost to you. Rates shown are representative and subject to change. Always verify current rates directly with the lender." data-es="Fintrail puede ganar una comisión cuando aplicas a través de nuestros enlaces de socios, sin costo adicional para ti. Las tasas mostradas son representativas y sujetas a cambio. Siempre verifica las tasas actuales directamente con el prestamista.">Fintrail may earn a commission when you apply through our partner links, at no extra cost to you. Rates shown are representative and subject to change. Always verify current rates directly with the lender.</span></p>
-      </div>
+    <div class="resource-shortcuts" aria-label="Resource Center shortcuts">
+      <a class="resource-shortcut" href="#resource-products" onclick="scrollResourceSection(event,'resource-products')" data-en="Products" data-es="Productos">Products</a>
+      <a class="resource-shortcut" href="#resource-credit" onclick="scrollResourceSection(event,'resource-credit')" data-en="Credit" data-es="Crédito">Credit</a>
+      <a class="resource-shortcut" href="#resource-education" onclick="scrollResourceSection(event,'resource-education')" data-en="Education" data-es="Educación">Education</a>
+      <a class="resource-shortcut" href="#resource-hardship" onclick="scrollResourceSection(event,'resource-hardship')" data-en="Hardship" data-es="Ayuda">Hardship</a>
+      <a class="resource-shortcut" href="#resource-grants" onclick="scrollResourceSection(event,'resource-grants')" data-en="Grants" data-es="Becas">Grants</a>
+      <a class="resource-shortcut" href="#resource-partners" onclick="scrollResourceSection(event,'resource-partners')" data-en="Partners" data-es="Socios">Partners</a>
     </div>
 
     <div class="resources-grid" id="resources-grid"></div>
@@ -5722,140 +5725,47 @@
   let currentType = 'income';
   let currentFilter = 'all';
 
-  // RESOURCES DATA — affiliate-ready
+  // RESOURCE CENTER DATA
   const resources = [
-    // MORTGAGES
-    {
-      tag: 'mortgage', featured: true,
-      title: 'Better Mortgage', logo: '🏠',
-      badges: ['badge-featured|⭐ Featured', 'badge-low|Low Rates', 'badge-fast|100% Online'],
-      rates: [{ val:'6.49%', label:'30-yr Fixed' }, { val:'6.12%', label:'15-yr Fixed' }, { val:'5.89%', label:'5/1 ARM' }],
-      desc: 'Commission-free mortgage lender with an entirely online process. Pre-approval in as little as 3 minutes.',
-      cta: 'Check Your Rate', url: 'https://www.better.com', ctaStyle: '',
-      fine: 'Rates shown are representative APRs. Your rate depends on credit score, down payment & loan amount.',
-      commission: '💰 Earn $150–$300 per funded loan referral'
-    },
-    {
-      tag: 'mortgage',
-      title: 'Rocket Mortgage', logo: '🚀',
-      badges: ['badge-fast|Fast Approval', 'badge-nofe|No Hidden Fees'],
-      rates: [{ val:'6.62%', label:'30-yr Fixed' }, { val:'6.25%', label:'15-yr Fixed' }],
-      desc: 'America\'s largest mortgage lender. Easy online application, verified approval in minutes.',
-      cta: 'Get Pre-Approved', url: 'https://www.rocketmortgage.com', ctaStyle: '',
-      fine: 'Rates change daily. Rate shown is sample APR for illustrative purposes.',
-      commission: '💰 Earn $200–$400 per closed referral'
-    },
-    {
-      tag: 'mortgage',
-      title: 'LoanDepot', logo: '🏡',
-      badges: ['badge-low|Competitive Rates', 'badge-fast|Fast Close'],
-      rates: [{ val:'6.55%', label:'30-yr Fixed' }, { val:'6.18%', label:'15-yr Fixed' }],
-      desc: 'One of the nation\'s largest non-bank lenders. Offers FHA, VA, jumbo, and conventional loans.',
-      cta: 'Get a Quote', url: 'https://www.loandepot.com', ctaStyle: '',
-      fine: 'Advertised rates are for well-qualified borrowers. Verify current rates on their site.',
-      commission: '💰 Earn $150–$250 per lead'
-    },
-    // PERSONAL LOANS
-    {
-      tag: 'personal', featured: true,
-      title: 'SoFi Personal Loans', logo: '💳',
-      badges: ['badge-featured|⭐ Featured', 'badge-nofe|No Fees', 'badge-low|Low APR'],
-      rates: [{ val:'8.99%', label:'Starting APR' }, { val:'$5K–$100K', label:'Loan Range' }],
-      desc: 'No origination fees, no prepayment penalties. Borrow $5K–$100K with same-day funding available.',
-      cta: 'Check Your Rate', url: 'https://www.sofi.com/personal-loans/', ctaStyle: '',
-      fine: 'APR range: 8.99%–29.99%. Rate depends on creditworthiness. Soft credit check for pre-qualification.',
-      commission: '💰 Earn $100–$150 per funded loan'
-    },
-    {
-      tag: 'personal',
-      title: 'LightStream', logo: '⚡',
-      badges: ['badge-low|Lowest Rates', 'badge-nofe|No Fees'],
-      rates: [{ val:'7.49%', label:'Starting APR' }, { val:'$5K–$100K', label:'Loan Range' }],
-      desc: 'Truist\'s online lending division. Offers the lowest rates for excellent credit borrowers.',
-      cta: 'Apply Now', url: 'https://www.lightstream.com', ctaStyle: '',
-      fine: 'Rates start at 7.49% APR with AutoPay. Requires good to excellent credit.',
-      commission: '💰 Earn $80–$120 per funded loan'
-    },
-    {
-      tag: 'personal',
-      title: 'Upstart', logo: '🎓',
-      badges: ['badge-fast|AI-Powered Approval', 'badge-low|Fair Credit OK'],
-      rates: [{ val:'6.40%', label:'Starting APR' }, { val:'$1K–$50K', label:'Loan Range' }],
-      desc: 'Uses AI and education/employment data — not just credit score — to offer better rates to more people.',
-      cta: 'Check Rate', url: 'https://www.upstart.com', ctaStyle: '',
-      fine: 'Average APR 21.97%. Available to borrowers with limited credit history.',
-      commission: '💰 Earn $60–$100 per funded loan'
-    },
-    // AUTO LOANS
-    {
-      tag: 'auto', featured: true,
-      title: 'PenFed Credit Union', logo: '🚗',
-      badges: ['badge-featured|⭐ Featured', 'badge-low|Lowest Auto Rates'],
-      rates: [{ val:'4.74%', label:'New Auto APR' }, { val:'5.24%', label:'Used Auto APR' }],
-      desc: 'Pentagon Federal Credit Union offers some of the lowest auto loan rates nationwide. Open to everyone.',
-      cta: 'Apply for Auto Loan', url: 'https://www.penfed.org/auto-loans', ctaStyle: '',
-      fine: 'Rates as low as 4.74% APR for new autos with excellent credit. Membership required.',
-      commission: '💰 Earn $50–$100 per funded auto loan'
-    },
-    {
-      tag: 'auto',
-      title: 'LightStream Auto', logo: '🚙',
-      badges: ['badge-nofe|No Restrictions', 'badge-fast|Same-Day Funding'],
-      rates: [{ val:'6.49%', label:'Starting APR' }, { val:'$5K–$100K', label:'Loan Range' }],
-      desc: 'Finance any vehicle — new, used, or private party. No restrictions on age or mileage.',
-      cta: 'Get Auto Loan', url: 'https://www.lightstream.com/auto-loans', ctaStyle: '',
-      fine: 'Rate with AutoPay discount. Subject to credit approval.',
-      commission: '💰 Earn $75–$120 per funded loan'
-    },
-    {
-      tag: 'auto',
-      title: 'myAutoloan', logo: '🔑',
-      badges: ['badge-fast|4 Offers in Minutes', 'badge-low|Compare Rates'],
-      rates: [{ val:'5.29%', label:'Starting APR' }, { val:'Multiple', label:'Lenders' }],
-      desc: 'Get up to 4 competing loan offers from lenders in minutes. Best for comparison shopping.',
-      cta: 'Compare Offers', url: 'https://www.myautoloan.com', ctaStyle: '',
-      fine: 'Rates vary by lender, credit score, and vehicle. Soft pull for initial offers.',
-      commission: '💰 Earn $40–$80 per qualified lead'
-    },
-    // REFINANCE
-    {
-      tag: 'refi', featured: true,
-      title: 'Credible', logo: '🔄',
-      badges: ['badge-featured|⭐ Featured', 'badge-fast|Compare 10+ Lenders'],
-      rates: [{ val:'6.25%', label:'Refi from' }, { val:'No Impact', label:'Credit Check' }],
-      desc: 'Compare real pre-qualified refinance rates from 10+ lenders in 2 minutes. No hard credit pull.',
-      cta: 'Compare Refi Rates', url: 'https://www.credible.com/refinance-mortgage', ctaStyle: '',
-      fine: 'Rates shown are lowest available. Your rate depends on credit, LTV, and loan term.',
-      commission: '💰 Earn $150–$350 per closed refi'
-    },
-    {
-      tag: 'refi',
-      title: 'SoFi Student Loan Refi', logo: '🎓',
-      badges: ['badge-nofe|No Fees', 'badge-low|Low Rates'],
-      rates: [{ val:'4.99%', label:'Fixed from' }, { val:'4.74%', label:'Variable from' }],
-      desc: 'Refinance federal or private student loans. No origination fees, career coaching included.',
-      cta: 'Refinance Student Loans', url: 'https://www.sofi.com/refinance-student-loan/', ctaStyle: '',
-      fine: 'Refinancing federal loans removes federal protections. Consider carefully before refinancing.',
-      commission: '💰 Earn $100–$200 per funded refi'
-    },
-    // GRANTS
-    { tag: 'grants', tagLabel: 'Grant', title: 'Grants.gov', logo: '🎁', badges: ['badge-low|Free'], rates: [], desc: 'The official U.S. government site listing thousands of federal grant opportunities across all sectors.', cta: 'Browse Grants', url: 'https://www.grants.gov', ctaStyle: 'secondary', fine: '', commission: '' },
-    { tag: 'grants', tagLabel: 'Grant', title: 'CDFI Fund', logo: '🏘️', badges: ['badge-low|Community Focus'], rates: [], desc: 'Grants for low-income and underserved communities from the U.S. Treasury Department.', cta: 'Learn More', url: 'https://www.cdfifund.gov', ctaStyle: 'secondary', fine: '', commission: '' },
-    { tag: 'grants', tagLabel: 'Grant', title: 'SBA Grants', logo: '💼', badges: ['badge-low|Small Business'], rates: [], desc: 'Small Business Administration grant programs for qualifying businesses and entrepreneurs.', cta: 'Find Grants', url: 'https://www.sba.gov/funding-programs/grants', ctaStyle: 'secondary', fine: '', commission: '' },
-    // TOOLS
-    { tag: 'tools', title: 'Credit Karma', logo: '📊', badges: ['badge-nofe|Free Forever'], rates: [], desc: 'Free credit score monitoring, personalized recommendations, and financial insights.', cta: 'Check Score Free', url: 'https://www.creditkarma.com', ctaStyle: 'secondary', fine: '', commission: '💰 Earn $2–$10 per signup' },
-    { tag: 'tools', title: 'YNAB', logo: '📋', badges: ['badge-fast|Best Budgeting App'], rates: [], desc: 'Proactive budgeting software. Average user saves $600 in the first 2 months.', cta: 'Try Free 34 Days', url: 'https://www.youneedabudget.com', ctaStyle: 'secondary', fine: '', commission: '💰 Earn $10–$20 per subscription' },
-    // EDUCATION
-    { tag: 'education', title: 'Khan Academy Finance', logo: '📚', badges: ['badge-nofe|100% Free'], rates: [], desc: 'World-class finance and economics courses from basic budgeting to advanced investing.', cta: 'Start Learning', url: 'https://www.khanacademy.org/economics-finance-domain', ctaStyle: 'secondary', fine: '', commission: '' },
-    { tag: 'education', title: 'NerdWallet', logo: '🤓', badges: ['badge-fast|Expert Guides'], rates: [], desc: 'Expert personal finance advice, product comparisons, and guides for every financial decision.', cta: 'Read Guides', url: 'https://www.nerdwallet.com', ctaStyle: 'secondary', fine: '', commission: '💰 Earn via product referrals' },
-
-    // CREDIT SCORES
-    { tag: 'credit', featured: true, title: 'Experian', logo: '📊', badges: ['badge-featured|⭐ Official Bureau', 'badge-nofe|Free Score'], rates: [], desc: 'One of the three major credit bureaus. Get your official Experian credit report and FICO score for free. Includes score monitoring and alerts.', cta: 'Get Free Score', url: 'https://www.experian.com/consumer-products/free-credit-report.html', ctaStyle: '', fine: 'Free basic score available. Premium monitoring plans available separately.', commission: '💰 Earn per signup referral' },
-    { tag: 'credit', title: 'Equifax', logo: '📋', badges: ['badge-nofe|Official Bureau'], rates: [], desc: 'One of the three major credit bureaus. Access your Equifax credit report and monitor for changes that could indicate identity theft.', cta: 'Check Your Report', url: 'https://www.equifax.com/personal/products/credit/free-credit-report/', ctaStyle: 'secondary', fine: 'Free annual report available at AnnualCreditReport.com.', commission: '' },
-    { tag: 'credit', title: 'TransUnion', logo: '🔐', badges: ['badge-nofe|Official Bureau'], rates: [], desc: 'The third major credit bureau. View your TransUnion credit report, monitor your score, and get alerts for suspicious activity.', cta: 'View Report', url: 'https://www.transunion.com/free-credit-report', ctaStyle: 'secondary', fine: 'Free report available. Paid monitoring plans available.', commission: '' },
-    { tag: 'credit', title: 'AnnualCreditReport.com', logo: '🏛️', badges: ['badge-nofe|100% Free', 'badge-featured|Official Gov Site'], rates: [], desc: 'The only federally authorized source for free credit reports from all three bureaus — Equifax, Experian, and TransUnion. You are entitled by law to one free report per bureau per year.', cta: 'Get Free Reports', url: 'https://www.annualcreditreport.com', ctaStyle: '', fine: 'This is the official government-mandated free credit report site.', commission: '' },
-    { tag: 'credit', title: 'Credit Karma', logo: '💚', badges: ['badge-nofe|Always Free', 'badge-fast|Instant Score'], rates: [], desc: 'Free credit scores and reports from TransUnion and Equifax. Updated weekly with personalized recommendations for credit cards and loans.', cta: 'Check for Free', url: 'https://www.creditkarma.com', ctaStyle: 'secondary', fine: 'Shows TransUnion and Equifax scores. Does not include Experian.', commission: '💰 Earn per product referral' },
-    { tag: 'credit', title: 'myFICO', logo: '🎯', badges: ['badge-fast|All 3 Bureaus'], rates: [], desc: 'Get your official FICO scores from all three bureaus — the exact scores most lenders use. Includes score simulators and monitoring alerts.', cta: 'See All 3 Scores', url: 'https://www.myfico.com', ctaStyle: 'secondary', fine: 'Paid service. Prices start around $19.95/mo for all three bureau scores.', commission: '💰 Earn per subscription referral' },
+    { section:'products', group:'Mortgage', title:'Better Mortgage', logo:'🏠', badges:['badge-low|Low Rates','badge-fast|100% Online'], rates:[{val:'6.49%',label:'30-yr Fixed'},{val:'6.12%',label:'15-yr Fixed'}], desc:{en:'Online mortgage lender with pre-approval tools and purchase/refinance options.', es:'Prestamista hipotecario en línea con herramientas de preaprobación y opciones de compra o refinanciamiento.'}, cta:{en:'Visit Better',es:'Visitar Better'}, url:'https://www.better.com' },
+    { section:'products', group:'Mortgage', title:'Rocket Mortgage', logo:'🚀', badges:['badge-fast|Fast Approval'], rates:[{val:'6.62%',label:'30-yr Fixed'},{val:'6.25%',label:'15-yr Fixed'}], desc:{en:'Large mortgage lender with online application tools and multiple home loan options.', es:'Prestamista hipotecario grande con solicitud en línea y varias opciones de préstamos para vivienda.'}, cta:{en:'Visit Rocket',es:'Visitar Rocket'}, url:'https://www.rocketmortgage.com' },
+    { section:'products', group:'Mortgage', title:'LoanDepot', logo:'🏡', badges:['badge-low|Competitive Rates'], rates:[{val:'6.55%',label:'30-yr Fixed'},{val:'6.18%',label:'15-yr Fixed'}], desc:{en:'Mortgage lender offering conventional, FHA, VA, jumbo, and refinancing options.', es:'Prestamista hipotecario con opciones convencionales, FHA, VA, jumbo y refinanciamiento.'}, cta:{en:'Visit LoanDepot',es:'Visitar LoanDepot'}, url:'https://www.loandepot.com' },
+    { section:'products', group:'Personal Loans', title:'SoFi Personal Loans', logo:'💳', badges:['badge-nofe|No Fees'], rates:[{val:'8.99%',label:'Starting APR'},{val:'$5K–$100K',label:'Loan Range'}], desc:{en:'Personal loans with no origination fees and rate-check tools.', es:'Préstamos personales sin cargos de originación y herramientas para revisar tasas.'}, cta:{en:'Visit SoFi',es:'Visitar SoFi'}, url:'https://www.sofi.com/personal-loans/' },
+    { section:'products', group:'Personal Loans', title:'LightStream', logo:'⚡', badges:['badge-low|Low APR'], rates:[{val:'7.49%',label:'Starting APR'},{val:'$5K–$100K',label:'Loan Range'}], desc:{en:'Personal loans for qualified borrowers across many loan purposes.', es:'Préstamos personales para prestatarios calificados y muchos usos.'}, cta:{en:'Visit LightStream',es:'Visitar LightStream'}, url:'https://www.lightstream.com' },
+    { section:'products', group:'Personal Loans', title:'Upstart', logo:'🎓', badges:['badge-fast|AI Review'], rates:[{val:'6.40%',label:'Starting APR'},{val:'$1K–$50K',label:'Loan Range'}], desc:{en:'Personal loan marketplace that may consider more than traditional credit score factors.', es:'Mercado de préstamos personales que puede considerar más que solo el puntaje de crédito tradicional.'}, cta:{en:'Visit Upstart',es:'Visitar Upstart'}, url:'https://www.upstart.com' },
+    { section:'products', group:'Auto Loans', title:'PenFed', logo:'🚗', badges:['badge-low|Auto Loans'], rates:[{val:'4.74%',label:'New Auto APR'},{val:'5.24%',label:'Used Auto APR'}], desc:{en:'Credit union auto loans for new and used vehicles.', es:'Préstamos de auto de una cooperativa de crédito para vehículos nuevos y usados.'}, cta:{en:'Visit PenFed',es:'Visitar PenFed'}, url:'https://www.penfed.org/auto-loans' },
+    { section:'products', group:'Auto Loans', title:'LightStream Auto', logo:'🚙', badges:['badge-fast|Same-Day Funding'], rates:[{val:'6.49%',label:'Starting APR'},{val:'$5K–$100K',label:'Loan Range'}], desc:{en:'Auto loan options for new, used, and private-party vehicles.', es:'Opciones de préstamos de auto para vehículos nuevos, usados y ventas privadas.'}, cta:{en:'Visit LightStream Auto',es:'Visitar LightStream Auto'}, url:'https://www.lightstream.com/auto-loans' },
+    { section:'products', group:'Auto Loans', title:'myAutoloan', logo:'🔑', badges:['badge-fast|Compare Offers'], rates:[{val:'5.29%',label:'Starting APR'},{val:'Multiple',label:'Lenders'}], desc:{en:'Compare auto loan offers from multiple lenders.', es:'Compara ofertas de préstamos de auto de varios prestamistas.'}, cta:{en:'Compare Offers',es:'Comparar Ofertas'}, url:'https://www.myautoloan.com' },
+    { section:'products', group:'Student Loans', title:'SoFi Student Loan Refi', logo:'🎓', badges:['badge-nofe|No Fees'], rates:[{val:'4.99%',label:'Fixed from'},{val:'4.74%',label:'Variable from'}], desc:{en:'Student loan refinancing for private and federal loans. Review federal protections before refinancing.', es:'Refinanciamiento de préstamos estudiantiles privados y federales. Revisa las protecciones federales antes de refinanciar.'}, cta:{en:'Visit SoFi Refi',es:'Visitar SoFi Refi'}, url:'https://www.sofi.com/refinance-student-loan/' },
+    { section:'credit', title:'Experian', logo:'📊', badges:['badge-nofe|Free Score'], rates:[], desc:{en:'Official credit bureau resources for credit reports, scores, monitoring, and alerts.', es:'Recursos de una agencia oficial para reportes, puntajes, monitoreo y alertas de crédito.'}, cta:{en:'Visit Experian',es:'Visitar Experian'}, url:'https://www.experian.com/consumer-products/free-credit-report.html' },
+    { section:'credit', title:'Equifax', logo:'📋', badges:['badge-nofe|Official Bureau'], rates:[], desc:{en:'Credit report access, monitoring resources, and identity protection tools.', es:'Acceso a reportes de crédito, recursos de monitoreo y herramientas de protección de identidad.'}, cta:{en:'Visit Equifax',es:'Visitar Equifax'}, url:'https://www.equifax.com/personal/products/credit/free-credit-report/' },
+    { section:'credit', title:'TransUnion', logo:'🔐', badges:['badge-nofe|Official Bureau'], rates:[], desc:{en:'Credit report, monitoring, and fraud alert resources from a major bureau.', es:'Reporte de crédito, monitoreo y alertas de fraude de una agencia principal.'}, cta:{en:'Visit TransUnion',es:'Visitar TransUnion'}, url:'https://www.transunion.com/free-credit-report' },
+    { section:'credit', title:'Credit Karma', logo:'💚', badges:['badge-nofe|Free'], rates:[], desc:{en:'Free credit score monitoring and educational credit insights.', es:'Monitoreo gratuito de puntaje de crédito y educación crediticia.'}, cta:{en:'Visit Credit Karma',es:'Visitar Credit Karma'}, url:'https://www.creditkarma.com' },
+    { section:'credit', title:'myFICO', logo:'🎯', badges:['badge-fast|FICO Scores'], rates:[], desc:{en:'FICO score resources and credit education for deeper score tracking.', es:'Recursos de puntajes FICO y educación crediticia para seguimiento más profundo.'}, cta:{en:'Visit myFICO',es:'Visitar myFICO'}, url:'https://www.myfico.com' },
+    { section:'credit', title:'AnnualCreditReport.com', logo:'🏛️', badges:['badge-nofe|Official Free Reports'], rates:[], desc:{en:'Federally authorized source for free credit reports from Equifax, Experian, and TransUnion.', es:'Fuente autorizada federalmente para reportes gratis de Equifax, Experian y TransUnion.'}, cta:{en:'Get Free Reports',es:'Obtener Reportes Gratis'}, url:'https://www.annualcreditreport.com' },
+    { section:'credit', title:'Build Credit From Scratch', logo:'🧱', badges:['badge-nofe|Educational'], rates:[], desc:{en:'Learn no-score basics: secured cards, authorized users, credit builder loans, and the first 6–12 months of history.', es:'Aprende lo básico sin puntaje: tarjetas aseguradas, usuarios autorizados, préstamos para construir crédito y los primeros 6–12 meses de historial.'}, cta:{en:'Open Credit Guide',es:'Abrir Guía de Crédito'}, url:'#tab-guide' },
+    { section:'education', title:'Khan Academy Finance', logo:'📚', badges:['badge-nofe|Free'], rates:[], desc:{en:'Free finance and economics lessons from budgeting basics to investing concepts.', es:'Lecciones gratuitas de finanzas y economía, desde presupuestos hasta inversión.'}, cta:{en:'Start Learning',es:'Comenzar'}, url:'https://www.khanacademy.org/economics-finance-domain' },
+    { section:'education', title:'NerdWallet', logo:'🤓', badges:['badge-fast|Guides'], rates:[], desc:{en:'Personal finance articles, calculators, and product comparison education.', es:'Artículos, calculadoras y educación para comparar productos financieros.'}, cta:{en:'Read Guides',es:'Leer Guías'}, url:'https://www.nerdwallet.com' },
+    { section:'education', title:'YNAB', logo:'📋', badges:['badge-fast|Budgeting'], rates:[], desc:{en:'Budgeting education and software built around giving every dollar a job.', es:'Educación y software de presupuesto para asignar un propósito a cada dólar.'}, cta:{en:'Visit YNAB',es:'Visitar YNAB'}, url:'https://www.youneedabudget.com' },
+    { section:'education', title:'Budgeting Basics', logo:'💼', badges:['badge-nofe|Fintrail Guide'], rates:[], desc:{en:'Learn the 50/30/20 Rule and Zero-Based Budgeting for everyday money planning.', es:'Aprende la regla 50/30/20 y el presupuesto base cero para planificar tu dinero.'}, cta:{en:'Open Guide',es:'Abrir Guía'}, url:'#tab-guide' },
+    { section:'education', title:'Debt Payoff Methods', logo:'💳', badges:['badge-nofe|Fintrail Guide'], rates:[], desc:{en:'Compare Avalanche and Snowball payoff methods and choose a plan you can follow.', es:'Compara los métodos Avalancha y Bola de Nieve y elige un plan sostenible.'}, cta:{en:'Open Debt Planner',es:'Abrir Planificador'}, url:'#tab-debtplan' },
+    { section:'education', title:'Emergency Fund Guide', logo:'🛟', badges:['badge-nofe|Fintrail Guide'], rates:[], desc:{en:'Build a starter emergency fund and grow it toward 3–6 months of expenses.', es:'Crea un fondo de emergencia inicial y hazlo crecer hacia 3–6 meses de gastos.'}, cta:{en:'Open Savings Goals',es:'Abrir Metas'}, url:'#tab-savings' },
+    { section:'education', title:'Beginner Investing Guide', logo:'🌱', badges:['badge-nofe|Fintrail Guide'], rates:[], desc:{en:'Understand compound growth, long-term investing basics, and risk awareness.', es:'Entiende crecimiento compuesto, inversión a largo plazo y conciencia de riesgo.'}, cta:{en:'Open Calculator',es:'Abrir Calculadora'}, url:'#tab-invest' },
+    { section:'education', title:'Building Credit Guide', logo:'📈', badges:['badge-nofe|Fintrail Guide'], rates:[], desc:{en:'Learn on-time payments, utilization, credit age, inquiries, and mix of credit.', es:'Aprende pagos a tiempo, utilización, antigüedad, consultas y mezcla de crédito.'}, cta:{en:'Open Credit Guide',es:'Abrir Guía'}, url:'#tab-guide' },
+    { section:'hardship', title:'Housing Assistance', logo:'🏠', badges:['badge-low|HUD'], rates:[], desc:{en:'HUD resources and housing counseling for renters, homeowners, and foreclosure prevention.', es:'Recursos de HUD y consejería de vivienda para inquilinos, dueños y prevención de ejecución hipotecaria.'}, cta:{en:'Find Housing Help',es:'Buscar Ayuda de Vivienda'}, url:'https://www.hud.gov/topics/rental_assistance' },
+    { section:'hardship', title:'HUD Housing Counseling', logo:'🧭', badges:['badge-low|Counseling'], rates:[], desc:{en:'Find HUD-approved housing counselors for budgeting, mortgage, rental, and foreclosure questions.', es:'Encuentra consejeros aprobados por HUD para presupuesto, hipoteca, renta y ejecución hipotecaria.'}, cta:{en:'Find a Counselor',es:'Buscar Consejero'}, url:'https://www.hud.gov/counseling' },
+    { section:'hardship', title:'Utility Assistance', logo:'💡', badges:['badge-low|LIHEAP'], rates:[], desc:{en:'LIHEAP helps eligible households with heating, cooling, and energy costs.', es:'LIHEAP ayuda a hogares elegibles con calefacción, aire acondicionado y costos de energía.'}, cta:{en:'Learn About LIHEAP',es:'Aprender sobre LIHEAP'}, url:'https://www.acf.hhs.gov/ocs/programs/liheap' },
+    { section:'hardship', title:'Food Assistance', logo:'🥫', badges:['badge-low|SNAP'], rates:[], desc:{en:'SNAP information for grocery assistance and eligibility basics.', es:'Información de SNAP para asistencia alimentaria y requisitos básicos.'}, cta:{en:'Learn About SNAP',es:'Aprender sobre SNAP'}, url:'https://www.fns.usda.gov/snap/supplemental-nutrition-assistance-program' },
+    { section:'hardship', title:'Feeding America', logo:'🍽️', badges:['badge-low|Food Banks'], rates:[], desc:{en:'Find local food banks and meal assistance through the Feeding America network.', es:'Encuentra bancos de alimentos y comidas mediante la red Feeding America.'}, cta:{en:'Find Food Help',es:'Buscar Ayuda Alimentaria'}, url:'https://www.feedingamerica.org/find-your-local-foodbank' },
+    { section:'hardship', title:'United Way 211', logo:'☎️', badges:['badge-low|Community Support'], rates:[], desc:{en:'Connect with local help for housing, food, utilities, transportation, and crisis needs.', es:'Conéctate con ayuda local para vivienda, comida, servicios, transporte y crisis.'}, cta:{en:'Call or Search 211',es:'Llamar o Buscar 211'}, url:'https://www.211.org' },
+    { section:'hardship', title:'Debt Counseling', logo:'🤝', badges:['badge-low|NFCC'], rates:[], desc:{en:'NFCC connects people with nonprofit credit counselors for debt and budget guidance.', es:'NFCC conecta con consejeros de crédito sin fines de lucro para deudas y presupuesto.'}, cta:{en:'Find Counseling',es:'Buscar Consejería'}, url:'https://www.nfcc.org' },
+    { section:'hardship', title:'Consumer Protection', logo:'🛡️', badges:['badge-low|CFPB'], rates:[], desc:{en:'CFPB resources for debt collection, credit reporting, mortgages, loans, and consumer complaints.', es:'Recursos de CFPB para cobranzas, reportes de crédito, hipotecas, préstamos y quejas.'}, cta:{en:'Visit CFPB',es:'Visitar CFPB'}, url:'https://www.consumerfinance.gov' },
+    { section:'hardship', title:'Fraud & Identity Theft', logo:'🔐', badges:['badge-low|FTC'], rates:[], desc:{en:'FTC IdentityTheft.gov helps you report identity theft and create a recovery plan.', es:'FTC IdentityTheft.gov ayuda a reportar robo de identidad y crear un plan de recuperación.'}, cta:{en:'Get Recovery Help',es:'Obtener Ayuda'}, url:'https://www.identitytheft.gov' },
+    { section:'grants', title:'Grants.gov', logo:'🎁', badges:['badge-low|Federal Grants'], rates:[], desc:{en:'Official U.S. government site for federal grant opportunities.', es:'Sitio oficial del gobierno de EE. UU. para oportunidades de becas federales.'}, cta:{en:'Browse Grants',es:'Buscar Becas'}, url:'https://www.grants.gov' },
+    { section:'grants', title:'SBA Grants', logo:'💼', badges:['badge-low|Small Business'], rates:[], desc:{en:'Small Business Administration grant programs and funding resources.', es:'Programas de becas y recursos de financiamiento de la Administración de Pequeñas Empresas.'}, cta:{en:'Find SBA Grants',es:'Buscar Becas SBA'}, url:'https://www.sba.gov/funding-programs/grants' },
+    { section:'grants', title:'CDFI Fund', logo:'🏘️', badges:['badge-low|Community Finance'], rates:[], desc:{en:'U.S. Treasury program supporting community development financial institutions.', es:'Programa del Tesoro que apoya instituciones financieras de desarrollo comunitario.'}, cta:{en:'Learn More',es:'Aprender Más'}, url:'https://www.cdfifund.gov' },
+    { section:'grants', title:'Veteran Resources', logo:'🎖️', badges:['badge-low|VA'], rates:[], desc:{en:'Benefits, financial resources, housing help, and support programs for veterans.', es:'Beneficios, recursos financieros, ayuda de vivienda y programas para veteranos.'}, cta:{en:'Visit VA Resources',es:'Visitar Recursos VA'}, url:'https://www.va.gov/resources/' },
+    { section:'grants', title:'Disaster Assistance Resources', logo:'⛑️', badges:['badge-low|Disaster Help'], rates:[], desc:{en:'Federal disaster assistance information and recovery application resources.', es:'Información de asistencia federal por desastre y recursos de solicitud para recuperación.'}, cta:{en:'Visit DisasterAssistance.gov',es:'Visitar DisasterAssistance.gov'}, url:'https://www.disasterassistance.gov' }
   ];
 
   function getRateBannerData() {
@@ -6649,7 +6559,9 @@
   }
 
   function renderRateBanner() {
-    document.getElementById('rate-banner').innerHTML = getRateBannerData().map(r => `
+    const banner = document.getElementById('rate-banner');
+    if (!banner) return;
+    banner.innerHTML = getRateBannerData().map(r => `
       <div class="rate-chip">
         <div class="rc-type">${r.type}</div>
         <div class="rc-rate">${r.rate}</div>
@@ -6660,35 +6572,45 @@
   function filterResources(tag, btn) {
     currentFilter = tag;
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+    if (btn) btn.classList.add('active');
     renderResources();
   }
 
-  function renderResources() {
-    const grid = document.getElementById('resources-grid');
-    const affiliateTags = ['mortgage','personal','auto','refi'];
-    let filtered = currentFilter === 'all' ? resources : resources.filter(r => r.tag === currentFilter);
-    // Free users only see non-affiliate categories
-    if (!isPro) filtered = filtered.filter(r => !affiliateTags.includes(r.tag));
-    const sorted = [...filtered].sort((a,b) => (b.featured?1:0) - (a.featured?1:0));
+  function scrollResourceSection(event, id) {
+    if (event) event.preventDefault();
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 
-    grid.innerHTML = sorted.map(r => {
-      const badgesHtml = (r.badges||[]).map(b => {
-        const [cls, label] = b.split('|');
-        return `<span class="rc-badge ${cls}">${label}</span>`;
-      }).join('');
+  function resourceText(value) {
+    if (value && typeof value === 'object') return currentLang === 'es' ? value.es : value.en;
+    return value || '';
+  }
 
-      const ratesHtml = r.rates.length ? `
-        <div class="rc-rate-display">
-          ${r.rates.map((rt,i) => `
-            ${i>0 ? '<div class="rc-divider"></div>' : ''}
-            <div class="rc-rate-item">
-              <div class="rri-val">${rt.val}</div>
-              <div class="rri-label">${rt.label}</div>
-            </div>`).join('')}
-        </div>` : '';
+  function isExternalResourceUrl(url) {
+    return /^https?:\/\//i.test(String(url || ''));
+  }
 
-      return `
+  function renderResourceCard(r) {
+    const badgesHtml = (r.badges||[]).map(b => {
+      const [cls, label] = b.split('|');
+      return `<span class="rc-badge ${cls}">${label}</span>`;
+    }).join('');
+
+    const ratesHtml = (r.rates || []).length ? `
+      <div class="rc-rate-display">
+        ${r.rates.map((rt,i) => `
+          ${i>0 ? '<div class="rc-divider"></div>' : ''}
+          <div class="rc-rate-item">
+            <div class="rri-val">${rt.val}</div>
+            <div class="rri-label">${rt.label}</div>
+          </div>`).join('')}
+      </div>` : '';
+
+    const href = r.url || '#';
+    const externalAttrs = isExternalResourceUrl(href) ? 'target="_blank" rel="noopener noreferrer"' : '';
+
+    return `
       <div class="resource-card" style="${r.featured?'border-color:var(--accent2);box-shadow:0 2px 12px rgba(233,196,106,0.15)':''}">
         <div class="rc-header">
           <div style="display:flex;align-items:center;gap:0.5rem">
@@ -6698,12 +6620,56 @@
         </div>
         <div class="rc-badges">${badgesHtml}</div>
         ${ratesHtml}
-        <p>${r.desc}</p>
-        ${r.fine ? `<p class="rc-fine" style="margin-bottom:0.6rem">${r.fine}</p>` : ''}
-        <a class="rc-cta ${r.ctaStyle||''}" href="${r.url}" target="_blank" rel="noopener noreferrer">${r.cta} →</a>
-        ${r.commission ? `<div class="commission-note">Partner details will be added as agreements are finalized.</div>` : ''}
+        <p>${resourceText(r.desc)}</p>
+        ${r.fine ? `<p class="rc-fine" style="margin-bottom:0.6rem">${resourceText(r.fine)}</p>` : ''}
+        <a class="rc-cta ${r.ctaStyle||''}" href="${href}" ${externalAttrs}>${resourceText(r.cta)} →</a>
       </div>`;
+  }
+
+  function renderResources() {
+    const grid = document.getElementById('resources-grid');
+    if (!grid) return;
+    const isEs = currentLang === 'es';
+    const rateDisclosure = isEs
+      ? 'Las tasas mostradas son estimaciones representativas y pueden cambiar. Verifica las tasas actuales directamente con la institución antes de solicitar.'
+      : 'Rates shown are representative estimates and may change. Verify current rates directly with the lender before applying.';
+    const sections = [
+      { id:'resource-products', key:'products', title:isEs?'🏠 Productos Financieros':'🏠 Financial Products', desc:isEs?'Hipotecas, préstamos personales, préstamos de auto y refinanciamiento estudiantil para comparar opciones antes de solicitar.':'Mortgages, personal loans, auto loans, and student refinancing resources to compare before applying.', disclosure:true },
+      { id:'resource-credit', key:'credit', title:isEs?'💳 Crédito y Reportes':'💳 Credit & Reports', desc:isEs?'Reportes, monitoreo y recursos educativos para construir o proteger tu crédito.':'Reports, monitoring, and educational resources to build or protect your credit.' },
+      { id:'resource-education', key:'education', title:isEs?'📚 Educación Financiera':'📚 Financial Education', desc:isEs?'Guías y herramientas para presupuestar mejor, pagar deudas, ahorrar e invertir con más claridad.':'Guides and tools to budget better, pay down debt, save, and invest with more clarity.' },
+      { id:'resource-hardship', key:'hardship', title:isEs?'🆘 Ayuda por Dificultad Financiera':'🆘 Financial Hardship Assistance', desc:isEs?'Recursos para vivienda, servicios, comida, consejería de deuda, protección al consumidor y fraude.':'Resources for housing, utilities, food, debt counseling, consumer protection, and fraud recovery.' },
+      { id:'resource-grants', key:'grants', title:isEs?'🏛 Gobierno y Becas':'🏛 Government & Grants', desc:isEs?'Programas gubernamentales, becas, asistencia para veteranos y recursos por desastre.':'Government programs, grants, veteran resources, and disaster assistance.' }
+    ];
+
+    const sectionHtml = sections.map(section => {
+      const cards = resources.filter(r => r.section === section.key).map(renderResourceCard).join('');
+      return `
+        <section class="resource-section" id="${section.id}">
+          <div class="resource-section-header">
+            <h2>${section.title}</h2>
+            <p>${section.desc}</p>
+          </div>
+          ${section.disclosure ? `<div class="resource-section-disclosure">${rateDisclosure}</div>` : ''}
+          <div class="resources-grid">${cards}</div>
+        </section>`;
     }).join('');
+
+    const partnerCats = isEs
+      ? ['Bancos','Cooperativas de Crédito','Constructores de Crédito','Ahorros de Alto Rendimiento','Seguros','Servicios de Impuestos']
+      : ['Banks','Credit Unions','Credit Builders','High Yield Savings','Insurance','Tax Services'];
+    const partners = `
+      <section class="resource-section" id="resource-partners">
+        <div class="resource-section-header">
+          <h2>${isEs ? '🤝 Socios Destacados de Fintrail' : '🤝 Featured Fintrail Partners'}</h2>
+          <p>${isEs ? 'Las ofertas de socios aparecerán aquí a medida que las alianzas se finalicen.' : 'Partner offers will appear here as partnerships are finalized.'}</p>
+        </div>
+        <div class="resource-partner-placeholder">
+          <strong>${isEs ? 'Categorías futuras de socios:' : 'Future partner categories:'}</strong>
+          <div class="resource-partner-cats">${partnerCats.map(cat => `<span>${cat}</span>`).join('')}</div>
+        </div>
+      </section>`;
+
+    grid.innerHTML = sectionHtml + partners;
   }
 
   // GUIDE SWITCHING
@@ -7462,11 +7428,15 @@ Guidelines:
   }
 
   function calcLoan() {
-    const P = parseFloat(document.getElementById('cmp-amount').value) || 0;
-    const annualRate = parseFloat(document.getElementById('cmp-rate').value) || 0;
-    const n = parseInt(document.getElementById('cmp-term').value) || 12;
-    const r = annualRate / 100 / 12;
+    const amountInput = document.getElementById('cmp-amount');
+    const rateInput = document.getElementById('cmp-rate');
+    const termInput = document.getElementById('cmp-term');
     const container = document.getElementById('compare-results');
+    if (!amountInput || !rateInput || !termInput || !container) return;
+    const P = parseFloat(amountInput.value) || 0;
+    const annualRate = parseFloat(rateInput.value) || 0;
+    const n = parseInt(termInput.value) || 12;
+    const r = annualRate / 100 / 12;
     if (!P || !annualRate) { container.innerHTML = ''; return; }
     const monthly = r === 0 ? P/n : P * r * Math.pow(1+r,n) / (Math.pow(1+r,n) - 1);
     const totalPaid = monthly * n;
