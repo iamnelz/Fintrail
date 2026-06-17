@@ -6047,16 +6047,22 @@
     // Always save to localStorage as reliable fallback with timestamp
     const _uid2 = currentUser?.id || 'demo';
     const _ts = Date.now();
+    const _goalsForSave = (typeof getGoalsForSave === 'function') ? getGoalsForSave(_uid2) : goals;
+    goals = _goalsForSave;
     safeSet('fintrail_debts_' + _uid2,       JSON.stringify(planDebts));
-    safeSet('fintrail_goals_' + _uid2,       JSON.stringify(goals));
-    safeSet('fintrail_goals_ts_' + _uid2,    safeGet('fintrail_goals_ts_' + _uid2) || String(_ts));
+    safeSet('fintrail_goals_' + _uid2,       JSON.stringify(_goalsForSave));
+    safeSet('fintrail_goals_ts_' + _uid2,    String(_ts));
     safeSet('fintrail_bills_' + _uid2,       JSON.stringify(bills));
     safeSet('fintrail_txns_' + _uid2,        JSON.stringify(transactions));
+    if (typeof gameData === 'object' && gameData) {
+      gameData.goalsUpdatedAt = new Date(_ts).toISOString();
+      gameData.goalsRevision = _ts;
+    }
     refreshHealthScoreIfVisible();
 
     if (!sbClient || !currentUser) return;
     try {
-      const payload = { user_id: currentUser.id, transactions, bills, goals, plan_debts: planDebts, nw_assets: nwAssets, nw_liabilities: nwLiabilities, nw_history: nwHistory, game_data: gameData, is_pro: isPro, updated_at: new Date().toISOString() };
+      const payload = { user_id: currentUser.id, transactions, bills, goals: _goalsForSave, plan_debts: planDebts, nw_assets: nwAssets, nw_liabilities: nwLiabilities, nw_history: nwHistory, game_data: gameData, is_pro: isPro, updated_at: new Date().toISOString() };
       await sbClient.from('user_data').upsert(payload, { onConflict: 'user_id' });
     } catch(err) {
       console.log('saveUserData error:', err.message);
@@ -6823,7 +6829,7 @@ Guidelines:
   }
 
   function escHtml(str) {
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 
   // SAVINGS GOALS
@@ -6847,6 +6853,17 @@ Guidelines:
       ...g,
       saved: Math.min(g.saved, g.target)
     }));
+  }
+
+  function getGoalsForSave(uid) {
+    const normalized = normalizeGoalsList(goals);
+    if (normalized.length) return normalized;
+    try {
+      const raw = safeGet('fintrail_goals_' + (uid || currentUser?.id || 'demo'));
+      const stored = raw ? normalizeGoalsList(JSON.parse(raw)) : [];
+      if (stored.length) return stored;
+    } catch(e) {}
+    return normalized;
   }
 
   function currentGoalsTimestamp() {
@@ -6887,6 +6904,13 @@ Guidelines:
     const remoteTs = parseInt(remoteGame.goalsRevision || '0', 10) ||
       (remoteGame.goalsUpdatedAt ? Date.parse(remoteGame.goalsUpdatedAt) : 0) ||
       (data && data.updated_at ? Date.parse(data.updated_at) : 0);
+
+    if (localGoals.length && hasRemoteGoals && !remoteGoals.length) {
+      goals = localGoals;
+      safeSet('fintrail_goals_' + uid, JSON.stringify(goals));
+      if (!localTs) safeSet('fintrail_goals_ts_' + uid, String(Date.now()));
+      return;
+    }
 
     if (hasRemoteGoals && (!localRaw || (remoteGoals.length && !localGoals.length) || (remoteTs && remoteTs >= localTs))) {
       goals = remoteGoals;
