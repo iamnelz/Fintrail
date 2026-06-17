@@ -6057,6 +6057,7 @@
     if (typeof gameData === 'object' && gameData) {
       gameData.goalsUpdatedAt = new Date(_ts).toISOString();
       gameData.goalsRevision = _ts;
+      gameData.alertPrefs = alertPrefs;
     }
     refreshHealthScoreIfVisible();
 
@@ -6182,6 +6183,10 @@
             gameData.creditScore = data.game_data.creditScore || data.game_data.credit_score;
           }
           if (gameData.creditScore) safeSet('fintrail_credit_score_' + currentUser.id, String(gameData.creditScore));
+          if (data.game_data.alertPrefs || data.game_data.alert_prefs) {
+            alertPrefs = normalizeAlertPrefs(data.game_data.alertPrefs || data.game_data.alert_prefs);
+            saveAlertPrefsLocal();
+          }
         }
         if (data.is_pro) {
           isPro = true;
@@ -6201,6 +6206,7 @@
       try { const loc = safeGet('fintrail_debts_' + _fuid); if (loc) planDebts = JSON.parse(loc); } catch(e) {}
     }
     render(); renderBillList(); renderSchedule(); renderGoals();
+    loadAlertPrefs();
     applySavedCreditScore();
     if (typeof updateSimulator === 'function' && document.getElementById('base-score')) updateSimulator();
     if (planDebts.length) { renderDebtList(); runPayoffPlan(); }
@@ -6323,7 +6329,7 @@
     if (tab === 'creditsim') { updateCreditSimTab(); }
     if (tab === 'calendar') { try { loadCalendarEvents(); renderCalendar(); } catch(e) { console.error('Calendar render failed:', e); } }
     if (tab === 'networth') { setTimeout(initNetWorth, 50); }
-    if (tab === 'healthscore') { try { calculateHealthScore(); } catch(e) { console.error('Health score render failed:', e); } }
+    if (tab === 'healthscore') { try { loadAlertPrefs(); calculateHealthScore(); } catch(e) { console.error('Health score render failed:', e); } }
     if (tab === 'reports') { try { renderMonthlyReport(); } catch(e) { console.error('Monthly report render failed:', e); } }
     if (tab === 'debtplan') { try { renderDebtList(); runPayoffPlan(); } catch(e) { console.error('Debt planner render failed:', e); } }
     if (currentLang !== 'en') setTimeout(applyLanguage, 30);
@@ -6388,7 +6394,7 @@
     if (tab === 'streaks') renderStreaksTab();
     if (tab === 'creditsim') { updateCreditSimTab(); }
     if (tab === 'calendar') { loadCalendarEvents(); renderCalendar(); }
-    if (tab === 'healthscore') { try { calculateHealthScore(); } catch(e) { console.error('Health score render failed:', e); } }
+    if (tab === 'healthscore') { try { loadAlertPrefs(); calculateHealthScore(); } catch(e) { console.error('Health score render failed:', e); } }
     if (tab === 'reports') { try { renderMonthlyReport(); } catch(e) { console.error('Monthly report render failed:', e); } }
     if (tab === 'debtplan') { try { renderDebtList(); runPayoffPlan(); } catch(e) { console.error('Debt planner render failed:', e); } }
     if (currentLang !== 'en') setTimeout(applyLanguage, 30);
@@ -6415,7 +6421,7 @@
     document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
     document.getElementById('tab-' + tab).classList.add('visible');
     btn.classList.add('active');
-    if (tab === 'healthscore') { try { calculateHealthScore(); } catch(e) { console.error('Health score render failed:', e); } }
+    if (tab === 'healthscore') { try { loadAlertPrefs(); calculateHealthScore(); } catch(e) { console.error('Health score render failed:', e); } }
   }
 
   // TRANSACTION TYPE
@@ -7883,44 +7889,123 @@ Guidelines:
   let alertPrefs = { bills: false, budget: false, goals: false, payday: false };
   let notifPermission = 'default';
 
+  function notifText(en, es) {
+    return currentLang === 'es' ? es : en;
+  }
+
+  function normalizeAlertPrefs(prefs) {
+    prefs = prefs && typeof prefs === 'object' ? prefs : {};
+    return {
+      bills: !!prefs.bills,
+      budget: !!prefs.budget,
+      goals: !!prefs.goals,
+      payday: !!prefs.payday
+    };
+  }
+
+  function getAlertPrefsKey() {
+    return 'fintrail_alert_prefs_' + (currentUser?.id || 'demo');
+  }
+
+  function saveAlertPrefsLocal() {
+    alertPrefs = normalizeAlertPrefs(alertPrefs);
+    try {
+      safeSet(getAlertPrefsKey(), JSON.stringify(alertPrefs));
+      safeSet('fintrail_alert_prefs_local', JSON.stringify(alertPrefs));
+    } catch(e) {}
+    if (typeof gameData === 'object' && gameData) gameData.alertPrefs = alertPrefs;
+  }
+
+  function applyAlertPrefsToUI() {
+    const map = {
+      'alert-bills': 'bills',
+      'alert-budget': 'budget',
+      'alert-goals': 'goals',
+      'alert-payday': 'payday'
+    };
+    Object.keys(map).forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.checked = !!alertPrefs[map[id]];
+    });
+    syncNotificationPermission();
+  }
+
+  function loadAlertPrefs() {
+    let saved = null;
+    try { saved = safeGet(getAlertPrefsKey()) || safeGet('fintrail_alert_prefs_local'); } catch(e) {}
+    if (saved) {
+      try { alertPrefs = normalizeAlertPrefs(JSON.parse(saved)); } catch(e) { alertPrefs = normalizeAlertPrefs(alertPrefs); }
+    } else if (gameData?.alertPrefs || gameData?.alert_prefs) {
+      alertPrefs = normalizeAlertPrefs(gameData.alertPrefs || gameData.alert_prefs);
+    } else {
+      alertPrefs = normalizeAlertPrefs(alertPrefs);
+    }
+    saveAlertPrefsLocal();
+    applyAlertPrefsToUI();
+  }
+
+  function hasAnyAlertEnabled() {
+    return !!(alertPrefs.bills || alertPrefs.budget || alertPrefs.goals || alertPrefs.payday);
+  }
+
+  function syncNotificationPermission() {
+    notifPermission = (typeof window !== 'undefined' && 'Notification' in window) ? Notification.permission : 'unsupported';
+    return notifPermission;
+  }
+
   function saveAlertPrefs() {
-    alertPrefs.bills = document.getElementById('alert-bills').checked;
-    alertPrefs.budget = document.getElementById('alert-budget').checked;
-    alertPrefs.goals = document.getElementById('alert-goals').checked;
-    alertPrefs.payday = document.getElementById('alert-payday').checked;
+    alertPrefs = normalizeAlertPrefs({
+      bills: !!document.getElementById('alert-bills')?.checked,
+      budget: !!document.getElementById('alert-budget')?.checked,
+      goals: !!document.getElementById('alert-goals')?.checked,
+      payday: !!document.getElementById('alert-payday')?.checked
+    });
+    saveAlertPrefsLocal();
+    updateNotifStatus('pending', notifText('Notification settings saved.', 'Configuración de notificaciones guardada.'));
+    saveUserData();
   }
 
   async function requestNotifications() {
-    if (!('Notification' in window)) {
-      updateNotifStatus('denied', '❌ Notifications not supported in this browser');
-      return;
+    if (typeof window === 'undefined' || !('Notification' in window)) {
+      updateNotifStatus('denied', notifText('Notifications are not supported on this browser.', 'Las notificaciones no son compatibles con este navegador.'));
+      return 'unsupported';
     }
-    const permission = await Notification.requestPermission();
+    const permission = Notification.permission === 'default' ? await Notification.requestPermission() : Notification.permission;
     notifPermission = permission;
     if (permission === 'granted') {
-      updateNotifStatus('granted', '✅ Notifications enabled! You\'ll receive Fintrail alerts.');
-      sendAlert('🎉 Fintrail Alerts Active', 'You\'ll now receive bill reminders and budget alerts!');
-    } else {
-      updateNotifStatus('denied', '❌ Notifications blocked. Please enable them in browser settings.');
+      updateNotifStatus('granted', notifText('Notifications are enabled.', 'Las notificaciones están activadas.'));
+      return 'granted';
     }
+    updateNotifStatus('denied', notifText('Notifications are blocked. Enable them in your browser settings.', 'Las notificaciones están bloqueadas. Actívalas en la configuración del navegador.'));
+    return permission;
   }
 
-  function sendTestNotification() {
-    if (notifPermission !== 'granted') {
-      updateNotifStatus('pending', '⚠️ Please enable notifications first');
+  async function sendTestNotification() {
+    loadAlertPrefs();
+    if (!hasAnyAlertEnabled()) {
+      updateNotifStatus('pending', notifText('Turn on Health Score notifications first.', 'Activa primero las notificaciones de Salud Financiera.'));
       return;
     }
-    sendAlert('🧪 Test Alert', 'Fintrail notifications are working perfectly!');
+    const permission = syncNotificationPermission();
+    if (permission === 'unsupported') {
+      updateNotifStatus('denied', notifText('Notifications are not supported on this browser.', 'Las notificaciones no son compatibles con este navegador.'));
+      return;
+    }
+    const finalPermission = permission === 'granted' ? 'granted' : await requestNotifications();
+    if (finalPermission !== 'granted') return;
+    sendAlert('Fintrail Pro', notifText('Your financial health reminder is working.', 'Tu recordatorio de salud financiera está funcionando.'));
+    updateNotifStatus('granted', notifText('Test notification sent.', 'Notificación de prueba enviada.'));
   }
 
   function sendAlert(title, body) {
-    if (notifPermission === 'granted') {
-      new Notification(title, { body, icon: '💰' });
+    if (syncNotificationPermission() === 'granted') {
+      new Notification(title, { body });
     }
   }
 
   function updateNotifStatus(type, msg) {
     const el = document.getElementById('notif-status');
+    if (!el) return;
     el.className = 'notif-status ' + type;
     el.textContent = msg;
   }
