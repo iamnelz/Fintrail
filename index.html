@@ -3671,6 +3671,23 @@
 .fintrail-install-step ol {
   margin-left: 1.15rem;
 }
+.fintrail-install-step.active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(240,85,85,0.12);
+}
+.fintrail-install-feedback {
+  display: none;
+  margin-top: 10px;
+  padding: 9px 10px;
+  border-radius: 10px;
+  background: rgba(240,85,85,0.08);
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+.fintrail-install-feedback.visible {
+  display: block;
+}
 .fintrail-install-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -3792,6 +3809,7 @@
     <div class="fintrail-install-body">
       <p id="fintrail-install-copy"></p>
       <div class="fintrail-install-steps" id="fintrail-install-steps"></div>
+      <div class="fintrail-install-feedback" id="fintrail-install-feedback" aria-live="polite"></div>
     </div>
     <div class="fintrail-install-actions">
       <button type="button" class="fintrail-install-primary" id="fintrail-install-primary" onclick="fintrailStartInstallPrompt()">Install Guide</button>
@@ -15458,25 +15476,31 @@ window.addEventListener('load', function(){
       title: 'Install Fintrail',
       body: 'Add Fintrail to your home screen for faster access and an app-like experience.',
       iosTitle: 'iPhone / iPad:',
-      iosSteps: ['Tap the Share button.', 'Select “Add to Home Screen.”', 'Tap “Add.”'],
+      iosSteps: ['Tap the Safari Share button at the bottom of the screen.', 'Scroll and tap “Add to Home Screen.”', 'Tap “Add.”'],
       androidTitle: 'Android:',
       androidText: 'Tap “Install” when prompted, or use your browser menu to add Fintrail to your home screen.',
       install: 'Install Guide',
       maybe: 'Maybe Later',
       never: 'Don’t Show Again',
-      close: 'Close'
+      close: 'Close',
+      guideReady: 'Follow the steps above to install Fintrail.',
+      nativeReady: 'Opening the Android install prompt.',
+      manualReady: 'Native install is not available here. Follow the steps above.'
     },
     es: {
       title: 'Instala Fintrail',
       body: 'Agrega Fintrail a tu pantalla de inicio para tener acceso más rápido y una experiencia similar a una aplicación.',
       iosTitle: 'iPhone / iPad:',
-      iosSteps: ['Toca el botón Compartir.', 'Selecciona “Agregar a pantalla de inicio.”', 'Toca “Agregar.”'],
+      iosSteps: ['Toca el botón Compartir de Safari en la parte inferior de la pantalla.', 'Desplázate y toca “Agregar a pantalla de inicio.”', 'Toca “Agregar.”'],
       androidTitle: 'Android:',
       androidText: 'Toca “Instalar” cuando aparezca el aviso, o usa el menú del navegador para agregar Fintrail a tu pantalla de inicio.',
       install: 'Guía de instalación',
       maybe: 'Más tarde',
       never: 'No volver a mostrar',
-      close: 'Cerrar'
+      close: 'Cerrar',
+      guideReady: 'Sigue los pasos de arriba para instalar Fintrail.',
+      nativeReady: 'Abriendo el aviso de instalación de Android.',
+      manualReady: 'La instalación nativa no está disponible aquí. Sigue los pasos de arriba.'
     }
   };
 
@@ -15499,6 +15523,16 @@ window.addEventListener('load', function(){
     var mobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|Tablet/i.test(ua);
     var tabletLike = touch > 1 && Math.min(window.innerWidth || 0, window.innerHeight || 0) <= 1024;
     return mobileUA || tabletLike;
+  }
+
+  function isIOSDevice(){
+    var ua = navigator.userAgent || '';
+    var touch = navigator.maxTouchPoints || 0;
+    return /iPhone|iPad|iPod/i.test(ua) || (touch > 1 && /Macintosh/i.test(ua));
+  }
+
+  function isAndroidDevice(){
+    return /Android/i.test(navigator.userAgent || '');
   }
 
   function isStandalone(){
@@ -15551,6 +15585,7 @@ window.addEventListener('load', function(){
     var primary = document.getElementById('fintrail-install-primary');
     var later = document.getElementById('fintrail-install-later');
     var never = document.getElementById('fintrail-install-never');
+    var feedback = document.getElementById('fintrail-install-feedback');
     var close = document.querySelector('.fintrail-install-close');
     if (!title || !body || !steps || !primary || !later || !never) return;
     title.textContent = c.title;
@@ -15559,10 +15594,31 @@ window.addEventListener('load', function(){
     later.textContent = c.maybe;
     never.textContent = c.never;
     if (close) close.setAttribute('aria-label', c.close);
+    if (feedback) {
+      feedback.textContent = '';
+      feedback.classList.remove('visible');
+    }
     steps.innerHTML = [
-      '<div class="fintrail-install-step"><strong>' + c.iosTitle + '</strong><ol>' + c.iosSteps.map(function(step){ return '<li>' + step + '</li>'; }).join('') + '</ol></div>',
-      '<div class="fintrail-install-step"><strong>' + c.androidTitle + '</strong><p>' + c.androidText + '</p></div>'
+      '<div class="fintrail-install-step" data-install-platform="ios"><strong>' + c.iosTitle + '</strong><ol>' + c.iosSteps.map(function(step){ return '<li>' + step + '</li>'; }).join('') + '</ol></div>',
+      '<div class="fintrail-install-step" data-install-platform="android"><strong>' + c.androidTitle + '</strong><p>' + c.androidText + '</p></div>'
     ].join('');
+  }
+
+  function showInstallGuideFeedback(message, platform){
+    var lang = getLang();
+    var c = copy[lang] || copy.en;
+    var steps = document.getElementById('fintrail-install-steps');
+    var feedback = document.getElementById('fintrail-install-feedback');
+    if (steps) {
+      steps.querySelectorAll('.fintrail-install-step').forEach(function(step){
+        step.classList.toggle('active', !platform || step.getAttribute('data-install-platform') === platform);
+      });
+      steps.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    if (feedback) {
+      feedback.textContent = message || c.guideReady;
+      feedback.classList.add('visible');
+    }
   }
 
   function showInstallPrompt(){
@@ -15604,7 +15660,15 @@ window.addEventListener('load', function(){
   };
 
   window.fintrailStartInstallPrompt = async function(){
-    if (deferredInstallPrompt) {
+    var lang = getLang();
+    var c = copy[lang] || copy.en;
+    renderInstallPrompt();
+    if (isIOSDevice()) {
+      showInstallGuideFeedback(c.guideReady, 'ios');
+      return;
+    }
+    if (deferredInstallPrompt && isAndroidDevice()) {
+      showInstallGuideFeedback(c.nativeReady, 'android');
       var promptEvent = deferredInstallPrompt;
       deferredInstallPrompt = null;
       promptEvent.prompt();
@@ -15617,9 +15681,7 @@ window.addEventListener('load', function(){
       } catch(e) {}
       return;
     }
-    renderInstallPrompt();
-    var steps = document.getElementById('fintrail-install-steps');
-    if (steps) steps.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    showInstallGuideFeedback(c.manualReady, isAndroidDevice() ? 'android' : null);
   };
 
   window.addEventListener('beforeinstallprompt', function(event){
