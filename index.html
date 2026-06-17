@@ -3,6 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f05555">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Fintrail Pro">
+<meta name="application-name" content="Fintrail Pro">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='44' fill='%23f05555'/%3E%3Ctext x='96' y='119' text-anchor='middle' font-family='Georgia,serif' font-size='72' font-weight='700' fill='white'%3EFP%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='42' fill='%23f05555'/%3E%3Ctext x='90' y='112' text-anchor='middle' font-family='Georgia,serif' font-size='66' font-weight='700' fill='white'%3EFP%3C/text%3E%3C/svg%3E">
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Fintrail%20Pro%22%2C%22short_name%22%3A%22Fintrail%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23f0f2f5%22%2C%22theme_color%22%3A%22%23f05555%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%2520viewBox%3D'0%25200%2520192%2520192'%253E%253Crect%2520width%3D'192'%2520height%3D'192'%2520rx%3D'44'%2520fill%3D'%2523f05555'%2F%253E%253Ctext%2520x%3D'96'%2520y%3D'119'%2520text-anchor%3D'middle'%2520font-family%3D'Georgia%2Cserif'%2520font-size%3D'72'%2520font-weight%3D'700'%2520fill%3D'white'%253EFP%253C%2Ftext%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
 <title>Fintrail Pro — Budget Smarter, Live Better</title>
 <!-- BUILD: FINTRAIL_ONBOARDING_V5_MOCKUP_STYLE_SAMPLE_SCORE_2026_06_03 -->
 <!-- REPLACE content value below with your actual Google Search Console verification code -->
@@ -3578,6 +3585,121 @@
 #tab-goals .goal-category,#goals-list .goal-category,#goals-grid .goal-category,.goal-card .goal-category{display:none!important;}
 #goal-cat,#goal-category{display:none!important;}
 </style>
+<style>
+/* === FINTRAIL MOBILE INSTALL PROMPT === */
+.fintrail-install-sheet {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 1200;
+  display: none;
+  justify-content: center;
+  padding: 0 14px max(14px, env(safe-area-inset-bottom));
+  pointer-events: none;
+}
+.fintrail-install-sheet.visible { display: flex; }
+.fintrail-install-card {
+  width: min(520px, 100%);
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 18px 18px 14px 14px;
+  box-shadow: 0 -12px 40px rgba(26,26,46,0.22);
+  padding: 18px;
+  pointer-events: auto;
+}
+.fintrail-install-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.fintrail-install-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.fintrail-install-mark {
+  width: 40px;
+  height: 40px;
+  border-radius: 13px;
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+}
+.fintrail-install-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  color: var(--text);
+  line-height: 1.1;
+}
+.fintrail-install-close {
+  border: 0;
+  background: var(--surface2);
+  color: var(--text-soft);
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.fintrail-install-body {
+  color: var(--text-soft);
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+.fintrail-install-steps {
+  display: grid;
+  gap: 10px;
+  margin: 12px 0;
+}
+.fintrail-install-step {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+.fintrail-install-step strong {
+  display: block;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.fintrail-install-step ol {
+  margin-left: 1.15rem;
+}
+.fintrail-install-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 14px;
+}
+.fintrail-install-actions button {
+  border: 0;
+  border-radius: 10px;
+  padding: 0.78rem 0.7rem;
+  font-family: 'Sora', sans-serif;
+  font-weight: 800;
+  cursor: pointer;
+}
+.fintrail-install-primary {
+  grid-column: 1 / -1;
+  background: var(--accent);
+  color: #fff;
+}
+.fintrail-install-secondary {
+  background: var(--surface2);
+  color: var(--text);
+}
+.fintrail-install-ghost {
+  background: transparent;
+  color: var(--text-soft);
+  border: 1px solid var(--border) !important;
+}
+</style>
 </head>
 <body>
 
@@ -3649,6 +3771,32 @@
         </div>
       </div>
 
+    </div>
+  </div>
+</div>
+
+
+<!-- FINTRAIL INSTALL PROMPT -->
+<div id="fintrail-install-sheet" class="fintrail-install-sheet" role="dialog" aria-modal="true" aria-labelledby="fintrail-install-title" aria-hidden="true">
+  <div class="fintrail-install-card">
+    <div class="fintrail-install-top">
+      <div class="fintrail-install-brand">
+        <div class="fintrail-install-mark">FP</div>
+        <div>
+          <div id="fintrail-install-title" class="fintrail-install-title">Install Fintrail</div>
+          <div style="font-size:0.72rem;font-weight:800;color:var(--muted);letter-spacing:0.08em">FINTRAIL PRO</div>
+        </div>
+      </div>
+      <button type="button" class="fintrail-install-close" onclick="fintrailDismissInstallPrompt('later')" aria-label="Close">×</button>
+    </div>
+    <div class="fintrail-install-body">
+      <p id="fintrail-install-copy"></p>
+      <div class="fintrail-install-steps" id="fintrail-install-steps"></div>
+    </div>
+    <div class="fintrail-install-actions">
+      <button type="button" class="fintrail-install-primary" id="fintrail-install-primary" onclick="fintrailStartInstallPrompt()">Install Guide</button>
+      <button type="button" class="fintrail-install-secondary" id="fintrail-install-later" onclick="fintrailDismissInstallPrompt('later')">Maybe Later</button>
+      <button type="button" class="fintrail-install-ghost" id="fintrail-install-never" onclick="fintrailDismissInstallPrompt('never')">Don’t Show Again</button>
     </div>
   </div>
 </div>
@@ -15294,6 +15442,217 @@ window.addEventListener('load', function(){
 
 
 
+<script>
+/* === FINTRAIL MOBILE PWA INSTALL PROMPT === */
+(function(){
+  var deferredInstallPrompt = null;
+  var installPromptTimer = null;
+  var INSTALL_DISMISSED_UNTIL = 'fintrailInstallPromptDismissedUntil';
+  var INSTALL_NEVER_SHOW = 'fintrailInstallPromptNeverShow';
+  var INSTALL_SHOWN_COUNT = 'fintrailInstallPromptShownCount';
+  var MAX_INSTALL_PROMPT_SHOWS = 3;
+  var MAYBE_LATER_DAYS = 30;
+
+  var copy = {
+    en: {
+      title: 'Install Fintrail',
+      body: 'Add Fintrail to your home screen for faster access and an app-like experience.',
+      iosTitle: 'iPhone / iPad:',
+      iosSteps: ['Tap the Share button.', 'Select “Add to Home Screen.”', 'Tap “Add.”'],
+      androidTitle: 'Android:',
+      androidText: 'Tap “Install” when prompted, or use your browser menu to add Fintrail to your home screen.',
+      install: 'Install Guide',
+      maybe: 'Maybe Later',
+      never: 'Don’t Show Again',
+      close: 'Close'
+    },
+    es: {
+      title: 'Instala Fintrail',
+      body: 'Agrega Fintrail a tu pantalla de inicio para tener acceso más rápido y una experiencia similar a una aplicación.',
+      iosTitle: 'iPhone / iPad:',
+      iosSteps: ['Toca el botón Compartir.', 'Selecciona “Agregar a pantalla de inicio.”', 'Toca “Agregar.”'],
+      androidTitle: 'Android:',
+      androidText: 'Toca “Instalar” cuando aparezca el aviso, o usa el menú del navegador para agregar Fintrail a tu pantalla de inicio.',
+      install: 'Guía de instalación',
+      maybe: 'Más tarde',
+      never: 'No volver a mostrar',
+      close: 'Cerrar'
+    }
+  };
+
+  function getLang(){
+    try { return (typeof currentLang !== 'undefined' && currentLang === 'es') ? 'es' : 'en'; }
+    catch(e) { return 'en'; }
+  }
+
+  function storeGet(key){
+    try { return localStorage.getItem(key); } catch(e) { return null; }
+  }
+
+  function storeSet(key, value){
+    try { localStorage.setItem(key, String(value)); } catch(e) {}
+  }
+
+  function isMobileOrTablet(){
+    var ua = navigator.userAgent || '';
+    var touch = navigator.maxTouchPoints || 0;
+    var mobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|Tablet/i.test(ua);
+    var tabletLike = touch > 1 && Math.min(window.innerWidth || 0, window.innerHeight || 0) <= 1024;
+    return mobileUA || tabletLike;
+  }
+
+  function isStandalone(){
+    return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+      window.navigator.standalone === true;
+  }
+
+  function isAuthVisible(){
+    var auth = document.getElementById('auth-screen');
+    if (!auth) return false;
+    return getComputedStyle(auth).display !== 'none';
+  }
+
+  function isOnboardingVisible(){
+    var overlay = document.getElementById('ft-onboarding-v5');
+    return !!(overlay && overlay.classList.contains('ft-onboarding-v5-visible'));
+  }
+
+  function hasAppAccess(){
+    var hasUser = false;
+    try { hasUser = !!currentUser; } catch(e) {}
+    var done = false;
+    try {
+      if (typeof ftOnboardingV5IsComplete === 'function') done = ftOnboardingV5IsComplete();
+      if (!done && typeof window.fintrailIsOnboardingCompleteSynced === 'function') done = window.fintrailIsOnboardingCompleteSynced();
+    } catch(e) {}
+    return hasUser || done;
+  }
+
+  function canShowInstallPrompt(){
+    if (!isMobileOrTablet()) return false;
+    if (isStandalone()) return false;
+    if (isAuthVisible()) return false;
+    if (isOnboardingVisible()) return false;
+    if (!hasAppAccess()) return false;
+    if (storeGet(INSTALL_NEVER_SHOW) === 'true') return false;
+    var dismissedUntil = parseInt(storeGet(INSTALL_DISMISSED_UNTIL) || '0', 10);
+    if (dismissedUntil && Date.now() < dismissedUntil) return false;
+    var count = parseInt(storeGet(INSTALL_SHOWN_COUNT) || '0', 10);
+    if (count >= MAX_INSTALL_PROMPT_SHOWS) return false;
+    return true;
+  }
+
+  function renderInstallPrompt(){
+    var lang = getLang();
+    var c = copy[lang] || copy.en;
+    var title = document.getElementById('fintrail-install-title');
+    var body = document.getElementById('fintrail-install-copy');
+    var steps = document.getElementById('fintrail-install-steps');
+    var primary = document.getElementById('fintrail-install-primary');
+    var later = document.getElementById('fintrail-install-later');
+    var never = document.getElementById('fintrail-install-never');
+    var close = document.querySelector('.fintrail-install-close');
+    if (!title || !body || !steps || !primary || !later || !never) return;
+    title.textContent = c.title;
+    body.textContent = c.body;
+    primary.textContent = c.install;
+    later.textContent = c.maybe;
+    never.textContent = c.never;
+    if (close) close.setAttribute('aria-label', c.close);
+    steps.innerHTML = [
+      '<div class="fintrail-install-step"><strong>' + c.iosTitle + '</strong><ol>' + c.iosSteps.map(function(step){ return '<li>' + step + '</li>'; }).join('') + '</ol></div>',
+      '<div class="fintrail-install-step"><strong>' + c.androidTitle + '</strong><p>' + c.androidText + '</p></div>'
+    ].join('');
+  }
+
+  function showInstallPrompt(){
+    if (!canShowInstallPrompt()) return;
+    renderInstallPrompt();
+    var sheet = document.getElementById('fintrail-install-sheet');
+    if (!sheet) return;
+    sheet.classList.add('visible');
+    sheet.setAttribute('aria-hidden', 'false');
+    var count = parseInt(storeGet(INSTALL_SHOWN_COUNT) || '0', 10);
+    storeSet(INSTALL_SHOWN_COUNT, count + 1);
+  }
+
+  function hideInstallPrompt(){
+    var sheet = document.getElementById('fintrail-install-sheet');
+    if (!sheet) return;
+    sheet.classList.remove('visible');
+    sheet.setAttribute('aria-hidden', 'true');
+  }
+
+  function scheduleInstallPrompt(delay){
+    clearTimeout(installPromptTimer);
+    installPromptTimer = setTimeout(function(){
+      if (isOnboardingVisible()) {
+        scheduleInstallPrompt(4000);
+        return;
+      }
+      showInstallPrompt();
+    }, delay || 14000);
+  }
+
+  window.fintrailDismissInstallPrompt = function(action){
+    if (action === 'never') {
+      storeSet(INSTALL_NEVER_SHOW, 'true');
+    } else {
+      storeSet(INSTALL_DISMISSED_UNTIL, Date.now() + MAYBE_LATER_DAYS * 24 * 60 * 60 * 1000);
+    }
+    hideInstallPrompt();
+  };
+
+  window.fintrailStartInstallPrompt = async function(){
+    if (deferredInstallPrompt) {
+      var promptEvent = deferredInstallPrompt;
+      deferredInstallPrompt = null;
+      promptEvent.prompt();
+      try {
+        var choice = await promptEvent.userChoice;
+        if (choice && choice.outcome === 'accepted') {
+          storeSet(INSTALL_NEVER_SHOW, 'true');
+          hideInstallPrompt();
+        }
+      } catch(e) {}
+      return;
+    }
+    renderInstallPrompt();
+    var steps = document.getElementById('fintrail-install-steps');
+    if (steps) steps.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  };
+
+  window.addEventListener('beforeinstallprompt', function(event){
+    event.preventDefault();
+    deferredInstallPrompt = event;
+  });
+
+  window.addEventListener('appinstalled', function(){
+    storeSet(INSTALL_NEVER_SHOW, 'true');
+    hideInstallPrompt();
+  });
+
+  window.addEventListener('load', function(){
+    scheduleInstallPrompt(15000);
+    var overlay = document.getElementById('ft-onboarding-v5');
+    if (overlay && window.MutationObserver) {
+      new MutationObserver(function(){
+        if (!isOnboardingVisible()) scheduleInstallPrompt(2500);
+      }).observe(overlay, { attributes: true, attributeFilter: ['class'] });
+    }
+  });
+
+  var originalShowApp = (typeof window.showApp === 'function') ? window.showApp : null;
+  if (originalShowApp && !originalShowApp.__fintrailInstallPromptWrapped) {
+    window.showApp = function(){
+      var result = originalShowApp.apply(this, arguments);
+      scheduleInstallPrompt(15000);
+      return result;
+    };
+    window.showApp.__fintrailInstallPromptWrapped = true;
+  }
+})();
+</script>
 
 
 </body>
