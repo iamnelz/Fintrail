@@ -5285,6 +5285,11 @@
                 onkeydown="if(event.key==='Enter')syncScoreSlider()"
                 style="font-size:1.1rem;font-weight:700;text-align:center">
             </div>
+            <label style="display:flex;align-items:center;gap:0.55rem;margin-top:0.75rem;font-size:0.82rem;color:var(--text-soft);font-weight:700;cursor:pointer">
+              <input type="checkbox" id="credit-no-score" onchange="toggleNoCreditScore(this.checked)">
+              <span data-en="I don’t have a credit score yet" data-es="Aún no tengo puntaje de crédito">I don’t have a credit score yet</span>
+            </label>
+            <div id="credit-beginner-guidance" style="display:none;margin-top:0.85rem;padding:0.85rem;border-radius:10px;background:rgba(66,103,214,0.08);border:1px solid rgba(66,103,214,0.16);font-size:0.78rem;color:var(--text-soft);line-height:1.55"></div>
           </div>
 
           <div class="score-input-card">
@@ -6183,6 +6188,18 @@
             gameData.creditScore = data.game_data.creditScore || data.game_data.credit_score;
           }
           if (gameData.creditScore) safeSet('fintrail_credit_score_' + currentUser.id, String(gameData.creditScore));
+          if ((data.game_data.creditScoreStatus || data.game_data.credit_score_status) === 'no_score') {
+            gameData.creditScore = null;
+            gameData.credit_score = null;
+            gameData.creditScoreStatus = 'no_score';
+            gameData.credit_score_status = 'no_score';
+          }
+          if ((gameData.creditScoreStatus || gameData.credit_score_status) === 'no_score') {
+            safeSet('fintrail_credit_score_status_' + currentUser.id, 'no_score');
+            safeSet('fintrail_credit_score_status_local', 'no_score');
+            safeSet('fintrail_credit_score_' + currentUser.id, 'null');
+            safeSet('fintrail_credit_score_local', 'null');
+          }
           if (data.game_data.alertPrefs || data.game_data.alert_prefs) {
             alertPrefs = normalizeAlertPrefs(data.game_data.alertPrefs || data.game_data.alert_prefs);
             saveAlertPrefsLocal();
@@ -8733,6 +8750,7 @@ Guidelines:
 
 
   function getSavedCreditScore() {
+    if (hasNoCreditScore()) return null;
     const uid = currentUser?.id || 'demo';
     const saved = parseInt(safeGet('fintrail_credit_score_' + uid) || safeGet('fintrail_credit_score_local') || '0');
     if (!isNaN(saved) && saved >= 300 && saved <= 850) return saved;
@@ -8742,6 +8760,7 @@ Guidelines:
   }
 
   function hasSavedCreditScore() {
+    if (hasNoCreditScore()) return false;
     const uid = currentUser?.id || 'demo';
     const candidates = [
       safeGet('fintrail_credit_score_' + uid),
@@ -8755,7 +8774,52 @@ Guidelines:
     });
   }
 
+  function hasNoCreditScore() {
+    const uid = currentUser?.id || 'demo';
+    return gameData?.creditScoreStatus === 'no_score' ||
+      gameData?.credit_score_status === 'no_score' ||
+      safeGet('fintrail_credit_score_status_' + uid) === 'no_score' ||
+      safeGet('fintrail_credit_score_status_local') === 'no_score';
+  }
+
+  function getCreditBeginnerGuidanceHTML() {
+    const items = currentLang === 'es'
+      ? [
+        'Comienza con una tarjeta asegurada o como usuario autorizado.',
+        'Haz compras pequeñas y paga el saldo completo cada mes.',
+        'Evita solicitar demasiadas cuentas al mismo tiempo.',
+        'Tu primer puntaje normalmente aparece después de varios meses de actividad reportada.'
+      ]
+      : [
+        'Start by opening a secured credit card or becoming an authorized user.',
+        'Make small purchases and pay the balance in full each month.',
+        'Avoid applying for too many accounts at once.',
+        'Your first score usually appears after several months of reported activity.'
+      ];
+    return `<strong>${currentLang === 'es' ? 'Para construir tu primer puntaje:' : 'To build your first score:'}</strong><ul style="margin:0.45rem 0 0 1rem;padding:0">${items.map(item => `<li>${item}</li>`).join('')}</ul>`;
+  }
+
+  function setCreditInputsDisabled(disabled) {
+    const slider = document.getElementById('base-score');
+    const input = document.getElementById('base-score-num');
+    if (slider) slider.disabled = disabled;
+    if (input) input.disabled = disabled;
+  }
+
   function applySavedCreditScore() {
+    const noScore = hasNoCreditScore();
+    const noScoreBox = document.getElementById('credit-no-score');
+    const guidance = document.getElementById('credit-beginner-guidance');
+    if (noScoreBox) noScoreBox.checked = noScore;
+    setCreditInputsDisabled(noScore);
+    if (guidance) {
+      guidance.style.display = noScore ? 'block' : 'none';
+      guidance.innerHTML = noScore ? getCreditBeginnerGuidanceHTML() : '';
+    }
+    if (noScore) {
+      if (document.getElementById('base-score-display')) document.getElementById('base-score-display').textContent = currentLang === 'es' ? 'Sin puntaje' : 'No score';
+      return;
+    }
     const score = getSavedCreditScore();
     const slider = document.getElementById('base-score');
     const input = document.getElementById('base-score-num');
@@ -8770,9 +8834,13 @@ Guidelines:
     const uid = currentUser?.id || 'demo';
     gameData.creditScore = val;
     gameData.credit_score = val;
+    gameData.creditScoreStatus = 'scored';
+    gameData.credit_score_status = 'scored';
     gameData.creditScoreUpdatedAt = new Date().toISOString();
     safeSet('fintrail_credit_score_' + uid, String(val));
     safeSet('fintrail_credit_score_local', String(val));
+    safeSet('fintrail_credit_score_status_' + uid, 'scored');
+    safeSet('fintrail_credit_score_status_local', 'scored');
     safeSet('fintrail_credit_score_updated_' + uid, gameData.creditScoreUpdatedAt);
     refreshHealthScoreIfVisible();
     if (creditScoreSaveTimer) clearTimeout(creditScoreSaveTimer);
@@ -8790,7 +8858,89 @@ Guidelines:
     }, 450);
   }
 
+  function persistNoCreditScore() {
+    const uid = currentUser?.id || 'demo';
+    gameData.creditScore = null;
+    gameData.credit_score = null;
+    gameData.creditScoreStatus = 'no_score';
+    gameData.credit_score_status = 'no_score';
+    gameData.creditScoreUpdatedAt = new Date().toISOString();
+    safeSet('fintrail_credit_score_' + uid, 'null');
+    safeSet('fintrail_credit_score_local', 'null');
+    safeSet('fintrail_credit_score_status_' + uid, 'no_score');
+    safeSet('fintrail_credit_score_status_local', 'no_score');
+    safeSet('fintrail_credit_score_updated_' + uid, gameData.creditScoreUpdatedAt);
+    refreshHealthScoreIfVisible();
+    if (creditScoreSaveTimer) clearTimeout(creditScoreSaveTimer);
+    creditScoreSaveTimer = setTimeout(async () => {
+      if (!sbClient || !currentUser) return;
+      try {
+        await sbClient.from('user_data').upsert({
+          user_id: currentUser.id,
+          game_data: gameData,
+          updated_at: new Date().toISOString()
+        }, { onConflict: 'user_id' });
+      } catch (e) {
+        console.log('credit score sync err:', e.message);
+      }
+    }, 450);
+  }
+
+  function toggleNoCreditScore(enabled) {
+    setCreditInputsDisabled(enabled);
+    const guidance = document.getElementById('credit-beginner-guidance');
+    if (enabled) {
+      persistNoCreditScore();
+      if (guidance) {
+        guidance.style.display = 'block';
+        guidance.innerHTML = getCreditBeginnerGuidanceHTML();
+      }
+      renderNoScoreSimulator();
+    } else {
+      if (guidance) {
+        guidance.style.display = 'none';
+        guidance.innerHTML = '';
+      }
+      const fallback = 680;
+      const slider = document.getElementById('base-score');
+      const input = document.getElementById('base-score-num');
+      if (slider) slider.value = fallback;
+      if (input) input.value = fallback;
+      persistCreditScore(fallback);
+      updateSimulator();
+    }
+  }
+
+  function renderNoScoreSimulator() {
+    const label = currentLang === 'es' ? 'Aún no tengo puntaje de crédito' : 'No credit score yet';
+    const guidanceHTML = getCreditBeginnerGuidanceHTML();
+    const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
+    setText('sim-current-score', '—');
+    setText('sim-current-rating', label);
+    setText('base-score-display', currentLang === 'es' ? 'Sin puntaje' : 'No score');
+    setText('result-current', '—');
+    setText('result-simulated', '—');
+    setText('result-current-rating', label);
+    setText('result-change', currentLang === 'es' ? 'Construye tu primer puntaje' : 'Build your first score');
+    const changeEl = document.getElementById('result-change');
+    if (changeEl) changeEl.style.color = 'var(--accent)';
+    const needleCurrent = document.getElementById('needle-current');
+    const needleSim = document.getElementById('needle-simulated');
+    if (needleCurrent) needleCurrent.style.left = '0%';
+    if (needleSim) needleSim.style.left = '0%';
+    const timeline = document.getElementById('score-timeline');
+    if (timeline) timeline.innerHTML = `<div class="tl-card" style="grid-column:1/-1"><div class="tl-label">${label}</div><div class="tl-time">${currentLang === 'es' ? 'Tu primer puntaje normalmente aparece después de varios meses de actividad reportada.' : 'Your first score usually appears after several months of reported activity.'}</div></div>`;
+    const plan = document.getElementById('action-plan');
+    if (plan) plan.innerHTML = `<div class="ap-item"><div class="ap-rank">1</div><div class="ap-content">${guidanceHTML}</div></div>`;
+    const guidance = document.getElementById('credit-beginner-guidance');
+    if (guidance) {
+      guidance.style.display = 'block';
+      guidance.innerHTML = guidanceHTML;
+    }
+  }
+
   function syncScoreSlider() {
+    if (hasNoCreditScore()) return;
     const input = document.getElementById('base-score-num');
     const raw = parseInt(input.value);
     if (isNaN(raw) || input.value === '') return;
@@ -8802,6 +8952,10 @@ Guidelines:
   }
 
   function updateSimulator() {
+    if (hasNoCreditScore()) {
+      renderNoScoreSimulator();
+      return;
+    }
     const base = parseInt(document.getElementById('base-score').value);
     document.getElementById('base-score-num').value = base;
     document.getElementById('base-score-display').textContent = base;
@@ -10642,6 +10796,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   }
 
   function getReportCreditScore() {
+    if (typeof hasNoCreditScore === 'function' && hasNoCreditScore()) return null;
     // Prefer the credit simulator's saved score helper if available.
     try {
       if (typeof getSavedCreditScore === 'function') {
@@ -10668,6 +10823,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   }
 
   function getReportSimulatedCreditScore(base) {
+    if (base === null || base === undefined || isNaN(parseInt(base))) return null;
     let impact = 0;
     try {
       if (Array.isArray(selectedActions) && Array.isArray(creditActions)) {
@@ -10964,29 +11120,35 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
 
     // Credit — live from Credit Simulator saved score
     const credit = getReportCreditScore();
-    const simulated = getReportSimulatedCreditScore(credit);
-    reportSetText('report-credit-current', credit);
-    reportSetText('report-credit-simulated', simulated);
+    const hasNoScore = credit === null;
+    const noScoreLabel = t('No credit score yet', 'Aún no hay puntaje de crédito');
+    const simulated = hasNoScore ? null : getReportSimulatedCreditScore(credit);
+    reportSetText('report-credit-current', hasNoScore ? noScoreLabel : credit);
+    reportSetText('report-credit-simulated', hasNoScore ? noScoreLabel : simulated);
     const creditFill = document.getElementById('report-credit-progress');
-    if (creditFill) creditFill.style.width = Math.max(0, Math.min(100, ((credit - 300) / 550) * 100)) + '%';
-    let factor = t('Use the credit simulator to see your biggest positive factor.', 'Usa el simulador de crédito para ver tu factor positivo principal.');
+    if (creditFill) creditFill.style.width = hasNoScore ? '0%' : Math.max(0, Math.min(100, ((credit - 300) / 550) * 100)) + '%';
+    let factor = hasNoScore
+      ? t('Start with a secured card or authorized user account.', 'Comienza con una tarjeta asegurada o como usuario autorizado.')
+      : t('Use the credit simulator to see your biggest positive factor.', 'Usa el simulador de crédito para ver tu factor positivo principal.');
     try {
-      if (Array.isArray(selectedActions) && selectedActions.length && Array.isArray(creditActions)) {
+      if (!hasNoScore && Array.isArray(selectedActions) && selectedActions.length && Array.isArray(creditActions)) {
         const best = selectedActions.map(id => creditActions.find(a => a.id === id)).filter(Boolean).sort((a,b) => b.impact - a.impact)[0];
         if (best) factor = `${best.label}: ${best.impact > 0 ? '+' : ''}${best.impact} ${t('points estimated impact.', 'puntos de impacto estimado.')}`;
       }
     } catch(e) {}
     reportSetText('report-credit-factor', factor);
-    reportSetText('report-credit-insight', simulated > credit
-      ? t(`Your selected simulations could move your score from ${credit} to about ${simulated}.`, `Tus simulaciones seleccionadas podrían mover tu puntaje de ${credit} a aproximadamente ${simulated}.`)
-      : t(`Your saved credit score is ${credit}. Try a credit simulation to identify your strongest next step.`, `Tu puntaje de crédito guardado es ${credit}. Prueba una simulación de crédito para identificar tu próximo paso más fuerte.`)
+    reportSetText('report-credit-insight', hasNoScore
+      ? t('Your first score usually appears after several months of reported activity.', 'Tu primer puntaje normalmente aparece después de varios meses de actividad reportada.')
+      : (simulated > credit
+        ? t(`Your selected simulations could move your score from ${credit} to about ${simulated}.`, `Tus simulaciones seleccionadas podrían mover tu puntaje de ${credit} a aproximadamente ${simulated}.`)
+        : t(`Your saved credit score is ${credit}. Try a credit simulation to identify your strongest next step.`, `Tu puntaje de crédito guardado es ${credit}. Prueba una simulación de crédito para identificar tu próximo paso más fuerte.`))
     );
 
     // AI highlights
     const highlights = [];
     if (topGoal) highlights.push(t(`Your top savings goal is ${topGoal.name}.`, `Tu meta principal de ahorro es ${topGoal.name}.`));
     if (focusDebt) highlights.push(t(`Your current payoff focus is ${focusDebt.name}.`, `Tu enfoque actual de pago es ${focusDebt.name}.`));
-    highlights.push(t(`Your saved credit score is ${credit}.`, `Tu puntaje de crédito guardado es ${credit}.`));
+    highlights.push(hasNoScore ? noScoreLabel : t(`Your saved credit score is ${credit}.`, `Tu puntaje de crédito guardado es ${credit}.`));
     if ((gameData?.askedAI || gameData?.usedCreditSim || gameData?.usedInvestCalc)) {
       highlights.push(t('You are actively using Fintrail tools to build financial momentum.', 'Estás usando activamente las herramientas de Fintrail para crear impulso financiero.'));
     }
@@ -11003,8 +11165,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       : t('You are building better financial habits by using your tools.', 'Estás construyendo mejores hábitos financieros usando tus herramientas.')
     );
     reportSetText('report-summary-text', t(
-      `This report is now using your live Fintrail data: ${debts.length} debt${debts.length===1?'':'s'} tracked, credit score ${credit}, and ${goals.length} savings goal${goals.length===1?'':'s'}.`,
-      `Este reporte ahora usa tus datos activos de Fintrail: ${debts.length} deuda${debts.length===1?'':'s'} registrada${debts.length===1?'':'s'}, puntaje de crédito ${credit} y ${goals.length} meta${goals.length===1?'':'s'} de ahorro.`
+      `This report is now using your live Fintrail data: ${debts.length} debt${debts.length===1?'':'s'} tracked, ${hasNoScore ? 'no credit score yet' : 'credit score ' + credit}, and ${goals.length} savings goal${goals.length===1?'':'s'}.`,
+      `Este reporte ahora usa tus datos activos de Fintrail: ${debts.length} deuda${debts.length===1?'':'s'} registrada${debts.length===1?'':'s'}, ${hasNoScore ? 'aún no hay puntaje de crédito' : 'puntaje de crédito ' + credit} y ${goals.length} meta${goals.length===1?'':'s'} de ahorro.`
     ));
     captureMonthlyReportSnapshot(currentMonthKey, {
       health,
