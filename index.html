@@ -11442,29 +11442,6 @@ Guidelines:
       debts: debts.length
     });
   }
-  function getMonthlyReportPdfLines() {
-    const text = id => (document.getElementById(id)?.textContent || '').trim();
-    const aiText = (document.getElementById('report-ai-list')?.innerText || '').trim();
-    return [
-      text('report-title'),
-      text('report-subtitle'),
-      '',
-      `${text('report-health-heading')}: ${text('report-score-current')} (${text('report-score-note')})`,
-      `${text('report-savings-heading')}: ${text('report-savings-goal-name')} - ${text('report-savings-saved')} / ${text('report-savings-target')} (${text('report-savings-pct')})`,
-      `${text('report-debt-heading')}: ${text('report-debt-total')} - ${text('report-debt-focus')}`,
-      `${text('report-credit-heading')}: ${text('report-credit-current')} -> ${text('report-credit-simulated')}`,
-      `${text('report-credit-factor-label')}: ${text('report-credit-factor')}`,
-      '',
-      text('report-ai-heading'),
-      aiText,
-      '',
-      `${text('report-next-focus-label')}: ${text('report-next-focus')}`,
-      `${text('report-monthly-achievement-label')}: ${text('report-achievement-title')} - ${text('report-achievement-desc')}`,
-      '',
-      text('report-summary-text')
-    ].filter(line => line !== undefined);
-  }
-
   function normalizePdfText(text) {
     return String(text || '')
       .normalize('NFD')
@@ -11494,24 +11471,262 @@ Guidelines:
     return normalizePdfText(text).replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)');
   }
 
+  function getMonthlyReportPDFData() {
+    const isEs = currentLang === 'es';
+    const t = (en, es) => isEs ? es : en;
+    const text = id => (document.getElementById(id)?.textContent || '').trim();
+    const currentMonthKey = document.getElementById('report-month-select')?.value !== 'current'
+      ? document.getElementById('report-month-select')?.value
+      : getMonthlyReportMonthKey();
+    const snapshots = getMonthlyReportSnapshots();
+    const previousReport = getPreviousMonthlyReportSnapshot(snapshots, currentMonthKey || getMonthlyReportMonthKey());
+    const health = parseInt(text('report-score-current'), 10) || getReportHealthScore();
+    const healthStatus = health < 50 ? t('Needs Attention', 'Necesita Atencion') :
+      health < 70 ? t('Improving', 'Mejorando') :
+      health < 85 ? t('Good', 'Bueno') :
+      t('Excellent', 'Excelente');
+    const monthLabel = formatMonthlyReportMonth(currentMonthKey || getMonthlyReportMonthKey(), isEs);
+    const generatedLabel = new Date().toLocaleDateString(isEs ? 'es-US' : 'en-US', { month:'long', day:'numeric', year:'numeric' });
+    const userLabel = currentUser?.user_metadata?.full_name || currentUser?.email || '';
+
+    const currentGoals = Array.isArray(goals) && goals.length ? goals : [];
+    const savings = currentGoals.length ? currentGoals.map(g => {
+      const saved = parseFloat(g.saved) || 0;
+      const target = parseFloat(g.target) || 0;
+      const remaining = Math.max(0, target - saved);
+      const pct = target > 0 ? Math.min(100, Math.round((saved / target) * 100)) : 0;
+      return {
+        name: g.name || t('Savings Goal', 'Meta de Ahorro'),
+        saved: '$' + saved.toLocaleString(undefined, { maximumFractionDigits:0 }),
+        target: '$' + target.toLocaleString(undefined, { maximumFractionDigits:0 }),
+        remaining: '$' + remaining.toLocaleString(undefined, { maximumFractionDigits:0 }),
+        progress: pct + '% ' + t('Complete', 'Completo')
+      };
+    }) : [];
+    if (!savings.length && text('report-savings-goal-name') && text('report-savings-saved') !== '$0') {
+      const savedNum = parseFloat(text('report-savings-saved').replace(/[^0-9.]/g, '')) || 0;
+      const targetNum = parseFloat(text('report-savings-target').replace(/[^0-9.]/g, '')) || 0;
+      savings.push({
+        name: text('report-savings-goal-name'),
+        saved: text('report-savings-saved'),
+        target: text('report-savings-target'),
+        remaining: '$' + Math.max(0, targetNum - savedNum).toLocaleString(undefined, { maximumFractionDigits:0 }),
+        progress: text('report-savings-pct') + ' ' + t('Complete', 'Completo')
+      });
+    }
+
+    const debts = getReportDebts();
+    const totalDebt = text('report-debt-total') || '$0';
+    const focusDebt = text('report-debt-focus') || t('No debt added', 'No hay deudas agregadas');
+    const strategy = payoffMethod === 'snowball' ? t('Snowball', 'Bola de Nieve') : t('Avalanche', 'Avalancha');
+    const focusObj = debts.find(d => d.name === focusDebt) || debts[0];
+    const nextPayment = focusObj ? `${focusObj.name} - ${'$' + (parseFloat(focusObj.minPayment) || 0).toLocaleString(undefined, { maximumFractionDigits:0 })}` : t('Add debts to calculate focus payment.', 'Agrega deudas para calcular el pago de enfoque.');
+
+    const currentCreditText = text('report-credit-current');
+    const noScore = /no credit score yet|aun no hay puntaje|aún no hay puntaje/i.test(currentCreditText);
+    const currentCredit = noScore ? t('No credit score yet', 'Aun no hay puntaje de credito') : currentCreditText;
+    const previousCreditNum = parseInt(previousReport?.metrics?.credit, 10);
+    const currentCreditNum = parseInt(currentCreditText, 10);
+    const previousCredit = noScore ? t('No credit score yet', 'Aun no hay puntaje de credito') :
+      (!isNaN(previousCreditNum) ? previousCreditNum : (!isNaN(currentCreditNum) ? currentCreditNum : currentCreditText));
+    const creditChange = noScore ? '' : ((!isNaN(currentCreditNum) && !isNaN(parseInt(previousCredit, 10))) ? String(currentCreditNum - parseInt(previousCredit, 10)) : '0');
+
+    const aiItems = Array.from(document.querySelectorAll('#report-ai-list .report-ai-item')).map(el => el.textContent.trim()).filter(Boolean);
+    const aiInsight = aiItems.length ? aiItems.join(' ') : (text('report-summary-text') || t('Keep using Fintrail tools for more personalized insights.', 'Sigue usando las herramientas de Fintrail para obtener consejos mas personalizados.'));
+
+    return {
+      isEs,
+      labels: {
+        monthlyReport: t('Monthly Financial Progress Report', 'Reporte Mensual de Progreso Financiero'),
+        generated: t('Generated', 'Generado'),
+        brandLine: 'Budget Smarter. Live Better.',
+        health: t('Financial Health Summary', 'Resumen de Salud Financiera'),
+        healthScore: t('Financial Health Score', 'Puntaje de Salud Financiera'),
+        savings: t('Savings Progress', 'Progreso de Ahorros'),
+        noSavings: t('No savings goals yet.', 'Aun no hay metas de ahorro.'),
+        saved: t('Saved', 'Ahorrado'),
+        target: t('Target', 'Objetivo'),
+        remaining: t('Remaining', 'Restante'),
+        progress: t('Progress', 'Progreso'),
+        debt: t('Debt Payoff Progress', 'Progreso de Pago de Deudas'),
+        totalDebt: t('Total Debt Tracked', 'Total de Deuda Registrada'),
+        currentFocus: t('Current Focus', 'Enfoque Actual'),
+        strategy: t('Recommended Strategy', 'Estrategia Recomendada'),
+        nextPayment: t('Next Payment Focus', 'Proximo Pago de Enfoque'),
+        credit: t('Credit Progress', 'Progreso de Credito'),
+        currentScore: t('Current Score', 'Puntaje Actual'),
+        previousScore: t('Previous Score', 'Puntaje Anterior'),
+        change: t('Change', 'Cambio'),
+        ai: t('AI Insights', 'Consejos de IA'),
+        achievement: t('Monthly Achievement', 'Logro del Mes'),
+        suggestedFocus: t('Suggested Focus', 'Enfoque Sugerido'),
+        footer: t('Generated by Fintrail Pro', 'Generado por Fintrail Pro'),
+        disclaimer: t('This report is for educational and personal tracking purposes only.', 'Este reporte es solo para fines educativos y de seguimiento personal.')
+      },
+      monthLabel,
+      generatedLabel,
+      userLabel,
+      health,
+      healthStatus,
+      savings,
+      totalDebt,
+      focusDebt,
+      strategy,
+      nextPayment,
+      currentCredit,
+      previousCredit,
+      creditChange,
+      aiInsight,
+      achievementTitle: text('report-achievement-title') || t('Progress Builder', 'Constructor de Progreso'),
+      achievementDesc: text('report-achievement-desc') || t('Keep tracking your progress to unlock monthly achievements.', 'Sigue registrando tu progreso para desbloquear logros mensuales.'),
+      suggestedFocus: text('report-next-focus') || t('Keep updating your savings, debt, and credit tools.', 'Sigue actualizando tus herramientas de ahorro, deuda y credito.')
+    };
+  }
+
   function createMonthlyReportPDFBlob() {
-    const rawLines = getMonthlyReportPdfLines();
-    const lines = [];
-    rawLines.forEach(line => splitPdfLine(line).forEach(part => lines.push(part)));
-    const contentLines = ['BT', '/F1 16 Tf', '50 760 Td', `(${escapePdfText(lines.shift() || 'Fintrail Pro Monthly Report')}) Tj`, '/F1 10 Tf', '0 -24 Td'];
-    lines.slice(0, 54).forEach(line => {
-      contentLines.push(`(${escapePdfText(line)}) Tj`);
-      contentLines.push('0 -14 Td');
-    });
-    contentLines.push('ET');
-    const stream = contentLines.join('\n');
+    const data = getMonthlyReportPDFData();
+    const pageW = 612, pageH = 792, margin = 42;
+    const pages = [];
+    let cmds = [], y = pageH - margin;
+    const color = {
+      dark:[26,26,46], accent:[240,85,85], accent2:[245,166,35], green:[0,184,148],
+      soft:[90,96,114], border:[224,227,234], bg:[246,248,251], white:[255,255,255]
+    };
+    const rgb = c => c.map(v => (v / 255).toFixed(3)).join(' ');
+    const add = s => cmds.push(s);
+    const page = () => { if (cmds.length) pages.push(cmds.join('\n')); cmds = []; y = pageH - margin; };
+    const rect = (x, yy, w, h, fill, stroke) => {
+      add('q');
+      if (fill) add(`${rgb(fill)} rg`);
+      if (stroke) add(`${rgb(stroke)} RG 1 w`);
+      add(`${x} ${yy} ${w} ${h} re ${fill && stroke ? 'B' : fill ? 'f' : 'S'}`);
+      add('Q');
+    };
+    const textAt = (txt, x, yy, size = 10, font = 'F1', fill = color.dark) => {
+      add('BT');
+      add(`${rgb(fill)} rg`);
+      add(`/${font} ${size} Tf`);
+      add(`${x} ${yy} Td`);
+      add(`(${escapePdfText(txt)}) Tj`);
+      add('ET');
+    };
+    const wrapped = (txt, x, yy, maxLen, size = 10, leading = 13, font = 'F1', fill = color.dark) => {
+      const lines = splitPdfLine(txt, maxLen);
+      lines.forEach((line, i) => textAt(line, x, yy - (i * leading), size, font, fill));
+      return yy - (lines.length * leading);
+    };
+    const ensure = h => { if (y - h < 76) { drawFooter(); page(); drawHeader(false); } };
+    const drawHeader = first => {
+      if (first) {
+        rect(0, pageH - 170, pageW, 170, color.dark);
+        rect(0, pageH - 170, pageW, 8, color.accent);
+        textAt('Fintrail Pro', margin, pageH - 72, 24, 'F2', color.white);
+        textAt(data.labels.monthlyReport, margin, pageH - 100, 14, 'F1', color.white);
+        textAt(data.monthLabel, margin, pageH - 126, 22, 'F2', color.white);
+        textAt(`${data.labels.generated} ${data.generatedLabel}`, margin, pageH - 148, 9, 'F1', [220,224,232]);
+        if (data.userLabel) textAt(data.userLabel, pageW - 250, pageH - 72, 9, 'F1', [220,224,232]);
+        textAt(data.labels.brandLine, pageW - 250, pageH - 148, 11, 'F2', color.accent);
+        y = pageH - 205;
+      } else {
+        textAt('Fintrail Pro', margin, pageH - 42, 13, 'F2', color.accent);
+        textAt(data.monthLabel, pageW - 170, pageH - 42, 9, 'F1', color.soft);
+        y = pageH - 76;
+      }
+    };
+    const drawFooter = () => {
+      rect(margin, 48, pageW - margin * 2, 1, color.border);
+      textAt(`${data.labels.footer}  |  ${data.labels.brandLine}  |  fintrail.app`, margin, 32, 8, 'F1', color.soft);
+      textAt(data.labels.disclaimer, margin, 20, 7, 'F1', color.soft);
+    };
+    const sectionTitle = title => {
+      ensure(34);
+      textAt(title, margin, y, 15, 'F2', color.dark);
+      rect(margin, y - 7, 40, 3, color.accent);
+      y -= 28;
+    };
+    const metricCard = (x, yy, w, h, label, value, note) => {
+      rect(x, yy - h, w, h, color.white, color.border);
+      textAt(label, x + 14, yy - 22, 8, 'F2', color.soft);
+      textAt(value, x + 14, yy - 48, 18, 'F2', color.dark);
+      if (note) wrapped(note, x + 14, yy - 66, 28, 8, 10, 'F1', color.soft);
+    };
+    const infoCard = (title, rows, body) => {
+      const bodyLines = body ? splitPdfLine(body, 84).length : 0;
+      const h = 36 + rows.length * 22 + bodyLines * 12;
+      ensure(h + 14);
+      rect(margin, y - h, pageW - margin * 2, h, color.white, color.border);
+      textAt(title, margin + 14, y - 22, 12, 'F2', color.dark);
+      let yy = y - 46;
+      rows.forEach(row => {
+        textAt(row[0], margin + 14, yy, 8, 'F2', color.soft);
+        textAt(row[1], margin + 155, yy, 10, 'F1', color.dark);
+        yy -= 22;
+      });
+      if (body) wrapped(body, margin + 14, yy + 2, 84, 9, 12, 'F1', color.soft);
+      y -= h + 16;
+    };
+
+    drawHeader(true);
+    sectionTitle(data.labels.health);
+    metricCard(margin, y, 160, 88, data.labels.healthScore, `${data.health} / 100`, data.healthStatus);
+    metricCard(margin + 180, y, 160, 88, data.labels.suggestedFocus, data.healthStatus, data.suggestedFocus);
+    metricCard(margin + 360, y, 150, 88, data.labels.generated, data.generatedLabel, data.monthLabel);
+    y -= 108;
+
+    sectionTitle(data.labels.savings);
+    if (data.savings.length) {
+      data.savings.slice(0, 6).forEach(goal => {
+        infoCard(goal.name, [
+          [data.labels.saved + ':', goal.saved],
+          [data.labels.target + ':', goal.target],
+          [data.labels.remaining + ':', goal.remaining],
+          [data.labels.progress + ':', goal.progress]
+        ]);
+      });
+    } else {
+      infoCard(data.labels.savings, [], data.labels.noSavings);
+    }
+
+    sectionTitle(data.labels.debt);
+    infoCard(data.labels.debt, [
+      [data.labels.totalDebt + ':', data.totalDebt],
+      [data.labels.currentFocus + ':', data.focusDebt],
+      [data.labels.strategy + ':', data.strategy],
+      [data.labels.nextPayment + ':', data.nextPayment]
+    ]);
+
+    sectionTitle(data.labels.credit);
+    infoCard(data.labels.credit, [
+      [data.labels.currentScore + ':', String(data.currentCredit)],
+      [data.labels.previousScore + ':', String(data.previousCredit)],
+      [data.labels.change + ':', String(data.creditChange || '0')]
+    ], document.getElementById('report-credit-insight')?.textContent || '');
+
+    sectionTitle(data.labels.ai);
+    infoCard(data.labels.ai, [], data.aiInsight);
+
+    sectionTitle(data.labels.achievement);
+    infoCard(data.achievementTitle, [], data.achievementDesc || data.labels.achievement);
+
+    sectionTitle(data.labels.suggestedFocus);
+    infoCard(data.labels.suggestedFocus, [], data.suggestedFocus);
+
+    drawFooter();
+    page();
     const objects = [
       '<< /Type /Catalog /Pages 2 0 R >>',
-      '<< /Type /Pages /Kids [3 0 R] /Count 1 >>',
-      '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>',
-      '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>',
-      `<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`
+      `<< /Type /Pages /Kids ${pages.map((_, i) => `${3 + i * 2} 0 R`).join(' ')} /Count ${pages.length} >>`
     ];
+    pages.forEach((stream, i) => {
+      const pageObjNum = 3 + i * 2;
+      const streamObjNum = pageObjNum + 1;
+      objects.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 ${3 + pages.length * 2} 0 R /F2 ${4 + pages.length * 2} 0 R >> >> /Contents ${streamObjNum} 0 R >>`);
+      objects.push(`<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`);
+    });
+    objects.push(
+      '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>',
+      '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>'
+    );
     let pdf = '%PDF-1.4\n';
     const offsets = [0];
     objects.forEach((obj, index) => {
