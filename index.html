@@ -2523,6 +2523,45 @@
   #bsub-tracker .bar-val { min-width:58px; font-size:0.68rem; }
 }
 
+#bsub-tracker #chart-section,
+#bsub-tracker #bar-chart,
+#bsub-tracker .bar-chart {
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+#bsub-tracker #chart-section {
+  padding-bottom: 1.6rem !important;
+}
+#bsub-tracker .bar-chart {
+  gap: 1rem !important;
+  padding-bottom: 0.25rem !important;
+}
+#bsub-tracker .bar-row {
+  grid-template-columns: minmax(180px, max-content) minmax(120px,1fr) minmax(70px, auto) !important;
+  min-height: 34px;
+  overflow: visible !important;
+}
+#bsub-tracker .bar-label {
+  width: auto !important;
+  max-width: none !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+}
+@media (max-width:700px) {
+  #bsub-tracker .bar-row {
+    grid-template-columns: minmax(0,1fr) minmax(64px,auto) !important;
+  }
+  #bsub-tracker .bar-label {
+    grid-column: 1 / -1 !important;
+  }
+  #bsub-tracker .bar-track { grid-column: 1 !important; }
+  #bsub-tracker .bar-val { grid-column: 2 !important; }
+}
+
 
 /* FIX: Mobile Budget sub-tabs must behave like real pages.
    The mobile redesign made #bsub-tracker display:flex, which overrode
