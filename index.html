@@ -6207,7 +6207,7 @@
       bar.classList.add('premium');
       badge.textContent = `${level.badge} ${level.name}`;
       badge.classList.add('premium-plan');
-      statusEl.textContent = `⭐ Pro Plan${statusTitle ? ' · ' + statusTitle : ''} · ${currentUser?.email || ''}`;
+      statusEl.textContent = `${currentLang === 'es' ? '⭐ Plan Pro' : '⭐ Pro Plan'}${statusTitle ? ' · ' + statusTitle : ''} · ${currentUser?.email || ''}`;
       actionBtn.textContent = currentLang === 'es' ? 'Administrar Suscripción' : 'Manage Subscription';
       actionBtn.onclick = cancelSubscription;
     } else {
@@ -10768,7 +10768,7 @@ Guidelines:
       // ACCOUNT BAR
       'free-plan': 'Free Plan',
       'upgrade-btn': 'Upgrade to Pro →',
-      'manage-sub': currentLang === 'es' ? 'Administrar Suscripción' : 'Manage Subscription',
+      'manage-sub': 'Manage Subscription',
       'sign-out': 'Sign Out',
       // AUTH
       'sign-in-tab': 'Sign In',
@@ -15143,6 +15143,7 @@ window.addEventListener('load', function(){
   }
 
   function applyTranslations(){
+    try { if (currentLang !== 'es') return; } catch(e) { return; }
     var replacements = [
       [
         "Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.",
@@ -16415,6 +16416,182 @@ window.addEventListener('load', function(){
     if (e.target && e.target.closest && e.target.closest('#tab-debtplan')) scheduleDebtEditGuard();
   }, true);
   document.addEventListener('change', scheduleDebtEditGuard, true);
+})();
+</script>
+
+
+<script>
+/* === ENGLISH MODE FINAL DYNAMIC LABEL CLEANUP === */
+(function(){
+  function isSpanish(){
+    try { return currentLang === 'es'; } catch(e) { return false; }
+  }
+
+  function setDataLanguage(root){
+    if (!root || !root.querySelectorAll) return;
+    root.querySelectorAll('[data-en]').forEach(function(el){
+      if (el.hasAttribute('data-en-html') && el.hasAttribute('data-es-html')) {
+        el.innerHTML = isSpanish() ? el.getAttribute('data-es-html') : el.getAttribute('data-en-html');
+        return;
+      }
+      var value = isSpanish() ? el.getAttribute('data-es') : el.getAttribute('data-en');
+      if (value) el.textContent = value;
+    });
+  }
+
+  function fixSavingsGoals(){
+    var root = document.getElementById('tab-goals');
+    if (!root) return;
+    root.querySelectorAll('.goal-remaining').forEach(function(el){
+      var amount = (el.textContent || '').match(/\$[0-9,.]+/);
+      el.textContent = (isSpanish() ? 'Restante: ' : 'Remaining: ') + (amount ? amount[0] : '');
+    });
+    root.querySelectorAll('.goal-pct').forEach(function(el){
+      var pct = (el.textContent || '').match(/[0-9]+(?:\.[0-9]+)?/);
+      el.textContent = (pct ? pct[0] : '0') + (isSpanish() ? '% completado' : '% complete');
+    });
+    root.querySelectorAll('.goal-monthly').forEach(function(el){
+      var txt = el.textContent || '';
+      var match = txt.match(/\$([0-9,.]+)\s*\/\s*(?:mo|mes).*?([0-9]+)\s*(?:months|month|meses|mes)/i);
+      if (!match) return;
+      el.innerHTML = isSpanish()
+        ? 'Ahorra <strong>$' + match[1] + '/mes</strong> para alcanzar tu meta en <strong>' + match[2] + ' ' + (match[2] === '1' ? 'mes' : 'meses') + '</strong>'
+        : 'Save <strong>$' + match[1] + '/mo</strong> to reach your goal in <strong>' + match[2] + ' ' + (match[2] === '1' ? 'month' : 'months') + '</strong>';
+    });
+    root.querySelectorAll('.deposit-input').forEach(function(input){
+      input.placeholder = isSpanish() ? 'Agregar ahorro...' : 'Add savings...';
+    });
+    root.querySelectorAll('.deposit-btn').forEach(function(btn){
+      btn.textContent = isSpanish() ? '+ Agregar' : '+ Add';
+    });
+  }
+
+  function fixInvestment(){
+    var root = document.getElementById('tab-invest');
+    if (!root) return;
+    setDataLanguage(root);
+    var yearsInput = document.getElementById('inv-years');
+    var years = yearsInput ? parseInt(yearsInput.value, 10) : null;
+    var sub = document.getElementById('inv-final-sub');
+    if (sub && years) sub.textContent = isSpanish() ? 'después de ' + years + ' año' + (years === 1 ? '' : 's') : 'after ' + years + ' year' + (years === 1 ? '' : 's');
+    root.querySelectorAll('.itl-year').forEach(function(el){
+      var n = (el.textContent || '').match(/[0-9]+/);
+      if (n) el.textContent = (isSpanish() ? 'Año ' : 'Year ') + n[0];
+    });
+    root.querySelectorAll('.itl-growth').forEach(function(el){
+      el.textContent = (el.textContent || '')
+        .replace(/interés/gi, isSpanish() ? 'interés' : 'interest')
+        .replace(/interest/gi, isSpanish() ? 'interés' : 'interest');
+    });
+  }
+
+  function replaceMonths(text){
+    var en = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    var es = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    var out = String(text || '');
+    if (isSpanish()) {
+      en.forEach(function(m, i){ out = out.replace(new RegExp('\\b' + m + '\\b', 'g'), es[i]); });
+    } else {
+      es.forEach(function(m, i){
+        out = out.replace(new RegExp('\\b' + m + '\\s+de\\s+(\\d{4})\\b', 'g'), en[i] + ' $1');
+        out = out.replace(new RegExp('\\b' + m + '\\b', 'g'), en[i]);
+      });
+    }
+    return out;
+  }
+
+  function fixCalendarAndReport(){
+    var cal = document.getElementById('cal-month-label');
+    if (cal) cal.textContent = replaceMonths(cal.textContent || '');
+    var days = isSpanish() ? ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'] : ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    document.querySelectorAll('#tab-calendar .cal-day-header, #tab-calendar .cal-week-day-name').forEach(function(el, idx){
+      if (idx < 7) el.textContent = days[idx];
+    });
+    ['report-title','report-month-select'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (el && el.tagName === 'SELECT') {
+        Array.prototype.forEach.call(el.options || [], function(opt){ opt.textContent = replaceMonths(opt.textContent || ''); });
+      } else if (el) {
+        el.textContent = replaceMonths(el.textContent || '');
+      }
+    });
+    setDataLanguage(document.getElementById('tab-reports'));
+  }
+
+  function fixResources(){
+    var root = document.getElementById('tab-resources');
+    if (!root) return;
+    setDataLanguage(root);
+    if (!isSpanish()) {
+      var map = {
+        'Productos Financieros':'Financial Products',
+        'Crédito y Reportes':'Credit & Reports',
+        'Educación Financiera':'Financial Education',
+        'Asistencia Financiera':'Financial Hardship Assistance',
+        'Gobierno y Becas':'Government & Grants',
+        'Socios Destacados de Fintrail':'Featured Fintrail Partners',
+        'Comenzar':'Start Learning',
+        'Leer Guías':'Read Guides',
+        'Visitar':'Visit',
+        'Más información':'Learn More'
+      };
+      root.querySelectorAll('h2,h3,p,button,a,span').forEach(function(el){
+        if (el.children.length > 0) return;
+        var text = el.textContent || '';
+        Object.keys(map).forEach(function(k){ text = text.split(k).join(map[k]); });
+        el.textContent = text;
+      });
+    }
+  }
+
+  function fixAccountBanner(){
+    if (isSpanish()) return;
+    ['ab-status','ab-plan-badge','mobile-plan-badge','account-subscription-btn','profile-subscription-btn'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.textContent = (el.textContent || '')
+        .replace(/Plan Pro/g, 'Pro Plan')
+        .replace(/Miembro Plata/g, 'Silver Member')
+        .replace(/\bPlata\b/g, 'Silver')
+        .replace(/Administrar Suscripción/g, 'Manage Subscription');
+    });
+  }
+
+  function applyEnglishModeCleanup(){
+    try {
+      fixSavingsGoals();
+      fixInvestment();
+      fixCalendarAndReport();
+      fixResources();
+      fixAccountBanner();
+    } catch(e) { console.log('English mode cleanup skipped:', e.message); }
+  }
+
+  function schedule(){
+    setTimeout(applyEnglishModeCleanup, 0);
+    setTimeout(applyEnglishModeCleanup, 120);
+    setTimeout(applyEnglishModeCleanup, 500);
+  }
+
+  ['applyLanguage','renderGoals','calcInvestment','renderCalendar','renderMonthlyReport','renderResources','filterResources','setProUI','setUserUI'].forEach(function(name){
+    try {
+      var fn = window[name];
+      if (typeof fn === 'function' && !fn.__fintrailEnglishModeCleanup) {
+        window[name] = function(){
+          var result = fn.apply(this, arguments);
+          schedule();
+          return result;
+        };
+        window[name].__fintrailEnglishModeCleanup = true;
+      }
+    } catch(e) {}
+  });
+
+  window.fintrailApplyEnglishModeCleanup = applyEnglishModeCleanup;
+  window.addEventListener('load', schedule);
+  document.addEventListener('click', schedule, true);
+  document.addEventListener('change', schedule, true);
+  document.addEventListener('input', schedule, true);
 })();
 </script>
 
