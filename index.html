@@ -635,6 +635,26 @@
   .dti-tip h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.2rem; }
   .dti-tip p { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
 
+  /* LOAN PAYMENT CALCULATOR */
+  .loan-calc-layout { display:grid; grid-template-columns:minmax(0,1fr) minmax(300px,0.9fr); gap:1.25rem; align-items:start; }
+  .loan-calc-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.85rem; }
+  .loan-result-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:1.25rem; }
+  .loan-result-card h2 { font-family:'Playfair Display',serif; font-size:1.15rem; margin-bottom:1rem; }
+  .loan-result-main { background:linear-gradient(135deg,#1a1a2e,#2d1b4e); color:#fff; border-radius:14px; padding:1.2rem; text-align:center; margin-bottom:1rem; }
+  .loan-result-main .loan-label { font-size:0.72rem; text-transform:uppercase; letter-spacing:0.08em; color:rgba(255,255,255,0.68); margin-bottom:0.35rem; }
+  .loan-result-main .loan-value { font-family:'Playfair Display',serif; font-size:2.3rem; font-weight:700; line-height:1; }
+  .loan-result-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; }
+  .loan-metric { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:0.8rem; }
+  .loan-metric-label { color:var(--muted); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.06em; font-weight:700; margin-bottom:0.25rem; }
+  .loan-metric-value { color:var(--text); font-weight:800; font-size:1rem; }
+  .loan-error { display:none; background:rgba(240,85,85,0.08); border:1px solid rgba(240,85,85,0.24); color:var(--danger); border-radius:10px; padding:0.75rem; font-size:0.82rem; margin-bottom:1rem; }
+  .loan-actions { display:flex; gap:0.65rem; flex-wrap:wrap; margin-top:1rem; }
+  .loan-secondary-btn { background:var(--surface2); color:var(--text-soft); border:1px solid var(--border); border-radius:10px; padding:0.75rem 1rem; font-family:'Sora',sans-serif; font-size:0.85rem; font-weight:700; cursor:pointer; }
+  @media (max-width: 820px) {
+    .loan-calc-layout, .loan-calc-grid, .loan-result-grid { grid-template-columns:1fr; }
+    .loan-result-main .loan-value { font-size:2rem; }
+  }
+
   .guide-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
   .guide-tab-btn {
     padding: 0.5rem 1.25rem;
@@ -4051,6 +4071,10 @@
           <span class="ndi-icon">📊</span>
           <div class="ndi-info"><span class="ndi-label" data-en="Credit Score Simulator" data-es="Simulador de Crédito">Credit Score Simulator <span class="pro-pill">PRO</span></span><span class="ndi-desc" data-en="Simulate score changes" data-es="Simula cambios en tu puntaje">Simulate score changes</span></div>
         </button>
+        <button class="nav-dropdown-item" onclick="navTo('loancalc', this)">
+          <span class="ndi-icon">🧮</span>
+          <div class="ndi-info"><span class="ndi-label" data-en="Loan Payment Calculator" data-es="Calculadora de Pagos de Préstamo">Loan Payment Calculator</span><span class="ndi-desc" data-en="Estimate payments and interest" data-es="Estima pagos e intereses">Estimate payments and interest</span></div>
+        </button>
       </div>
     </div>
 
@@ -4128,6 +4152,7 @@
     <button class="mobile-nav-tile" onclick="mobileTab('resources')">🔍<span data-en="Resources" data-es="Recursos">Resources</span></button>
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('guide')">📘<span data-en="Credit Guide" data-es="Guía de Crédito">Credit Guide</span></button>
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('creditsim')">📊<span data-en="Score Sim" data-es="Simulador">Score Sim</span></button>
+    <button class="mobile-nav-tile" onclick="mobileTab('loancalc')">🧮<span data-en="Loan Calc" data-es="Préstamo">Loan Calc</span></button>
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('negotiate')">💬<span data-en="Negotiation" data-es="Negociación">Negotiation</span></button>
   </div>
 
@@ -5078,6 +5103,81 @@
       <p data-en="Time:" data-es="Tiempo:" data-en-html="<strong>Time is your greatest asset.</strong> Starting 10 years earlier can <strong>double or triple</strong> your final balance. Even small monthly contributions grow significantly over decades — start today!" data-es-html="<strong>El tiempo es tu mayor activo.</strong> Comenzar 10 años antes puede <strong>duplicar o triplicar</strong> tu balance final. ¡Incluso contribuciones pequeñas crecen enormemente con el tiempo!"><strong>Time is your greatest asset.</strong> Starting 10 years earlier can <strong>double or triple</strong> your final balance. Even small monthly contributions grow significantly over decades — start today!</p>
     </div>
 
+  </div>
+
+
+  <!-- LOAN PAYMENT CALCULATOR TAB -->
+  <div class="tab-section" id="tab-loancalc">
+    <div class="loan-calc-layout">
+      <div class="card">
+        <h2 data-en="🧮 Loan Payment Calculator" data-es="🧮 Calculadora de Pagos de Préstamo">🧮 Loan Payment Calculator</h2>
+        <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:1.25rem;line-height:1.6;" data-en="Estimate monthly payments, total interest, payoff date, and how extra monthly payments can shorten your loan." data-es="Estima pagos mensuales, interés total, fecha de pago final y cómo los pagos adicionales pueden acortar tu préstamo.">Estimate monthly payments, total interest, payoff date, and how extra monthly payments can shorten your loan.</p>
+        <div class="loan-error" id="loan-error"></div>
+        <div class="loan-calc-grid">
+          <div class="form-group">
+            <label data-en="Loan Amount" data-es="Monto del Préstamo">Loan Amount</label>
+            <input type="number" id="loan-amount" min="0" step="0.01" placeholder="e.g. 25000" data-en-placeholder="e.g. 25000" data-es-placeholder="ej. 25000">
+          </div>
+          <div class="form-group">
+            <label data-en="Interest Rate / APR" data-es="Tasa de Interés / APR">Interest Rate / APR</label>
+            <input type="number" id="loan-rate" min="0" step="0.01" placeholder="e.g. 7.5" data-en-placeholder="e.g. 7.5" data-es-placeholder="ej. 7.5">
+          </div>
+          <div class="form-group">
+            <label data-en="Loan Term" data-es="Plazo del Préstamo">Loan Term</label>
+            <input type="number" id="loan-term" min="1" step="1" placeholder="e.g. 5" data-en-placeholder="e.g. 5" data-es-placeholder="ej. 5">
+          </div>
+          <div class="form-group">
+            <label data-en="Term Unit" data-es="Unidad del Plazo">Term Unit</label>
+            <select id="loan-term-unit">
+              <option value="years" data-en="Years" data-es="Años">Years</option>
+              <option value="months" data-en="Months" data-es="Meses">Months</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label data-en="Extra Monthly Payment" data-es="Pago Mensual Adicional">Extra Monthly Payment</label>
+            <input type="number" id="loan-extra" min="0" step="0.01" placeholder="0" data-en-placeholder="0" data-es-placeholder="0">
+          </div>
+          <div class="form-group">
+            <label data-en="Start Date" data-es="Fecha de Inicio">Start Date</label>
+            <input type="date" id="loan-start">
+          </div>
+        </div>
+        <div class="loan-actions">
+          <button class="add-btn" style="width:auto;margin-top:0" onclick="calculateLoanPayment()" data-en="Calculate Payment" data-es="Calcular Pago">Calculate Payment</button>
+          <button class="loan-secondary-btn" onclick="resetLoanPaymentCalculator()" data-en="Reset" data-es="Restablecer">Reset</button>
+        </div>
+        <div class="tip-bar" style="margin-top:1.25rem">
+          <div class="tip-icon">ℹ️</div>
+          <p data-en="This calculator provides estimates for educational planning purposes only. Actual loan terms may vary by lender." data-es="Esta calculadora proporciona estimaciones solo para planificación educativa. Los términos reales del préstamo pueden variar según la institución.">This calculator provides estimates for educational planning purposes only. Actual loan terms may vary by lender.</p>
+        </div>
+      </div>
+
+      <div class="loan-result-card">
+        <h2 data-en="Loan Estimate" data-es="Estimación del Préstamo">Loan Estimate</h2>
+        <div class="loan-result-main">
+          <div class="loan-label" data-en="Estimated Monthly Payment" data-es="Pago Mensual Estimado">Estimated Monthly Payment</div>
+          <div class="loan-value" id="loan-monthly">$0</div>
+        </div>
+        <div class="loan-result-grid">
+          <div class="loan-metric">
+            <div class="loan-metric-label" data-en="Total Interest Paid" data-es="Interés Total Pagado">Total Interest Paid</div>
+            <div class="loan-metric-value" id="loan-interest">$0</div>
+          </div>
+          <div class="loan-metric">
+            <div class="loan-metric-label" data-en="Total Amount Paid" data-es="Monto Total Pagado">Total Amount Paid</div>
+            <div class="loan-metric-value" id="loan-total">$0</div>
+          </div>
+          <div class="loan-metric">
+            <div class="loan-metric-label" data-en="Estimated Payoff Date" data-es="Fecha Estimada de Pago Final">Estimated Payoff Date</div>
+            <div class="loan-metric-value" id="loan-payoff">—</div>
+          </div>
+          <div class="loan-metric">
+            <div class="loan-metric-label" data-en="Extra Payment Savings" data-es="Ahorro por Pagos Adicionales">Extra Payment Savings</div>
+            <div class="loan-metric-value" id="loan-savings">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
 
@@ -6493,6 +6593,7 @@
     if (tab === 'healthscore') { try { loadAlertPrefs(); calculateHealthScore(); } catch(e) { console.error('Health score render failed:', e); } }
     if (tab === 'reports') { try { renderMonthlyReport(); } catch(e) { console.error('Monthly report render failed:', e); } }
     if (tab === 'debtplan') { try { renderDebtList(); runPayoffPlan(); } catch(e) { console.error('Debt planner render failed:', e); } }
+    if (tab === 'loancalc') { try { refreshLoanPaymentCalculatorLanguage(); } catch(e) { console.error('Loan calculator render failed:', e); } }
     if (currentLang !== 'en') setTimeout(applyLanguage, 30);
   }
 
@@ -6558,6 +6659,7 @@
     if (tab === 'healthscore') { try { loadAlertPrefs(); calculateHealthScore(); } catch(e) { console.error('Health score render failed:', e); } }
     if (tab === 'reports') { try { renderMonthlyReport(); } catch(e) { console.error('Monthly report render failed:', e); } }
     if (tab === 'debtplan') { try { renderDebtList(); runPayoffPlan(); } catch(e) { console.error('Debt planner render failed:', e); } }
+    if (tab === 'loancalc') { try { refreshLoanPaymentCalculatorLanguage(); } catch(e) { console.error('Loan calculator render failed:', e); } }
     if (currentLang !== 'en') setTimeout(applyLanguage, 30);
   }
 
@@ -6932,6 +7034,139 @@
     document.getElementById('dti-pct').style.color = color;
     document.getElementById('dti-verdict').textContent = verdict;
     document.getElementById('dti-verdict').style.color = color;
+  }
+
+  function loanText(en, es) {
+    return currentLang === 'es' ? es : en;
+  }
+
+  function loanCurrency(value) {
+    if (!Number.isFinite(value)) return '$0';
+    return '$' + value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function loanAddMonths(date, months) {
+    const d = new Date(date.getTime());
+    d.setMonth(d.getMonth() + months);
+    return d;
+  }
+
+  function loanFormatDate(date) {
+    if (!(date instanceof Date) || isNaN(date.getTime())) return '—';
+    const formatted = date.toLocaleDateString(currentLang === 'es' ? 'es-US' : 'en-US', { month:'long', year:'numeric' });
+    return currentLang === 'es' ? formatted.charAt(0).toUpperCase() + formatted.slice(1) : formatted;
+  }
+
+  function simulateLoanPayoff(principal, annualRate, scheduledPayment, extraPayment) {
+    const monthlyRate = annualRate / 100 / 12;
+    let balance = principal;
+    let totalInterest = 0;
+    let months = 0;
+    const payment = scheduledPayment + Math.max(0, extraPayment || 0);
+    const maxMonths = 1200;
+    while (balance > 0.005 && months < maxMonths) {
+      const interest = monthlyRate > 0 ? balance * monthlyRate : 0;
+      totalInterest += interest;
+      const principalPaid = Math.min(balance + interest, payment) - interest;
+      if (principalPaid <= 0) break;
+      balance -= principalPaid;
+      months += 1;
+    }
+    return { months, totalInterest, totalPaid: principal + totalInterest };
+  }
+
+  function setLoanResult(monthly, interest, total, payoff, savingsText) {
+    const monthlyEl = document.getElementById('loan-monthly');
+    const interestEl = document.getElementById('loan-interest');
+    const totalEl = document.getElementById('loan-total');
+    const payoffEl = document.getElementById('loan-payoff');
+    const savingsEl = document.getElementById('loan-savings');
+    if (monthlyEl) monthlyEl.textContent = monthly;
+    if (interestEl) interestEl.textContent = interest;
+    if (totalEl) totalEl.textContent = total;
+    if (payoffEl) payoffEl.textContent = payoff;
+    if (savingsEl) savingsEl.textContent = savingsText;
+  }
+
+  function showLoanError(message) {
+    const error = document.getElementById('loan-error');
+    if (!error) return;
+    error.textContent = message;
+    error.style.display = message ? 'block' : 'none';
+  }
+
+  function calculateLoanPayment() {
+    const amountEl = document.getElementById('loan-amount');
+    if (!amountEl) return;
+    const amount = parseFloat(amountEl.value);
+    const rate = parseFloat(document.getElementById('loan-rate')?.value);
+    const term = parseFloat(document.getElementById('loan-term')?.value);
+    const unit = document.getElementById('loan-term-unit')?.value || 'years';
+    const extraRaw = document.getElementById('loan-extra')?.value;
+    const extra = extraRaw === '' ? 0 : parseFloat(extraRaw);
+    const startRaw = document.getElementById('loan-start')?.value;
+    const startDate = startRaw ? new Date(startRaw + 'T00:00:00') : new Date();
+
+    if (!Number.isFinite(amount) || amount <= 0) { showLoanError(loanText('Please enter a valid loan amount.', 'Ingresa un monto de préstamo válido.')); return; }
+    if (!Number.isFinite(rate) || rate < 0) { showLoanError(loanText('Please enter a valid interest rate.', 'Ingresa una tasa de interés válida.')); return; }
+    if (!Number.isFinite(term) || term <= 0) { showLoanError(loanText('Please enter a valid loan term.', 'Ingresa un plazo de préstamo válido.')); return; }
+    if (!Number.isFinite(extra) || extra < 0) { showLoanError(loanText('Extra monthly payment cannot be negative.', 'El pago mensual adicional no puede ser negativo.')); return; }
+
+    showLoanError('');
+    const months = unit === 'months' ? Math.round(term) : Math.round(term * 12);
+    if (months <= 0) { showLoanError(loanText('Please enter a valid loan term.', 'Ingresa un plazo de préstamo válido.')); return; }
+    const monthlyRate = rate / 100 / 12;
+    const baseMonthly = monthlyRate === 0
+      ? amount / months
+      : amount * monthlyRate * Math.pow(1 + monthlyRate, months) / (Math.pow(1 + monthlyRate, months) - 1);
+    if (!Number.isFinite(baseMonthly) || baseMonthly <= 0) { showLoanError(loanText('Please check your loan inputs.', 'Revisa los datos del préstamo.')); return; }
+
+    const baseInterest = (baseMonthly * months) - amount;
+    const baseTotal = amount + Math.max(0, baseInterest);
+    const basePayoffDate = loanAddMonths(startDate, months);
+    let displayInterest = Math.max(0, baseInterest);
+    let displayTotal = baseTotal;
+    let displayPayoffDate = basePayoffDate;
+    let savingsText = loanText('No extra payment entered', 'No se ingresó pago adicional');
+
+    if (extra > 0) {
+      const extraPlan = simulateLoanPayoff(amount, rate, baseMonthly, extra);
+      const interestSaved = Math.max(0, baseInterest - extraPlan.totalInterest);
+      const monthsSaved = Math.max(0, months - extraPlan.months);
+      displayInterest = Math.max(0, extraPlan.totalInterest);
+      displayTotal = extraPlan.totalPaid;
+      displayPayoffDate = loanAddMonths(startDate, extraPlan.months);
+      const newPayoffDate = loanFormatDate(displayPayoffDate);
+      savingsText = currentLang === 'es'
+        ? `${loanCurrency(interestSaved)} ahorrados · ${monthsSaved} meses ahorrados · ${newPayoffDate}`
+        : `${loanCurrency(interestSaved)} saved · ${monthsSaved} months saved · ${newPayoffDate}`;
+    }
+
+    setLoanResult(
+      loanCurrency(baseMonthly),
+      loanCurrency(displayInterest),
+      loanCurrency(displayTotal),
+      loanFormatDate(displayPayoffDate),
+      savingsText
+    );
+  }
+
+  function resetLoanPaymentCalculator() {
+    ['loan-amount','loan-rate','loan-term','loan-extra','loan-start'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    const unit = document.getElementById('loan-term-unit');
+    if (unit) unit.value = 'years';
+    showLoanError('');
+    setLoanResult('$0', '$0', '$0', '—', '—');
+  }
+
+  function refreshLoanPaymentCalculatorLanguage() {
+    const amount = document.getElementById('loan-amount')?.value;
+    const rate = document.getElementById('loan-rate')?.value;
+    const term = document.getElementById('loan-term')?.value;
+    if (amount || rate || term) calculateLoanPayment();
   }
 
   // AI CHAT
@@ -11161,6 +11396,7 @@ Guidelines:
       call('calcInvestment');
       call('renderDebtList');
       call('runPayoffPlan');
+      call('refreshLoanPaymentCalculatorLanguage');
       call('calculateHealthScore');
       call('renderHealthScore');
       call('renderRecommendations');
