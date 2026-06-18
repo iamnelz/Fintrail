@@ -7890,8 +7890,8 @@ Guidelines:
           <span style="color:var(--muted);font-size:0.78rem">$${d.balance.toLocaleString()} · ${d.apr}% APR · Min $${d.minPayment.toFixed(2)}/mo</span>
         </div>
         <div style="display:flex;gap:0.25rem;flex-shrink:0">
-          <button onclick="editDebt(${d.id})" style="background:none;border:1px solid var(--border);color:var(--text-soft);cursor:pointer;font-size:0.7rem;font-weight:600;padding:0.2rem 0.55rem;border-radius:6px">Edit</button>
-          <button onclick="removeDebt(${d.id})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:0.2rem 0.4rem">✕</button>
+          <button onclick="editDebt(${d.id})" data-debt-edit-btn="true" style="background:none;border:1px solid var(--border);color:var(--text-soft);cursor:pointer;font-size:0.7rem;font-weight:600;padding:0.2rem 0.55rem;border-radius:6px">${currentLang === 'es' ? 'Editar' : 'Edit'}</button>
+          <button onclick="removeDebt(${d.id})" title="${currentLang === 'es' ? 'Eliminar' : 'Delete'}" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:0.2rem 0.4rem">✕</button>
         </div>
       </div>`).join('');
   }
@@ -9740,10 +9740,10 @@ Guidelines:
       const prev  = nwHistory[nwHistory.length - 2].value;
       const delta = netWorth - prev;
       const sign  = delta >= 0 ? '+' : '';
-      change.textContent = sign + '$' + Math.abs(delta).toLocaleString(undefined, {maximumFractionDigits:0}) + ' vs last month';
+      change.textContent = sign + '$' + Math.abs(delta).toLocaleString(undefined, {maximumFractionDigits:0}) + (currentLang === 'es' ? ' vs el mes pasado' : ' vs last month');
       change.style.color = delta >= 0 ? 'rgba(6,214,160,0.85)' : 'rgba(240,85,85,0.85)';
     } else {
-      change.textContent = 'Add your assets and liabilities below';
+      change.textContent = currentLang === 'es' ? 'Agrega tus activos y pasivos abajo' : 'Add your assets and liabilities below';
       change.style.color = 'rgba(255,255,255,0.55)';
     }
 
@@ -9760,6 +9760,31 @@ Guidelines:
     renderNWChart();
   }
 
+  function getNWDisplayName(name) {
+    const raw = String(name || '');
+    const assetMap = {
+      'Savings Account': 'Cuenta de Ahorros',
+      'Certificate': 'Certificado',
+      'Vehicle Value': 'Valor del Vehículo',
+      'Home Value': 'Valor de Casa',
+      'Cash / Checking': 'Efectivo / Cuenta Corriente',
+      '401k / IRA': '401k / IRA',
+      'Cash': 'Efectivo',
+      'Savings': 'Ahorros',
+      'Retirement': 'Jubilación',
+      'Home': 'Casa',
+      'Car': 'Auto'
+    };
+    const liabilityMap = {
+      'Mortgage': 'Hipoteca',
+      'Car Loan': 'Préstamo del Auto',
+      'Credit Cards': 'Tarjetas de Crédito',
+      'Student Loans': 'Préstamos Estudiantiles'
+    };
+    if (currentLang !== 'es') return raw;
+    return assetMap[raw] || liabilityMap[raw] || raw;
+  }
+
   function renderNWLists() {
     const aList = document.getElementById('nw-asset-list');
     const lList = document.getElementById('nw-liability-list');
@@ -9768,19 +9793,19 @@ Guidelines:
     aList.innerHTML = nwAssets.length === 0 ? `<div style="font-size:0.8rem;color:var(--muted);text-align:center;padding:0.5rem">${currentLang==='es'?'Aún no hay activos':'No assets yet'}</div>` :
       nwAssets.map(a => `
         <div class="nw-item">
-          <span class="nw-item-name">${escHtml(a.name)}</span>
+          <span class="nw-item-name">${escHtml(getNWDisplayName(a.name))}</span>
           <span class="nw-item-value asset">$${parseFloat(a.value).toLocaleString(undefined,{maximumFractionDigits:0})}</span>
-          <button type="button" class="nw-item-edit" onclick="event.stopPropagation();editNWItem('asset','${a.id}')">Edit</button>
-          <button type="button" class="nw-item-del" onclick="event.stopPropagation();deleteNWItem('asset','${a.id}')" title="Delete">&times;</button>
+          <button type="button" class="nw-item-edit" onclick="event.stopPropagation();editNWItem('asset','${a.id}')">${currentLang === 'es' ? 'Editar' : 'Edit'}</button>
+          <button type="button" class="nw-item-del" onclick="event.stopPropagation();deleteNWItem('asset','${a.id}')" title="${currentLang === 'es' ? 'Eliminar' : 'Delete'}">&times;</button>
         </div>`).join('');
 
     lList.innerHTML = nwLiabilities.length === 0 ? `<div style="font-size:0.8rem;color:var(--muted);text-align:center;padding:0.5rem">${currentLang==='es'?'Aún no hay pasivos':'No liabilities yet'}</div>` :
       nwLiabilities.map(l => `
         <div class="nw-item">
-          <span class="nw-item-name">${escHtml(l.name)}</span>
+          <span class="nw-item-name">${escHtml(getNWDisplayName(l.name))}</span>
           <span class="nw-item-value liability">$${parseFloat(l.value).toLocaleString(undefined,{maximumFractionDigits:0})}</span>
-          <button type="button" class="nw-item-edit" onclick="event.stopPropagation();editNWItem('liability','${l.id}')">Edit</button>
-          <button type="button" class="nw-item-del" onclick="event.stopPropagation();deleteNWItem('liability','${l.id}')" title="Delete">&times;</button>
+          <button type="button" class="nw-item-edit" onclick="event.stopPropagation();editNWItem('liability','${l.id}')">${currentLang === 'es' ? 'Editar' : 'Edit'}</button>
+          <button type="button" class="nw-item-del" onclick="event.stopPropagation();deleteNWItem('liability','${l.id}')" title="${currentLang === 'es' ? 'Eliminar' : 'Delete'}">&times;</button>
         </div>`).join('');
   }
 
@@ -9799,7 +9824,7 @@ Guidelines:
       const pct   = total > 0 ? Math.round((item.value / total) * 100) : 0;
       const color = item.type === 'asset' ? 'var(--income-color)' : 'var(--accent)';
       return `<div class="nw-bar-row">
-        <span class="nw-bar-label" title="${escHtml(item.name)}">${escHtml(item.name)}</span>
+        <span class="nw-bar-label" title="${escHtml(getNWDisplayName(item.name))}">${escHtml(getNWDisplayName(item.name))}</span>
         <div class="nw-bar-track"><div class="nw-bar-fill" style="width:${pct}%;background:${color}"></div></div>
         <span class="nw-bar-amount" style="color:${color}">$${item.value.toLocaleString(undefined,{maximumFractionDigits:0})}</span>
       </div>`;
@@ -14779,6 +14804,7 @@ window.addEventListener('load', function(){
     ['Savings Account', 'Cuenta de Ahorros'],
     ['Certificate', 'Certificado'],
     ['Vehicle Value', 'Valor del Vehículo'],
+    ['Home Value', 'Valor de Casa'],
     ['Car Loan', 'Préstamo del Auto'],
     ['e.g. Savings Account', 'ej. Cuenta de Ahorros'],
     ['e.g. Mortgage', 'ej. Hipoteca'],
@@ -15683,8 +15709,7 @@ window.addEventListener('load', function(){
           'Balance': 'Saldo',
           'Min:': 'Mín.:',
           'Min': 'Mín.',
-          'Focus': 'Prioridad',
-          'Edit': 'Editar'
+          'Focus': 'Prioridad'
         });
       } else {
         replaceTextNodes(root, {
@@ -15694,10 +15719,19 @@ window.addEventListener('load', function(){
           'Saldo': 'Balance',
           'Mín.:': 'Min:',
           'Mín.': 'Min',
-          'Prioridad': 'Focus',
-          'Editar': 'Edit'
+          'Prioridad': 'Focus'
         });
       }
+
+      root.querySelectorAll('[data-debt-edit-btn="true"], button[onclick^="editDebt"]').forEach(function(btn){
+        btn.textContent = es ? 'Editar' : 'Edit';
+      });
+      root.querySelectorAll('button').forEach(function(btn){
+        var label = String(btn.textContent || '').trim();
+        if (/^Editar(?:ar)+$/i.test(label) || /^Editarar/i.test(label)) {
+          btn.textContent = es ? 'Editar' : 'Edit';
+        }
+      });
     } catch(e) {}
   }
 
