@@ -3954,7 +3954,7 @@
         <div class="nav-dropdown-section" data-en="Planning" data-es="Planificación">Planning</div>
         <button class="nav-dropdown-item" onclick="navTo('savings', this)">
           <span class="ndi-icon">🎯</span>
-          <div class="ndi-info"><span class="ndi-label" data-en="Savings Goals" data-es="Metas de Ahorro" data-en="Savings Goals" data-es="Metas de Ahorro">Savings Goals</span><span class="ndi-desc" data-en="Track your goals" data-es="Rastrea tus metas">Track your goals</span></div>
+          <div class="ndi-info"><span class="ndi-label" data-en="Savings Goals" data-es="Metas de Ahorro">Savings Goals</span><span class="ndi-desc" data-en="Track your goals" data-es="Rastrea tus metas">Track your goals</span></div>
         </button>
         <button class="nav-dropdown-item" onclick="navTo('invest', this)">
           <span class="ndi-icon">📈</span>
@@ -4050,7 +4050,7 @@
   <div style="font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);padding:0.3rem 1rem 0.2rem" data-en="💰 Budget" data-es="💰 Presupuesto">💰 Budget</div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem;padding:0 0.75rem 0.5rem">
     <button class="mobile-nav-tile" onclick="mobileTab('budget')">📊<span data-en="Tracker" data-es="Rastreador">Tracker</span></button>
-    <button class="mobile-nav-tile" onclick="mobileTabSchedule()">📅<span data-en="Bill Schedule" data-es="Facturas">Bill Schedule</span></button>
+    <button class="mobile-nav-tile" onclick="mobileTabSchedule()">📅<span data-en="Bill Schedule" data-es="Horario de Facturas">Bill Schedule</span></button>
   </div>
 
   <!-- PLANNING -->
@@ -4058,16 +4058,16 @@
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem;padding:0 0.75rem 0.5rem">
     <button class="mobile-nav-tile" onclick="mobileTab('savings')">🎯<span data-en="Goals" data-es="Metas">Goals</span></button>
     <button class="mobile-nav-tile" onclick="mobileTab('invest')">📈<span data-en="Investment" data-es="Inversión">Investment</span></button>
-    <button class="mobile-nav-tile" onclick="mobileTab('networth');closeMobileNav()">💎<span data-en="Net Worth" data-es="Patrimonio">Net Worth</span></button>
+    <button class="mobile-nav-tile" onclick="mobileTab('networth');closeMobileNav()">💎<span data-en="Net Worth" data-es="Patrimonio Neto">Net Worth</span></button>
     <button class="mobile-nav-tile" onclick="mobileTab('calendar')">📅<span data-en="Calendar" data-es="Calendario">Calendar</span></button>
-    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('debtplan')">💳<span data-en="Debt Planner" data-es="Plan de Deuda">Debt Planner</span></button>
+    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('debtplan')">💳<span data-en="Debt Planner" data-es="Plan de Deudas">Debt Planner</span></button>
   </div>
 
   <!-- TOOLS -->
   <div style="font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);padding:0.3rem 1rem 0.2rem" data-en="🛠 Tools" data-es="🛠 Herramientas">🛠 Tools</div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem;padding:0 0.75rem 0.5rem">
     <button class="mobile-nav-tile" onclick="mobileTab('resources')">🔍<span data-en="Resources" data-es="Recursos">Resources</span></button>
-    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('guide')">📘<span data-en="Credit Guide" data-es="Guía Crédito">Credit Guide</span></button>
+    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('guide')">📘<span data-en="Credit Guide" data-es="Guía de Crédito">Credit Guide</span></button>
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('creditsim')">📊<span data-en="Score Sim" data-es="Simulador">Score Sim</span></button>
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('negotiate')">💬<span data-en="Negotiation" data-es="Negociación">Negotiation</span></button>
   </div>
@@ -4076,7 +4076,7 @@
   <div style="font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);padding:0.3rem 1rem 0.2rem" data-en="💡 Insights" data-es="💡 Análisis">💡 Insights</div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem;padding:0 0.75rem 0.5rem">
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('ai')">💬<span data-en="AI Advisor" data-es="Asesor IA">AI Advisor</span></button>
-    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('healthscore')">🏆<span data-en="Health Score" data-es="Salud">Health Score</span></button>
+    <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('healthscore')">🏆<span data-en="Health Score" data-es="Salud Financiera">Health Score</span></button>
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('reports')">📈<span data-en="Reports" data-es="Reportes">Reports</span></button>
     <button class="mobile-nav-tile" onclick="mobileTab('streaks');closeMobileNav()">🔥🏅<span data-en="Streaks &amp; Milestones" data-es="Rachas y Logros">Streaks &amp; Milestones</span></button>
   </div>
@@ -4187,11 +4187,11 @@
   <h1 data-en="Budget Smarter, <em>Live Better.</em>" data-es="Presupuesta Mejor, <em>Vive Mejor.</em>">Budget Smarter, <em>Live Better.</em></h1>
   <p data-en="Fintrail Pro gives you the AI-powered tools to track spending, eliminate debt, and build lasting financial health — all in one place." data-es="Fintrail Pro te da las herramientas con IA para controlar tus gastos, eliminar deudas y construir una salud financiera duradera — todo en un solo lugar.">Fintrail Pro gives you the AI-powered tools to track spending, eliminate debt, and build lasting financial health — all in one place.</p>
   <div class="hero-chips">
-    <span class="hero-chip">📊 Budget Tracker</span>
-    <span class="hero-chip">🎯 Savings Goals</span>
-    <span class="hero-chip">💬 AI Advisor</span>
-    <span class="hero-chip">🏦 Lender Rates</span>
-    <span class="hero-chip">📅 Bill Schedule</span>
+    <span class="hero-chip" data-en="📊 Budget Tracker" data-es="📊 Rastreador de Presupuesto">📊 Budget Tracker</span>
+    <span class="hero-chip" data-en="🎯 Savings Goals" data-es="🎯 Metas de Ahorro">🎯 Savings Goals</span>
+    <span class="hero-chip" data-en="💬 AI Advisor" data-es="💬 Asesor IA">💬 AI Advisor</span>
+    <span class="hero-chip" data-en="🏦 Lender Rates" data-es="🏦 Tasas de Prestamistas">🏦 Lender Rates</span>
+    <span class="hero-chip" data-en="📅 Bill Schedule" data-es="📅 Horario de Facturas">📅 Bill Schedule</span>
   </div>
 </div>
 
@@ -4202,8 +4202,8 @@
 
     <!-- SUB NAV -->
     <div class="schedule-toggle">
-      <button class="sched-tab-btn active" onclick="showBudgetSub('tracker', this)">📊 Tracker</button>
-      <button class="sched-tab-btn" onclick="showBudgetSub('schedule', this)">📅 Bill Schedule</button>
+      <button class="sched-tab-btn active" onclick="showBudgetSub('tracker', this)" data-en="📊 Tracker" data-es="📊 Rastreador">📊 Tracker</button>
+      <button class="sched-tab-btn" onclick="showBudgetSub('schedule', this)" data-en="📅 Bill Schedule" data-es="📅 Horario de Facturas">📅 Bill Schedule</button>
     </div>
 
     <!-- TRACKER SUB -->
@@ -5763,7 +5763,7 @@
         <button class="cal-nav-btn" onclick="calNav(-1)">‹</button>
         <div class="cal-month-label" id="cal-month-label">May 2026</div>
         <button class="cal-nav-btn" onclick="calNav(1)">›</button>
-        <button class="cal-nav-btn" onclick="goToToday()" style="font-size:0.75rem">Today</button>
+        <button class="cal-nav-btn" onclick="goToToday()" style="font-size:0.75rem" data-en="Today" data-es="Hoy">Today</button>
       </div>
       <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap">
         <div class="cal-view-toggle">
@@ -5778,9 +5778,9 @@
     <div class="cal-legend">
       <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#f05555"></div> <span data-en="Bills Due" data-es="Facturas Vencidas">Bills Due</span></div>
       <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#00b894"></div> <span data-en="Payday" data-es="Día de Pago">Payday</span></div>
-      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#f5a623"></div> Savings Goals</div>
-      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#818cf8"></div> Debt Milestones</div>
-      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#06d6a0"></div> Custom Events</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#f5a623"></div> <span data-en="Savings Goals" data-es="Metas de Ahorro">Savings Goals</span></div>
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#818cf8"></div> <span data-en="Debt Milestones" data-es="Hitos de Deuda">Debt Milestones</span></div>
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#06d6a0"></div> <span data-en="Custom Events" data-es="Eventos Personalizados">Custom Events</span></div>
     </div>
 
     <div class="cal-layout">
@@ -11872,7 +11872,7 @@ Guidelines:
       eventMap[e.date].push(e);
     });
 
-    const dayNames = currentLang === 'es' ? ['Dom','Lun','Mar','Mie','Jue','Vie','Sab'] : ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const dayNames = currentLang === 'es' ? ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'] : ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
     let html = dayNames.map(d => `<div class="cal-day-header">${d}</div>`).join('');
 
     // Prev month days
@@ -11894,7 +11894,7 @@ Guidelines:
         <div class="cal-day-num">${d}</div>
         <div class="cal-events">
           ${shown.map(e => `<div class="cal-event ${e.type}" title="${e.title}">${e.icon} ${e.title}</div>`).join('')}
-          ${more > 0 ? `<div class="cal-more">+${more} ${currentLang === 'es' ? 'mas' : 'more'}</div>` : ''}
+          ${more > 0 ? `<div class="cal-more">+${more} ${currentLang === 'es' ? 'más' : 'more'}</div>` : ''}
         </div>
       </div>`;
     }
@@ -11912,7 +11912,7 @@ Guidelines:
     const today = new Date();
     const startOfWeek = new Date(calCurrentDate);
     startOfWeek.setDate(calCurrentDate.getDate() - calCurrentDate.getDay());
-    const dayNames = currentLang === 'es' ? ['Dom','Lun','Mar','Mie','Jue','Vie','Sab'] : ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const dayNames = currentLang === 'es' ? ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'] : ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
     let headerHtml = `<div class="cal-week-header" style="background:var(--surface)"></div>`;
     const weekDays = [];
@@ -11928,7 +11928,7 @@ Guidelines:
     }
 
     const hours = currentLang === 'es'
-      ? ['Todo el Dia','8 AM','9 AM','10 AM','11 AM','12 PM','1 PM','2 PM','3 PM','4 PM','5 PM','6 PM','7 PM','8 PM']
+      ? ['Todo el Día','8 AM','9 AM','10 AM','11 AM','12 PM','1 PM','2 PM','3 PM','4 PM','5 PM','6 PM','7 PM','8 PM']
       : ['All Day','8 AM','9 AM','10 AM','11 AM','12 PM','1 PM','2 PM','3 PM','4 PM','5 PM','6 PM','7 PM','8 PM'];
     let bodyHtml = '';
     hours.forEach(h => {
@@ -11937,7 +11937,7 @@ Guidelines:
         const dateStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
         const events = getCalEvents(d.getFullYear(), d.getMonth()).filter(e => e.date === dateStr);
         bodyHtml += `<div class="cal-week-slot">
-          ${((currentLang === 'es' && h === 'Todo el Dia') || h === 'All Day') ? events.map(e => `<div class="cal-week-event ${e.type}">${e.icon} ${e.title}</div>`).join('') : ''}
+          ${((currentLang === 'es' && h === 'Todo el Día') || h === 'All Day') ? events.map(e => `<div class="cal-week-event ${e.type}">${e.icon} ${e.title}</div>`).join('') : ''}
         </div>`;
       });
     });
@@ -11967,7 +11967,7 @@ Guidelines:
 
     const colors = { bill:'#f05555', payday:'#00b894', goal:'#f5a623', debt:'#818cf8', custom:'#06d6a0', reminder:'#06d6a0', milestone:'#818cf8' };
     const container = document.getElementById('cal-upcoming-list');
-    if (upcoming.length === 0) { container.innerHTML = `<div class="empty-state" style="font-size:0.82rem">${currentLang === 'es' ? 'No hay proximos eventos — agrega facturas, metas o eventos personalizados.' : 'No upcoming events — add bills, goals or custom events!'}</div>`; return; }
+    if (upcoming.length === 0) { container.innerHTML = `<div class="empty-state" style="font-size:0.82rem">${currentLang === 'es' ? 'No hay próximos eventos — agrega facturas, metas o eventos personalizados.' : 'No upcoming events — add bills, goals or custom events!'}</div>`; return; }
 
     container.innerHTML = upcoming.map(e => {
       const eDate = new Date(e.date);
@@ -11975,8 +11975,8 @@ Guidelines:
       const dateLabel = diff === 0
         ? (currentLang === 'es' ? 'Hoy' : 'Today')
         : diff === 1
-          ? (currentLang === 'es' ? 'Manana' : 'Tomorrow')
-          : `${diff} ${currentLang === 'es' ? 'dias' : 'days'}`;
+          ? (currentLang === 'es' ? 'Mañana' : 'Tomorrow')
+          : `${diff} ${currentLang === 'es' ? 'días' : 'days'}`;
       return `<div class="cal-upcoming-item">
         <div class="cal-upcoming-dot" style="background:${colors[e.type]||'#888'}"></div>
         <div class="cal-upcoming-info">
@@ -11992,7 +11992,7 @@ Guidelines:
     const date = new Date(dateStr + 'T00:00:00');
     if (isNaN(date.getTime())) return dateStr;
     const weekdays = currentLang === 'es'
-      ? ['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado']
+      ? ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado']
       : ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
     const months = currentLang === 'es'
       ? ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
@@ -12026,7 +12026,7 @@ Guidelines:
             ${e.note ? `<div style="font-size:0.75rem;color:var(--muted)">${e.note}</div>` : ''}
           </div>
         </div>`).join('')}
-      <button onclick="showAddEventModal('${dateStr}');this.closest('.cal-popup').remove()" style="width:100%;margin-top:0.75rem;background:none;border:1.5px solid var(--border);border-radius:8px;padding:0.45rem;font-family:'Sora',sans-serif;font-size:0.78rem;cursor:pointer;color:var(--text-soft)">${currentLang === 'es' ? '+ Agregar Evento Aqui' : '+ Add Event Here'}</button>`;
+      <button onclick="showAddEventModal('${dateStr}');this.closest('.cal-popup').remove()" style="width:100%;margin-top:0.75rem;background:none;border:1.5px solid var(--border);border-radius:8px;padding:0.45rem;font-family:'Sora',sans-serif;font-size:0.78rem;cursor:pointer;color:var(--text-soft)">${currentLang === 'es' ? '+ Agregar Evento Aquí' : '+ Add Event Here'}</button>`;
     document.body.appendChild(popup);
     setTimeout(() => document.addEventListener('click', function rm(e) { if(!popup.contains(e.target)){popup.remove(); document.removeEventListener('click',rm);} }), 100);
   }
@@ -15747,6 +15747,37 @@ window.addEventListener('load', function(){
     ['Maybe Later','Tal vez mas tarde'],
     ['Don’t Show Again','No volver a mostrar'],
     ['Install Guide','Guia de instalacion'],
+    ['My Profile','Mi Perfil'],
+    ['Profile','Perfil'],
+    ['Close','Cerrar'],
+    ['Back','Atrás'],
+    ['Clear category','Limpiar categoría'],
+    ['Search category','Buscar categoría'],
+    ['Mark paid','Marcar pagado'],
+    ['Delete','Eliminar'],
+    ['Save Changes','Guardar Cambios'],
+    ['Update Password','Actualizar Contraseña'],
+    ['Please wait...','Espera por favor...'],
+    ['Sign In','Iniciar Sesión'],
+    ['Create Free Account','Crear Cuenta Gratis'],
+    ['Saving...','Guardando...'],
+    ['Updating...','Actualizando...'],
+    ['Sending...','Enviando...'],
+    ['Resend Code','Reenviar Código'],
+    ['Enabled','Activado'],
+    ['Disable','Desactivar'],
+    ['Red','Rojo'],
+    ['Purple','Morado'],
+    ['Teal','Turquesa'],
+    ['Orange','Naranja'],
+    ['Pink','Rosa'],
+    ['Green','Verde'],
+    ['Blue','Azul'],
+    ['Violet','Violeta'],
+    ['Today','Hoy'],
+    ['Savings Goals','Metas de Ahorro'],
+    ['Debt Milestones','Hitos de Deuda'],
+    ['Custom Events','Eventos Personalizados'],
     ['Financial Calendar','Calendario Financiero'],
     ['Notifications','Notificaciones'],
     ['Notification Preferences','Preferencias de Notificaciones'],
@@ -15772,6 +15803,34 @@ window.addEventListener('load', function(){
     ['Notification settings saved.','Configuracion de notificaciones guardada.'],
     ['Test notification sent.','Notificacion de prueba enviada.'],
     ['Your report PDF is ready to share.','Tu reporte PDF esta listo para compartir.'],
+    ['Please enter your email and password.','Ingresa tu correo y contraseña.'],
+    ['Please fill in all fields.','Completa todos los campos.'],
+    ['Please fill in both fields.','Completa ambos campos.'],
+    ['Password must be at least 8 characters.','La contraseña debe tener al menos 8 caracteres.'],
+    ['Passwords do not match.','Las contraseñas no coinciden.'],
+    ['Configure Supabase credentials to enable real auth.','Configura las credenciales de Supabase para habilitar autenticación real.'],
+    ['Configure Supabase credentials to enable Google auth.','Configura las credenciales de Supabase para habilitar Google.'],
+    ['Configure Supabase credentials first.','Configura primero las credenciales de Supabase.'],
+    ['Account created! Check your email to confirm, then sign in.','Cuenta creada. Revisa tu correo para confirmar y luego inicia sesión.'],
+    ['Enter your email above, then click Forgot Password.','Ingresa tu correo arriba y luego toca Olvidé mi contraseña.'],
+    ['Password reset link sent to','Enlace para restablecer contraseña enviado a'],
+    ['Account updated successfully!','Cuenta actualizada correctamente.'],
+    ['Failed to update account.','No se pudo actualizar la cuenta.'],
+    ['Password updated successfully!','Contraseña actualizada correctamente.'],
+    ['Failed to update password.','No se pudo actualizar la contraseña.'],
+    ['Verification code sent to','Código de verificación enviado a'],
+    ['Failed to send code.','No se pudo enviar el código.'],
+    ['Please enter the 6-digit code.','Ingresa el código de 6 dígitos.'],
+    ['Two-factor authentication is now enabled!','La autenticación de dos factores está activada.'],
+    ['Invalid code. Please try again.','Código inválido. Intenta de nuevo.'],
+    ['Notification preferences saved!','Preferencias de notificación guardadas.'],
+    ['Are you absolutely sure? This will permanently delete your account and ALL data. This cannot be undone.','¿Estás completamente seguro? Esto eliminará permanentemente tu cuenta y TODOS los datos. No se puede deshacer.'],
+    ['Last chance — delete everything?','Última oportunidad: ¿eliminar todo?'],
+    ['Your account has been deleted.','Tu cuenta fue eliminada.'],
+    ['Error deleting account:','Error al eliminar la cuenta:'],
+    ['This will clear all your transactions, bills, and goals. Your account will remain active.','Esto borrará todas tus transacciones, facturas y metas. Tu cuenta seguirá activa.'],
+    ['All data cleared successfully.','Todos los datos se borraron correctamente.'],
+    ['Add some transactions first before saving your budget report.','Agrega algunas transacciones antes de guardar tu reporte de presupuesto.'],
     ['Please enter a goal name and target amount.','Ingresa un nombre de meta y un monto objetivo valido.'],
     ['Saved amount cannot be negative.','El monto ahorrado no puede ser negativo.'],
     ['Delete this savings goal?','¿Eliminar esta meta de ahorro?'],
@@ -15850,6 +15909,21 @@ window.addEventListener('load', function(){
       return originalConfirm.call(this, swapText(message));
     };
     window.confirm.__fintrailPhase3Localization = true;
+  }
+
+  const originalShowAuthMsg = window.showAuthMsg;
+  if (typeof originalShowAuthMsg === 'function' && !originalShowAuthMsg.__fintrailPhase3Localization) {
+    window.showAuthMsg = function(msg, type){
+      return originalShowAuthMsg.call(this, swapText(msg), type);
+    };
+    window.showAuthMsg.__fintrailPhase3Localization = true;
+  }
+  const originalShowProfileMsg = window.showProfileMsg;
+  if (typeof originalShowProfileMsg === 'function' && !originalShowProfileMsg.__fintrailPhase3Localization) {
+    window.showProfileMsg = function(id, msg, type){
+      return originalShowProfileMsg.call(this, id, swapText(msg), type);
+    };
+    window.showProfileMsg.__fintrailPhase3Localization = true;
   }
 
   window.addEventListener('load', function(){
@@ -16119,6 +16193,123 @@ window.addEventListener('load', function(){
     };
     window.showApp.__fintrailInstallPromptWrapped = true;
   }
+})();
+</script>
+
+<script>
+/* === SAVINGS GOAL CARD TRACKING SPANISH FINAL FIX === */
+(function(){
+  function isSpanish(){
+    try { return currentLang === 'es'; } catch(e) { return false; }
+  }
+
+  function swapMonths(text){
+    var pairs = [
+      ['Jan','Ene'], ['Feb','Feb'], ['Mar','Mar'], ['Apr','Abr'], ['May','Mayo'], ['Jun','Jun'],
+      ['Jul','Jul'], ['Aug','Ago'], ['Sep','Sept'], ['Oct','Oct'], ['Nov','Nov'], ['Dec','Dic']
+    ];
+    var out = String(text || '');
+    pairs.forEach(function(pair){
+      out = isSpanish() ? out.replace(new RegExp('\\b' + pair[0] + '\\b', 'g'), pair[1]) : out.replace(new RegExp('\\b' + pair[1] + '\\b', 'g'), pair[0]);
+    });
+    return out;
+  }
+
+  function applySavingsGoalCardTrackingLanguage(){
+    try {
+      var root = document.getElementById('tab-goals');
+      if (!root) return;
+
+      root.querySelectorAll('.goal-card').forEach(function(card){
+        var target = card.querySelector('.goal-target');
+        if (target) {
+          var targetText = target.textContent || '';
+          target.textContent = isSpanish()
+            ? targetText.replace(/^of\s+/i, 'de ')
+            : targetText.replace(/^de\s+/i, 'of ');
+        }
+
+        var remaining = card.querySelector('.goal-remaining');
+        if (remaining) {
+          remaining.textContent = isSpanish()
+            ? remaining.textContent.replace(/^Remaining:/i, 'Restante:')
+            : remaining.textContent.replace(/^Restante:/i, 'Remaining:');
+        }
+
+        var pct = card.querySelector('.goal-pct');
+        if (pct) {
+          pct.textContent = isSpanish()
+            ? pct.textContent.replace(/%\s*complete/i, '% completado')
+            : pct.textContent.replace(/%\s*completado/i, '% complete');
+        }
+
+        var deadline = card.querySelector('.goal-deadline');
+        if (deadline) deadline.textContent = swapMonths(deadline.textContent);
+
+        var monthly = card.querySelector('.goal-monthly');
+        if (monthly) {
+          var html = monthly.innerHTML || '';
+          if (isSpanish()) {
+            html = html
+              .replace(/Save\s*/i, 'Ahorra ')
+              .replace(/\/mo/i, '/mes')
+              .replace(/to reach your goal in/i, 'para alcanzar tu meta en')
+              .replace(/months/i, 'meses')
+              .replace(/month/i, 'mes');
+          } else {
+            html = html
+              .replace(/Ahorra\s*/i, 'Save ')
+              .replace(/\/mes/i, '/mo')
+              .replace(/para alcanzar tu meta en/i, 'to reach your goal in')
+              .replace(/meses/i, 'months')
+              .replace(/mes/i, 'month');
+          }
+          monthly.innerHTML = html;
+        }
+
+        var input = card.querySelector('.deposit-input');
+        if (input) input.placeholder = isSpanish() ? 'Agregar ahorro...' : 'Add savings...';
+        var button = card.querySelector('.deposit-btn');
+        if (button) button.textContent = isSpanish() ? '+ Agregar' : '+ Add';
+        var complete = card.querySelector('.goal-complete-badge');
+        if (complete) complete.textContent = isSpanish() ? '🎉 ¡Meta Alcanzada!' : '🎉 Goal Reached!';
+      });
+    } catch(e) {}
+  }
+
+  window.fintrailSavingsGoalCardTrackingLanguage = applySavingsGoalCardTrackingLanguage;
+
+  function scheduleSavingsGoalCardTrackingLanguage(){
+    setTimeout(applySavingsGoalCardTrackingLanguage, 20);
+    setTimeout(applySavingsGoalCardTrackingLanguage, 180);
+  }
+
+  var originalRenderGoals = window.renderGoals;
+  if (typeof originalRenderGoals === 'function' && !originalRenderGoals.__fintrailSavingsTrackingLang) {
+    window.renderGoals = function(){
+      var result = originalRenderGoals.apply(this, arguments);
+      scheduleSavingsGoalCardTrackingLanguage();
+      return result;
+    };
+    window.renderGoals.__fintrailSavingsTrackingLang = true;
+  }
+
+  var originalApplyLanguage = window.applyLanguage;
+  if (typeof originalApplyLanguage === 'function' && !originalApplyLanguage.__fintrailSavingsTrackingLang) {
+    window.applyLanguage = function(){
+      var result = originalApplyLanguage.apply(this, arguments);
+      scheduleSavingsGoalCardTrackingLanguage();
+      return result;
+    };
+    window.applyLanguage.__fintrailSavingsTrackingLang = true;
+  }
+
+  window.addEventListener('load', scheduleSavingsGoalCardTrackingLanguage);
+  document.addEventListener('click', function(e){
+    if (e.target && e.target.closest && (e.target.closest('#tab-goals') || /English|Español|^EN$|^ES$/.test(String(e.target.textContent || '').trim()))) {
+      scheduleSavingsGoalCardTrackingLanguage();
+    }
+  });
 })();
 </script>
 
