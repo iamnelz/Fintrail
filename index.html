@@ -11587,135 +11587,107 @@ Guidelines:
     const data = getMonthlyReportPDFData();
     const pageW = 612, pageH = 792, margin = 42;
     const pages = [];
-    let cmds = [], y = pageH - margin;
-    const color = {
-      dark:[26,26,46], accent:[240,85,85], accent2:[245,166,35], green:[0,184,148],
-      soft:[90,96,114], border:[224,227,234], bg:[246,248,251], white:[255,255,255]
-    };
-    const rgb = c => c.map(v => (v / 255).toFixed(3)).join(' ');
+    let cmds = [];
+    let y = pageH - margin;
     const add = s => cmds.push(s);
-    const page = () => { if (cmds.length) pages.push(cmds.join('\n')); cmds = []; y = pageH - margin; };
-    const rect = (x, yy, w, h, fill, stroke) => {
-      add('q');
-      if (fill) add(`${rgb(fill)} rg`);
-      if (stroke) add(`${rgb(stroke)} RG 1 w`);
-      add(`${x} ${yy} ${w} ${h} re ${fill && stroke ? 'B' : fill ? 'f' : 'S'}`);
-      add('Q');
+    const newPage = () => {
+      if (cmds.length) pages.push(cmds.join('\n'));
+      cmds = [];
+      y = pageH - margin;
+      add('0.10 0.10 0.18 rg 0 742 612 50 re f');
+      add('0.941 0.333 0.333 rg 0 742 612 4 re f');
+      add('BT /F2 18 Tf 42 762 Td 1 1 1 rg (Fintrail Pro) Tj ET');
+      add(`BT /F1 9 Tf 418 762 Td 1 1 1 rg (${escapePdfText(data.monthLabel)}) Tj ET`);
     };
-    const textAt = (txt, x, yy, size = 10, font = 'F1', fill = color.dark) => {
-      add('BT');
-      add(`${rgb(fill)} rg`);
-      add(`/${font} ${size} Tf`);
-      add(`${x} ${yy} Td`);
-      add(`(${escapePdfText(txt)}) Tj`);
-      add('ET');
+    const finishPage = () => {
+      add('0.88 0.89 0.92 rg 42 48 528 1 re f');
+      add(`BT /F1 8 Tf 42 32 Td 0.35 0.38 0.45 rg (${escapePdfText(`${data.labels.footer} | ${data.labels.brandLine} | fintrail.app`)}) Tj ET`);
+      add(`BT /F1 7 Tf 42 20 Td 0.35 0.38 0.45 rg (${escapePdfText(data.labels.disclaimer)}) Tj ET`);
+      pages.push(cmds.join('\n'));
+      cmds = [];
     };
-    const wrapped = (txt, x, yy, maxLen, size = 10, leading = 13, font = 'F1', fill = color.dark) => {
-      const lines = splitPdfLine(txt, maxLen);
-      lines.forEach((line, i) => textAt(line, x, yy - (i * leading), size, font, fill));
-      return yy - (lines.length * leading);
-    };
-    const ensure = h => { if (y - h < 76) { drawFooter(); page(); drawHeader(false); } };
-    const drawHeader = first => {
-      if (first) {
-        rect(0, pageH - 170, pageW, 170, color.dark);
-        rect(0, pageH - 170, pageW, 8, color.accent);
-        textAt('Fintrail Pro', margin, pageH - 72, 24, 'F2', color.white);
-        textAt(data.labels.monthlyReport, margin, pageH - 100, 14, 'F1', color.white);
-        textAt(data.monthLabel, margin, pageH - 126, 22, 'F2', color.white);
-        textAt(`${data.labels.generated} ${data.generatedLabel}`, margin, pageH - 148, 9, 'F1', [220,224,232]);
-        if (data.userLabel) textAt(data.userLabel, pageW - 250, pageH - 72, 9, 'F1', [220,224,232]);
-        textAt(data.labels.brandLine, pageW - 250, pageH - 148, 11, 'F2', color.accent);
-        y = pageH - 205;
-      } else {
-        textAt('Fintrail Pro', margin, pageH - 42, 13, 'F2', color.accent);
-        textAt(data.monthLabel, pageW - 170, pageH - 42, 9, 'F1', color.soft);
-        y = pageH - 76;
+    const ensure = needed => {
+      if (y - needed < 70) {
+        finishPage();
+        newPage();
+        y = 718;
       }
     };
-    const drawFooter = () => {
-      rect(margin, 48, pageW - margin * 2, 1, color.border);
-      textAt(`${data.labels.footer}  |  ${data.labels.brandLine}  |  fintrail.app`, margin, 32, 8, 'F1', color.soft);
-      textAt(data.labels.disclaimer, margin, 20, 7, 'F1', color.soft);
+    const line = (text, x = margin, size = 10, bold = false, color = '0.10 0.10 0.18') => {
+      add(`BT /${bold ? 'F2' : 'F1'} ${size} Tf ${x} ${y} Td ${color} rg (${escapePdfText(text)}) Tj ET`);
+      y -= size + 7;
     };
-    const sectionTitle = title => {
-      ensure(34);
-      textAt(title, margin, y, 15, 'F2', color.dark);
-      rect(margin, y - 7, 40, 3, color.accent);
-      y -= 28;
+    const wrappedLine = (text, x = margin, maxLen = 88, size = 10, bold = false, color = '0.10 0.10 0.18') => {
+      splitPdfLine(text, maxLen).forEach(part => line(part, x, size, bold, color));
     };
-    const metricCard = (x, yy, w, h, label, value, note) => {
-      rect(x, yy - h, w, h, color.white, color.border);
-      textAt(label, x + 14, yy - 22, 8, 'F2', color.soft);
-      textAt(value, x + 14, yy - 48, 18, 'F2', color.dark);
-      if (note) wrapped(note, x + 14, yy - 66, 28, 8, 10, 'F1', color.soft);
+    const section = title => {
+      ensure(44);
+      y -= 8;
+      add(`0.941 0.333 0.333 rg ${margin} ${y - 3} 40 3 re f`);
+      line(title, margin, 14, true);
     };
-    const infoCard = (title, rows, body) => {
-      const bodyLines = body ? splitPdfLine(body, 84).length : 0;
-      const h = 36 + rows.length * 22 + bodyLines * 12;
-      ensure(h + 14);
-      rect(margin, y - h, pageW - margin * 2, h, color.white, color.border);
-      textAt(title, margin + 14, y - 22, 12, 'F2', color.dark);
-      let yy = y - 46;
-      rows.forEach(row => {
-        textAt(row[0], margin + 14, yy, 8, 'F2', color.soft);
-        textAt(row[1], margin + 155, yy, 10, 'F1', color.dark);
-        yy -= 22;
-      });
-      if (body) wrapped(body, margin + 14, yy + 2, 84, 9, 12, 'F1', color.soft);
-      y -= h + 16;
+    const divider = () => {
+      ensure(12);
+      add(`0.88 0.89 0.92 rg ${margin} ${y} ${pageW - margin * 2} 1 re f`);
+      y -= 12;
+    };
+    const row = (label, value) => {
+      ensure(20);
+      line(`${label} ${value}`, margin + 14, 10);
     };
 
-    drawHeader(true);
-    sectionTitle(data.labels.health);
-    metricCard(margin, y, 160, 88, data.labels.healthScore, `${data.health} / 100`, data.healthStatus);
-    metricCard(margin + 180, y, 160, 88, data.labels.suggestedFocus, data.healthStatus, data.suggestedFocus);
-    metricCard(margin + 360, y, 150, 88, data.labels.generated, data.generatedLabel, data.monthLabel);
-    y -= 108;
+    newPage();
+    y = 708;
+    line(data.labels.monthlyReport, margin, 19, true);
+    line(data.monthLabel, margin, 15, true, '0.941 0.333 0.333');
+    line(`${data.labels.generated} ${data.generatedLabel}`, margin, 9, false, '0.35 0.38 0.45');
+    if (data.userLabel) line(data.userLabel, margin, 9, false, '0.35 0.38 0.45');
+    divider();
 
-    sectionTitle(data.labels.savings);
+    section(data.labels.health);
+    row(data.labels.healthScore + ':', `${data.health} / 100`);
+    row('Status:', data.healthStatus);
+
+    section(data.labels.savings);
     if (data.savings.length) {
-      data.savings.slice(0, 6).forEach(goal => {
-        infoCard(goal.name, [
-          [data.labels.saved + ':', goal.saved],
-          [data.labels.target + ':', goal.target],
-          [data.labels.remaining + ':', goal.remaining],
-          [data.labels.progress + ':', goal.progress]
-        ]);
+      data.savings.slice(0, 8).forEach(goal => {
+        ensure(90);
+        line(goal.name, margin + 8, 12, true);
+        row(data.labels.saved + ':', goal.saved);
+        row(data.labels.target + ':', goal.target);
+        row(data.labels.remaining + ':', goal.remaining);
+        row(data.labels.progress + ':', goal.progress);
+        y -= 4;
       });
     } else {
-      infoCard(data.labels.savings, [], data.labels.noSavings);
+      wrappedLine(data.labels.noSavings, margin + 8, 82, 10);
     }
 
-    sectionTitle(data.labels.debt);
-    infoCard(data.labels.debt, [
-      [data.labels.totalDebt + ':', data.totalDebt],
-      [data.labels.currentFocus + ':', data.focusDebt],
-      [data.labels.strategy + ':', data.strategy],
-      [data.labels.nextPayment + ':', data.nextPayment]
-    ]);
+    section(data.labels.debt);
+    row(data.labels.totalDebt + ':', data.totalDebt);
+    row(data.labels.currentFocus + ':', data.focusDebt);
+    row(data.labels.strategy + ':', data.strategy);
+    row(data.labels.nextPayment + ':', data.nextPayment);
 
-    sectionTitle(data.labels.credit);
-    infoCard(data.labels.credit, [
-      [data.labels.currentScore + ':', String(data.currentCredit)],
-      [data.labels.previousScore + ':', String(data.previousCredit)],
-      [data.labels.change + ':', String(data.creditChange || '0')]
-    ], document.getElementById('report-credit-insight')?.textContent || '');
+    section(data.labels.credit);
+    row(data.labels.currentScore + ':', String(data.currentCredit));
+    row(data.labels.previousScore + ':', String(data.previousCredit));
+    row(data.labels.change + ':', String(data.creditChange || '0'));
 
-    sectionTitle(data.labels.ai);
-    infoCard(data.labels.ai, [], data.aiInsight);
+    section(data.labels.ai);
+    wrappedLine(data.aiInsight, margin + 8, 82, 10);
 
-    sectionTitle(data.labels.achievement);
-    infoCard(data.achievementTitle, [], data.achievementDesc || data.labels.achievement);
+    section(data.labels.achievement);
+    line(data.achievementTitle, margin + 8, 12, true);
+    wrappedLine(data.achievementDesc || data.labels.achievement, margin + 8, 82, 10);
 
-    sectionTitle(data.labels.suggestedFocus);
-    infoCard(data.labels.suggestedFocus, [], data.suggestedFocus);
+    section(data.labels.suggestedFocus);
+    wrappedLine(data.suggestedFocus, margin + 8, 82, 10);
 
-    drawFooter();
-    page();
+    finishPage();
     const objects = [
       '<< /Type /Catalog /Pages 2 0 R >>',
-      `<< /Type /Pages /Kids ${pages.map((_, i) => `${3 + i * 2} 0 R`).join(' ')} /Count ${pages.length} >>`
+      `<< /Type /Pages /Kids [${pages.map((_, i) => `${3 + i * 2} 0 R`).join(' ')}] /Count ${pages.length} >>`
     ];
     pages.forEach((stream, i) => {
       const pageObjNum = 3 + i * 2;
