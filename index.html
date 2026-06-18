@@ -16969,5 +16969,301 @@ window.addEventListener('load', function(){
 </script>
 
 
+<style id="fintrail-design-system-phase-1">
+  :root {
+    --bg:#F8FAFC;
+    --surface:#FFFFFF;
+    --surface2:#F3F4F6;
+    --dark:#151515;
+    --accent:#E53935;
+    --accent2:#F59E0B;
+    --accent3:#10B981;
+    --muted:#64748B;
+    --text:#111827;
+    --text-soft:#475569;
+    --danger:#DC2626;
+    --border:#E5E7EB;
+    --income-color:#10B981;
+    --expense-color:#E53935;
+    --glow-red:rgba(229,57,53,0.16);
+    --glow-teal:rgba(16,185,129,0.14);
+  }
+
+  body {
+    background:var(--bg);
+    color:var(--text);
+  }
+
+  header {
+    background:rgba(255,255,255,0.94);
+    border-bottom:1px solid var(--border);
+    box-shadow:0 8px 24px rgba(17,24,39,0.06);
+  }
+
+  .hero {
+    background:
+      radial-gradient(circle at 50% 0%, rgba(229,57,53,0.28), transparent 34%),
+      linear-gradient(145deg,#151515 0%,#1F2933 58%,#111827 100%);
+  }
+  .hero::before { background:radial-gradient(ellipse, rgba(229,57,53,0.16) 0%, transparent 70%); }
+  .hero h1 em { color:#ff6b66; }
+
+  .card,
+  .summary-card,
+  .goal-stat,
+  .loan-result-card,
+  .resource-card,
+  .rc-card,
+  .report-card,
+  .profile-panel,
+  .health-score-card,
+  .alerts-card,
+  .planner-card,
+  .score-input-card,
+  .invest-result-card {
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:16px;
+    box-shadow:0 12px 30px rgba(17,24,39,0.06);
+  }
+
+  .card:hover,
+  .summary-card:hover,
+  .resource-card:hover,
+  .rc-card:hover {
+    border-color:rgba(229,57,53,0.28);
+    box-shadow:0 16px 36px rgba(17,24,39,0.08);
+  }
+
+  nav button,
+  .nav-group-btn,
+  .nav-dropdown-item,
+  .mobile-nav-tile {
+    border-radius:12px;
+  }
+  nav button:hover,
+  .nav-dropdown-item:hover,
+  .mobile-nav-tile:hover {
+    background:#F9FAFB;
+    color:var(--text);
+  }
+  nav button.active,
+  .nav-dropdown-item.active,
+  .mobile-nav-tile.active {
+    color:var(--accent);
+    background:rgba(229,57,53,0.08);
+    border-color:rgba(229,57,53,0.24);
+  }
+
+  .nav-dropdown {
+    border:1px solid var(--border);
+    border-radius:16px;
+    box-shadow:0 20px 45px rgba(17,24,39,0.14);
+    overflow:hidden;
+  }
+  .nav-dropdown-section {
+    color:var(--muted);
+  }
+  .ndi-icon {
+    width:34px;
+    height:34px;
+    border-radius:12px;
+    background:#F9FAFB;
+    border:1px solid var(--border);
+    color:var(--accent);
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+  }
+  .ndi-icon svg {
+    width:18px;
+    height:18px;
+    stroke:currentColor;
+    stroke-width:2;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+    fill:none;
+  }
+
+  .add-btn,
+  .profile-save-btn,
+  .lock-gate-btn,
+  .alert-test-btn,
+  .report-action-btn.primary,
+  .upgrade-btn-nav,
+  .receipt-submit-btn,
+  .fm-btn.primary {
+    background:var(--accent) !important;
+    color:#fff !important;
+    border:none !important;
+    border-radius:14px !important;
+    box-shadow:0 10px 22px rgba(229,57,53,0.22);
+  }
+  .add-btn:hover,
+  .profile-save-btn:hover,
+  .lock-gate-btn:hover,
+  .alert-test-btn:hover,
+  .report-action-btn.primary:hover,
+  .upgrade-btn-nav:hover,
+  .receipt-submit-btn:hover,
+  .fm-btn.primary:hover {
+    background:#C92F2B !important;
+    box-shadow:0 14px 26px rgba(229,57,53,0.28);
+  }
+
+  .loan-secondary-btn,
+  .fm-btn.secondary,
+  .receipt-skip-btn,
+  .report-action-btn:not(.primary),
+  .filter-btn,
+  .resource-shortcut {
+    background:#fff;
+    color:var(--text-soft);
+    border:1px solid var(--border);
+    border-radius:14px;
+  }
+  .loan-secondary-btn:hover,
+  .filter-btn:hover,
+  .resource-shortcut:hover {
+    border-color:rgba(229,57,53,0.32);
+    color:var(--accent);
+  }
+
+  .pro-pill,
+  .premium-badge,
+  .ab-plan,
+  #ab-plan-badge,
+  #mobile-plan-badge,
+  .badge {
+    border-radius:999px;
+    font-weight:800;
+    letter-spacing:0.04em;
+  }
+  .pro-pill,
+  .premium-badge {
+    background:#151515 !important;
+    color:#fff !important;
+  }
+  #ab-plan-badge,
+  #mobile-plan-badge {
+    background:#F3F4F6;
+    color:#1F2933;
+    border:1px solid #D1D5DB;
+  }
+  .founding-badge,
+  .founding-member-badge,
+  [class*="founding"][class*="badge"] {
+    background:#FFF7DF !important;
+    color:#7A5200 !important;
+    border-color:#D4A017 !important;
+  }
+
+  .bar-track,
+  .goal-progress-track,
+  .report-progress,
+  .dti-bar-track,
+  .nw-bar-track,
+  .xp-bar-track {
+    background:#E5E7EB;
+    border-radius:999px;
+    overflow:hidden;
+  }
+  .bar-fill,
+  .goal-progress-fill,
+  .report-progress-fill,
+  .dti-bar-fill,
+  .nw-bar-fill,
+  .xp-bar-fill {
+    border-radius:999px;
+  }
+
+  .empty-state,
+  .empty-goals {
+    background:#F9FAFB;
+    border:1px dashed #CBD5E1;
+    border-radius:16px;
+    color:var(--muted);
+  }
+
+  .tip-bar {
+    background:#FFFFFF;
+    border:1px solid var(--border);
+    border-left:4px solid var(--accent);
+    border-radius:16px;
+  }
+  .tip-icon,
+  .lg-icon,
+  .eg-icon,
+  .chat-avatar,
+  .msg-avatar {
+    background:#FEF2F2;
+    color:var(--accent);
+    border-radius:14px;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus,
+  button:focus-visible,
+  a:focus-visible {
+    outline:3px solid rgba(229,57,53,0.24) !important;
+    outline-offset:2px;
+  }
+</style>
+
+<script>
+/* === FINTRAIL DESIGN SYSTEM PHASE 1 ICON PASS === */
+(function(){
+  function svg(path){
+    return '<svg viewBox="0 0 24 24" aria-hidden="true">' + path + '</svg>';
+  }
+  var icons = {
+    budget: svg('<path d="M4 19V5"/><path d="M8 19V9"/><path d="M12 19V3"/><path d="M16 19v-6"/><path d="M20 19V7"/>'),
+    calendar: svg('<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>'),
+    target: svg('<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>'),
+    trend: svg('<path d="M3 17l6-6 4 4 7-9"/><path d="M14 6h6v6"/>'),
+    diamond: svg('<path d="M6 3h12l4 6-10 12L2 9l4-6z"/><path d="M2 9h20"/>'),
+    card: svg('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/><path d="M7 15h4"/>'),
+    search: svg('<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>'),
+    book: svg('<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/>'),
+    calculator: svg('<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M12 11h2M16 11h0M8 15h2M12 15h2M16 15h0"/>'),
+    message: svg('<path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>'),
+    activity: svg('<path d="M22 12h-4l-3 8L9 4l-3 8H2"/>'),
+    report: svg('<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 16h8M8 12h4"/>'),
+    award: svg('<circle cx="12" cy="8" r="5"/><path d="M8.5 12.5L7 22l5-3 5 3-1.5-9.5"/>')
+  };
+  function pick(text){
+    text = (text || '').toLowerCase();
+    if (text.includes('budget')) return icons.budget;
+    if (text.includes('bill') || text.includes('calendar')) return icons.calendar;
+    if (text.includes('saving') || text.includes('goal')) return icons.target;
+    if (text.includes('investment')) return icons.trend;
+    if (text.includes('net worth')) return icons.diamond;
+    if (text.includes('debt') || text.includes('credit score') || text.includes('simulator')) return icons.card;
+    if (text.includes('resources')) return icons.search;
+    if (text.includes('guide')) return icons.book;
+    if (text.includes('loan')) return icons.calculator;
+    if (text.includes('advisor') || text.includes('negotiation')) return icons.message;
+    if (text.includes('health')) return icons.activity;
+    if (text.includes('report')) return icons.report;
+    if (text.includes('streak')) return icons.award;
+    return icons.budget;
+  }
+  function refreshIcons(){
+    document.querySelectorAll('.nav-dropdown-item .ndi-icon').forEach(function(icon){
+      if (icon.dataset.ftIconReady === '1') return;
+      var item = icon.closest('.nav-dropdown-item');
+      icon.innerHTML = pick(item ? item.textContent : '');
+      icon.dataset.ftIconReady = '1';
+    });
+  }
+  window.fintrailRefreshDesignIcons = refreshIcons;
+  window.addEventListener('load', refreshIcons);
+  document.addEventListener('DOMContentLoaded', refreshIcons);
+  setTimeout(refreshIcons, 250);
+})();
+</script>
+
 </body>
 </html>
