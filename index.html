@@ -10876,6 +10876,8 @@ Guidelines:
     currentLang = currentLang === 'en' ? 'es' : 'en';
     safeSet('fintrail_lang', currentLang);
     applyLanguage();
+    if (typeof scheduleLocalizedUIRefresh === 'function') scheduleLocalizedUIRefresh();
+    else if (typeof refreshAllLocalizedUI === 'function') refreshAllLocalizedUI();
     if (typeof updateProfileSubscriptionUI === 'function') updateProfileSubscriptionUI();
   }
 
@@ -11064,7 +11066,83 @@ Guidelines:
 
     // Save preference
     safeSet('fintrail_lang', currentLang);
+    if (typeof refreshAllLocalizedUI === 'function') refreshAllLocalizedUI({ fromApplyLanguage: true });
   }
+
+  function refreshAllLocalizedUI(options = {}) {
+    if (refreshAllLocalizedUI._running) return;
+    refreshAllLocalizedUI._running = true;
+
+    const call = (name, args = []) => {
+      try {
+        if (typeof window[name] === 'function') window[name].apply(window, args);
+        else if (typeof globalThis[name] === 'function') globalThis[name].apply(globalThis, args);
+      } catch(e) {}
+    };
+    const visible = selector => {
+      try {
+        const el = document.querySelector(selector);
+        return !!(el && (el.classList.contains('visible') || getComputedStyle(el).display !== 'none'));
+      } catch(e) { return false; }
+    };
+
+    try {
+      safeSet('fintrail_lang', currentLang);
+      if (!options.fromApplyLanguage && typeof applyLanguage === 'function') applyLanguage();
+
+      call('render');
+      call('renderBudgetChart');
+      call('renderBillList');
+      call('renderSchedule');
+      call('renderGoals');
+      call('calcNW');
+      call('renderNWLists');
+      call('renderNWHistory');
+      call('renderNWChart');
+      call('calcInvestment');
+      call('renderDebtList');
+      call('runPayoffPlan');
+      call('calculateHealthScore');
+      call('renderHealthScore');
+      call('renderRecommendations');
+      call('updateSimulator');
+      call('renderActionCards');
+      call('renderMonthlyReport');
+      call('renderCalendar');
+      call('renderResources');
+      call('renderStreaks');
+      call('renderActivityFeed');
+      call('setUserUI', currentUser ? [currentUser] : []);
+      call('setProUI');
+      call('updateProfileSubscriptionUI');
+      call('updateFoundingMemberUI');
+      call('applyFoundingFeedbackLanguage');
+
+      if (visible('#fintrail-install-sheet') || visible('#fintrail-install-prompt')) {
+        call('renderInstallPrompt');
+      }
+      if (typeof window.fintrailTranslateLooseButtons === 'function') window.fintrailTranslateLooseButtons();
+      if (typeof window.fintrailApplyFinalTranslationPolish === 'function') window.fintrailApplyFinalTranslationPolish();
+      if (typeof window.fintrailApplyEnglishModeCleanup === 'function') window.fintrailApplyEnglishModeCleanup();
+      if (typeof window.fintrailNormalizeDebtEditButtons === 'function') window.fintrailNormalizeDebtEditButtons();
+      if (typeof window.fintrailSavingsGoalCardTrackingLanguage === 'function') window.fintrailSavingsGoalCardTrackingLanguage();
+      if (typeof window.fintrailPhase3Localization === 'function') window.fintrailPhase3Localization();
+    } finally {
+      refreshAllLocalizedUI._running = false;
+    }
+  }
+
+  window.refreshAllLocalizedUI = refreshAllLocalizedUI;
+
+  function scheduleLocalizedUIRefresh() {
+    if (typeof refreshAllLocalizedUI !== 'function') return;
+    refreshAllLocalizedUI();
+    setTimeout(refreshAllLocalizedUI, 80);
+    setTimeout(refreshAllLocalizedUI, 250);
+    setTimeout(refreshAllLocalizedUI, 700);
+  }
+
+  window.scheduleLocalizedUIRefresh = scheduleLocalizedUIRefresh;
 
   function loadLanguagePreference() {
     try {
