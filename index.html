@@ -1200,6 +1200,217 @@
   }
   .auth-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--glow-red); }
   .auth-input::placeholder { color: var(--muted); }
+
+  /* PUBLIC HOME */
+  #public-home {
+    position:fixed;
+    inset:0;
+    z-index:1990;
+    display:flex;
+    flex-direction:column;
+    overflow-y:auto;
+    background:#F8FAFC;
+    color:var(--text);
+  }
+  .public-nav {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:1rem;
+    padding:1rem clamp(1rem,4vw,3rem);
+    background:rgba(255,255,255,0.94);
+    border-bottom:1px solid var(--border);
+    position:sticky;
+    top:0;
+    z-index:2;
+    backdrop-filter:blur(12px);
+  }
+  .public-brand {
+    display:flex;
+    align-items:center;
+    gap:0.65rem;
+    font-family:'Playfair Display',serif;
+    font-size:1.25rem;
+    font-weight:700;
+    color:var(--text);
+  }
+  .public-mark {
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:var(--accent);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Playfair Display',serif;
+    font-size:0.85rem;
+  }
+  .public-nav-actions { display:flex; align-items:center; gap:0.55rem; flex-wrap:wrap; justify-content:flex-end; }
+  .public-btn {
+    border:1px solid var(--border);
+    background:#fff;
+    color:var(--text);
+    border-radius:14px;
+    padding:0.72rem 1rem;
+    font-family:'Sora',sans-serif;
+    font-size:0.88rem;
+    font-weight:800;
+    cursor:pointer;
+    transition:all 0.18s ease;
+  }
+  .public-btn:hover { border-color:rgba(229,57,53,0.32); color:var(--accent); }
+  .public-btn.primary {
+    background:var(--accent);
+    color:#fff;
+    border-color:var(--accent);
+    box-shadow:0 12px 26px rgba(229,57,53,0.22);
+  }
+  .public-btn.primary:hover { background:#C92F2B; color:#fff; }
+  .public-lang {
+    min-width:44px;
+    padding:0.58rem 0.7rem;
+    border-radius:999px;
+  }
+  .public-home-main { width:100%; }
+  .public-hero {
+    background:
+      radial-gradient(circle at 52% -12%, rgba(229,57,53,0.28), transparent 34%),
+      linear-gradient(145deg,#151515 0%,#1F2933 58%,#111827 100%);
+    color:#fff;
+    padding:clamp(3rem,8vw,6rem) clamp(1.25rem,5vw,4rem) 3rem;
+    text-align:center;
+  }
+  .public-hero h1 {
+    font-family:'Playfair Display',serif;
+    font-size:clamp(2.6rem,7vw,5rem);
+    line-height:1;
+    margin-bottom:0.8rem;
+  }
+  .public-motto {
+    font-size:clamp(1.2rem,3vw,2rem);
+    font-weight:900;
+    color:#fff;
+    margin-bottom:0.9rem;
+  }
+  .public-motto span { color:#ff6b66; font-family:'Playfair Display',serif; font-style:italic; }
+  .public-subtitle {
+    max-width:760px;
+    margin:0 auto 1.5rem;
+    color:rgba(255,255,255,0.76);
+    line-height:1.7;
+    font-size:1rem;
+  }
+  .public-hero-actions { display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap; }
+  .public-section {
+    padding:clamp(2rem,5vw,4rem) clamp(1.25rem,5vw,4rem);
+    max-width:1180px;
+    width:100%;
+    margin:0 auto;
+  }
+  .public-section h2 {
+    font-family:'Playfair Display',serif;
+    font-size:clamp(1.7rem,3vw,2.35rem);
+    margin-bottom:1rem;
+    color:var(--text);
+  }
+  .public-grid {
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:1rem;
+  }
+  .public-card {
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:1.15rem;
+    box-shadow:0 12px 30px rgba(17,24,39,0.06);
+  }
+  .public-card-icon {
+    width:42px;
+    height:42px;
+    border-radius:14px;
+    background:#FEF2F2;
+    color:var(--accent);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:0.85rem;
+  }
+  .public-card-icon svg {
+    width:22px;
+    height:22px;
+    stroke:currentColor;
+    stroke-width:2;
+    fill:none;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+  }
+  .public-card h3 { font-size:1rem; margin-bottom:0.45rem; color:var(--text); }
+  .public-card p, .public-list li { color:var(--text-soft); font-size:0.88rem; line-height:1.55; }
+  .public-steps { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; counter-reset:steps; }
+  .public-step { position:relative; padding-top:2.8rem; }
+  .public-step::before {
+    counter-increment:steps;
+    content:counter(steps);
+    position:absolute;
+    top:1rem;
+    left:1rem;
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    background:var(--accent);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:900;
+  }
+  .public-pricing { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  .public-plan h3 { font-size:1.1rem; margin-bottom:0.85rem; }
+  .public-list { list-style:none; display:flex; flex-direction:column; gap:0.6rem; }
+  .public-list li::before { content:'✓'; color:var(--accent); font-weight:900; margin-right:0.45rem; }
+  .public-founder {
+    background:#151515;
+    color:#fff;
+    border-radius:24px;
+    padding:clamp(1.5rem,4vw,2.5rem);
+    display:grid;
+    grid-template-columns:1.2fr 0.8fr;
+    gap:1.5rem;
+    align-items:center;
+  }
+  .public-founder h2 { color:#fff; }
+  .public-founder p, .public-founder li { color:rgba(255,255,255,0.76); }
+  .public-founder-badge {
+    display:inline-flex;
+    margin-bottom:0.85rem;
+    background:#FFF7DF;
+    color:#7A5200;
+    border:1px solid #D4A017;
+    border-radius:999px;
+    padding:0.35rem 0.75rem;
+    font-size:0.75rem;
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+  }
+  .public-final {
+    text-align:center;
+    padding-bottom:5rem;
+  }
+  @media(max-width:900px){
+    .public-grid, .public-steps { grid-template-columns:repeat(2,1fr); }
+    .public-founder { grid-template-columns:1fr; }
+  }
+  @media(max-width:560px){
+    .public-nav { align-items:flex-start; }
+    .public-nav-actions { gap:0.4rem; }
+    .public-btn { padding:0.62rem 0.8rem; font-size:0.8rem; }
+    .public-grid, .public-steps, .public-pricing { grid-template-columns:1fr; }
+    .public-hero { text-align:left; }
+    .public-hero-actions { justify-content:flex-start; }
+  }
   .auth-submit {
     background: var(--accent); color: #fff; border: none; border-radius: 10px;
     padding: 0.8rem; font-family: 'Sora', sans-serif; font-size: 0.9rem;
@@ -3799,8 +4010,83 @@
 </head>
 <body>
 
+<!-- PUBLIC HOME / LANDING PAGE -->
+<div id="public-home">
+  <div class="public-nav">
+    <div class="public-brand"><span class="public-mark">FP</span><span>Fin<span style="color:var(--accent)">trail</span> Pro</span></div>
+    <div class="public-nav-actions">
+      <button class="public-btn public-lang" id="public-lang-btn" onclick="toggleLanguage()">EN</button>
+      <button class="public-btn" onclick="showAuthFromHome('signin')" data-en="Sign In" data-es="Iniciar Sesión">Sign In</button>
+      <button class="public-btn primary" onclick="showAuthFromHome('signup')" data-en="Get Started" data-es="Comenzar">Get Started</button>
+    </div>
+  </div>
+
+  <main class="public-home-main">
+    <section class="public-hero">
+      <h1>Fintrail Pro</h1>
+      <div class="public-motto" data-en-html="Budget Smarter. <span>Live Better.</span>" data-es-html="Presupuesta Mejor. <span>Vive Mejor.</span>">Budget Smarter. <span>Live Better.</span></div>
+      <p class="public-subtitle" data-en="A personal finance app to help you budget, save, pay down debt, build credit, and track your financial progress." data-es="Una aplicación de finanzas personales para ayudarte a crear presupuestos, ahorrar, pagar deudas, construir crédito y seguir tu progreso financiero.">A personal finance app to help you budget, save, pay down debt, build credit, and track your financial progress.</p>
+      <div class="public-hero-actions">
+        <button class="public-btn primary" onclick="showAuthFromHome('signup')" data-en="Get Started" data-es="Comenzar">Get Started</button>
+        <button class="public-btn" onclick="showAuthFromHome('signin')" data-en="Sign In" data-es="Iniciar Sesión">Sign In</button>
+      </div>
+    </section>
+
+    <section class="public-section">
+      <h2 data-en="Everything you need to build financial momentum" data-es="Todo lo que necesitas para avanzar financieramente">Everything you need to build financial momentum</h2>
+      <div class="public-grid">
+        <div class="public-card"><div class="public-card-icon"><svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M8 19V9"/><path d="M12 19V3"/><path d="M16 19v-6"/><path d="M20 19V7"/></svg></div><h3 data-en="Budget Tracker" data-es="Rastreador de Presupuesto">Budget Tracker</h3><p data-en="Track income, expenses, and spending categories." data-es="Controla ingresos, gastos y categorías de consumo.">Track income, expenses, and spending categories.</p></div>
+        <div class="public-card"><div class="public-card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></div><h3 data-en="Savings Goals" data-es="Metas de Ahorro">Savings Goals</h3><p data-en="Set savings goals and track progress over time." data-es="Crea metas de ahorro y sigue tu progreso con el tiempo.">Set savings goals and track progress over time.</p></div>
+        <div class="public-card"><div class="public-card-icon"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/><path d="M7 15h4"/></svg></div><h3 data-en="Debt Planner" data-es="Plan de Deudas">Debt Planner</h3><p data-en="Compare avalanche and snowball payoff strategies." data-es="Compara estrategias de pago avalancha y bola de nieve.">Compare avalanche and snowball payoff strategies.</p></div>
+        <div class="public-card"><div class="public-card-icon"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 8L9 4l-3 8H2"/></svg></div><h3 data-en="Health Score" data-es="Salud Financiera">Health Score</h3><p data-en="See a financial health score based on your habits and progress." data-es="Consulta una salud financiera basada en tus hábitos y progreso.">See a financial health score based on your habits and progress.</p></div>
+        <div class="public-card"><div class="public-card-icon"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 7-9"/><path d="M14 6h6v6"/></svg></div><h3 data-en="Credit Simulator" data-es="Simulador de Crédito">Credit Simulator</h3><p data-en="Explore how credit actions may affect your score." data-es="Explora cómo tus acciones de crédito pueden afectar tu puntaje.">Explore how credit actions may affect your score.</p></div>
+        <div class="public-card"><div class="public-card-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 16h8M8 12h4"/></svg></div><h3 data-en="Monthly Report" data-es="Reporte Mensual">Monthly Report</h3><p data-en="Download and share a monthly financial progress report." data-es="Descarga y comparte un reporte mensual de progreso financiero.">Download and share a monthly financial progress report.</p></div>
+        <div class="public-card"><div class="public-card-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div><h3 data-en="Resource Center" data-es="Centro de Recursos">Resource Center</h3><p data-en="Find financial education, products, hardship assistance, and trusted resources." data-es="Encuentra educación financiera, productos, ayuda en dificultades y recursos confiables.">Find financial education, products, hardship assistance, and trusted resources.</p></div>
+        <div class="public-card"><div class="public-card-icon"><svg viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/></svg></div><h3 data-en="AI Advisor" data-es="Asesor IA">AI Advisor</h3><p data-en="Ask personal finance questions and get guided support." data-es="Haz preguntas de finanzas personales y recibe apoyo guiado.">Ask personal finance questions and get guided support.</p></div>
+      </div>
+    </section>
+
+    <section class="public-section">
+      <h2 data-en="How it works" data-es="Cómo funciona">How it works</h2>
+      <div class="public-steps">
+        <div class="public-card public-step"><h3 data-en="Create your account" data-es="Crea tu cuenta">Create your account</h3></div>
+        <div class="public-card public-step"><h3 data-en="Choose your financial goals" data-es="Elige tus metas financieras">Choose your financial goals</h3></div>
+        <div class="public-card public-step"><h3 data-en="Track your money and progress" data-es="Sigue tu dinero y progreso">Track your money and progress</h3></div>
+        <div class="public-card public-step"><h3 data-en="Improve your financial health over time" data-es="Mejora tu salud financiera con el tiempo">Improve your financial health over time</h3></div>
+      </div>
+    </section>
+
+    <section class="public-section">
+      <h2 data-en="Free vs Pro" data-es="Gratis vs Pro">Free vs Pro</h2>
+      <div class="public-pricing">
+        <div class="public-card public-plan"><h3 data-en="Free" data-es="Gratis">Free</h3><ul class="public-list"><li data-en="5 AI prompts per day" data-es="5 preguntas de IA por día">5 AI prompts per day</li><li data-en="3 credit simulations per month" data-es="3 simulaciones de crédito por mes">3 credit simulations per month</li><li data-en="Access to core tools" data-es="Acceso a herramientas principales">Access to core tools</li></ul></div>
+        <div class="public-card public-plan"><h3 data-en="Pro" data-es="Pro">Pro</h3><ul class="public-list"><li data-en="Unlimited AI prompts" data-es="Preguntas de IA ilimitadas">Unlimited AI prompts</li><li data-en="Unlimited credit simulations" data-es="Simulaciones de crédito ilimitadas">Unlimited credit simulations</li><li data-en="Full progress tracking experience" data-es="Experiencia completa de seguimiento de progreso">Full progress tracking experience</li></ul></div>
+      </div>
+    </section>
+
+    <section class="public-section">
+      <div class="public-founder">
+        <div>
+          <span class="public-founder-badge" data-en="Founding Member Offer" data-es="Oferta de Miembro Fundador">Founding Member Offer</span>
+          <h2 data-en="Lock in Fintrail Pro for $4.99/month." data-es="Asegura Fintrail Pro por $4.99/mes.">Lock in Fintrail Pro for $4.99/month.</h2>
+          <p data-en="Available for the first 150 subscribers or until January 31, 2027. Includes a 90-day rejoin grace period if canceled. Future planned price: $6.99/month." data-es="Disponible para los primeros 150 suscriptores o hasta el 31 de enero de 2027. Incluye un período de gracia de 90 días para volver si cancelas. Precio futuro planificado: $6.99/mes.">Available for the first 150 subscribers or until January 31, 2027. Includes a 90-day rejoin grace period if canceled. Future planned price: $6.99/month.</p>
+        </div>
+        <div><button class="public-btn primary" onclick="showAuthFromHome('signup')" data-en="Become a Founding Member" data-es="Convertirme en Miembro Fundador">Become a Founding Member</button></div>
+      </div>
+    </section>
+
+    <section class="public-section public-final">
+      <h2 data-en="Start building better financial habits today." data-es="Empieza a construir mejores hábitos financieros hoy.">Start building better financial habits today.</h2>
+      <div class="public-hero-actions">
+        <button class="public-btn primary" onclick="showAuthFromHome('signup')" data-en="Get Started" data-es="Comenzar">Get Started</button>
+        <button class="public-btn" onclick="showAuthFromHome('signin')" data-en="Sign In" data-es="Iniciar Sesión">Sign In</button>
+      </div>
+    </section>
+  </main>
+</div>
+
 <!-- AUTH SCREEN -->
-<div id="auth-screen">
+<div id="auth-screen" style="display:none">
   <div class="auth-card">
     <div class="auth-top">
       <div style="display:flex;align-items:center;justify-content:center;gap:0.75rem;margin-bottom:0.5rem">
@@ -6156,10 +6442,32 @@
 
   let currentUser = null;
 
+  function showPublicHome() {
+    const home = document.getElementById('public-home');
+    const auth = document.getElementById('auth-screen');
+    if (home) home.style.display = 'flex';
+    if (auth) auth.style.display = 'none';
+    if (typeof applyLanguage === 'function') setTimeout(applyLanguage, 0);
+  }
+
+  function hidePublicHome() {
+    const home = document.getElementById('public-home');
+    if (home) home.style.display = 'none';
+  }
+
+  function showAuthFromHome(tab = 'signin') {
+    hidePublicHome();
+    const auth = document.getElementById('auth-screen');
+    if (auth) auth.style.display = 'flex';
+    switchAuthTab(tab);
+    if (typeof applyLanguage === 'function') setTimeout(applyLanguage, 0);
+  }
+
   // AUTH INIT — check if already logged in
   async function initAuth() {
     if (!sbClient) {
       // Demo mode — skip auth, show app with notice
+      hidePublicHome();
       document.getElementById('auth-screen').style.display = 'none';
       document.getElementById('setup-banner').style.display = 'flex';
       setUserUI({ email: 'demo@fintrail.app', user_metadata: { full_name: 'Demo User' } });
@@ -6175,11 +6483,12 @@
     // Listen for auth changes
     sbClient.auth.onAuthStateChange((_event, session) => {
       if (session?.user) { currentUser = session.user; showApp(currentUser); }
-      else { currentUser = null; document.getElementById('auth-screen').style.display = 'flex'; }
+      else { currentUser = null; showPublicHome(); }
     });
   }
 
   function showApp(user) {
+    hidePublicHome();
     document.getElementById('auth-screen').style.display = 'none';
     nwLoaded = false; // Reset so Supabase NW data loads fresh on login
     setUserUI(user);
@@ -6267,7 +6576,7 @@
     if (sbClient) await sbClient.auth.signOut();
     currentUser = null;
     transactions = []; bills = []; goals = [];
-    document.getElementById('auth-screen').style.display = 'flex';
+    showPublicHome();
   }
 
   // AUTH UI HELPERS
@@ -11188,6 +11497,8 @@ Guidelines:
     if (typeof applyFoundingFeedbackLanguage === 'function') applyFoundingFeedbackLanguage();
     const mobileLangBtn = document.getElementById('mobile-lang-btn');
     if (mobileLangBtn) { mobileLangBtn.textContent = isEs ? 'ES' : 'EN'; mobileLangBtn.style.color = isEs ? 'var(--accent)' : 'var(--muted)'; mobileLangBtn.style.borderColor = isEs ? 'var(--accent)' : 'var(--border)'; }
+    const publicLangBtn = document.getElementById('public-lang-btn');
+    if (publicLangBtn) { publicLangBtn.textContent = isEs ? 'ES' : 'EN'; publicLangBtn.style.color = isEs ? 'var(--accent)' : 'var(--text-soft)'; publicLangBtn.style.borderColor = isEs ? 'var(--accent)' : 'var(--border)'; }
 
     // Mobile lang label (legacy)
     const mobileLang = document.getElementById('mobile-lang-label');
