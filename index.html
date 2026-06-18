@@ -7241,6 +7241,16 @@ Guidelines:
     return '#c1440e';
   }
 
+  function formatGoalDateLabel(dateStr) {
+    if (!dateStr) return currentLang === 'es' ? 'Sin fecha limite' : 'No deadline';
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return currentLang === 'es' ? 'Sin fecha limite' : 'No deadline';
+    const months = currentLang === 'es'
+      ? ['Ene','Feb','Mar','Abr','Mayo','Jun','Jul','Ago','Sept','Oct','Nov','Dic']
+      : ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return `${months[date.getMonth()]} ${date.getFullYear()}`;
+  }
+
   function updateGoalsSummary() {
     goals = normalizeGoalsList(goals);
     const totalSaved = goals.reduce((s, g) => s + g.saved, 0);
@@ -7309,7 +7319,7 @@ Guidelines:
       const remaining = g.target - g.saved;
       const monthlyGuidance = goalMonthlyGuidance(g);
       const complete = pct >= 100;
-      const dateLabel = g.date ? new Date(g.date).toLocaleDateString('en-US', {month:'short', year:'numeric'}) : 'No deadline';
+      const dateLabel = formatGoalDateLabel(g.date);
 
       return `
       <div class="goal-card" data-goal-id="${g.id}">
@@ -7337,10 +7347,10 @@ Guidelines:
           <div class="goal-progress-fill" style="width:${pct}%;background:${color}"></div>
         </div>
         <div class="goal-meta">
-          <span class="goal-pct" style="color:${color}">${pct.toFixed(0)}% complete</span>
+          <span class="goal-pct" style="color:${color}">${pct.toFixed(0)}${currentLang === 'es' ? '% completado' : '% complete'}</span>
           <span class="goal-deadline">📅 ${dateLabel}</span>
         </div>
-        ${complete ? '<div class="goal-complete-badge">🎉 Goal Reached!</div>' : ''}
+        ${complete ? `<div class="goal-complete-badge">🎉 ${currentLang === 'es' ? '¡Meta Alcanzada!' : 'Goal Reached!'}</div>` : ''}
         <div class="goal-monthly">${monthlyGuidance}</div>
         ${!complete ? `
         <div class="add-deposit-row">
@@ -8043,26 +8053,31 @@ Guidelines:
     // Timeline
     const colors = ['#f05555','#f5a623','#00b894','#818cf8','#06d6a0'];
     const maxM = Math.max(...Object.values(extraResult.debtMonths).filter(Boolean), 1);
-    const methodLabel = payoffMethod === 'avalanche' ? '🔥 Avalanche' : '⛄ Snowball';
+    const methodLabel = payoffMethod === 'avalanche'
+      ? (currentLang === 'es' ? '🔥 Avalancha' : '🔥 Avalanche')
+      : (currentLang === 'es' ? '⛄ Bola de Nieve' : '⛄ Snowball');
     const sortedForTimeline = [...planDebts].sort((a,b) =>
       payoffMethod === 'avalanche' ? b.apr - a.apr : a.balance - b.balance
     );
     document.getElementById('payoff-timeline').innerHTML = `
-      <div style="font-size:0.78rem;font-weight:700;color:var(--muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.06em">${methodLabel} Payoff Order</div>
+      <div style="font-size:0.78rem;font-weight:700;color:var(--muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.06em">${methodLabel} ${currentLang === 'es' ? 'Orden de Pago' : 'Payoff Order'}</div>
       ${sortedForTimeline.map((d, i) => {
         const m = extraResult.debtMonths[d.id] || extraResult.months;
         const pct = Math.max(5, (m / maxM) * 100);
         const payoffDate = new Date(); payoffDate.setMonth(payoffDate.getMonth() + m);
-        const dateStr = payoffDate.toLocaleDateString('en-US', {month:'short', year:'numeric'});
+        const payoffMonths = currentLang === 'es'
+          ? ['Ene','Feb','Mar','Abr','Mayo','Jun','Jul','Ago','Sept','Oct','Nov','Dic']
+          : ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        const dateStr = `${payoffMonths[payoffDate.getMonth()]} ${payoffDate.getFullYear()}`;
         return `<div class="pt-row" style="margin-bottom:0.4rem">
           <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.25rem">
             <span style="background:${colors[i%colors.length]};color:#fff;font-size:0.65rem;font-weight:800;padding:0.1rem 0.45rem;border-radius:10px">#${i+1}</span>
             <span class="pt-name" style="font-weight:600">${d.name}</span>
             <span style="font-size:0.72rem;color:var(--muted)">APR ${d.apr}%</span>
-            ${i === 0 ? `<span style="font-size:0.65rem;background:var(--accent);color:#fff;padding:0.1rem 0.4rem;border-radius:10px">Focus now</span>` : ''}
+            ${i === 0 ? `<span style="font-size:0.65rem;background:var(--accent);color:#fff;padding:0.1rem 0.4rem;border-radius:10px">${currentLang === 'es' ? 'Enfoque ahora' : 'Focus now'}</span>` : ''}
           </div>
           <div class="pt-bar-track"><div class="pt-bar-fill" style="width:${pct}%;background:${colors[i%colors.length]}">${fmtMonths(m)}</div></div>
-          <div style="font-size:0.72rem;color:var(--muted);margin-top:0.15rem">Paid off by ${dateStr}</div>
+          <div style="font-size:0.72rem;color:var(--muted);margin-top:0.15rem">${currentLang === 'es' ? 'Pagado para' : 'Paid off by'} ${dateStr}</div>
         </div>`;
       }).join('')}`;
 
@@ -11486,7 +11501,11 @@ Guidelines:
       health < 85 ? t('Good', 'Bueno') :
       t('Excellent', 'Excelente');
     const monthLabel = formatMonthlyReportMonth(currentMonthKey || getMonthlyReportMonthKey(), isEs);
-    const generatedLabel = new Date().toLocaleDateString(isEs ? 'es-US' : 'en-US', { month:'long', day:'numeric', year:'numeric' });
+    const generatedDate = new Date();
+    const pdfEsMonths = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    const generatedLabel = isEs
+      ? `${pdfEsMonths[generatedDate.getMonth()]} ${generatedDate.getDate()}, ${generatedDate.getFullYear()}`
+      : generatedDate.toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
     const userLabel = currentUser?.user_metadata?.full_name || currentUser?.email || '';
 
     const currentGoals = Array.isArray(goals) && goals.length ? goals : [];
@@ -11789,7 +11808,7 @@ Guidelines:
         const pdYear = pd.getFullYear();
         const pdMonth = pd.getMonth();
         if (pdYear === year && pdMonth === month) {
-          events.push({ date:`${year}-${String(month+1).padStart(2,'0')}-${String(pd.getDate()).padStart(2,'0')}`, title:'💵 Payday', type:'payday', icon:'💵' });
+          events.push({ date:`${year}-${String(month+1).padStart(2,'0')}-${String(pd.getDate()).padStart(2,'0')}`, title:currentLang === 'es' ? 'Dia de Pago' : 'Payday', type:'payday', icon:'💵' });
         }
       });
     }
@@ -11799,7 +11818,7 @@ Guidelines:
       if (g.date) {
         const gDate = new Date(g.date);
         if (gDate.getFullYear() === year && gDate.getMonth() === month) {
-          events.push({ date:g.date, title:`🎯 ${g.name} Goal`, type:'goal', icon:'🎯' });
+          events.push({ date:g.date, title:currentLang === 'es' ? `${g.name} - Meta` : `${g.name} Goal`, type:'goal', icon:'🎯' });
         }
       }
     });
@@ -11811,7 +11830,7 @@ Guidelines:
         const payoffDate = new Date();
         payoffDate.setMonth(payoffDate.getMonth() + months);
         if (payoffDate.getFullYear() === year && payoffDate.getMonth() === month) {
-          events.push({ date:`${year}-${String(month+1).padStart(2,'0')}-${String(payoffDate.getDate()).padStart(2,'0')}`, title:`💳 ${d.name} Paid Off`, type:'debt', icon:'💳' });
+          events.push({ date:`${year}-${String(month+1).padStart(2,'0')}-${String(payoffDate.getDate()).padStart(2,'0')}`, title:currentLang === 'es' ? `${d.name} Pagado` : `${d.name} Paid Off`, type:'debt', icon:'💳' });
         }
       });
     }
@@ -11853,7 +11872,7 @@ Guidelines:
       eventMap[e.date].push(e);
     });
 
-    const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const dayNames = currentLang === 'es' ? ['Dom','Lun','Mar','Mie','Jue','Vie','Sab'] : ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
     let html = dayNames.map(d => `<div class="cal-day-header">${d}</div>`).join('');
 
     // Prev month days
@@ -11875,7 +11894,7 @@ Guidelines:
         <div class="cal-day-num">${d}</div>
         <div class="cal-events">
           ${shown.map(e => `<div class="cal-event ${e.type}" title="${e.title}">${e.icon} ${e.title}</div>`).join('')}
-          ${more > 0 ? `<div class="cal-more">+${more} more</div>` : ''}
+          ${more > 0 ? `<div class="cal-more">+${more} ${currentLang === 'es' ? 'mas' : 'more'}</div>` : ''}
         </div>
       </div>`;
     }
@@ -11893,7 +11912,7 @@ Guidelines:
     const today = new Date();
     const startOfWeek = new Date(calCurrentDate);
     startOfWeek.setDate(calCurrentDate.getDate() - calCurrentDate.getDay());
-    const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const dayNames = currentLang === 'es' ? ['Dom','Lun','Mar','Mie','Jue','Vie','Sab'] : ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
     let headerHtml = `<div class="cal-week-header" style="background:var(--surface)"></div>`;
     const weekDays = [];
@@ -11908,7 +11927,9 @@ Guidelines:
       </div>`;
     }
 
-    const hours = ['All Day','8 AM','9 AM','10 AM','11 AM','12 PM','1 PM','2 PM','3 PM','4 PM','5 PM','6 PM','7 PM','8 PM'];
+    const hours = currentLang === 'es'
+      ? ['Todo el Dia','8 AM','9 AM','10 AM','11 AM','12 PM','1 PM','2 PM','3 PM','4 PM','5 PM','6 PM','7 PM','8 PM']
+      : ['All Day','8 AM','9 AM','10 AM','11 AM','12 PM','1 PM','2 PM','3 PM','4 PM','5 PM','6 PM','7 PM','8 PM'];
     let bodyHtml = '';
     hours.forEach(h => {
       bodyHtml += `<div class="cal-time-slot">${h}</div>`;
@@ -11916,7 +11937,7 @@ Guidelines:
         const dateStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
         const events = getCalEvents(d.getFullYear(), d.getMonth()).filter(e => e.date === dateStr);
         bodyHtml += `<div class="cal-week-slot">
-          ${h === 'All Day' ? events.map(e => `<div class="cal-week-event ${e.type}">${e.icon} ${e.title}</div>`).join('') : ''}
+          ${((currentLang === 'es' && h === 'Todo el Dia') || h === 'All Day') ? events.map(e => `<div class="cal-week-event ${e.type}">${e.icon} ${e.title}</div>`).join('') : ''}
         </div>`;
       });
     });
@@ -11946,12 +11967,16 @@ Guidelines:
 
     const colors = { bill:'#f05555', payday:'#00b894', goal:'#f5a623', debt:'#818cf8', custom:'#06d6a0', reminder:'#06d6a0', milestone:'#818cf8' };
     const container = document.getElementById('cal-upcoming-list');
-    if (upcoming.length === 0) { container.innerHTML = '<div class="empty-state" style="font-size:0.82rem">No upcoming events — add bills, goals or custom events!</div>'; return; }
+    if (upcoming.length === 0) { container.innerHTML = `<div class="empty-state" style="font-size:0.82rem">${currentLang === 'es' ? 'No hay proximos eventos — agrega facturas, metas o eventos personalizados.' : 'No upcoming events — add bills, goals or custom events!'}</div>`; return; }
 
     container.innerHTML = upcoming.map(e => {
       const eDate = new Date(e.date);
       const diff = Math.ceil((eDate - today) / (1000*60*60*24));
-      const dateLabel = diff === 0 ? 'Today' : diff === 1 ? 'Tomorrow' : `${diff} days`;
+      const dateLabel = diff === 0
+        ? (currentLang === 'es' ? 'Hoy' : 'Today')
+        : diff === 1
+          ? (currentLang === 'es' ? 'Manana' : 'Tomorrow')
+          : `${diff} ${currentLang === 'es' ? 'dias' : 'days'}`;
       return `<div class="cal-upcoming-item">
         <div class="cal-upcoming-dot" style="background:${colors[e.type]||'#888'}"></div>
         <div class="cal-upcoming-info">
@@ -11961,6 +11986,18 @@ Guidelines:
         <div class="cal-upcoming-date">${dateLabel}</div>
       </div>`;
     }).join('');
+  }
+
+  function formatCalendarPopupDate(dateStr) {
+    const date = new Date(dateStr + 'T00:00:00');
+    if (isNaN(date.getTime())) return dateStr;
+    const weekdays = currentLang === 'es'
+      ? ['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado']
+      : ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const months = currentLang === 'es'
+      ? ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
+      : ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    return `${weekdays[date.getDay()]}, ${months[date.getMonth()]} ${date.getDate()}`;
   }
 
   function showDayDetail(dateStr) {
@@ -11978,8 +12015,8 @@ Guidelines:
     popup.style.cssText = 'top:50%;left:50%;transform:translate(-50%,-50%)';
     popup.innerHTML = `
       <button class="cal-popup-close" onclick="this.parentElement.remove()">✕</button>
-      <div class="cal-popup-title">${new Date(dateStr+'T00:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}</div>
-      <div class="cal-popup-meta">${events.length} event${events.length!==1?'s':''}</div>
+      <div class="cal-popup-title">${formatCalendarPopupDate(dateStr)}</div>
+      <div class="cal-popup-meta">${events.length} ${currentLang === 'es' ? (events.length === 1 ? 'evento' : 'eventos') : `event${events.length!==1?'s':''}`}</div>
       ${events.map(e => `
         <div style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0;border-bottom:1px solid var(--border)">
           <div style="width:8px;height:8px;border-radius:50%;background:${colors[e.type]||'#888'};flex-shrink:0"></div>
@@ -11989,7 +12026,7 @@ Guidelines:
             ${e.note ? `<div style="font-size:0.75rem;color:var(--muted)">${e.note}</div>` : ''}
           </div>
         </div>`).join('')}
-      <button onclick="showAddEventModal('${dateStr}');this.closest('.cal-popup').remove()" style="width:100%;margin-top:0.75rem;background:none;border:1.5px solid var(--border);border-radius:8px;padding:0.45rem;font-family:'Sora',sans-serif;font-size:0.78rem;cursor:pointer;color:var(--text-soft)">+ Add Event Here</button>`;
+      <button onclick="showAddEventModal('${dateStr}');this.closest('.cal-popup').remove()" style="width:100%;margin-top:0.75rem;background:none;border:1.5px solid var(--border);border-radius:8px;padding:0.45rem;font-family:'Sora',sans-serif;font-size:0.78rem;cursor:pointer;color:var(--text-soft)">${currentLang === 'es' ? '+ Agregar Evento Aqui' : '+ Add Event Here'}</button>`;
     document.body.appendChild(popup);
     setTimeout(() => document.addEventListener('click', function rm(e) { if(!popup.contains(e.target)){popup.remove(); document.removeEventListener('click',rm);} }), 100);
   }
@@ -15698,6 +15735,129 @@ window.addEventListener('load', function(){
   document.addEventListener('click', function(){ setTimeout(applyDebtPayoffLabels, 100); });
   document.addEventListener('change', function(){ setTimeout(applyDebtPayoffLabels, 100); });
   document.addEventListener('input', function(){ setTimeout(applyDebtPayoffLabels, 100); });
+})();
+</script>
+
+
+<script>
+/* === PHASE 3 LOCALIZATION AUDIT PATCH === */
+(function(){
+  const pairs = [
+    ['Maybe later','Tal vez mas tarde'],
+    ['Maybe Later','Tal vez mas tarde'],
+    ['Don’t Show Again','No volver a mostrar'],
+    ['Install Guide','Guia de instalacion'],
+    ['Financial Calendar','Calendario Financiero'],
+    ['Notifications','Notificaciones'],
+    ['Notification Preferences','Preferencias de Notificaciones'],
+    ['Goal Milestones','Hitos de Metas'],
+    ['Bill Reminders','Recordatorios de Facturas'],
+    ['Payment Receipts','Recibos de Pago'],
+    ['Fintrail Newsletter','Boletin de Fintrail'],
+    ['Danger Zone','Zona de Peligro'],
+    ['Account Info','Informacion de la Cuenta'],
+    ['Security & 2FA','Seguridad y 2FA'],
+    ['Change Password','Cambiar Contrasena'],
+    ['Current Month','Mes Actual'],
+    ['Download Report (PDF)','Descargar Reporte (PDF)'],
+    ['Share Your Progress','Comparte Tu Progreso'],
+    ['No transactions yet. Add one to get started!','Aun no hay transacciones. Agrega una para comenzar.'],
+    ['No bills added yet.','Aun no hay facturas agregadas.'],
+    ['No savings goals yet.','Aun no hay metas de ahorro.'],
+    ['No upcoming events','No hay proximos eventos'],
+    ['Add income and expenses in Budget Tracker so Fintrail can calculate your score more accurately.','Agrega ingresos y gastos en el Rastreador de Presupuesto para que Fintrail calcule tu puntaje con mas precision.'],
+    ['Turn on Health Score notifications first.','Activa primero las notificaciones de Salud Financiera.'],
+    ['Notifications are not supported on this browser.','Las notificaciones no son compatibles con este navegador.'],
+    ['Notifications are blocked. Enable them in your browser settings.','Las notificaciones estan bloqueadas. Activalas en la configuracion del navegador.'],
+    ['Notification settings saved.','Configuracion de notificaciones guardada.'],
+    ['Test notification sent.','Notificacion de prueba enviada.'],
+    ['Your report PDF is ready to share.','Tu reporte PDF esta listo para compartir.'],
+    ['Please enter a goal name and target amount.','Ingresa un nombre de meta y un monto objetivo valido.'],
+    ['Saved amount cannot be negative.','El monto ahorrado no puede ser negativo.'],
+    ['Delete this savings goal?','¿Eliminar esta meta de ahorro?'],
+    ['Please enter an event name and date.','Ingresa un nombre de evento y una fecha.']
+  ];
+  const esToEn = new Map(pairs.map(([en, es]) => [es, en]));
+
+  function isEs(){ try { return currentLang === 'es'; } catch(e) { return false; } }
+  function swapText(value){
+    let out = String(value || '');
+    if (isEs()) {
+      pairs.forEach(([en, es]) => { out = out.split(en).join(es); });
+    } else {
+      pairs.forEach(([en, es]) => { out = out.split(es).join(en); });
+    }
+    return out;
+  }
+  function translateNodeText(root){
+    if (!root || !document.createTreeWalker) return;
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode(node){
+        const p = node.parentElement;
+        if (!p || ['SCRIPT','STYLE','OPTION'].includes(p.tagName)) return NodeFilter.FILTER_REJECT;
+        if (p.closest && p.closest('.ft-onboarding-v5-card')) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(node => {
+      const next = swapText(node.textContent);
+      if (next !== node.textContent) node.textContent = next;
+    });
+  }
+  function translateAttrs(root){
+    if (!root || !root.querySelectorAll) return;
+    root.querySelectorAll('[placeholder], [title], [aria-label]').forEach(el => {
+      ['placeholder','title','aria-label'].forEach(attr => {
+        if (!el.hasAttribute(attr)) return;
+        const next = swapText(el.getAttribute(attr));
+        if (next !== el.getAttribute(attr)) el.setAttribute(attr, next);
+      });
+    });
+  }
+  function applyPhase3Localization(){
+    try {
+      translateNodeText(document.body);
+      translateAttrs(document.body);
+      if (typeof applyFoundingFeedbackLanguage === 'function') applyFoundingFeedbackLanguage();
+      if (typeof window.fintrailTranslateLooseButtons === 'function') window.fintrailTranslateLooseButtons();
+    } catch(e) {}
+  }
+  window.fintrailPhase3Localization = applyPhase3Localization;
+
+  const originalApplyLanguage = window.applyLanguage;
+  if (typeof originalApplyLanguage === 'function' && !originalApplyLanguage.__fintrailPhase3Localization) {
+    window.applyLanguage = function(){
+      const result = originalApplyLanguage.apply(this, arguments);
+      setTimeout(applyPhase3Localization, 40);
+      setTimeout(applyPhase3Localization, 300);
+      return result;
+    };
+    window.applyLanguage.__fintrailPhase3Localization = true;
+  }
+
+  const originalAlert = window.alert;
+  if (typeof originalAlert === 'function' && !originalAlert.__fintrailPhase3Localization) {
+    window.alert = function(message){
+      return originalAlert.call(this, swapText(message));
+    };
+    window.alert.__fintrailPhase3Localization = true;
+  }
+  const originalConfirm = window.confirm;
+  if (typeof originalConfirm === 'function' && !originalConfirm.__fintrailPhase3Localization) {
+    window.confirm = function(message){
+      return originalConfirm.call(this, swapText(message));
+    };
+    window.confirm.__fintrailPhase3Localization = true;
+  }
+
+  window.addEventListener('load', function(){
+    setTimeout(applyPhase3Localization, 900);
+    setTimeout(applyPhase3Localization, 2200);
+  });
+  document.addEventListener('click', function(){ setTimeout(applyPhase3Localization, 120); });
+  document.addEventListener('change', function(){ setTimeout(applyPhase3Localization, 120); });
 })();
 </script>
 
