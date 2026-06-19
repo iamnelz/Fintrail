@@ -5241,21 +5241,21 @@
 
       <!-- DEBT PAYOFF PLANNER -->
       <div class="planner-card">
-        <h2 data-en="🎯 Personalized Debt Payoff Planner" data-es="🎯 Plan Personalizado de Pago de Deudas">🎯 Personalized Debt Payoff Planner</h2>
+        <h2 data-en="Personalized Debt Payoff Planner" data-es="Plan Personalizado de Pago de Deudas">Personalized Debt Payoff Planner</h2>
         <p><span data-en="Enter your debts below and we'll build a personalized payoff plan using either the Avalanche (highest interest first) or Snowball (smallest balance first) method." data-es="Ingresa tus deudas y construiremos un plan de pago usando el método Avalancha (mayor interés primero) o Bola de Nieve (menor saldo primero).">Enter your debts below and we'll build a personalized payoff plan using either the Avalanche (highest interest first) or Snowball (smallest balance first) method.</span></p>
         <div style="display:flex;justify-content:flex-end;margin-bottom:0.75rem;margin-top:0.5rem">
-          <button onclick="downloadDebtPlanPDF()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.45rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.35rem">📄 Save PDF</button>
+          <button onclick="downloadDebtPlanPDF()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.45rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.35rem">Save PDF</button>
         </div>
 
         <!-- METHOD TOGGLE -->
         <div class="method-toggle">
-          <button class="method-btn active" id="method-avalanche" onclick="setMethod('avalanche', this)" data-en="🔥 Avalanche — Save Most Money" data-es="🔥 Método Avalancha — Ahorra Más">🔥 Avalanche — Save Most Money</button>
-          <button class="method-btn" id="method-snowball" onclick="setMethod('snowball', this)" data-en="⛄ Snowball — Quick Wins First" data-es="⛄ Método Bola de Nieve — Victorias Rápidas">⛄ Snowball — Quick Wins First</button>
+          <button class="method-btn active" id="method-avalanche" onclick="setMethod('avalanche', this)" data-en="Avalanche — Save Most Money" data-es="Método Avalancha — Ahorra Más">Avalanche — Save Most Money</button>
+          <button class="method-btn" id="method-snowball" onclick="setMethod('snowball', this)" data-en="Snowball — Quick Wins First" data-es="Método Bola de Nieve — Victorias Rápidas">Snowball — Quick Wins First</button>
         </div>
 
         <!-- METHOD EXPLANATION -->
         <div id="method-explanation" style="background:var(--bg);border-radius:10px;padding:0.85rem 1rem;margin-bottom:1rem;border:1px solid var(--border);font-size:0.82rem;color:var(--text-soft);line-height:1.6">
-          <strong style="color:var(--text)">🔥 Método Avalancha:</strong> Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.
+          <strong style="color:var(--text)">Método Avalancha:</strong> Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.
         </div>
 
         <!-- EXTRA PAYMENT INPUT -->
@@ -8450,9 +8450,9 @@ Guidelines:
     btn.classList.add('active');
     const explanation = document.getElementById('method-explanation');
     if (method === 'avalanche') {
-      explanation.innerHTML = '<strong style="color:var(--text)">🔥 Método Avalancha:</strong> Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.';
+      explanation.innerHTML = '<strong style="color:var(--text)">Método Avalancha:</strong> Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.';
     } else {
-      explanation.innerHTML = '<strong style="color:var(--text)">⛄ Snowball Method:</strong> Pay minimums on all debts, then put ALL extra money toward the <strong>smallest balance</strong> debt first. Gives you quick wins and motivation to keep going.';
+      explanation.innerHTML = '<strong style="color:var(--text)">Snowball Method:</strong> Pay minimums on all debts, then put ALL extra money toward the <strong>smallest balance</strong> debt first. Gives you quick wins and motivation to keep going.';
     }
     runPayoffPlan();
   }
@@ -8490,7 +8490,7 @@ Guidelines:
     list.innerHTML = sorted.map((d, i) => `
       <div style="display:flex;align-items:center;justify-content:space-between;padding:0.65rem 0.85rem;background:${i===0?'rgba(240,85,85,0.04)':'var(--bg)'};border-radius:8px;border:1.5px solid ${i===0?'var(--accent)':'var(--border)'};font-size:0.83rem;gap:0.5rem">
         <div style="display:flex;align-items:center;gap:0.5rem;flex:1;flex-wrap:wrap">
-          ${i===0?`<span style="background:var(--accent);color:#fff;font-size:0.65rem;font-weight:800;padding:0.1rem 0.4rem;border-radius:8px">🎯 Focus</span>`:`<span style="background:var(--bg);border:1px solid var(--border);font-size:0.68rem;font-weight:800;padding:0.1rem 0.4rem;border-radius:6px;color:var(--muted)">#${i+1}</span>`}
+          ${i===0?`<span style="background:var(--accent);color:#fff;font-size:0.65rem;font-weight:800;padding:0.1rem 0.4rem;border-radius:8px">Focus</span>`:`<span style="background:var(--bg);border:1px solid var(--border);font-size:0.68rem;font-weight:800;padding:0.1rem 0.4rem;border-radius:6px;color:var(--muted)">#${i+1}</span>`}
           <strong style="color:var(--text)">${escHtml(d.name)}</strong>
           <span style="color:var(--muted);font-size:0.78rem">$${d.balance.toLocaleString()} · ${d.apr}% APR · Min $${d.minPayment.toFixed(2)}/mo</span>
         </div>
@@ -8565,7 +8565,7 @@ Guidelines:
           <div style="flex:1">
             <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.2rem">
               <span style="font-weight:700;font-size:0.875rem;color:var(--text)">${d.name}</span>
-              ${isFocus ? `<span style="background:var(--accent);color:#fff;font-size:0.65rem;font-weight:800;padding:0.1rem 0.45rem;border-radius:10px;text-transform:uppercase">🎯 Focus</span>` : ''}
+              ${isFocus ? `<span style="background:var(--accent);color:#fff;font-size:0.65rem;font-weight:800;padding:0.1rem 0.45rem;border-radius:10px;text-transform:uppercase">Focus</span>` : ''}
             </div>
             <div style="font-size:0.75rem;color:var(--muted)">Balance: $${d.remaining.toLocaleString()} · APR: ${d.apr}% · Min: $${d.monthlyMin.toFixed(2)}</div>
             ${isFocus ? `<div style="font-size:0.72rem;color:var(--accent);margin-top:0.2rem">Min $${d.monthlyMin.toFixed(2)} + Extra $${extra.toFixed(2)} = Total $${thisPayment.toFixed(2)}</div>` : ''}
@@ -8638,20 +8638,20 @@ Guidelines:
 
     document.getElementById('plan-summary').innerHTML = `
       <div class="plan-col">
-        <div class="plan-col-title">💳 Minimums Only</div>
+        <div class="plan-col-title">Minimums Only</div>
         <div class="plan-stat"><div class="plan-stat-val bad">${fmtMonths(minResult.months)}</div><div class="plan-stat-label">Time to debt free</div></div>
         <div class="plan-stat"><div class="plan-stat-val bad">$${Math.round(minResult.totalInterest).toLocaleString()}</div><div class="plan-stat-label">Total interest</div></div>
         <div class="plan-stat"><div class="plan-stat-val">$${Math.round(totalDebt + minResult.totalInterest).toLocaleString()}</div><div class="plan-stat-label">Total paid</div></div>
       </div>
       <div class="plan-col highlight">
-        <div class="plan-col-title">${payoffMethod === 'avalanche' ? '🔥 Avalanche' : '⛄ Snowball'} + $${extra}/mo</div>
+        <div class="plan-col-title">${payoffMethod === 'avalanche' ? 'Avalanche' : 'Snowball'} + $${extra}/mo</div>
         <div class="plan-stat"><div class="plan-stat-val good">${fmtMonths(extraResult.months)}</div><div class="plan-stat-label">Time to debt free</div></div>
         <div class="plan-stat"><div class="plan-stat-val good">$${Math.round(extraResult.totalInterest).toLocaleString()}</div><div class="plan-stat-label">Total interest</div></div>
         <div class="plan-stat"><div class="plan-stat-val">$${Math.round(totalDebt + extraResult.totalInterest).toLocaleString()}</div><div class="plan-stat-label">Total paid</div></div>
       </div>
       ${interestSaved > 0 ? `
       <div class="plan-savings-banner" style="grid-column:1/-1">
-        <div class="psb-val">💰 Save $${Math.round(interestSaved).toLocaleString()} and get debt free ${monthsSaved} months sooner!</div>
+        <div class="psb-val">Save $${Math.round(interestSaved).toLocaleString()} and get debt free ${monthsSaved} months sooner!</div>
         <div class="psb-label">using ${payoffMethod === 'avalanche' ? 'Avalanche' : 'Snowball'} with $${extra}/mo extra</div>
       </div>` : ''}`;
 
@@ -8659,8 +8659,8 @@ Guidelines:
     const colors = ['#f05555','#f5a623','#00b894','#818cf8','#06d6a0'];
     const maxM = Math.max(...Object.values(extraResult.debtMonths).filter(Boolean), 1);
     const methodLabel = payoffMethod === 'avalanche'
-      ? (currentLang === 'es' ? '🔥 Avalancha' : '🔥 Avalanche')
-      : (currentLang === 'es' ? '⛄ Bola de Nieve' : '⛄ Snowball');
+      ? (currentLang === 'es' ? 'Avalancha' : 'Avalanche')
+      : (currentLang === 'es' ? 'Bola de Nieve' : 'Snowball');
     const sortedForTimeline = [...planDebts].sort((a,b) =>
       payoffMethod === 'avalanche' ? b.apr - a.apr : a.balance - b.balance
     );
@@ -9357,8 +9357,8 @@ Guidelines:
 
     function fmtM(m) { const y=Math.floor(m/12),mo=m%12; return y>0?(mo>0?`${y}yr ${mo}mo`:`${y}yr`):`${mo}mo`; }
 
-    let html = `<h1>🎯 Debt Payoff Plan</h1>
-      <p style="color:#888;margin-bottom:1.25rem">Strategy: <strong>${payoffMethod === 'avalanche' ? '🔥 Avalanche (highest interest first)' : '⛄ Snowball (smallest balance first)'}</strong> · Extra payment: <strong>$${extra}/mo</strong></p>
+    let html = `<h1>Debt Payoff Plan</h1>
+      <p style="color:#888;margin-bottom:1.25rem">Strategy: <strong>${payoffMethod === 'avalanche' ? 'Avalanche (highest interest first)' : 'Snowball (smallest balance first)'}</strong> · Extra payment: <strong>$${extra}/mo</strong></p>
 
       <div class="summary-box">
         <div class="summary-item"><div class="summary-val">${fmtM(extraResult.months)}</div><div class="summary-label">Debt Free In</div></div>
@@ -16380,18 +16380,18 @@ window.addEventListener('load', function(){
       var explanation = document.getElementById('method-explanation');
       var isSnowball = !!(snowballBtn && snowballBtn.classList && snowballBtn.classList.contains('active'));
 
-      if (avalancheBtn) avalancheBtn.textContent = es ? '🔥 Método Avalancha — Ahorra Más' : '🔥 Avalanche — Save Most Money';
-      if (snowballBtn) snowballBtn.textContent = es ? '☃️ Método Bola de Nieve — Victorias Rápidas' : '☃️ Snowball — Quick Wins First';
+      if (avalancheBtn) avalancheBtn.textContent = es ? 'Método Avalancha — Ahorra Más' : 'Avalanche — Save Most Money';
+      if (snowballBtn) snowballBtn.textContent = es ? 'Método Bola de Nieve — Victorias Rápidas' : 'Snowball — Quick Wins First';
 
       if (explanation) {
         if (isSnowball) {
           explanation.innerHTML = es
-            ? '<strong style="color:var(--text)">☃️ Método Bola de Nieve:</strong> ' + snowballEs
-            : '<strong style="color:var(--text)">☃️ Snowball Method:</strong> ' + snowballEn;
+            ? '<strong style="color:var(--text)">Método Bola de Nieve:</strong> ' + snowballEs
+            : '<strong style="color:var(--text)">Snowball Method:</strong> ' + snowballEn;
         } else {
           explanation.innerHTML = es
-            ? '<strong style="color:var(--text)">🔥 Método Avalancha:</strong> ' + avalancheEs
-            : '<strong style="color:var(--text)">🔥 Avalanche Method:</strong> Pay minimums on all debts, then put ALL extra money toward the <strong>highest interest rate</strong> debt first. Mathematically saves the most money in interest.';
+            ? '<strong style="color:var(--text)">Método Avalancha:</strong> ' + avalancheEs
+            : '<strong style="color:var(--text)">Avalanche Method:</strong> Pay minimums on all debts, then put ALL extra money toward the <strong>highest interest rate</strong> debt first. Mathematically saves the most money in interest.';
         }
       }
 
@@ -17829,6 +17829,8 @@ window.addEventListener('load', function(){
     "clock": '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
     "life-buoy": '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M4.9 4.9 9.2 9.2M14.8 14.8l4.3 4.3M19.1 4.9l-4.3 4.3M9.2 14.8l-4.3 4.3"/>',
     "scale": '<path d="m16 16 3-8 3 8c-.9 1-5.1 1-6 0z"/><path d="m2 16 3-8 3 8c-.9 1-5.1 1-6 0z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 8h18"/>'
+    ,"mountain": '<path d="m3 20 7-12 4 7 2-3 5 8z"/><path d="m10 8 2 3 2-2"/>'
+    ,"circle-dot": '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/>'
   };
   var icons = {};
   Object.keys(iconPaths).forEach(function(key){ icons[key] = svg(iconPaths[key]); });
@@ -17846,7 +17848,7 @@ window.addEventListener('load', function(){
     "📚":"book-open", "🤓":"book-open", "🔐":"shield-check", "🏛️":"landmark", "💚":"heart-pulse", "🤝":"handshake",
     "⚠️":"alert-triangle", "⚠":"alert-triangle", "🔔":"bell", "❤️":"heart", "❤":"heart", "🛡️":"shield-check", "🛡":"shield-check",
     "ℹ️":"info", "ℹ":"info", "🧾":"receipt-text", "📄":"file-text", "📉":"trending-down", "🛟":"life-buoy",
-    "📞":"phone", "⏰":"clock", "🏅":"award"
+    "📞":"phone", "⏰":"clock", "🏅":"award", "⛄":"circle-dot", "☃️":"circle-dot", "☃":"circle-dot"
   };
 
   var savingsGoalIconMap = {
@@ -17962,6 +17964,15 @@ window.addEventListener('load', function(){
     var text = label || cleanLabel(el.textContent);
     var html = icon(iconName) + '<span>' + text + '</span>';
     if (el.innerHTML !== html) el.innerHTML = html;
+  }
+  function setInlineIconLabel(el, iconName, label){
+    if (!el) return;
+    var text = label || cleanLabel(el.textContent);
+    var html = icon(iconName) + '<span>' + text + '</span>';
+    if (el.innerHTML !== html) el.innerHTML = html;
+    el.style.display = 'inline-flex';
+    el.style.alignItems = 'center';
+    el.style.gap = '0.4rem';
   }
 
   function refreshNavIcons(){
@@ -18115,6 +18126,48 @@ window.addEventListener('load', function(){
     }
   }
 
+  function refreshDebtPlannerIcons(){
+    var root = document.getElementById('tab-debtplan');
+    if (!root) return;
+
+    setInlineIconLabel(root.querySelector('.planner-card > h2'), 'target');
+    setInlineIconLabel(root.querySelector('button[onclick="downloadDebtPlanPDF()"]'), 'file-text');
+    setInlineIconLabel(document.getElementById('method-avalanche'), 'mountain');
+    setInlineIconLabel(document.getElementById('method-snowball'), 'circle-dot');
+
+    var explanationStrong = root.querySelector('#method-explanation strong');
+    if (explanationStrong) {
+      var explanationText = cleanLabel(explanationStrong.textContent);
+      setInlineIconLabel(explanationStrong, /snowball|bola/i.test(explanationText) ? 'circle-dot' : 'mountain', explanationText);
+    }
+
+    root.querySelectorAll('span').forEach(function(el){
+      var txt = cleanLabel(el.textContent);
+      if (/^(Focus|Prioridad|Prioridad ahora|Prioridad actual|Enfoque ahora)$/i.test(txt)) {
+        setInlineIconLabel(el, 'target', txt);
+      }
+    });
+
+    root.querySelectorAll('.plan-col-title').forEach(function(el){
+      var txt = cleanLabel(el.textContent);
+      var lower = txt.toLowerCase();
+      var iconName = lower.includes('minimum') || lower.includes('mínimo') ? 'credit-card'
+        : lower.includes('snowball') || lower.includes('bola') ? 'circle-dot'
+        : 'mountain';
+      setInlineIconLabel(el, iconName, txt);
+    });
+
+    root.querySelectorAll('.psb-val').forEach(function(el){
+      setInlineIconLabel(el, 'wallet', cleanLabel(el.textContent));
+    });
+
+    var timelineTitle = root.querySelector('#payoff-timeline > div:first-child');
+    if (timelineTitle) {
+      var timelineText = cleanLabel(timelineTitle.textContent);
+      setInlineIconLabel(timelineTitle, /snowball|bola/i.test(timelineText) ? 'circle-dot' : 'mountain', timelineText);
+    }
+  }
+
   function refreshGenericEmojiIcons(){
     var iconOnlySelectors = [
       '.tip-icon', '.lg-icon', '.eg-icon', '.dt-icon', '.gi-icon', '.atr-icon',
@@ -18151,6 +18204,7 @@ window.addEventListener('load', function(){
     refreshStreakIcons();
     refreshMembershipIcons();
     refreshNetWorthIcons();
+    refreshDebtPlannerIcons();
     refreshGenericEmojiIcons();
   }
 
@@ -18177,6 +18231,9 @@ window.addEventListener('load', function(){
     "selectScriptType",
     "selectDebtType",
     "generateNegotiationScript",
+    "setMethod",
+    "renderDebtList",
+    "runPayoffPlan",
     "applyLanguage"
   ].forEach(function(name){
     var original = window[name];
