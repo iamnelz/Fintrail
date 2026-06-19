@@ -4791,12 +4791,12 @@
     <div id="guide-content">
     <div class="guide-intro">
       <div class="guide-intro-card active" id="gi-credit" onclick="switchGuide('credit')">
-        <div class="gi-icon">⭐</div>
+        <div class="gi-icon" data-guide-icon="star"></div>
         <h3 data-en="Improve Your Credit Score" data-es="Mejora Tu Puntaje de Crédito">Improve Your Credit Score</h3>
         <p data-en="Step-by-step actions to build and maintain a strong credit profile." data-es="Acciones paso a paso para construir un perfil crediticio sólido.">Step-by-step actions to build and maintain a strong credit profile.</p>
       </div>
       <div class="guide-intro-card" id="gi-dti" onclick="switchGuide('dti')">
-        <div class="gi-icon">⚖️</div>
+        <div class="gi-icon" data-guide-icon="bar-chart-3"></div>
         <h3 data-en="Lower Your Debt-to-Income" data-es="Reduce Tu Deuda-Ingreso">Lower Your Debt-to-Income</h3>
         <p data-en="Calculate your DTI ratio and get a personalized plan to reduce it." data-es="Calcula tu relación deuda-ingreso y recibe un plan personalizado para reducirla.">Calculate your DTI ratio and get a personalized plan to reduce it.</p>
       </div>
@@ -17678,6 +17678,21 @@ window.addEventListener('load', function(){
   #tab-networth > .card[style*="linear-gradient"] {
     background:var(--fintrail-brand-gradient) !important;
   }
+
+  .guide-intro-card .gi-icon {
+    color:#fff !important;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:30px;
+    height:30px;
+  }
+
+  .guide-intro-card .gi-icon .ft-lucide-icon {
+    width:28px;
+    height:28px;
+    color:#fff !important;
+  }
 </style>
 
 <style id="fintrail-icon-refresh-phase-2">
@@ -18119,6 +18134,12 @@ window.addEventListener('load', function(){
     });
   }
 
+  function refreshCreditGuideIcons(){
+    document.querySelectorAll('.guide-intro-card .gi-icon[data-guide-icon]').forEach(function(el){
+      replaceSingleIcon(el, el.getAttribute('data-guide-icon') || 'star');
+    });
+  }
+
   function refreshStreakIcons(){
     document.querySelectorAll('#tab-streaks h2[data-en][data-es]').forEach(function(h){
       var label = cleanLabel(h.textContent);
@@ -18295,6 +18316,7 @@ window.addEventListener('load', function(){
     refreshHeroChips();
     refreshSavingsGoalIcons();
     refreshResourceIcons();
+    refreshCreditGuideIcons();
     refreshStreakIcons();
     refreshMembershipIcons();
     refreshNetWorthIcons();
