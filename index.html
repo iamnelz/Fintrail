@@ -5385,7 +5385,7 @@
     </div>
 
     <div class="tip-bar">
-      <div class="tip-icon">⏰</div>
+      <div class="tip-icon"></div>
       <p data-en="Time:" data-es="Tiempo:" data-en-html="<strong>Time is your greatest asset.</strong> Starting 10 years earlier can <strong>double or triple</strong> your final balance. Even small monthly contributions grow significantly over decades — start today!" data-es-html="<strong>El tiempo es tu mayor activo.</strong> Comenzar 10 años antes puede <strong>duplicar o triplicar</strong> tu balance final. ¡Incluso contribuciones pequeñas crecen enormemente con el tiempo!"><strong>Time is your greatest asset.</strong> Starting 10 years earlier can <strong>double or triple</strong> your final balance. Even small monthly contributions grow significantly over decades — start today!</p>
     </div>
 
@@ -17792,7 +17792,6 @@ window.addEventListener('load', function(){
   }
   .bill-due-alert-icon,
   .bill-schedule-empty-icon,
-  .investment-tip-icon,
   .debt-helper-icon {
     display:inline-flex;
     align-items:center;
@@ -17805,13 +17804,11 @@ window.addEventListener('load', function(){
   }
   .bill-due-alert-icon .ft-lucide-icon,
   .bill-schedule-empty-icon .ft-lucide-icon,
-  .investment-tip-icon .ft-lucide-icon,
   .debt-helper-icon .ft-lucide-icon {
     width:18px;
     height:18px;
   }
-  .debt-helper-text,
-  .investment-tip-row {
+  .debt-helper-text {
     display:flex;
     align-items:flex-start;
     gap:0.45rem;
@@ -18242,12 +18239,12 @@ window.addEventListener('load', function(){
 
   function refreshInvestmentIcons(){
     var tip = document.querySelector('p[data-en="Time:"]');
-    if (!tip || tip.querySelector('.investment-tip-icon')) return;
-    tip.classList.add('investment-tip-row');
-    var span = document.createElement('span');
-    span.className = 'investment-tip-icon';
-    span.innerHTML = icon('clock');
-    tip.insertBefore(span, tip.firstChild);
+    if (!tip) return;
+    tip.classList.remove('investment-tip-row');
+    tip.querySelectorAll('.investment-tip-icon').forEach(function(el){ el.remove(); });
+    var tipBar = tip.closest('.tip-bar');
+    var iconEl = tipBar ? tipBar.querySelector('.tip-icon') : null;
+    if (iconEl) replaceSingleIcon(iconEl, 'clock');
   }
 
   function refreshProIcons(){
