@@ -17786,6 +17786,7 @@ window.addEventListener('load', function(){
     "crown": '<path d="m3 7 4 4 5-7 5 7 4-4-2 11H5z"/><path d="M5 18h14"/>',
     "credit-card": '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/><path d="M7 15h4"/>',
     "trending-up": '<path d="M3 17l6-6 4 4 7-9"/><path d="M14 6h6v6"/>',
+    "trending-down": '<path d="M3 7l6 6 4-4 7 9"/><path d="M14 18h6v-6"/>',
     "target-arrow": '<circle cx="12" cy="12" r="8"/><path d="M12 12 21 3"/><path d="M16 3h5v5"/>',
     "banknote": '<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 9h.01M18 15h.01"/>',
     "check-circle": '<circle cx="12" cy="12" r="9"/><path d="m9 12 2 2 4-5"/>',
@@ -17840,9 +17841,9 @@ window.addEventListener('load', function(){
     "💻":"laptop", "🏥":"hospital", "🐾":"paw-print", "🌟":"sparkles", "🔍":"search", "📘":"book-open",
     "🧮":"calculator", "💬":"bot", "🏆":"trophy", "🛠":"wrench", "💡":"lightbulb", "👤":"user",
     "🏦":"landmark", "🚀":"rocket", "🔑":"key", "🔄":"refresh-cw", "🏘️":"building", "💼":"briefcase",
-    "📚":"book-open", "🤓":"book-open", "🔐":"shield-check", "🏛️":"landmark", "💚":"heart-pulse",
+    "📚":"book-open", "🤓":"book-open", "🔐":"shield-check", "🏛️":"landmark", "💚":"heart-pulse", "🤝":"handshake",
     "⚠️":"alert-triangle", "⚠":"alert-triangle", "🔔":"bell", "❤️":"heart", "❤":"heart", "🛡️":"shield-check", "🛡":"shield-check",
-    "ℹ️":"info", "ℹ":"info", "🧾":"receipt-text", "📄":"file-text", "📉":"trending-up", "🛟":"life-buoy",
+    "ℹ️":"info", "ℹ":"info", "🧾":"receipt-text", "📄":"file-text", "📉":"trending-down", "🛟":"life-buoy",
     "📞":"phone", "⏰":"clock", "🏅":"award"
   };
 
@@ -18118,9 +18119,9 @@ window.addEventListener('load', function(){
       '.filter-btn', '.sched-tab-btn', '.method-btn', '.step-impact',
       '.fm-badge-large', '.fm-visible-badge', '#fm-modal-title',
       '#report-title', '#report-credit-next-label', '#report-monthly-achievement-label',
-      '#script-output-title', '#receipt-modal-title', '#uz-file-name',
+      '#script-output-title', '#script-title', '#receipt-modal-title', '#uz-file-name',
       '.reward-locked', '.pw-feature', '.pw-trial', '.ab-left',
-      '.cal-event', '.cal-week-event', '.cal-legend-item'
+      '.cal-event', '.cal-week-event', '.cal-legend-item', '.activity-text'
     ].join(',');
     document.querySelectorAll(leadingSelectors).forEach(function(el){
       replaceFirstDirectEmoji(el);
@@ -18156,6 +18157,10 @@ window.addEventListener('load', function(){
     "renderResources",
     "renderGoals",
     "renderSavingsGoals",
+    "renderActivityFeed",
+    "selectScriptType",
+    "selectDebtType",
+    "generateNegotiationScript",
     "applyLanguage"
   ].forEach(function(name){
     var original = window[name];
