@@ -17732,6 +17732,30 @@ window.addEventListener('load', function(){
     height:28px;
     color:var(--accent);
   }
+  .ft-iconized-text {
+    display:inline-flex;
+    align-items:center;
+    gap:0.35rem;
+  }
+  .ft-inline-icon {
+    margin-right:0.35rem;
+  }
+  .paywall-icon .ft-lucide-icon,
+  .profile-avatar .ft-lucide-icon,
+  .pmb-icon .ft-lucide-icon,
+  .si-icon .ft-lucide-icon,
+  .report-card-icon .ft-lucide-icon,
+  .dt-icon .ft-lucide-icon,
+  .gi-icon .ft-lucide-icon,
+  .atr-icon .ft-lucide-icon,
+  .script-tip-icon .ft-lucide-icon,
+  .cal-event .ft-lucide-icon,
+  .cal-week-event .ft-lucide-icon,
+  .activity-icon .ft-lucide-icon,
+  .ac-icon .ft-lucide-icon {
+    width:20px;
+    height:20px;
+  }
 </style>
 
 <script>
@@ -17747,6 +17771,10 @@ window.addEventListener('load', function(){
     "landmark": '<path d="M3 21h18"/><path d="M5 21V10"/><path d="M19 21V10"/><path d="M9 21V10"/><path d="M15 21V10"/><path d="M12 3 3 8h18z"/>',
     "calendar": '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
     "calendar-check": '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m9 16 2 2 4-5"/>',
+    "receipt-text": '<path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2z"/><path d="M8 7h8M8 11h8M8 15h5"/>',
+    "info": '<circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/>',
+    "alert-triangle": '<path d="m12 3 10 18H2z"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+    "bell": '<path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/>',
     "handshake": '<path d="m11 17 2 2a2.8 2.8 0 0 0 4 0l2-2"/><path d="m14 14 2.5 2.5a2.1 2.1 0 0 0 3 0 2.1 2.1 0 0 0 0-3L16 10"/><path d="m8 10-3.5 3.5a2.1 2.1 0 0 0 0 3 2.1 2.1 0 0 0 3 0L10 14"/><path d="m7 11 4-4 3 3 3-3"/>',
     "wallet": '<path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5"/><path d="M16 12h.01"/>',
     "clipboard-list": '<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M8 12h8"/><path d="M8 16h8"/><path d="M8 20h5"/>',
@@ -17792,7 +17820,12 @@ window.addEventListener('load', function(){
     "briefcase": '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 12h18"/>',
     "shield-check": '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-5"/>',
     "heart": '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>',
-    "building": '<path d="M3 21h18"/><path d="M6 21V3h12v18"/><path d="M9 7h1M14 7h1M9 11h1M14 11h1M9 15h1M14 15h1"/>'
+    "heart-pulse": '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/><path d="M3 12h4l2-3 3 6 2-3h7"/>',
+    "building": '<path d="M3 21h18"/><path d="M6 21V3h12v18"/><path d="M9 7h1M14 7h1M9 11h1M14 11h1M9 15h1M14 15h1"/>',
+    "phone": '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.4 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>',
+    "clock": '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    "life-buoy": '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M4.9 4.9 9.2 9.2M14.8 14.8l4.3 4.3M19.1 4.9l-4.3 4.3M9.2 14.8l-4.3 4.3"/>',
+    "scale": '<path d="m16 16 3-8 3 8c-.9 1-5.1 1-6 0z"/><path d="m2 16 3-8 3 8c-.9 1-5.1 1-6 0z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 8h18"/>'
   };
   var icons = {};
   Object.keys(iconPaths).forEach(function(key){ icons[key] = svg(iconPaths[key]); });
@@ -17807,7 +17840,10 @@ window.addEventListener('load', function(){
     "💻":"laptop", "🏥":"hospital", "🐾":"paw-print", "🌟":"sparkles", "🔍":"search", "📘":"book-open",
     "🧮":"calculator", "💬":"bot", "🏆":"trophy", "🛠":"wrench", "💡":"lightbulb", "👤":"user",
     "🏦":"landmark", "🚀":"rocket", "🔑":"key", "🔄":"refresh-cw", "🏘️":"building", "💼":"briefcase",
-    "📚":"book-open", "🤓":"book-open", "🔐":"shield-check", "🏛️":"landmark", "💚":"heart"
+    "📚":"book-open", "🤓":"book-open", "🔐":"shield-check", "🏛️":"landmark", "💚":"heart-pulse",
+    "⚠️":"alert-triangle", "⚠":"alert-triangle", "🔔":"bell", "❤️":"heart", "❤":"heart", "🛡️":"shield-check", "🛡":"shield-check",
+    "ℹ️":"info", "ℹ":"info", "🧾":"receipt-text", "📄":"file-text", "📉":"trending-up", "🛟":"life-buoy",
+    "📞":"phone", "⏰":"clock", "🏅":"award"
   };
 
   var savingsGoalIconMap = {
@@ -17860,6 +17896,11 @@ window.addEventListener('load', function(){
       .trim();
   }
   function icon(name){ return icons[name] || icons["bar-chart-3"]; }
+  function iconNode(name){
+    var template = document.createElement('template');
+    template.innerHTML = icon(name);
+    return template.content.firstElementChild;
+  }
   function iconWithHiddenValue(name, value){
     return icon(name) + '<span class="ft-emoji-value">' + value + '</span>';
   }
@@ -17887,6 +17928,25 @@ window.addEventListener('load', function(){
   function firstEmoji(text){
     var match = String(text || '').match(/([\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]\uFE0F?)/u);
     return match ? match[1] : '';
+  }
+  function replaceFirstDirectEmoji(el, map){
+    if (!el || el.closest('script,style,textarea,select,input,#ft-onboarding-v5,[class*="ft-onboarding-v5"],.ft-emoji-value')) return;
+    if (el.classList && (el.classList.contains('emoji-opt') || el.classList.contains('goal-icon'))) return;
+    var nodes = Array.from(el.childNodes || []);
+    for (var i = 0; i < nodes.length; i++) {
+      var node = nodes[i];
+      if (node.nodeType !== Node.TEXT_NODE) continue;
+      var value = firstEmoji(node.textContent);
+      if (!value) continue;
+      var iconName = (map && map[value]) || emojiIconMap[value];
+      if (!iconName) continue;
+      var replacement = iconNode(iconName);
+      replacement.classList.add('ft-inline-icon');
+      node.textContent = node.textContent.replace(value, '').replace(/^\s+/, ' ');
+      el.insertBefore(replacement, node);
+      return true;
+    }
+    return false;
   }
   function replaceSingleIcon(el, iconName, hiddenValue){
     if (!el) return;
@@ -18039,6 +18099,34 @@ window.addEventListener('load', function(){
     });
   }
 
+  function refreshGenericEmojiIcons(){
+    var iconOnlySelectors = [
+      '.tip-icon', '.lg-icon', '.eg-icon', '.dt-icon', '.gi-icon', '.atr-icon',
+      '.chat-avatar', '.msg-avatar', '.paywall-icon', '.profile-avatar',
+      '.pmb-icon', '.si-icon', '.report-card-icon', '.report-achievement-emoji',
+      '.script-tip-icon', '.tl-score', '.ac-icon', '.activity-icon', '.stb-icon'
+    ].join(',');
+    document.querySelectorAll(iconOnlySelectors).forEach(function(el){
+      var value = firstEmoji(el.textContent);
+      if (!value) return;
+      replaceSingleIcon(el, emojiIconMap[value] || pickByText(el.textContent));
+    });
+
+    var leadingSelectors = [
+      'button:not(.mobile-nav-tile):not(.nav-group-btn)',
+      'h1', 'h2', 'h3', 'h4',
+      '.filter-btn', '.sched-tab-btn', '.method-btn', '.step-impact',
+      '.fm-badge-large', '.fm-visible-badge', '#fm-modal-title',
+      '#report-title', '#report-credit-next-label', '#report-monthly-achievement-label',
+      '#script-output-title', '#receipt-modal-title', '#uz-file-name',
+      '.reward-locked', '.pw-feature', '.pw-trial', '.ab-left',
+      '.cal-event', '.cal-week-event', '.cal-legend-item'
+    ].join(',');
+    document.querySelectorAll(leadingSelectors).forEach(function(el){
+      replaceFirstDirectEmoji(el);
+    });
+  }
+
   function refreshFintrailIcons(){
     refreshNavIcons();
     refreshHeroChips();
@@ -18046,6 +18134,7 @@ window.addEventListener('load', function(){
     refreshResourceIcons();
     refreshStreakIcons();
     refreshMembershipIcons();
+    refreshGenericEmojiIcons();
   }
 
   var refreshTimer = null;
