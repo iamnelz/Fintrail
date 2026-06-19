@@ -940,7 +940,7 @@
   }
   .payday-block-header {
     display:flex; align-items:center; justify-content:space-between;
-    padding:0.7rem 1rem; background:linear-gradient(135deg, #1a1a2e, #2d1b4e); cursor:pointer;
+    padding:0.7rem 1rem; background:linear-gradient(135deg, #151515, #1F2933); cursor:pointer;
     user-select:none; border-radius: 10px 10px 0 0;
   }
   .payday-block-header .pd-date { font-size:0.85rem; font-weight:600; color:#fff; display:flex; align-items:center; gap:0.5rem; }
@@ -7599,6 +7599,10 @@ Guidelines:
     return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 
+  function billScheduleDisplayName(name) {
+    return String(name || '').replace(/^[\s\uFE0F]*(?:[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]\uFE0F?\s*)+/u, '').trim();
+  }
+
   // SAVINGS GOALS
   let goals = [];
   let selectedEmoji = '🎯';
@@ -8029,9 +8033,8 @@ Guidelines:
       const isSplit = perPaycheck < b.amount;
       return `<div class="bill-item recurring">
         <div class="bi-left">
-          <span class="bill-icon">${b.cat.split(' ')[0]}</span>
           <div class="bi-info">
-            <div class="bi-name">${escHtml(b.name)}</div>
+            <div class="bi-name">${escHtml(billScheduleDisplayName(b.name))}</div>
             <div class="bi-meta">Due ${b.day}${['st','nd','rd'][((b.day)%10)-1]||'th'} · ${b.cat.split(' ').slice(1).join(' ')}${isSplit ? ` · <span style="color:var(--accent)">$${perPaycheck.toFixed(2)}/paycheck</span>` : ''}</div>
           </div>
         </div>
@@ -8160,7 +8163,7 @@ Guidelines:
 
         html += `<div class="payday-block">
           <div class="payday-block-header ${isOpen?'open':''}" onclick="togglePayBlock('${pdKey}', this)">
-            <div class="pd-date"><span class="pd-icon">💵</span> ${currentLang === 'es' ? 'Día de Pago — ' : 'Payday — '}${pdStr}</div>
+            <div class="pd-date">${currentLang === 'es' ? 'Día de Pago — ' : 'Payday — '}${pdStr}</div>
             <div style="display:flex;align-items:center;gap:0.75rem">
               <div class="pd-summary">${dueBills.length} ${currentLang === 'es' ? (dueBills.length !== 1 ? 'facturas' : 'factura') : ('bill' + (dueBills.length!==1?'s':''))} · $${periodTotal.toFixed(2)} · ${paidCount}/${dueBills.length} ${currentLang === 'es' ? 'pagadas' : 'paid'}</div>
               <div class="pd-toggle">▼</div>
@@ -8181,8 +8184,7 @@ Guidelines:
             html += `<div class="payday-bill-row ${isPaid?'paid-row':''}">
               <div class="pbr-left" style="flex-direction:column;align-items:flex-start;gap:0.2rem">
                 <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap">
-                  <span>${b.cat.split(' ')[0]}</span>
-                  <span style="font-weight:600;font-size:0.875rem">${escHtml(b.name)}</span>
+                  <span style="font-weight:600;font-size:0.875rem">${escHtml(billScheduleDisplayName(b.name))}</span>
                   ${b.splitLabel ? `<span style="font-size:0.68rem;background:rgba(240,85,85,0.1);color:var(--accent);padding:0.15rem 0.5rem;border-radius:4px;font-weight:700">${currentLang === 'es' ? 'Dividido' : 'Split'} ${b.splitLabel}</span>` : ''}
                 </div>
                 <span class="pbr-due" style="${urgency}">${currentLang === 'es' ? 'vence' : 'due'} ${dueDateStr}${daysUntil >= 0 && daysUntil <= 3 ? ' ⚠️' : ''}</span>
