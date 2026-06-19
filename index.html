@@ -7710,7 +7710,7 @@ Guidelines:
   function selectEmoji(el) {
     document.querySelectorAll('.emoji-opt').forEach(e => e.classList.remove('selected'));
     el.classList.add('selected');
-    selectedEmoji = el.textContent;
+    selectedEmoji = (el.querySelector('.ft-emoji-value')?.textContent || el.textContent || '').trim() || '🎯';
   }
 
   function addGoal() {
@@ -17646,56 +17646,447 @@ window.addEventListener('load', function(){
   }
 </style>
 
+<style id="fintrail-icon-refresh-phase-2">
+  .ft-lucide-icon {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:22px;
+    height:22px;
+    color:currentColor;
+    flex:0 0 auto;
+    vertical-align:-0.18em;
+  }
+  .ft-lucide-icon svg {
+    width:100%;
+    height:100%;
+    fill:none;
+    stroke:currentColor;
+    stroke-width:2;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+  }
+  .hero-chip {
+    display:inline-flex;
+    align-items:center;
+    gap:0.45rem;
+  }
+  .hero-chip .ft-lucide-icon,
+  .nav-group-btn .ft-lucide-icon,
+  .mobile-nav-tile .ft-lucide-icon,
+  .nav-dropdown-item .ndi-icon .ft-lucide-icon {
+    width:18px;
+    height:18px;
+  }
+  .mobile-nav-tile {
+    gap:0.22rem;
+  }
+  .mobile-nav-section-title {
+    display:flex;
+    align-items:center;
+    gap:0.4rem;
+  }
+  .mobile-nav-section-title .ft-lucide-icon {
+    width:15px;
+    height:15px;
+  }
+  .emoji-opt {
+    position:relative;
+  }
+  .emoji-opt .ft-lucide-icon {
+    width:24px;
+    height:24px;
+    pointer-events:none;
+  }
+  .goal-icon {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .goal-icon .ft-lucide-icon {
+    width:28px;
+    height:28px;
+  }
+  .ft-emoji-value {
+    position:absolute !important;
+    width:1px !important;
+    height:1px !important;
+    overflow:hidden !important;
+    clip:rect(0 0 0 0) !important;
+    white-space:nowrap !important;
+  }
+  .level-badge .ft-lucide-icon,
+  #level-badge .ft-lucide-icon {
+    width:54px;
+    height:54px;
+  }
+  .badge-emoji .ft-lucide-icon,
+  .sc-icon .ft-lucide-icon,
+  .lrp-badge .ft-lucide-icon,
+  .rc-icon .ft-lucide-icon {
+    width:28px;
+    height:28px;
+  }
+  .resource-card .ft-resource-icon {
+    width:28px;
+    height:28px;
+    color:var(--accent);
+  }
+</style>
+
 <script>
-/* === FINTRAIL DESIGN SYSTEM PHASE 1 ICON PASS === */
+/* === FINTRAIL ICON REFRESH PHASE 2 === */
 (function(){
   function svg(path){
-    return '<svg viewBox="0 0 24 24" aria-hidden="true">' + path + '</svg>';
+    return '<span class="ft-lucide-icon" aria-hidden="true"><svg viewBox="0 0 24 24">' + path + '</svg></span>';
   }
-  var icons = {
-    budget: svg('<path d="M4 19V5"/><path d="M8 19V9"/><path d="M12 19V3"/><path d="M16 19v-6"/><path d="M20 19V7"/>'),
-    calendar: svg('<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>'),
-    target: svg('<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>'),
-    trend: svg('<path d="M3 17l6-6 4 4 7-9"/><path d="M14 6h6v6"/>'),
-    diamond: svg('<path d="M6 3h12l4 6-10 12L2 9l4-6z"/><path d="M2 9h20"/>'),
-    card: svg('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/><path d="M7 15h4"/>'),
-    search: svg('<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>'),
-    book: svg('<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/>'),
-    calculator: svg('<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M12 11h2M16 11h0M8 15h2M12 15h2M16 15h0"/>'),
-    message: svg('<path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>'),
-    activity: svg('<path d="M22 12h-4l-3 8L9 4l-3 8H2"/>'),
-    report: svg('<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 16h8M8 12h4"/>'),
-    award: svg('<circle cx="12" cy="8" r="5"/><path d="M8.5 12.5L7 22l5-3 5 3-1.5-9.5"/>')
+  var iconPaths = {
+    "bar-chart-3": '<path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>',
+    "target": '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1"/>',
+    "bot": '<rect x="5" y="8" width="14" height="10" rx="2"/><path d="M12 8V4"/><path d="M8 4h8"/><path d="M9 13h.01"/><path d="M15 13h.01"/><path d="M9 18v2"/><path d="M15 18v2"/>',
+    "landmark": '<path d="M3 21h18"/><path d="M5 21V10"/><path d="M19 21V10"/><path d="M9 21V10"/><path d="M15 21V10"/><path d="M12 3 3 8h18z"/>',
+    "calendar": '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+    "calendar-check": '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m9 16 2 2 4-5"/>',
+    "handshake": '<path d="m11 17 2 2a2.8 2.8 0 0 0 4 0l2-2"/><path d="m14 14 2.5 2.5a2.1 2.1 0 0 0 3 0 2.1 2.1 0 0 0 0-3L16 10"/><path d="m8 10-3.5 3.5a2.1 2.1 0 0 0 0 3 2.1 2.1 0 0 0 3 0L10 14"/><path d="m7 11 4-4 3 3 3-3"/>',
+    "wallet": '<path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5"/><path d="M16 12h.01"/>',
+    "clipboard-list": '<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M8 12h8"/><path d="M8 16h8"/><path d="M8 20h5"/>',
+    "trophy": '<path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4a2 2 0 0 0 2 5h1"/><path d="M17 6h3a2 2 0 0 1-2 5h-1"/>',
+    "notebook": '<path d="M4 4h15v16H4z"/><path d="M8 4v16"/><path d="M2 8h4M2 12h4M2 16h4"/><path d="M11 8h5M11 12h5"/>',
+    "piggy-bank": '<path d="M19 10c1.1 0 2 .9 2 2v2h-2"/><path d="M5 11V9a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v5a4 4 0 0 1-4 4H8l-2 3v-3H5a3 3 0 0 1-3-3v-1a3 3 0 0 1 3-3z"/><path d="M8 9h.01"/><path d="M11 5V3h4v2"/>',
+    "flame": '<path d="M8.5 14.5A4.5 4.5 0 0 0 12 22a4.5 4.5 0 0 0 3.5-7.5c-.5-.7-1.5-1.5-1.5-3.5-1.7 1-2.8 2.2-3 4-1.2-.9-2-2.2-2-4-1.8 1.7-3 3.6-3 6a6 6 0 0 0 12 0"/>',
+    "zap": '<path d="M13 2 3 14h8l-1 8 10-12h-8z"/>',
+    "crown": '<path d="m3 7 4 4 5-7 5 7 4-4-2 11H5z"/><path d="M5 18h14"/>',
+    "credit-card": '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/><path d="M7 15h4"/>',
+    "trending-up": '<path d="M3 17l6-6 4 4 7-9"/><path d="M14 6h6v6"/>',
+    "target-arrow": '<circle cx="12" cy="12" r="8"/><path d="M12 12 21 3"/><path d="M16 3h5v5"/>',
+    "banknote": '<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 9h.01M18 15h.01"/>',
+    "check-circle": '<circle cx="12" cy="12" r="9"/><path d="m9 12 2 2 4-5"/>',
+    "medal": '<circle cx="12" cy="8" r="5"/><path d="M8.5 12.5 7 22l5-3 5 3-1.5-9.5"/>',
+    "diamond": '<path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20"/><path d="m6 3 6 18 6-18"/>',
+    "gift": '<rect x="3" y="8" width="18" height="13" rx="2"/><path d="M12 8v13"/><path d="M3 12h18"/><path d="M7.5 8a2.5 2.5 0 1 1 5 0"/><path d="M16.5 8a2.5 2.5 0 1 0-5 0"/>',
+    "lock": '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+    "home": '<path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/>',
+    "car": '<path d="M5 17h14l-1-5H6z"/><path d="M7 17v2"/><path d="M17 17v2"/><path d="M7 12l2-5h6l2 5"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/>',
+    "plane": '<path d="M2 16 22 4l-7 17-4-7-9 2z"/><path d="m11 14 11-10"/>',
+    "graduation-cap": '<path d="M22 10 12 5 2 10l10 5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/><path d="M22 10v6"/>',
+    "gem": '<path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20"/>',
+    "baby": '<path d="M9 12h.01M15 12h.01"/><path d="M10 16c1.2 1 2.8 1 4 0"/><circle cx="12" cy="12" r="8"/><path d="M9 3c0 2 1.5 3 3 3s3-1 3-3"/>',
+    "laptop": '<rect x="5" y="4" width="14" height="10" rx="2"/><path d="M3 20h18l-2-4H5z"/>',
+    "hospital": '<path d="M3 21h18"/><path d="M5 21V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v15"/><path d="M9 21v-5h6v5"/><path d="M12 8v5"/><path d="M9.5 10.5h5"/>',
+    "paw-print": '<circle cx="6" cy="7" r="2"/><circle cx="18" cy="7" r="2"/><circle cx="9" cy="4" r="2"/><circle cx="15" cy="4" r="2"/><path d="M8 15a4 4 0 0 1 8 0c0 2-1.8 4-4 4s-4-2-4-4z"/>',
+    "sparkles": '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M5 3v4M3 5h4M19 17v4M17 19h4"/>',
+    "star": '<path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.2l-5.6 3 1.1-6.2L3 9.6l6.2-.9z"/>',
+    "search": '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
+    "book-open": '<path d="M2 4h7a4 4 0 0 1 4 4v12a3 3 0 0 0-3-3H2z"/><path d="M22 4h-7a4 4 0 0 0-4 4v12a3 3 0 0 1 3-3h8z"/>',
+    "calculator": '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M12 11h2M16 11h0M8 15h2M12 15h2M16 15h0"/>',
+    "message-circle": '<path d="M21 11.5a8.5 8.5 0 0 1-12.8 7.4L3 21l2.1-5.2A8.5 8.5 0 1 1 21 11.5z"/>',
+    "activity": '<path d="M22 12h-4l-3 8L9 4l-3 8H2"/>',
+    "file-text": '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h8M8 9h2"/>',
+    "award": '<circle cx="12" cy="8" r="5"/><path d="M8.5 12.5 7 22l5-3 5 3-1.5-9.5"/>',
+    "wrench": '<path d="M14.7 6.3a4 4 0 0 0-5 5L3 18v3h3l6.7-6.7a4 4 0 0 0 5-5l-2.4 2.4-2-2.4z"/>',
+    "lightbulb": '<path d="M9 18h6"/><path d="M10 22h4"/><path d="M8 14a6 6 0 1 1 8 0c-.8.7-1 1.5-1 2H9c0-.5-.2-1.3-1-2z"/>',
+    "user": '<path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/>',
+    "rocket": '<path d="M4.5 16.5 3 21l4.5-1.5"/><path d="M9 15 5 11l6-6c3-3 7-2 8-1 1 1 2 5-1 8l-6 6-4-4z"/><path d="M15 9h.01"/>',
+    "key": '<circle cx="7" cy="15" r="4"/><path d="M10 12 21 1"/><path d="m18 4 2 2"/><path d="m15 7 2 2"/>',
+    "refresh-cw": '<path d="M21 12a9 9 0 0 1-15.5 6.2"/><path d="M3 12a9 9 0 0 1 15.5-6.2"/><path d="M3 18h5v-5"/><path d="M21 6h-5v5"/>',
+    "briefcase": '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 12h18"/>',
+    "shield-check": '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-5"/>',
+    "heart": '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>',
+    "building": '<path d="M3 21h18"/><path d="M6 21V3h12v18"/><path d="M9 7h1M14 7h1M9 11h1M14 11h1M9 15h1M14 15h1"/>'
   };
-  function pick(text){
-    text = (text || '').toLowerCase();
-    if (text.includes('budget')) return icons.budget;
-    if (text.includes('bill') || text.includes('calendar')) return icons.calendar;
-    if (text.includes('saving') || text.includes('goal')) return icons.target;
-    if (text.includes('investment')) return icons.trend;
-    if (text.includes('net worth')) return icons.diamond;
-    if (text.includes('debt') || text.includes('credit score') || text.includes('simulator')) return icons.card;
-    if (text.includes('resources')) return icons.search;
-    if (text.includes('guide')) return icons.book;
-    if (text.includes('loan')) return icons.calculator;
-    if (text.includes('advisor') || text.includes('negotiation')) return icons.message;
-    if (text.includes('health')) return icons.activity;
-    if (text.includes('report')) return icons.report;
-    if (text.includes('streak')) return icons.award;
-    return icons.budget;
+  var icons = {};
+  Object.keys(iconPaths).forEach(function(key){ icons[key] = svg(iconPaths[key]); });
+
+  var emojiIconMap = {
+    "👋":"handshake", "💸":"wallet", "📝":"clipboard-list", "📋":"clipboard-list", "🗒️":"notebook", "📒":"notebook",
+    "🎯":"target", "🎉":"trophy", "📅":"calendar-check", "💰":"piggy-bank", "💵":"banknote", "🤑":"banknote",
+    "🔥":"flame", "⚡":"zap", "⭐":"crown", "💳":"credit-card", "📈":"trending-up", "📊":"bar-chart-3",
+    "🤖":"bot", "🏹":"target-arrow", "✅":"check-circle", "🥉":"medal", "🥈":"medal", "🥇":"medal",
+    "💎":"diamond", "💠":"diamond", "🎁":"gift", "🔒":"lock", "🏠":"home", "🏡":"home",
+    "🚗":"car", "🚙":"car", "✈️":"plane", "🎓":"graduation-cap", "💍":"gem", "👶":"baby",
+    "💻":"laptop", "🏥":"hospital", "🐾":"paw-print", "🌟":"sparkles", "🔍":"search", "📘":"book-open",
+    "🧮":"calculator", "💬":"bot", "🏆":"trophy", "🛠":"wrench", "💡":"lightbulb", "👤":"user",
+    "🏦":"landmark", "🚀":"rocket", "🔑":"key", "🔄":"refresh-cw", "🏘️":"building", "💼":"briefcase",
+    "📚":"book-open", "🤓":"book-open", "🔐":"shield-check", "🏛️":"landmark", "💚":"heart"
+  };
+
+  var savingsGoalIconMap = {
+    "🎯":"target",
+    "🏠":"home",
+    "🏡":"home",
+    "🚗":"car",
+    "🚙":"car",
+    "✈️":"plane",
+    "🎓":"graduation-cap",
+    "💍":"gem",
+    "💎":"gem",
+    "👶":"baby",
+    "💻":"laptop",
+    "🏥":"hospital",
+    "🐾":"paw-print",
+    "💰":"wallet",
+    "💵":"wallet",
+    "⭐":"star",
+    "🌟":"star"
+  };
+
+  var badgeIconMap = {
+    first_login: "handshake",
+    first_transaction: "wallet",
+    ten_transactions: "clipboard-list",
+    first_goal: "target",
+    goal_complete: "trophy",
+    first_bill: "calendar-check",
+    five_bills: "notebook",
+    budget_surplus: "piggy-bank",
+    streak_7: "flame",
+    streak_30: "zap",
+    pro_member: "crown",
+    debt_planner: "credit-card",
+    invest_calc: "trending-up",
+    credit_sim: "bar-chart-3",
+    ai_chat: "bot",
+    three_goals: "target-arrow",
+    savings_1000: "banknote",
+    savings_10000: "piggy-bank",
+    fifty_transactions: "notebook",
+    profile_complete: "check-circle"
+  };
+
+  function cleanLabel(text){
+    return String(text || '')
+      .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]\uFE0F?/gu, '')
+      .replace(/\s+/g, ' ')
+      .trim();
   }
-  function refreshIcons(){
-    document.querySelectorAll('.nav-dropdown-item .ndi-icon').forEach(function(icon){
-      if (icon.dataset.ftIconReady === '1') return;
-      var item = icon.closest('.nav-dropdown-item');
-      icon.innerHTML = pick(item ? item.textContent : '');
-      icon.dataset.ftIconReady = '1';
+  function icon(name){ return icons[name] || icons["bar-chart-3"]; }
+  function iconWithHiddenValue(name, value){
+    return icon(name) + '<span class="ft-emoji-value">' + value + '</span>';
+  }
+  function pickByText(text){
+    var t = cleanLabel(text).toLowerCase();
+    if (t.includes('budget') || t.includes('presupuesto') || t.includes('tracker') || t.includes('rastreador')) return "bar-chart-3";
+    if (t.includes('bill') || t.includes('factura') || t.includes('calendar') || t.includes('calendario')) return "calendar";
+    if (t.includes('saving') || t.includes('goal') || t.includes('meta')) return "target";
+    if (t.includes('investment') || t.includes('invers')) return "trending-up";
+    if (t.includes('net worth') || t.includes('patrimonio')) return "diamond";
+    if (t.includes('debt') || t.includes('deuda') || t.includes('credit') || t.includes('crédito') || t.includes('score') || t.includes('simulador')) return "credit-card";
+    if (t.includes('resources') || t.includes('recursos')) return "search";
+    if (t.includes('guide') || t.includes('guía')) return "book-open";
+    if (t.includes('loan') || t.includes('préstamo')) return "calculator";
+    if (t.includes('advisor') || t.includes('asesor')) return "bot";
+    if (t.includes('negotiation') || t.includes('negociación')) return "message-circle";
+    if (t.includes('health') || t.includes('salud')) return "activity";
+    if (t.includes('report') || t.includes('reporte')) return "file-text";
+    if (t.includes('streak') || t.includes('racha') || t.includes('achievement') || t.includes('logro')) return "award";
+    if (t.includes('tool') || t.includes('herramienta')) return "wrench";
+    if (t.includes('insight') || t.includes('análisis')) return "lightbulb";
+    if (t.includes('account') || t.includes('cuenta')) return "user";
+    return "bar-chart-3";
+  }
+  function firstEmoji(text){
+    var match = String(text || '').match(/([\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]\uFE0F?)/u);
+    return match ? match[1] : '';
+  }
+  function replaceSingleIcon(el, iconName, hiddenValue){
+    if (!el) return;
+    var html = hiddenValue ? iconWithHiddenValue(iconName, hiddenValue) : icon(iconName);
+    if (el.innerHTML !== html) el.innerHTML = html;
+    el.dataset.ftIconReady = '1';
+  }
+  function replaceLeadingIcon(el, iconName, label){
+    if (!el) return;
+    var text = label || cleanLabel(el.textContent);
+    var html = icon(iconName) + '<span>' + text + '</span>';
+    if (el.innerHTML !== html) el.innerHTML = html;
+  }
+
+  function refreshNavIcons(){
+    var navGroups = {
+      "nav-budget": "bar-chart-3",
+      "nav-planning": "target",
+      "nav-tools": "wrench",
+      "nav-insights": "lightbulb"
+    };
+    Object.keys(navGroups).forEach(function(id){
+      var btn = document.getElementById(id);
+      if (!btn) return;
+      var arrow = btn.querySelector('.nav-arrow') ? '<span class="nav-arrow">▾</span>' : '<span class="nav-arrow">▾</span>';
+      var label = cleanLabel(btn.textContent.replace('▾',''));
+      var html = icon(navGroups[id]) + '<span>' + label + '</span> ' + arrow;
+      if (btn.innerHTML !== html) btn.innerHTML = html;
+    });
+
+    document.querySelectorAll('.nav-dropdown-item .ndi-icon').forEach(function(iconEl){
+      var item = iconEl.closest('.nav-dropdown-item');
+      replaceSingleIcon(iconEl, pickByText(item ? item.textContent : ''));
+    });
+
+    document.querySelectorAll('#mobile-nav > div[data-en][data-es]').forEach(function(header){
+      var label = cleanLabel(header.textContent);
+      var html = icon(pickByText(label)) + '<span>' + label + '</span>';
+      if (!header.classList.contains('mobile-nav-section-title')) header.classList.add('mobile-nav-section-title');
+      if (header.innerHTML !== html) header.innerHTML = html;
+    });
+
+    document.querySelectorAll('.mobile-nav-tile').forEach(function(tile){
+      var span = tile.querySelector('span[data-en][data-es]');
+      if (!span) return;
+      var spanHtml = span.outerHTML;
+      var label = span.textContent || span.getAttribute('data-en') || '';
+      var iconName = pickByText(label);
+      var onclick = tile.getAttribute('onclick') || '';
+      if (onclick.includes('budget')) iconName = "bar-chart-3";
+      else if (onclick.includes('Schedule') || onclick.includes('calendar')) iconName = "calendar";
+      else if (onclick.includes('savings')) iconName = "target";
+      else if (onclick.includes('invest')) iconName = "trending-up";
+      else if (onclick.includes('networth')) iconName = "diamond";
+      else if (onclick.includes('debtplan')) iconName = "credit-card";
+      else if (onclick.includes('resources')) iconName = "search";
+      else if (onclick.includes('guide')) iconName = "book-open";
+      else if (onclick.includes('creditsim')) iconName = "bar-chart-3";
+      else if (onclick.includes('loancalc')) iconName = "calculator";
+      else if (onclick.includes('negotiate')) iconName = "message-circle";
+      else if (onclick.includes('ai')) iconName = "bot";
+      else if (onclick.includes('healthscore')) iconName = "activity";
+      else if (onclick.includes('reports')) iconName = "file-text";
+      else if (onclick.includes('streaks')) iconName = "award";
+      var html = icon(iconName) + spanHtml;
+      if (tile.innerHTML !== html) tile.innerHTML = html;
     });
   }
-  window.fintrailRefreshDesignIcons = refreshIcons;
-  window.addEventListener('load', refreshIcons);
-  document.addEventListener('DOMContentLoaded', refreshIcons);
-  setTimeout(refreshIcons, 250);
+
+  function refreshHeroChips(){
+    var chips = [
+      ["Budget Tracker","bar-chart-3"], ["Savings Goals","target"], ["AI Advisor","bot"],
+      ["Lender Rates","landmark"], ["Bill Schedule","calendar"]
+    ];
+    document.querySelectorAll('.hero-chip').forEach(function(chip, index){
+      var label = cleanLabel(chip.textContent) || (chips[index] && chips[index][0]) || '';
+      var iconName = (chips[index] && chips[index][1]) || pickByText(label);
+      replaceLeadingIcon(chip, iconName, label);
+    });
+  }
+
+  function refreshSavingsGoalIcons(){
+    document.querySelectorAll('.emoji-opt').forEach(function(opt){
+      var value = opt.querySelector('.ft-emoji-value')?.textContent || firstEmoji(opt.textContent);
+      if (!value) return;
+      replaceSingleIcon(opt, savingsGoalIconMap[value] || emojiIconMap[value] || "target", value);
+    });
+    document.querySelectorAll('.goal-card .goal-icon, #goals-grid .goal-icon').forEach(function(el){
+      var value = firstEmoji(el.textContent);
+      if (!value) return;
+      replaceSingleIcon(el, savingsGoalIconMap[value] || emojiIconMap[value] || "target", value);
+    });
+  }
+
+  function refreshResourceIcons(){
+    document.querySelectorAll('.resource-card .rc-header span, .resource-card span[style*="font-size:1.4rem"]').forEach(function(el){
+      var value = firstEmoji(el.textContent);
+      if (!value) return;
+      el.classList.add('ft-resource-icon');
+      replaceSingleIcon(el, emojiIconMap[value] || pickByText(el.closest('.resource-card')?.textContent || ''));
+    });
+  }
+
+  function refreshStreakIcons(){
+    document.querySelectorAll('#tab-streaks h2[data-en][data-es]').forEach(function(h){
+      var label = cleanLabel(h.textContent);
+      var html = icon(pickByText(label)) + ' ' + label;
+      if (h.innerHTML !== html) h.innerHTML = html;
+    });
+    document.querySelectorAll('.sc-icon, .stb-icon, .tip-icon, .report-achievement-emoji').forEach(function(el){
+      var value = firstEmoji(el.textContent);
+      if (!value) return;
+      replaceSingleIcon(el, emojiIconMap[value] || "award");
+    });
+    document.querySelectorAll('.badge-emoji').forEach(function(el, index){
+      var badge = (window.BADGES_DEF && window.BADGES_DEF[index]) || (typeof BADGES_DEF !== 'undefined' ? BADGES_DEF[index] : null);
+      var value = firstEmoji(el.textContent);
+      var iconName = badge ? badgeIconMap[badge.id] : (emojiIconMap[value] || "award");
+      replaceSingleIcon(el, iconName || "award");
+    });
+    document.querySelectorAll('#level-badge, .level-badge, .lrp-badge').forEach(function(el){
+      var value = firstEmoji(el.textContent);
+      if (!value) return;
+      replaceSingleIcon(el, emojiIconMap[value] || "medal");
+    });
+    document.querySelectorAll('.rc-icon').forEach(function(el){
+      var value = firstEmoji(el.textContent);
+      if (!value) return;
+      replaceSingleIcon(el, emojiIconMap[value] || "gift");
+    });
+    document.querySelectorAll('.status-badge-display').forEach(function(el){
+      var value = firstEmoji(el.textContent);
+      if (!value) return;
+      var label = cleanLabel(el.textContent);
+      var html = icon(emojiIconMap[value] || "crown") + '<span>' + label + '</span>';
+      if (el.innerHTML !== html) el.innerHTML = html;
+    });
+  }
+
+  function refreshMembershipIcons(){
+    document.querySelectorAll('#ab-plan-badge, #mobile-plan-badge, .pro-pill, .premium-badge').forEach(function(el){
+      var value = firstEmoji(el.textContent);
+      if (!value) return;
+      var label = cleanLabel(el.textContent);
+      var html = icon(emojiIconMap[value] || "crown") + '<span>' + label + '</span>';
+      if (el.innerHTML !== html) el.innerHTML = html;
+      el.style.display = 'inline-flex';
+      el.style.alignItems = 'center';
+      el.style.gap = '0.35rem';
+    });
+  }
+
+  function refreshFintrailIcons(){
+    refreshNavIcons();
+    refreshHeroChips();
+    refreshSavingsGoalIcons();
+    refreshResourceIcons();
+    refreshStreakIcons();
+    refreshMembershipIcons();
+  }
+
+  var refreshTimer = null;
+  function scheduleIconRefresh(){
+    if (refreshTimer) return;
+    refreshTimer = setTimeout(function(){
+      refreshTimer = null;
+      refreshFintrailIcons();
+    }, 60);
+  }
+
+  window.fintrailRefreshDesignIcons = refreshFintrailIcons;
+  window.fintrailRefreshIconsPhase2 = refreshFintrailIcons;
+
+  [
+    "renderLevelCard",
+    "renderStreaks",
+    "renderBadges",
+    "renderResources",
+    "renderGoals",
+    "renderSavingsGoals",
+    "applyLanguage"
+  ].forEach(function(name){
+    var original = window[name];
+    if (typeof original !== 'function' || original._ftIconWrapped) return;
+    window[name] = function(){
+      var result = original.apply(this, arguments);
+      scheduleIconRefresh();
+      return result;
+    };
+    window[name]._ftIconWrapped = true;
+  });
+
+  document.addEventListener('DOMContentLoaded', function(){
+    refreshFintrailIcons();
+    var observer = new MutationObserver(scheduleIconRefresh);
+    observer.observe(document.body, { childList:true, subtree:true });
+  });
+  window.addEventListener('load', refreshFintrailIcons);
+  setTimeout(refreshFintrailIcons, 250);
+  setTimeout(refreshFintrailIcons, 1000);
 })();
 </script>
 
