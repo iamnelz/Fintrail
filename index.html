@@ -5433,7 +5433,7 @@
           <button class="loan-secondary-btn" onclick="resetLoanPaymentCalculator()" data-en="Reset" data-es="Restablecer">Reset</button>
         </div>
         <div class="tip-bar" style="margin-top:1.25rem">
-          <div class="tip-icon">ℹ️</div>
+          <div class="tip-icon loan-info-icon"></div>
           <p data-en="This calculator provides estimates for educational planning purposes only. Actual loan terms may vary by lender." data-es="Esta calculadora proporciona estimaciones solo para planificación educativa. Los términos reales del préstamo pueden variar según la institución.">This calculator provides estimates for educational planning purposes only. Actual loan terms may vary by lender.</p>
         </div>
       </div>
@@ -9414,7 +9414,7 @@ Guidelines:
     { id: 'reduce_util', icon: '📉', label: 'Reduce Utilization to 30%', labelEs: 'Reducir Utilización al 30%', desc: 'Pay down balances across cards', descEs: 'Baja saldos en tus tarjetas', impact: +25, type: 'positive', detail: 'Keeping utilization under 30% is a key scoring factor.', detailEs: 'Mantener la utilización por debajo del 30% es un factor importante para tu puntaje.' },
     { id: 'on_time_6mo', icon: '✅', label: '6 Months On-Time Payments', labelEs: '6 Meses de Pagos a Tiempo', desc: 'Pay every bill on time', descEs: 'Paga todas tus facturas a tiempo', impact: +30, type: 'positive', detail: 'Payment history is 35% of your score — the most important factor.', detailEs: 'El historial de pagos representa el 35% de tu puntaje — es el factor más importante.' },
     { id: 'on_time_12mo', icon: '🏆', label: '12 Months On-Time Payments', labelEs: '12 Meses de Pagos a Tiempo', desc: 'A full year of perfect payments', descEs: 'Un año completo de pagos perfectos', impact: +55, type: 'positive', detail: 'A year of on-time payments can dramatically rebuild damaged credit.', detailEs: 'Un año de pagos a tiempo puede ayudar mucho a reconstruir un crédito afectado.' },
-    { id: 'new_card', icon: '🆕', label: 'Open New Credit Card', labelEs: 'Abrir Nueva Tarjeta de Crédito', desc: 'Hard inquiry + new account', descEs: 'Consulta dura + cuenta nueva', impact: -10, type: 'negative', detail: 'New accounts lower your average age and create a hard inquiry.', detailEs: 'Las cuentas nuevas reducen la edad promedio de tu crédito y generan una consulta dura.' },
+    { id: 'new_card', icon: '', iconName: 'credit-card-plus', label: 'Open New Credit Card', labelEs: 'Abrir Nueva Tarjeta de Crédito', desc: 'Hard inquiry + new account', descEs: 'Consulta dura + cuenta nueva', impact: -10, type: 'negative', detail: 'New accounts lower your average age and create a hard inquiry.', detailEs: 'Las cuentas nuevas reducen la edad promedio de tu crédito y generan una consulta dura.' },
     { id: 'close_old', icon: '✂️', label: 'Close Old Credit Card', labelEs: 'Cerrar Tarjeta Antigua', desc: 'Reduces available credit & history', descEs: 'Reduce crédito disponible e historial', impact: -20, type: 'negative', detail: 'Closing cards reduces available credit and can shorten credit history.', detailEs: 'Cerrar tarjetas reduce tu crédito disponible y puede acortar tu historial crediticio.' },
     { id: 'miss_payment', icon: '⚠️', label: 'Miss a Payment (30 days)', labelEs: 'Fallar un Pago (30 días)', desc: 'Late payment reported', descEs: 'Pago atrasado reportado', impact: -60, type: 'negative', detail: 'A single missed payment can drop your score significantly and stays for 7 years.', detailEs: 'Un solo pago atrasado puede bajar mucho tu puntaje y permanecer hasta 7 años.' },
     { id: 'collections', icon: '🔴', label: 'Account Goes to Collections', labelEs: 'Cuenta Enviada a Cobranza', desc: 'Unpaid debt sold to collector', descEs: 'Deuda impaga enviada a cobrador', impact: -100, type: 'negative', detail: 'Collections devastate your score and stay on your report for 7 years.', detailEs: 'Las cobranzas pueden dañar mucho tu puntaje y permanecer en tu reporte hasta 7 años.' },
@@ -9439,7 +9439,7 @@ Guidelines:
     container.innerHTML = creditActions.map(a => `
       <div class="action-card ${selectedActions.has(a.id) ? 'selected ' + a.type : ''}" onclick="toggleAction('${a.id}')">
         <div class="ac-left">
-          <span class="ac-icon">${a.icon}</span>
+          <span class="ac-icon" data-credit-action-icon="${a.iconName || ''}">${a.icon}</span>
           <div class="ac-info">
             <h4>${currentLang === 'es' ? a.labelEs : a.label}</h4>
             <p>${currentLang === 'es' ? a.descEs : a.desc}</p>
@@ -9519,9 +9519,13 @@ Guidelines:
 
     if (isPro) {
       el.style.display = 'block';
-      el.textContent = currentLang === 'es'
-        ? '⭐ Pro: simulaciones de crédito ilimitadas'
-        : '⭐ Pro: unlimited credit simulations';
+      el.style.display = 'flex';
+      el.style.alignItems = 'center';
+      el.style.gap = '0.4rem';
+      el.innerHTML = `<span class="credit-sim-pro-icon"></span><span>${currentLang === 'es'
+        ? 'Pro: simulaciones de crédito ilimitadas'
+        : 'Pro: unlimited credit simulations'}</span>`;
+      if (window.fintrailRefreshDesignIcons) window.fintrailRefreshDesignIcons();
       return;
     }
 
@@ -9529,6 +9533,8 @@ Guidelines:
     if (usage.unlimited) return updateCreditSimUsageDisplay();
 
     el.style.display = 'block';
+    el.style.alignItems = '';
+    el.style.gap = '';
     el.textContent = currentLang === 'es'
       ? `${usage.remaining}/${usage.limit} simulaciones gratis restantes este mes`
       : `${usage.remaining}/${usage.limit} free simulations remaining this month`;
@@ -17817,9 +17823,27 @@ window.addEventListener('load', function(){
     vertical-align:-0.18em;
     flex:0 0 auto;
   }
+  .credit-sim-pro-icon {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:18px;
+    height:18px;
+    color:var(--accent);
+    flex:0 0 auto;
+    vertical-align:-0.18em;
+  }
+  .loan-info-icon .ft-lucide-icon,
+  .ac-icon[data-credit-action-icon="credit-card-plus"] .ft-lucide-icon {
+    color:var(--accent);
+  }
   .bill-due-alert-icon .ft-lucide-icon,
   .bill-schedule-empty-icon .ft-lucide-icon,
   .debt-helper-icon .ft-lucide-icon {
+    width:18px;
+    height:18px;
+  }
+  .credit-sim-pro-icon .ft-lucide-icon {
     width:18px;
     height:18px;
   }
@@ -17857,6 +17881,7 @@ window.addEventListener('load', function(){
     "zap": '<path d="M13 2 3 14h8l-1 8 10-12h-8z"/>',
     "crown": '<path d="m3 7 4 4 5-7 5 7 4-4-2 11H5z"/><path d="M5 18h14"/>',
     "credit-card": '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/><path d="M7 15h4"/>',
+    "credit-card-plus": '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/><path d="M7 15h4"/><circle cx="17" cy="16" r="4"/><path d="M17 14v4"/><path d="M15 16h4"/>',
     "trending-up": '<path d="M3 17l6-6 4 4 7-9"/><path d="M14 6h6v6"/>',
     "trending-down": '<path d="M3 7l6 6 4-4 7 9"/><path d="M14 18h6v-6"/>',
     "target-arrow": '<circle cx="12" cy="12" r="8"/><path d="M12 12 21 3"/><path d="M16 3h5v5"/>',
@@ -18283,6 +18308,22 @@ window.addEventListener('load', function(){
     }
   }
 
+  function refreshCreditSimProIcons(){
+    document.querySelectorAll('.credit-sim-pro-icon').forEach(function(el){
+      replaceSingleIcon(el, 'crown');
+    });
+  }
+
+  function refreshLoanAndCreditSimIcons(){
+    document.querySelectorAll('.loan-info-icon').forEach(function(el){
+      replaceSingleIcon(el, 'info');
+    });
+    document.querySelectorAll('.ac-icon[data-credit-action-icon]').forEach(function(el){
+      var iconName = el.getAttribute('data-credit-action-icon');
+      if (iconName) replaceSingleIcon(el, iconName);
+    });
+  }
+
   function refreshGenericEmojiIcons(){
     var iconOnlySelectors = [
       '.tip-icon', '.lg-icon', '.eg-icon', '.dt-icon', '.gi-icon', '.atr-icon',
@@ -18324,6 +18365,8 @@ window.addEventListener('load', function(){
     refreshBillScheduleIcons();
     refreshInvestmentIcons();
     refreshProIcons();
+    refreshCreditSimProIcons();
+    refreshLoanAndCreditSimIcons();
     refreshGenericEmojiIcons();
   }
 
@@ -18355,6 +18398,8 @@ window.addEventListener('load', function(){
     "runPayoffPlan",
     "renderSchedule",
     "setProUI",
+    "updateCreditSimUsageDisplay",
+    "renderActionCards",
     "applyLanguage"
   ].forEach(function(name){
     var original = window[name];
