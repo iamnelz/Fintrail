@@ -5553,7 +5553,7 @@
 
         <!-- BREAKDOWN -->
         <div class="card">
-          <h2 style="font-size:1rem;margin-bottom:1rem" data-en="🧩 Breakdown" data-es="🧩 Desglose">🧩 Breakdown</h2>
+          <h2 id="nw-breakdown-title" style="font-size:1rem;margin-bottom:1rem" data-en="Breakdown" data-es="Desglose">Breakdown</h2>
           <div id="nw-breakdown" style="display:flex;flex-direction:column;gap:0.5rem">
             <div style="text-align:center;color:var(--muted);font-size:0.82rem;padding:1rem">Add assets and liabilities to see your breakdown</div>
           </div>
@@ -18102,6 +18102,19 @@ window.addEventListener('load', function(){
     });
   }
 
+  function refreshNetWorthIcons(){
+    var title = document.getElementById('nw-breakdown-title');
+    if (!title) return;
+    var label = cleanLabel(title.textContent) || (typeof currentLang !== 'undefined' && currentLang === 'es' ? 'Desglose' : 'Breakdown');
+    var html = icon('bar-chart-3') + '<span>' + label + '</span>';
+    if (title.innerHTML !== html) {
+      title.innerHTML = html;
+      title.style.display = 'flex';
+      title.style.alignItems = 'center';
+      title.style.gap = '0.45rem';
+    }
+  }
+
   function refreshGenericEmojiIcons(){
     var iconOnlySelectors = [
       '.tip-icon', '.lg-icon', '.eg-icon', '.dt-icon', '.gi-icon', '.atr-icon',
@@ -18137,6 +18150,7 @@ window.addEventListener('load', function(){
     refreshResourceIcons();
     refreshStreakIcons();
     refreshMembershipIcons();
+    refreshNetWorthIcons();
     refreshGenericEmojiIcons();
   }
 
