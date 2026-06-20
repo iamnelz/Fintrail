@@ -11531,6 +11531,11 @@ Guidelines:
         // Only update direct text nodes (e.g. nav labels with PRO pills)
         // But skip <p> tags with mixed content — handled by data-es-html above
         if (tag === 'p') return;
+        if (/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]\uFE0F?/u.test(translation || '')) {
+          Array.from(el.children).forEach(child => {
+            if (child.classList && child.classList.contains('ft-inline-icon')) child.remove();
+          });
+        }
         el.childNodes.forEach(node => {
           if (node.nodeType === 3 && node.textContent.trim()) {
             node.textContent = translation + ' ';
@@ -18040,6 +18045,9 @@ window.addEventListener('load', function(){
       if (!value) continue;
       var iconName = (map && map[value]) || emojiIconMap[value];
       if (!iconName) continue;
+      Array.from(el.children || []).forEach(function(child){
+        if (child.classList && child.classList.contains('ft-inline-icon')) child.remove();
+      });
       var replacement = iconNode(iconName);
       replacement.classList.add('ft-inline-icon');
       node.textContent = node.textContent.replace(value, '').replace(/^\s+/, ' ');
