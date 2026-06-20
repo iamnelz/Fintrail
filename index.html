@@ -6726,15 +6726,10 @@
         // Sync game data (XP, level, achievements) across devices
         if (data.game_data) {
           const localGame = safeGet('fintrail_game_' + currentUser.id);
-          const localXP = localGame ? (JSON.parse(localGame).totalXP || 0) : 0;
-          const supaXP  = data.game_data.totalXP || 0;
-          // Use whichever has more XP (highest progress wins)
-          if (supaXP >= localXP) {
-            gameData = { ...gameData, ...data.game_data };
-            safeSet('fintrail_game_' + currentUser.id, JSON.stringify(gameData));
-          } else if (data.game_data.creditScore || data.game_data.credit_score) {
-            gameData.creditScore = data.game_data.creditScore || data.game_data.credit_score;
-          }
+          let parsedLocalGame = {};
+          try { parsedLocalGame = localGame ? JSON.parse(localGame) : {}; } catch(e) {}
+          gameData = mergeGameDataProgress(mergeGameDataProgress(gameData, parsedLocalGame), data.game_data);
+          safeSet('fintrail_game_' + currentUser.id, JSON.stringify(gameData));
           if (gameData.creditScore) safeSet('fintrail_credit_score_' + currentUser.id, String(gameData.creditScore));
         }
         if (data.is_pro) {
@@ -6991,11 +6986,12 @@
     const amount = parseFloat(document.getElementById('amount').value);
     const category = document.getElementById('category').value;
     if (!desc || isNaN(amount) || amount <= 0) { alert('Please enter a description and valid amount.'); return; }
-    transactions.push({ id: Date.now(), type: currentType, desc, amount, category });
+    transactions.push({ id: Date.now(), type: currentType, desc, amount, category, date: getLocalDateKey() });
     document.getElementById('desc').value = '';
     document.getElementById('amount').value = '';
     render();
     saveUserData();
+    updateBudgetStreakForToday();
     awardXPForAction('transaction');
   }
 
@@ -9614,6 +9610,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   let gameData = {
     loginStreak: 0,
     lastLogin: null,
+    lastLoginDate: null,
     budgetStreak: 0,
     lastBudgetUpdate: null,
     billStreak: 0,
@@ -10065,7 +10062,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
 
   function loadGameData() {
     const saved = safeGet('fintrail_game_' + (currentUser?.id || 'demo'));
-    if (saved) { try { gameData = { ...gameData, ...JSON.parse(saved) }; } catch(e) {} }
+    if (saved) { try { gameData = mergeGameDataProgress(gameData, JSON.parse(saved)); } catch(e) {} }
     checkLoginStreak();
     checkPendingXP(); // release any XP that's been waiting 48hrs
     renderStreaks();
@@ -10164,18 +10161,98 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     }
   }
 
+  function getLocalDateKey(date = new Date()) {
+    const d = date instanceof Date ? date : new Date(date);
+    if (isNaN(d.getTime())) return null;
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  }
+
+  function parseStreakDateKey(value) {
+    if (!value) return null;
+    const raw = String(value).trim();
+    if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
+    const parsed = new Date(raw);
+    return isNaN(parsed.getTime()) ? null : getLocalDateKey(parsed);
+  }
+
+  function getPreviousLocalDateKey(dateKey) {
+    const d = dateKey ? new Date(dateKey + 'T00:00:00') : new Date();
+    d.setDate(d.getDate() - 1);
+    return getLocalDateKey(d);
+  }
+
+  function compareDateKeys(a, b) {
+    const aa = parseStreakDateKey(a);
+    const bb = parseStreakDateKey(b);
+    if (!aa && !bb) return 0;
+    if (!aa) return -1;
+    if (!bb) return 1;
+    return aa.localeCompare(bb);
+  }
+
+  function mergeGameDataProgress(base = {}, incoming = {}) {
+    const merged = { ...base, ...incoming };
+    const baseLoginDate = parseStreakDateKey(base.lastLoginDate || base.lastLogin);
+    const incomingLoginDate = parseStreakDateKey(incoming.lastLoginDate || incoming.lastLogin);
+    const todayKey = getLocalDateKey();
+    const yesterdayKey = getPreviousLocalDateKey(todayKey);
+    const baseLoginStreak = Number(base.loginStreak || 0);
+    const incomingLoginStreak = Number(incoming.loginStreak || 0);
+    const loginDateCmp = compareDateKeys(incomingLoginDate, baseLoginDate);
+    if (loginDateCmp > 0) {
+      merged.loginStreak = incomingLoginStreak;
+      merged.lastLoginDate = incomingLoginDate;
+    } else if (loginDateCmp < 0) {
+      if (baseLoginDate === todayKey && incomingLoginDate === yesterdayKey && incomingLoginStreak >= baseLoginStreak) {
+        merged.loginStreak = incomingLoginStreak + 1;
+      } else {
+        merged.loginStreak = Math.max(baseLoginStreak, incomingLoginStreak);
+      }
+      merged.lastLoginDate = baseLoginDate;
+    } else {
+      merged.loginStreak = Math.max(baseLoginStreak, incomingLoginStreak);
+      merged.lastLoginDate = incomingLoginDate || baseLoginDate || null;
+    }
+    merged.lastLogin = merged.lastLoginDate;
+
+    const baseBudgetDate = parseStreakDateKey(base.lastBudgetUpdate);
+    const incomingBudgetDate = parseStreakDateKey(incoming.lastBudgetUpdate);
+    const budgetDateCmp = compareDateKeys(incomingBudgetDate, baseBudgetDate);
+    if (budgetDateCmp > 0) {
+      merged.budgetStreak = Number(incoming.budgetStreak || 0);
+      merged.lastBudgetUpdate = incomingBudgetDate;
+    } else if (budgetDateCmp < 0) {
+      merged.budgetStreak = Number(base.budgetStreak || 0);
+      merged.lastBudgetUpdate = baseBudgetDate;
+    } else {
+      merged.budgetStreak = Math.max(Number(base.budgetStreak || 0), Number(incoming.budgetStreak || 0));
+      merged.lastBudgetUpdate = incomingBudgetDate || baseBudgetDate || null;
+    }
+
+    merged.totalXP = Math.max(Number(base.totalXP || 0), Number(incoming.totalXP || 0));
+    merged.earnedBadges = Array.from(new Set([...(base.earnedBadges || []), ...(incoming.earnedBadges || [])]));
+    return merged;
+  }
+
   function checkLoginStreak() {
-    const today = new Date().toDateString();
-    const last = gameData.lastLogin;
+    const today = getLocalDateKey();
+    const yesterday = getPreviousLocalDateKey(today);
+    const last = parseStreakDateKey(gameData.lastLoginDate || gameData.lastLogin);
 
     if (!last) {
       gameData.loginStreak = 1;
+      gameData.lastLoginDate = today;
       gameData.lastLogin = today;
       addXP(25, '🎉 First login! Welcome to Fintrail');
-    } else if (last !== today) {
-      const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
-      if (last === yesterday.toDateString()) {
-        gameData.loginStreak = (gameData.loginStreak || 0) + 1;
+    } else if (last === today) {
+      gameData.lastLoginDate = today;
+      gameData.lastLogin = today;
+    } else {
+      if (last === yesterday) {
+        gameData.loginStreak = Math.max(0, Number(gameData.loginStreak || 0)) + 1;
         clampLoginStreak();
         const xp = Math.min(10 + gameData.loginStreak * 3, 75);
         addXP(xp, `🔥 Day ${gameData.loginStreak} login streak!`);
@@ -10183,12 +10260,31 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
         gameData.loginStreak = 1;
         addXP(10, '👋 Welcome back!');
       }
+      gameData.lastLoginDate = today;
       gameData.lastLogin = today;
     }
 
     // Always normalize after loading old/stale game data.
     clampLoginStreak();
     saveGameData();
+  }
+
+  function updateBudgetStreakForToday() {
+    const today = getLocalDateKey();
+    const yesterday = getPreviousLocalDateKey(today);
+    const last = parseStreakDateKey(gameData.lastBudgetUpdate);
+    if (!last) {
+      gameData.budgetStreak = 1;
+    } else if (last === today) {
+      gameData.budgetStreak = Math.max(1, Number(gameData.budgetStreak || 1));
+    } else if (last === yesterday) {
+      gameData.budgetStreak = Math.max(0, Number(gameData.budgetStreak || 0)) + 1;
+    } else {
+      gameData.budgetStreak = 1;
+    }
+    gameData.lastBudgetUpdate = today;
+    saveGameData();
+    renderStreaks();
   }
 
   function awardXPForAction(action) {
@@ -10308,9 +10404,10 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
 
   function renderStreaks() {
     if (!document.getElementById('streak-cards')) return;
+    const budgetStreakCount = Number(gameData.budgetStreak || 0) || (transactions.length > 0 ? 1 : 0);
     const streaks = [
       { icon: '🔥', label: currentLang==='es'?'Racha de Inicio':'Login Streak', desc: currentLang==='es'?'Inicia sesión diario':'Log in daily', count: gameData.loginStreak || 0, unit: currentLang==='es'?'días':'days' },
-      { icon: '📝', label: currentLang==='es'?'Racha de Presupuesto':'Budget Streak', desc: currentLang==='es'?'Registra transacciones':'Log transactions regularly', count: transactions.length > 0 ? Math.min(gameData.loginStreak || 0, 7) : 0, unit: currentLang==='es'?'días':'days' },
+      { icon: '📝', label: currentLang==='es'?'Racha de Presupuesto':'Budget Streak', desc: currentLang==='es'?'Registra transacciones':'Log transactions regularly', count: budgetStreakCount, unit: currentLang==='es'?'días':'days' },
       { icon: '📅', label: currentLang==='es'?'Facturas Seguidas':'Bills Tracked', desc: currentLang==='es'?'Facturas en el horario':'Bills added to schedule', count: bills.length, unit: currentLang==='es'?'facturas':'bills' },
       { icon: '🎯', label: currentLang==='es'?'Metas Activas':'Goals Active', desc: currentLang==='es'?'Metas de ahorro en progreso':'Savings goals in progress', count: goals.filter(g => g.saved < g.target).length, unit: currentLang==='es'?'metas':'goals' },
     ];
