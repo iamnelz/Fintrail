@@ -16511,6 +16511,14 @@ window.addEventListener('load', function(){
       var snowballBtn = document.getElementById('method-snowball');
       var explanation = document.getElementById('method-explanation');
       var isSnowball = !!(snowballBtn && snowballBtn.classList && snowballBtn.classList.contains('active'));
+      var title = root.querySelector('.planner-card > h2');
+
+      if (title) {
+        var titleText = es ? 'Plan Personalizado de Pago de Deudas' : 'Personalized Debt Payoff Planner';
+        var label = title.querySelector('.ft-stable-inline-text');
+        if (label) label.textContent = titleText;
+        else title.textContent = titleText;
+      }
 
       function setMethodButtonText(btn, text){
         if (!btn) return;
@@ -18438,7 +18446,11 @@ window.addEventListener('load', function(){
     var root = document.getElementById('tab-debtplan');
     if (!root) return;
 
-    setInlineIconLabel(root.querySelector('.planner-card > h2'), 'target');
+    setInlineIconLabel(root.querySelector('.planner-card > h2'), 'target',
+      (typeof currentLang !== 'undefined' && currentLang === 'es')
+        ? 'Plan Personalizado de Pago de Deudas'
+        : 'Personalized Debt Payoff Planner'
+    );
     setInlineIconLabel(root.querySelector('button[onclick="downloadDebtPlanPDF()"]'), 'file-text');
     setInlineIconLabel(document.getElementById('method-avalanche'), 'mountain');
     setInlineIconLabel(document.getElementById('method-snowball'), 'circle-dot');
@@ -18451,11 +18463,9 @@ window.addEventListener('load', function(){
     refreshDebtMethodIcons();
 
     root.querySelectorAll('span').forEach(function(el){
-      if (el.children.length > 0) return;
-      if (el.closest('.ft-stable-inline-icon, .ft-stable-inline-text, .debt-method-title, .debt-method-icon')) return;
       var txt = cleanLabel(el.textContent);
-      if (/^(Focus|Prioridad|Prioridad ahora|Prioridad actual|Enfoque ahora)$/i.test(txt)) {
-        setInlineIconLabel(el, 'target', txt);
+      if (/^(Focus|Prioridad|Prioridad ahora|Prioridad actual|Enfoque ahora)$/i.test(txt) && el.querySelector('.ft-stable-inline-icon, .ft-lucide-icon')) {
+        el.textContent = txt;
       }
     });
 
