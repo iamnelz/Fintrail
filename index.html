@@ -4542,7 +4542,7 @@
       <div class="pw-feature"><span class="pw-check">✓</span> 💬 AI Financial Advisor — unlimited chat</div>
       <div class="pw-feature"><span class="pw-check">✓</span> 🏆 Financial Health Score & tracking</div>
       <div class="pw-feature"><span class="pw-check">✓</span> 🎯 Personalized Debt Payoff Planner</div>
-      <div class="pw-feature"><span class="pw-check">✓</span> 📱 Budget Alerts & Bill Reminders</div>
+      <div class="pw-feature"><span class="pw-check">✓</span> <span class="ft-reference-icon" data-fixed-icon="smartphone-check"></span> Budget Alerts & Bill Reminders</div>
       <div class="pw-feature"><span class="pw-check">✓</span> 📘 Full Credit Score Improvement Guide</div>
       <div class="pw-feature"><span class="pw-check">✓</span> 🏦 Partner Lender Rates & Partner Offers</div>
     </div>
@@ -5016,8 +5016,8 @@
           <button class="suggested-btn" onclick="askSuggested(this)" data-en="Should I pay off debt or invest first?" data-es="¿Debo pagar mi deuda o invertir primero?">Should I pay off debt or invest first?</button>
         </div>
         <div class="card">
-          <h3 data-en="ℹ️ About this Advisor" data-es="ℹ️ Sobre este Asesor">ℹ️ About this Advisor</h3>
-          <p data-en="ℹ️ About this Advisor" data-es="ℹ️ Sobre este Asesor" data-en-html="This AI provides general financial education and guidance. It is not a licensed financial advisor. For personalized advice, consult a certified financial planner (CFP)." data-es-html="Este IA ofrece educación y orientación financiera general. <strong>No es un asesor financiero certificado.</strong> Para consejos personalizados, consulta un planificador financiero certificado (CFP)." style="font-size:0.8rem;color:var(--muted);line-height:1.6;">This AI provides general financial education and guidance. It is not a licensed financial advisor. For personalized advice, consult a certified financial planner (CFP).</p>
+          <h3 class="icon-heading" data-en="About this Advisor" data-es="Sobre este Asesor"><span class="ft-reference-icon" data-fixed-icon="info-square"></span>About this Advisor</h3>
+          <p data-en-html="This AI provides general financial education and guidance. It is not a licensed financial advisor. For personalized advice, consult a certified financial planner (CFP)." data-es-html="Este IA ofrece educación y orientación financiera general. <strong>No es un asesor financiero certificado.</strong> Para consejos personalizados, consulta un planificador financiero certificado (CFP)." style="font-size:0.8rem;color:var(--muted);line-height:1.6;">This AI provides general financial education and guidance. It is not a licensed financial advisor. For personalized advice, consult a certified financial planner (CFP).</p>
         </div>
       </div>
 
@@ -5161,7 +5161,7 @@
 
         <!-- ALERTS -->
         <div class="alerts-card">
-          <h2 data-en="📱 Budget Alerts & Reminders" data-es="📱 Alertas y Recordatorios de Presupuesto">📱 Budget Alerts & Reminders</h2>
+          <h2 class="icon-heading" data-en="Budget Alerts & Reminders" data-es="Alertas y Recordatorios de Presupuesto"><span class="ft-reference-icon" data-fixed-icon="smartphone-check"></span>Budget Alerts & Reminders</h2>
           <p data-en="Get browser notifications for upcoming bills and budget warnings so you never miss a payment." data-es="Recibe notificaciones del navegador sobre próximas facturas y alertas de presupuesto para no perder ningún pago.">Get browser notifications for upcoming bills and budget warnings so you never miss a payment.</p>
 
           <div class="alert-toggle-row">
@@ -6124,7 +6124,7 @@
 
             <!-- EMPTY STATE -->
             <div id="script-empty-state" style="text-align:center;padding:2.5rem 1rem">
-              <div style="font-size:3rem;margin-bottom:1rem">💬</div>
+              <div class="script-empty-icon" data-fixed-icon="message-square-dots"></div>
               <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--text);margin-bottom:0.5rem" data-en="Ready to negotiate?" data-es="¿Lista para negociar?">Ready to negotiate?</div>
               <p style="font-size:0.85rem;color:var(--muted);line-height:1.6" data-en="Fill in your debt details on the left and Claude AI will write a personalized word-for-word script tailored to your situation." data-es="Ingresa los detalles de tu deuda a la izquierda y Claude AI escribirá un guion personalizado palabra por palabra adaptado a tu situación.">Fill in your debt details on the left and Claude AI will write a personalized word-for-word script tailored to your situation.</p>
               <div class="tip-bar" style="margin-top:1.5rem;text-align:left">
@@ -9482,7 +9482,7 @@ Guidelines:
     { id: 'reduce_util', icon: '📉', label: 'Reduce Utilization to 30%', labelEs: 'Reducir Utilización al 30%', desc: 'Pay down balances across cards', descEs: 'Baja saldos en tus tarjetas', impact: +25, type: 'positive', detail: 'Keeping utilization under 30% is a key scoring factor.', detailEs: 'Mantener la utilización por debajo del 30% es un factor importante para tu puntaje.' },
     { id: 'on_time_6mo', icon: '✅', label: '6 Months On-Time Payments', labelEs: '6 Meses de Pagos a Tiempo', desc: 'Pay every bill on time', descEs: 'Paga todas tus facturas a tiempo', impact: +30, type: 'positive', detail: 'Payment history is 35% of your score — the most important factor.', detailEs: 'El historial de pagos representa el 35% de tu puntaje — es el factor más importante.' },
     { id: 'on_time_12mo', icon: '🏆', label: '12 Months On-Time Payments', labelEs: '12 Meses de Pagos a Tiempo', desc: 'A full year of perfect payments', descEs: 'Un año completo de pagos perfectos', impact: +55, type: 'positive', detail: 'A year of on-time payments can dramatically rebuild damaged credit.', detailEs: 'Un año de pagos a tiempo puede ayudar mucho a reconstruir un crédito afectado.' },
-    { id: 'new_card', icon: '', iconName: 'credit-card-plus', label: 'Open New Credit Card', labelEs: 'Abrir Nueva Tarjeta de Crédito', desc: 'Hard inquiry + new account', descEs: 'Consulta dura + cuenta nueva', impact: -10, type: 'negative', detail: 'New accounts lower your average age and create a hard inquiry.', detailEs: 'Las cuentas nuevas reducen la edad promedio de tu crédito y generan una consulta dura.' },
+    { id: 'new_card', icon: '', iconName: 'credit-card-dot', label: 'Open New Credit Card', labelEs: 'Abrir Nueva Tarjeta de Crédito', desc: 'Hard inquiry + new account', descEs: 'Consulta dura + cuenta nueva', impact: -10, type: 'negative', detail: 'New accounts lower your average age and create a hard inquiry.', detailEs: 'Las cuentas nuevas reducen la edad promedio de tu crédito y generan una consulta dura.' },
     { id: 'close_old', icon: '✂️', label: 'Close Old Credit Card', labelEs: 'Cerrar Tarjeta Antigua', desc: 'Reduces available credit & history', descEs: 'Reduce crédito disponible e historial', impact: -20, type: 'negative', detail: 'Closing cards reduces available credit and can shorten credit history.', detailEs: 'Cerrar tarjetas reduce tu crédito disponible y puede acortar tu historial crediticio.' },
     { id: 'miss_payment', icon: '⚠️', label: 'Miss a Payment (30 days)', labelEs: 'Fallar un Pago (30 días)', desc: 'Late payment reported', descEs: 'Pago atrasado reportado', impact: -60, type: 'negative', detail: 'A single missed payment can drop your score significantly and stays for 7 years.', detailEs: 'Un solo pago atrasado puede bajar mucho tu puntaje y permanecer hasta 7 años.' },
     { id: 'collections', icon: '🔴', label: 'Account Goes to Collections', labelEs: 'Cuenta Enviada a Cobranza', desc: 'Unpaid debt sold to collector', descEs: 'Deuda impaga enviada a cobrador', impact: -100, type: 'negative', detail: 'Collections devastate your score and stay on your report for 7 years.', detailEs: 'Las cobranzas pueden dañar mucho tu puntaje y permanecer en tu reporte hasta 7 años.' },
@@ -17964,6 +17964,40 @@ window.addEventListener('load', function(){
   .ac-icon[data-credit-action-icon="credit-card-plus"] .ft-lucide-icon {
     color:var(--accent);
   }
+  .ft-reference-icon,
+  .ac-icon[data-credit-action-icon="credit-card-dot"] .ft-lucide-icon {
+    color:var(--text);
+  }
+  .icon-heading {
+    display:flex;
+    align-items:center;
+    gap:0.45rem;
+  }
+  .ft-reference-icon {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    flex:0 0 auto;
+    width:24px;
+    height:24px;
+  }
+  .ft-reference-icon .ft-lucide-icon {
+    width:100%;
+    height:100%;
+  }
+  .script-empty-icon {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:56px;
+    height:56px;
+    margin-bottom:1rem;
+    color:var(--text);
+  }
+  .script-empty-icon .ft-lucide-icon {
+    width:54px;
+    height:54px;
+  }
   .bill-due-alert-icon .ft-lucide-icon,
   .bill-schedule-empty-icon .ft-lucide-icon,
   .debt-helper-icon .ft-lucide-icon {
@@ -18048,6 +18082,7 @@ window.addEventListener('load', function(){
     "book-open": '<path d="M2 4h7a4 4 0 0 1 4 4v12a3 3 0 0 0-3-3H2z"/><path d="M22 4h-7a4 4 0 0 0-4 4v12a3 3 0 0 1 3-3h8z"/>',
     "calculator": '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M12 11h2M16 11h0M8 15h2M12 15h2M16 15h0"/>',
     "message-circle": '<path d="M21 11.5a8.5 8.5 0 0 1-12.8 7.4L3 21l2.1-5.2A8.5 8.5 0 1 1 21 11.5z"/>',
+    "message-square-dots": '<path d="M21 14a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/>',
     "activity": '<path d="M22 12h-4l-3 8L9 4l-3 8H2"/>',
     "file-text": '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h8M8 9h2"/>',
     "award": '<circle cx="12" cy="8" r="5"/><path d="M8.5 12.5 7 22l5-3 5 3-1.5-9.5"/>',
@@ -18063,6 +18098,9 @@ window.addEventListener('load', function(){
     "heart-pulse": '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/><path d="M3 12h4l2-3 3 6 2-3h7"/>',
     "building": '<path d="M3 21h18"/><path d="M6 21V3h12v18"/><path d="M9 7h1M14 7h1M9 11h1M14 11h1M9 15h1M14 15h1"/>',
     "phone": '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.4 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>',
+    "smartphone-check": '<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/><path d="m10 12 1.5 1.5L14.5 9"/>',
+    "info-square": '<rect x="5" y="3" width="14" height="18" rx="3"/><path d="M12 11v6"/><path d="M12 7h.01"/>',
+    "credit-card-dot": '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/><path d="M7 15h7"/><circle cx="17" cy="15" r="2"/>',
     "clock": '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
     "life-buoy": '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M4.9 4.9 9.2 9.2M14.8 14.8l4.3 4.3M19.1 4.9l-4.3 4.3M9.2 14.8l-4.3 4.3"/>',
     "scale": '<path d="m16 16 3-8 3 8c-.9 1-5.1 1-6 0z"/><path d="m2 16 3-8 3 8c-.9 1-5.1 1-6 0z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 8h18"/>'
@@ -18453,6 +18491,12 @@ window.addEventListener('load', function(){
     });
   }
 
+  function refreshFixedReferenceIcons(){
+    document.querySelectorAll('[data-fixed-icon]').forEach(function(el){
+      replaceSingleIcon(el, el.getAttribute('data-fixed-icon') || 'info');
+    });
+  }
+
   function refreshBillScheduleIcons(){
     document.querySelectorAll('.bill-due-alert-icon').forEach(function(el){
       replaceSingleIcon(el, 'alert-triangle');
@@ -18540,6 +18584,7 @@ window.addEventListener('load', function(){
     refreshNetWorthIcons();
     refreshDebtPlannerIcons();
     refreshPaywallIcons();
+    refreshFixedReferenceIcons();
     refreshBillScheduleIcons();
     refreshInvestmentIcons();
     refreshProIcons();
@@ -18553,7 +18598,7 @@ window.addEventListener('load', function(){
     if (node.nodeType === Node.TEXT_NODE) return !!firstEmoji(node.textContent);
     if (node.nodeType !== Node.ELEMENT_NODE) return false;
     if (node.matches && node.matches('.ft-lucide-icon, .ft-emoji-value, script, style, textarea, input, select')) return false;
-    if (node.matches && node.matches('.emoji-opt, .goal-icon, .gi-icon, .loan-info-icon, .credit-sim-pro-icon, .ac-icon[data-credit-action-icon], .bill-due-alert-icon, .bill-schedule-empty-icon, .debt-helper-icon')) return true;
+    if (node.matches && node.matches('.emoji-opt, .goal-icon, .gi-icon, .loan-info-icon, .credit-sim-pro-icon, .ac-icon[data-credit-action-icon], [data-fixed-icon], .bill-due-alert-icon, .bill-schedule-empty-icon, .debt-helper-icon')) return true;
     return !!firstEmoji(node.textContent || '');
   }
 
