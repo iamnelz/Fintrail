@@ -11486,10 +11486,12 @@ Guidelines:
   function toggleLanguage() {
     currentLang = currentLang === 'en' ? 'es' : 'en';
     safeSet('fintrail_lang', currentLang);
+    window.__fintrailLanguageSwitching = true;
     applyLanguage();
-    if (typeof scheduleLocalizedUIRefresh === 'function') scheduleLocalizedUIRefresh();
-    else if (typeof refreshAllLocalizedUI === 'function') refreshAllLocalizedUI();
+    if (typeof refreshVisibleLocalizedUI === 'function') refreshVisibleLocalizedUI();
+    if (typeof window.fintrailRefreshDesignIcons === 'function') requestAnimationFrame(window.fintrailRefreshDesignIcons);
     if (typeof updateProfileSubscriptionUI === 'function') updateProfileSubscriptionUI();
+    setTimeout(function(){ window.__fintrailLanguageSwitching = false; }, 160);
   }
 
   function applyLanguage() {
@@ -11672,19 +11674,8 @@ Guidelines:
     document.querySelectorAll('[data-en-placeholder]').forEach(el => {
       el.placeholder = el.getAttribute(`data-${currentLang}-placeholder`) || el.getAttribute('data-en-placeholder');
     });
-    // Re-render dynamic content in new language
-    if (typeof render === 'function' && currentUser) render();
-
-
-    // Credit simulator dynamic content
-    if (typeof renderActionCards === 'function' && document.getElementById('action-cards')) {
-      renderActionCards();
-      if (typeof updateSimulator === 'function' && document.getElementById('base-score')) updateSimulator();
-    }
-
     // Save preference
     safeSet('fintrail_lang', currentLang);
-    if (typeof refreshAllLocalizedUI === 'function') refreshAllLocalizedUI({ fromApplyLanguage: true });
   }
 
   function refreshAllLocalizedUI(options = {}) {
@@ -11753,12 +11744,73 @@ Guidelines:
 
   window.refreshAllLocalizedUI = refreshAllLocalizedUI;
 
+  function refreshVisibleLocalizedUI() {
+    const call = (name, args = []) => {
+      try {
+        if (typeof window[name] === 'function') window[name].apply(window, args);
+        else if (typeof globalThis[name] === 'function') globalThis[name].apply(globalThis, args);
+      } catch(e) {}
+    };
+    const active = document.querySelector('.tab-section.visible');
+    const activeId = active ? active.id : '';
+
+    if (activeId === 'tab-budget') {
+      const scheduleVisible = document.getElementById('bsub-schedule')?.classList.contains('visible');
+      if (scheduleVisible) {
+        call('renderBillList');
+        call('renderSchedule');
+      } else {
+        call('renderBudgetChart');
+      }
+    } else if (activeId === 'tab-goals') {
+      call('renderGoals');
+    } else if (activeId === 'tab-networth') {
+      call('renderNWLists');
+      call('renderNWHistory');
+      call('renderNWChart');
+    } else if (activeId === 'tab-invest') {
+      call('calcInvestment');
+    } else if (activeId === 'tab-debtplan') {
+      call('renderDebtList');
+      call('runPayoffPlan');
+    } else if (activeId === 'tab-healthscore') {
+      call('renderHealthScore');
+      call('renderRecommendations');
+    } else if (activeId === 'tab-creditsim') {
+      call('renderActionCards');
+      call('updateSimulator');
+    } else if (activeId === 'tab-reports') {
+      call('renderMonthlyReport');
+    } else if (activeId === 'tab-calendar') {
+      call('renderCalendar');
+    } else if (activeId === 'tab-resources') {
+      call('renderResources');
+    } else if (activeId === 'tab-streaks') {
+      call('renderStreaks');
+      call('renderActivityFeed');
+    } else if (activeId === 'tab-loancalc') {
+      call('refreshLoanPaymentCalculatorLanguage');
+    }
+
+    call('setUserUI', currentUser ? [currentUser] : []);
+    call('setProUI');
+    call('updateProfileSubscriptionUI');
+    call('updateFoundingMemberUI');
+    call('applyFoundingFeedbackLanguage');
+    if (typeof window.fintrailTranslateLooseButtons === 'function') window.fintrailTranslateLooseButtons();
+    if (typeof window.fintrailApplyFinalTranslationPolish === 'function') window.fintrailApplyFinalTranslationPolish();
+    if (typeof window.fintrailApplyEnglishModeCleanup === 'function') window.fintrailApplyEnglishModeCleanup();
+    if (typeof window.fintrailNormalizeDebtEditButtons === 'function') window.fintrailNormalizeDebtEditButtons();
+    if (typeof window.fintrailSavingsGoalCardTrackingLanguage === 'function') window.fintrailSavingsGoalCardTrackingLanguage();
+    if (typeof window.fintrailPhase3Localization === 'function') window.fintrailPhase3Localization();
+  }
+
+  window.refreshVisibleLocalizedUI = refreshVisibleLocalizedUI;
+
   function scheduleLocalizedUIRefresh() {
     if (typeof refreshAllLocalizedUI !== 'function') return;
-    refreshAllLocalizedUI();
-    setTimeout(refreshAllLocalizedUI, 80);
-    setTimeout(refreshAllLocalizedUI, 250);
-    setTimeout(refreshAllLocalizedUI, 700);
+    if (typeof refreshVisibleLocalizedUI === 'function') refreshVisibleLocalizedUI();
+    else refreshAllLocalizedUI();
   }
 
   window.scheduleLocalizedUIRefresh = scheduleLocalizedUIRefresh;
@@ -18378,6 +18430,22 @@ window.addEventListener('load', function(){
     refreshGenericEmojiIcons();
   }
 
+  function nodeNeedsIconRefresh(node){
+    if (!node) return false;
+    if (node.nodeType === Node.TEXT_NODE) return !!firstEmoji(node.textContent);
+    if (node.nodeType !== Node.ELEMENT_NODE) return false;
+    if (node.matches && node.matches('.ft-lucide-icon, .ft-emoji-value, script, style, textarea, input, select')) return false;
+    if (node.matches && node.matches('.emoji-opt, .goal-icon, .gi-icon, .loan-info-icon, .credit-sim-pro-icon, .ac-icon[data-credit-action-icon], .bill-due-alert-icon, .bill-schedule-empty-icon, .debt-helper-icon')) return true;
+    return !!firstEmoji(node.textContent || '');
+  }
+
+  function mutationsNeedIconRefresh(mutations){
+    return Array.from(mutations || []).some(function(mutation){
+      if (mutation.type === 'characterData') return nodeNeedsIconRefresh(mutation.target);
+      return Array.from(mutation.addedNodes || []).some(nodeNeedsIconRefresh);
+    });
+  }
+
   var refreshTimer = null;
   function scheduleIconRefresh(){
     if (refreshTimer) return;
@@ -18422,7 +18490,9 @@ window.addEventListener('load', function(){
 
   document.addEventListener('DOMContentLoaded', function(){
     refreshFintrailIcons();
-    var observer = new MutationObserver(scheduleIconRefresh);
+    var observer = new MutationObserver(function(mutations){
+      if (mutationsNeedIconRefresh(mutations)) scheduleIconRefresh();
+    });
     observer.observe(document.body, { childList:true, subtree:true });
   });
   window.addEventListener('load', refreshFintrailIcons);
