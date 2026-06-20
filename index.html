@@ -6504,8 +6504,7 @@
     const name = user.user_metadata?.full_name || user.email.split('@')[0];
     const btn = document.getElementById('mobile-profile-btn');
     if (btn) btn.textContent = name.charAt(0).toUpperCase();
-    document.getElementById('ab-status').textContent = `${name} · Free Plan`;
-    document.getElementById('ab-status').title = user.email;
+    setAccountBannerStatus(`${name} · Free Plan`, user.email, 'user');
     if (isPro) setProUI();
 
     // Update mobile account strip
@@ -6517,8 +6516,36 @@
     if (mobileAvatar) mobileAvatar.textContent = initial;
     if (mobileUserName) mobileUserName.textContent = name;
     if (mobileUserPlan) mobileUserPlan.textContent = user.email;
-    if (mobilePlanBadge) mobilePlanBadge.textContent = isPro ? '⭐ PRO' : 'FREE';
+    if (mobilePlanBadge) mobilePlanBadge.textContent = isPro ? 'PRO' : 'FREE';
     if (typeof updateFoundingMemberUI === 'function') updateFoundingMemberUI();
+  }
+
+  function setAccountBannerStatus(text, title, iconName) {
+    const statusEl = document.getElementById('ab-status');
+    if (!statusEl) return;
+    statusEl.title = title || '';
+    statusEl.style.display = 'inline-flex';
+    statusEl.style.alignItems = 'center';
+    statusEl.style.gap = '0.4rem';
+
+    let iconEl = statusEl.querySelector(':scope > .account-status-icon');
+    let textEl = statusEl.querySelector(':scope > .account-status-text');
+
+    if (!iconEl || !textEl) {
+      statusEl.textContent = '';
+      iconEl = document.createElement('span');
+      iconEl.className = 'account-status-icon';
+      textEl = document.createElement('span');
+      textEl.className = 'account-status-text';
+      statusEl.appendChild(iconEl);
+      statusEl.appendChild(textEl);
+    }
+    iconEl.setAttribute('data-account-status-icon', iconName || 'user');
+    if (textEl.textContent !== text) textEl.textContent = text;
+
+    if (typeof window.fintrailRefreshAccountBannerIcons === 'function') {
+      window.fintrailRefreshAccountBannerIcons();
+    }
   }
 
   // SIGN IN
@@ -6673,16 +6700,16 @@
 
     if (isPro) {
       bar.classList.add('premium');
-      badge.textContent = `${level.badge} ${level.name}`;
+      badge.textContent = `${level.name}`;
       badge.classList.add('premium-plan');
-      statusEl.textContent = `${currentLang === 'es' ? 'Plan Pro' : 'Pro Plan'}${statusTitle ? ' · ' + statusTitle : ''} · ${currentUser?.email || ''}`;
+      setAccountBannerStatus(`${currentLang === 'es' ? 'Plan Pro' : 'Pro Plan'}${statusTitle ? ' · ' + statusTitle : ''} · ${currentUser?.email || ''}`, currentUser?.email || '', 'crown');
       actionBtn.textContent = currentLang === 'es' ? 'Administrar Suscripción' : 'Manage Subscription';
       actionBtn.onclick = cancelSubscription;
     } else {
       bar.classList.remove('premium');
-      badge.textContent = `${level.badge} ${level.name}`;
+      badge.textContent = `${level.name}`;
       badge.classList.remove('premium-plan');
-      statusEl.textContent = `${currentUser?.user_metadata?.full_name || currentUser?.email?.split('@')[0] || 'User'} · Free Plan`;
+      setAccountBannerStatus(`${currentUser?.user_metadata?.full_name || currentUser?.email?.split('@')[0] || 'User'} · Free Plan`, currentUser?.email || '', 'user');
       actionBtn.textContent = 'Upgrade to Pro →';
       actionBtn.onclick = () => showPaywall('bar');
     }
@@ -6690,7 +6717,7 @@
     // Update mobile plan badge
     const mobilePlanBadge = document.getElementById('mobile-plan-badge');
     if (mobilePlanBadge) {
-      mobilePlanBadge.textContent = isPro ? '⭐ PRO' : 'FREE';
+      mobilePlanBadge.textContent = isPro ? 'PRO' : 'FREE';
       mobilePlanBadge.style.background = isPro ? 'linear-gradient(135deg,#b8860b,#e9c46a)' : 'var(--surface2)';
       mobilePlanBadge.style.color = isPro ? '#1a1a0f' : 'var(--muted)';
     }
@@ -8448,13 +8475,52 @@ Guidelines:
     payoffMethod = method;
     document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    const explanation = document.getElementById('method-explanation');
-    if (method === 'avalanche') {
-      explanation.innerHTML = '<strong style="color:var(--text)">Método Avalancha:</strong> Paga los pagos mínimos en todas las deudas y destina todo el dinero adicional a la deuda con la tasa de interés más alta primero. Matemáticamente es el método que más dinero ahorra en intereses.';
-    } else {
-      explanation.innerHTML = '<strong style="color:var(--text)">Snowball Method:</strong> Pay minimums on all debts, then put ALL extra money toward the <strong>smallest balance</strong> debt first. Gives you quick wins and motivation to keep going.';
-    }
+    setDebtMethodExplanation(method);
     runPayoffPlan();
+  }
+
+  function setDebtMethodExplanation(method) {
+    const explanation = document.getElementById('method-explanation');
+    if (!explanation) return;
+    const isEs = currentLang === 'es';
+    const isSnowball = method === 'snowball';
+    const iconName = isSnowball ? 'circle-dot' : 'mountain';
+    const title = isSnowball
+      ? (isEs ? 'Método Bola de Nieve:' : 'Snowball Method:')
+      : (isEs ? 'Método Avalancha:' : 'Avalanche Method:');
+    const body = isSnowball
+      ? (isEs
+        ? 'Paga los mínimos en todas tus deudas y destina TODO el dinero extra a la deuda con el saldo más pequeño primero. Te brinda victorias rápidas y motivación para seguir avanzando.'
+        : 'Pay minimums on all debts, then put ALL extra money toward the smallest balance debt first. Gives you quick wins and motivation to keep going.')
+      : (isEs
+        ? 'Paga los mínimos en todas tus deudas y destina TODO el dinero extra a la deuda con la tasa de interés más alta primero. Matemáticamente, es el método que más dinero ahorra en intereses.'
+        : 'Pay minimums on all debts, then put ALL extra money toward the highest interest debt first. Mathematically, this method saves the most money on interest.');
+
+    let titleEl = explanation.querySelector(':scope > .debt-method-title');
+    let bodyEl = explanation.querySelector(':scope > .debt-method-body');
+    if (!titleEl || !bodyEl) {
+      explanation.textContent = '';
+      titleEl = document.createElement('strong');
+      titleEl.className = 'debt-method-title';
+      titleEl.style.color = 'var(--text)';
+      titleEl.style.display = 'inline-flex';
+      titleEl.style.alignItems = 'center';
+      titleEl.style.gap = '0.4rem';
+      titleEl.innerHTML = '<span class="debt-method-icon"></span><span class="debt-method-title-text"></span>';
+      bodyEl = document.createElement('span');
+      bodyEl.className = 'debt-method-body';
+      explanation.appendChild(titleEl);
+      explanation.appendChild(document.createTextNode(' '));
+      explanation.appendChild(bodyEl);
+    }
+    const iconEl = titleEl.querySelector('.debt-method-icon');
+    const titleTextEl = titleEl.querySelector('.debt-method-title-text');
+    if (iconEl) iconEl.setAttribute('data-debt-method-icon', iconName);
+    if (titleTextEl && titleTextEl.textContent !== title) titleTextEl.textContent = title;
+    if (bodyEl.textContent !== body) bodyEl.textContent = body;
+    if (typeof window.fintrailRefreshDebtMethodIcons === 'function') {
+      window.fintrailRefreshDebtMethodIcons();
+    }
   }
 
   function addDebt() {
@@ -11771,6 +11837,7 @@ Guidelines:
     } else if (activeId === 'tab-invest') {
       call('calcInvestment');
     } else if (activeId === 'tab-debtplan') {
+      call('setDebtMethodExplanation', [payoffMethod || 'avalanche']);
       call('renderDebtList');
       call('runPayoffPlan');
     } else if (activeId === 'tab-healthscore') {
@@ -16443,18 +16510,19 @@ window.addEventListener('load', function(){
       var explanation = document.getElementById('method-explanation');
       var isSnowball = !!(snowballBtn && snowballBtn.classList && snowballBtn.classList.contains('active'));
 
-      if (avalancheBtn) avalancheBtn.textContent = es ? 'Método Avalancha — Ahorra Más' : 'Avalanche — Save Most Money';
-      if (snowballBtn) snowballBtn.textContent = es ? 'Método Bola de Nieve — Victorias Rápidas' : 'Snowball — Quick Wins First';
+      function setMethodButtonText(btn, text){
+        if (!btn) return;
+        var label = btn.querySelector('.ft-stable-inline-text');
+        if (label) label.textContent = text;
+        else btn.textContent = text;
+      }
+
+      setMethodButtonText(avalancheBtn, es ? 'Método Avalancha — Ahorra Más' : 'Avalanche — Save Most Money');
+      setMethodButtonText(snowballBtn, es ? 'Método Bola de Nieve — Victorias Rápidas' : 'Snowball — Quick Wins First');
 
       if (explanation) {
-        if (isSnowball) {
-          explanation.innerHTML = es
-            ? '<strong style="color:var(--text)">Método Bola de Nieve:</strong> ' + snowballEs
-            : '<strong style="color:var(--text)">Snowball Method:</strong> ' + snowballEn;
-        } else {
-          explanation.innerHTML = es
-            ? '<strong style="color:var(--text)">Método Avalancha:</strong> ' + avalancheEs
-            : '<strong style="color:var(--text)">Avalanche Method:</strong> Pay minimums on all debts, then put ALL extra money toward the <strong>highest interest rate</strong> debt first. Mathematically saves the most money in interest.';
+        if (typeof setDebtMethodExplanation === 'function') {
+          setDebtMethodExplanation(isSnowball ? 'snowball' : 'avalanche');
         }
       }
 
@@ -17904,6 +17972,21 @@ window.addEventListener('load', function(){
     width:18px;
     height:18px;
   }
+  .account-status-icon,
+  .debt-method-icon {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:18px;
+    height:18px;
+    color:var(--accent);
+    flex:0 0 auto;
+  }
+  .account-status-icon .ft-lucide-icon,
+  .debt-method-icon .ft-lucide-icon {
+    width:18px;
+    height:18px;
+  }
   .debt-helper-text {
     display:flex;
     align-items:flex-start;
@@ -18123,8 +18206,20 @@ window.addEventListener('load', function(){
   function setInlineIconLabel(el, iconName, label){
     if (!el) return;
     var text = label || cleanLabel(el.textContent);
-    var html = icon(iconName) + '<span>' + text + '</span>';
-    if (el.innerHTML !== html) el.innerHTML = html;
+    var iconEl = el.querySelector(':scope > .ft-stable-inline-icon');
+    var textEl = el.querySelector(':scope > .ft-stable-inline-text');
+    if (!iconEl || !textEl) {
+      el.textContent = '';
+      iconEl = document.createElement('span');
+      iconEl.className = 'ft-stable-inline-icon';
+      textEl = document.createElement('span');
+      textEl.className = 'ft-stable-inline-text';
+      el.appendChild(iconEl);
+      el.appendChild(textEl);
+    }
+    iconEl.setAttribute('data-ft-stable-icon', iconName);
+    replaceSingleIcon(iconEl, iconName);
+    if (textEl.textContent !== text) textEl.textContent = text;
     el.style.display = 'inline-flex';
     el.style.alignItems = 'center';
     el.style.gap = '0.4rem';
@@ -18274,6 +18369,12 @@ window.addEventListener('load', function(){
     });
   }
 
+  function refreshAccountBannerIcons(){
+    document.querySelectorAll('.account-status-icon[data-account-status-icon]').forEach(function(el){
+      replaceSingleIcon(el, el.getAttribute('data-account-status-icon') || 'user');
+    });
+  }
+
   function refreshNetWorthIcons(){
     var title = document.getElementById('nw-breakdown-title');
     if (!title) return;
@@ -18301,11 +18402,7 @@ window.addEventListener('load', function(){
       replaceSingleIcon(el, 'info');
     });
 
-    var explanationStrong = root.querySelector('#method-explanation strong');
-    if (explanationStrong) {
-      var explanationText = cleanLabel(explanationStrong.textContent);
-      setInlineIconLabel(explanationStrong, /snowball|bola/i.test(explanationText) ? 'circle-dot' : 'mountain', explanationText);
-    }
+    refreshDebtMethodIcons();
 
     root.querySelectorAll('span').forEach(function(el){
       var txt = cleanLabel(el.textContent);
@@ -18332,6 +18429,12 @@ window.addEventListener('load', function(){
       var timelineText = cleanLabel(timelineTitle.textContent);
       setInlineIconLabel(timelineTitle, /snowball|bola/i.test(timelineText) ? 'circle-dot' : 'mountain', timelineText);
     }
+  }
+
+  function refreshDebtMethodIcons(){
+    document.querySelectorAll('.debt-method-icon[data-debt-method-icon]').forEach(function(el){
+      replaceSingleIcon(el, el.getAttribute('data-debt-method-icon') || 'mountain');
+    });
   }
 
   function refreshBillScheduleIcons(){
@@ -18362,10 +18465,7 @@ window.addEventListener('load', function(){
       btn.style.alignItems = 'center';
       btn.style.gap = '0.4rem';
     });
-    var statusEl = document.getElementById('ab-status');
-    if (statusEl && /Pro Plan|Plan Pro/.test(cleanLabel(statusEl.textContent))) {
-      setInlineIconLabel(statusEl, 'crown', cleanLabel(statusEl.textContent));
-    }
+    refreshAccountBannerIcons();
   }
 
   function refreshCreditSimProIcons(){
@@ -18457,6 +18557,8 @@ window.addEventListener('load', function(){
 
   window.fintrailRefreshDesignIcons = refreshFintrailIcons;
   window.fintrailRefreshIconsPhase2 = refreshFintrailIcons;
+  window.fintrailRefreshAccountBannerIcons = refreshAccountBannerIcons;
+  window.fintrailRefreshDebtMethodIcons = refreshDebtMethodIcons;
 
   [
     "renderLevelCard",
