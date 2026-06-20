@@ -1340,6 +1340,7 @@
   .score-breakdown { display:flex; flex-direction:column; gap:0.6rem; margin-top:1.25rem; text-align:left; }
   .sb-row { display:flex; align-items:center; justify-content:space-between; gap:0.75rem; }
   .sb-row-left { display:flex; align-items:center; gap:0.5rem; font-size:0.82rem; color:var(--text-soft); }
+  .sb-row-left .ft-reference-icon { width:18px; height:18px; color:var(--accent); stroke:var(--accent); flex-shrink:0; }
   .sb-bar-track { flex:1; height:6px; background:var(--border); border-radius:3px; overflow:hidden; }
   .sb-bar-fill { height:100%; border-radius:3px; transition:width 0.8s ease; }
   .sb-score { font-size:0.78rem; font-weight:700; width:32px; text-align:right; }
@@ -1379,7 +1380,8 @@
   .alerts-card p { font-size:0.82rem; color:var(--text-soft); margin-bottom:1.25rem; line-height:1.6; }
   .alert-toggle-row { display:flex; align-items:center; justify-content:space-between; padding:0.85rem 1rem; background:var(--bg); border-radius:10px; margin-bottom:0.6rem; border:1px solid var(--border); }
   .atr-left { display:flex; align-items:center; gap:0.65rem; }
-  .atr-icon { font-size:1.1rem; }
+  .atr-icon { font-size:1.1rem; display:inline-flex; align-items:center; justify-content:center; color:var(--accent); }
+  .atr-icon .ft-reference-icon { width:20px; height:20px; color:var(--accent); stroke:var(--accent); }
   .atr-info h4 { font-size:0.875rem; font-weight:600; color:var(--text); }
   .atr-info p { font-size:0.75rem; color:var(--muted); margin-top:0.1rem; }
   .toggle-switch { position:relative; width:40px; height:22px; flex-shrink:0; }
@@ -4989,7 +4991,7 @@
 
     <div id="premium-tab-gate" style="display:none">
       <div class="lock-gate">
-        <div class="lg-icon">🏆</div>
+        <div class="lg-icon" data-fixed-icon="activity"></div>
         <h3>Financial Health Score <span class="premium-badge">PRO</span></h3>
         <p>Unlock your Financial Health Score and smart Budget Alerts.</p>
         <button class="lock-gate-btn" onclick="showPaywall('premium')">Unlock with Pro — $4.99/mo</button>
@@ -5004,7 +5006,7 @@
 
         <!-- FINANCIAL HEALTH SCORE -->
         <div class="health-score-card">
-          <h2 data-en="🏆 Financial Health Score" data-es="🏆 Puntaje de Salud Financiera">🏆 Financial Health Score</h2>
+          <h2 class="icon-heading" data-en="Financial Health Score" data-es="Puntaje de Salud Financiera"><span class="ft-reference-icon" data-fixed-icon="activity"></span>Financial Health Score</h2>
           <div class="score-gauge">
             <svg viewBox="0 0 200 110" width="100%">
               <path class="gauge-bg" d="M20,100 A80,80 0 0,1 180,100"/>
@@ -5027,7 +5029,7 @@
 
           <div class="alert-toggle-row">
             <div class="atr-left">
-              <span class="atr-icon">📅</span>
+              <span class="atr-icon"><span class="ft-reference-icon" data-fixed-icon="calendar-check"></span></span>
               <div class="atr-info">
                 <h4 data-en="Upcoming Bill Reminders" data-es="Recordatorios de Facturas">Upcoming Bill Reminders</h4>
                 <p data-en="3 days before each bill is due" data-es="3 días antes del vencimiento">3 days before each bill is due</p>
@@ -5041,7 +5043,7 @@
 
           <div class="alert-toggle-row">
             <div class="atr-left">
-              <span class="atr-icon">⚠️</span>
+              <span class="atr-icon"><span class="ft-reference-icon" data-fixed-icon="alert-triangle"></span></span>
               <div class="atr-info">
                 <h4 data-en="Overspending Warnings" data-es="Alertas de Gastos">Overspending Warnings</h4>
                 <p data-en="When expenses exceed income" data-es="Cuando los gastos superan los ingresos">When expenses exceed income</p>
@@ -5055,7 +5057,7 @@
 
           <div class="alert-toggle-row">
             <div class="atr-left">
-              <span class="atr-icon">🎯</span>
+              <span class="atr-icon"><span class="ft-reference-icon" data-fixed-icon="target"></span></span>
               <div class="atr-info">
                 <h4 data-en="Savings Goal Milestones" data-es="Hitos de Metas de Ahorro">Savings Goal Milestones</h4>
                 <p data-en="When you hit 25%, 50%, 75%, 100%" data-es="Al alcanzar 25%, 50%, 75%, 100%">When you hit 25%, 50%, 75%, 100%</p>
@@ -5069,7 +5071,7 @@
 
           <div class="alert-toggle-row">
             <div class="atr-left">
-              <span class="atr-icon">💰</span>
+              <span class="atr-icon"><span class="ft-reference-icon" data-fixed-icon="wallet"></span></span>
               <div class="atr-info">
                 <h4 data-en="Payday Reminders" data-es="Recordatorios de Pago">Payday Reminders</h4>
                 <p data-en="Reminder to log income on payday" data-es="Recuerda registrar ingresos en día de pago">Reminder to log income on payday</p>
@@ -5082,7 +5084,7 @@
           </div>
 
           <div id="notif-status" class="notif-status pending" data-en="Click below to enable browser notifications" data-es="Haz clic abajo para activar notificaciones">Click below to enable browser notifications</div>
-          <button class="alert-test-btn" onclick="requestNotifications()" data-en="🔔 Enable Notifications" data-es="🔔 Activar Notificaciones">🔔 Enable Notifications</button>
+          <button class="alert-test-btn" onclick="requestNotifications()" data-en="Enable Notifications" data-es="Activar Notificaciones">Enable Notifications</button>
           <button class="alert-test-btn" style="margin-top:0.5rem" onclick="sendTestNotification()" data-en="Test Notification" data-es="Probar Notificación">Test Notification</button>
         </div>
 
@@ -5091,7 +5093,7 @@
 
 
       <div class="tip-bar" style="margin-top:0">
-        <div class="tip-icon">🏆</div>
+        <div class="tip-icon" data-fixed-icon="activity"></div>
         <p data-en-html="<strong>Your score updates automatically</strong> as you add transactions, bills, and savings goals. The higher your score, the better your financial health — aim for <strong>80+</strong> to qualify for the best loan rates!" data-es-html="<strong>Tu puntaje se actualiza automáticamente</strong> al agregar transacciones, facturas y metas de ahorro. Mientras más alto sea tu puntaje, mejor será tu salud financiera — apunta a <strong>80+</strong> para calificar para mejores tasas de préstamo."><strong>Your score updates automatically</strong> as you add transactions, bills, and savings goals. The higher your score, the better your financial health — aim for <strong>80+</strong> to qualify for the best loan rates!</p>
       </div>
 
@@ -6730,6 +6732,7 @@
           try { parsedLocalGame = localGame ? JSON.parse(localGame) : {}; } catch(e) {}
           gameData = mergeGameDataProgress(mergeGameDataProgress(gameData, parsedLocalGame), data.game_data);
           safeSet('fintrail_game_' + currentUser.id, JSON.stringify(gameData));
+          if (typeof loadAlertPrefs === 'function') loadAlertPrefs();
           if (gameData.creditScore) safeSet('fintrail_credit_score_' + currentUser.id, String(gameData.creditScore));
         }
         if (data.is_pro) {
@@ -7846,6 +7849,7 @@ Guidelines:
   // =============================================
   function calculateHealthScore() {
     if (!document.getElementById('gauge-fill')) return;
+    if (typeof applyAlertPrefsToUI === 'function') applyAlertPrefsToUI();
     const income = transactions.filter(t => t.type === 'income').reduce((s,t) => s+t.amount, 0);
     const expenses = transactions.filter(t => t.type === 'expense').reduce((s,t) => s+t.amount, 0);
     const balance = income - expenses;
@@ -7872,30 +7876,38 @@ Guidelines:
 
     let label;
     if (currentLang === 'es') {
-      label = total >= 80 ? 'Excelente 🌟' : total >= 65 ? 'Bueno 👍' : total >= 50 ? 'Regular ⚡' : 'Necesita Mejorar 💪';
+      label = total >= 80 ? 'Excelente' : total >= 65 ? 'Bueno' : total >= 50 ? 'Regular' : 'Necesita Mejorar';
     } else {
-      label = total >= 80 ? 'Excellent 🌟' : total >= 65 ? 'Good 👍' : total >= 50 ? 'Fair ⚡' : 'Needs Work 💪';
+      label = total >= 80 ? 'Excellent' : total >= 65 ? 'Good' : total >= 50 ? 'Fair' : 'Needs Work';
     }
     document.getElementById('health-score-label').textContent = label;
 
     const breakdown = document.getElementById('score-breakdown');
     const items = [
-      { label: currentLang==='es' ? '💰 Balance de Presupuesto' : '💰 Budget Balance', score: budgetScore, max: 25, color: '#00b894' },
-      { label: currentLang==='es' ? '🎯 Progreso de Ahorros' : '🎯 Savings Progress', score: savingsScore, max: 25, color: '#f5a623' },
-      { label: currentLang==='es' ? '💳 Carga de Deuda' : '💳 Debt Load', score: debtScore, max: 25, color: '#f05555' },
-      { label: currentLang==='es' ? '📅 Seguimiento de Facturas' : '📅 Bill Tracking', score: billScore, max: 25, color: '#818cf8' },
+      { icon: 'wallet', label: currentLang==='es' ? 'Balance de Presupuesto' : 'Budget Balance', score: budgetScore, max: 25, color: '#00b894' },
+      { icon: 'target', label: currentLang==='es' ? 'Progreso de Ahorros' : 'Savings Progress', score: savingsScore, max: 25, color: '#f5a623' },
+      { icon: 'credit-card', label: currentLang==='es' ? 'Carga de Deuda' : 'Debt Load', score: debtScore, max: 25, color: '#f05555' },
+      { icon: 'calendar-check', label: currentLang==='es' ? 'Seguimiento de Facturas' : 'Bill Tracking', score: billScore, max: 25, color: '#818cf8' },
     ];
     breakdown.innerHTML = items.map(item => `
       <div class="sb-row">
-        <div class="sb-row-left">${item.label}</div>
+        <div class="sb-row-left"><span class="ft-reference-icon" data-fixed-icon="${item.icon}"></span><span>${item.label}</span></div>
         <div class="sb-bar-track"><div class="sb-bar-fill" style="width:${(item.score/item.max)*100}%;background:${item.color}"></div></div>
         <div class="sb-score" style="color:${item.color}">${item.score}</div>
       </div>`).join('');
+    if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
 
     // Check goal milestone alerts
     if (alertPrefs.goals) checkGoalMilestones();
     // Check budget alert
-    if (alertPrefs.budget && balance < 0) sendAlert('⚠️ Budget Warning', `You're $${Math.abs(balance).toFixed(2)} over budget this month!`);
+    if (alertPrefs.budget && balance < 0) {
+      sendAlert(
+        currentLang === 'es' ? 'Alerta de presupuesto' : 'Budget Warning',
+        currentLang === 'es'
+          ? `Estás $${Math.abs(balance).toFixed(2)} por encima de tu presupuesto este mes.`
+          : `You're $${Math.abs(balance).toFixed(2)} over budget this month.`
+      );
+    }
   }
 
   // =============================================
@@ -8378,47 +8390,105 @@ Guidelines:
   // =============================================
   // ALERTS & NOTIFICATIONS
   // =============================================
-  let alertPrefs = { bills: false, budget: false, goals: false, payday: false };
+  function getDefaultAlertPrefs() {
+    return { bills: false, budget: false, goals: false, payday: false };
+  }
+
+  function normalizeAlertPrefs(prefs = {}) {
+    return {
+      ...getDefaultAlertPrefs(),
+      bills: !!prefs.bills,
+      budget: !!prefs.budget,
+      goals: !!prefs.goals,
+      payday: !!prefs.payday
+    };
+  }
+
+  let alertPrefs = normalizeAlertPrefs();
   let notifPermission = 'default';
 
+  function getAlertPrefsStorageKey() {
+    return 'fintrail_alert_prefs_' + (currentUser?.id || 'demo');
+  }
+
+  function applyAlertPrefsToUI() {
+    const pairs = [
+      ['alert-bills', 'bills'],
+      ['alert-budget', 'budget'],
+      ['alert-goals', 'goals'],
+      ['alert-payday', 'payday']
+    ];
+    pairs.forEach(([id, key]) => {
+      const el = document.getElementById(id);
+      if (el) el.checked = !!alertPrefs[key];
+    });
+  }
+
+  function loadAlertPrefs() {
+    let storedPrefs = {};
+    try {
+      const raw = safeGet(getAlertPrefsStorageKey());
+      storedPrefs = raw ? JSON.parse(raw) : {};
+    } catch(e) {
+      storedPrefs = {};
+    }
+    const syncedPrefs = gameData?.alertPrefs || {};
+    alertPrefs = normalizeAlertPrefs({ ...storedPrefs, ...syncedPrefs });
+    if (gameData) gameData.alertPrefs = alertPrefs;
+    if ('Notification' in window) notifPermission = Notification.permission;
+    applyAlertPrefsToUI();
+  }
+
   function saveAlertPrefs() {
-    alertPrefs.bills = document.getElementById('alert-bills').checked;
-    alertPrefs.budget = document.getElementById('alert-budget').checked;
-    alertPrefs.goals = document.getElementById('alert-goals').checked;
-    alertPrefs.payday = document.getElementById('alert-payday').checked;
+    alertPrefs = normalizeAlertPrefs({
+      bills: document.getElementById('alert-bills')?.checked,
+      budget: document.getElementById('alert-budget')?.checked,
+      goals: document.getElementById('alert-goals')?.checked,
+      payday: document.getElementById('alert-payday')?.checked
+    });
+    if (gameData) gameData.alertPrefs = alertPrefs;
+    safeSet(getAlertPrefsStorageKey(), JSON.stringify(alertPrefs));
+    saveGameData();
   }
 
   async function requestNotifications() {
     if (!('Notification' in window)) {
-      updateNotifStatus('denied', '❌ Notifications not supported in this browser');
+      updateNotifStatus('denied', currentLang === 'es' ? 'Las notificaciones no son compatibles con este navegador.' : 'Notifications are not supported on this browser.');
       return;
     }
     const permission = await Notification.requestPermission();
     notifPermission = permission;
     if (permission === 'granted') {
-      updateNotifStatus('granted', '✅ Notifications enabled! You\'ll receive Fintrail alerts.');
-      sendAlert('🎉 Fintrail Alerts Active', 'You\'ll now receive bill reminders and budget alerts!');
+      updateNotifStatus('granted', currentLang === 'es' ? 'Notificaciones activadas. Recibirás alertas de Fintrail.' : 'Notifications enabled. You will receive Fintrail alerts.');
+      sendAlert(
+        'Fintrail Pro',
+        currentLang === 'es' ? 'Tus alertas de Fintrail están activas.' : 'Your Fintrail alerts are active.'
+      );
     } else {
-      updateNotifStatus('denied', '❌ Notifications blocked. Please enable them in browser settings.');
+      updateNotifStatus('denied', currentLang === 'es' ? 'Las notificaciones están bloqueadas. Actívalas en la configuración del navegador.' : 'Notifications are blocked. Please enable them in browser settings.');
     }
   }
 
   function sendTestNotification() {
     if (notifPermission !== 'granted') {
-      updateNotifStatus('pending', '⚠️ Please enable notifications first');
+      updateNotifStatus('pending', currentLang === 'es' ? 'Activa primero las notificaciones.' : 'Please enable notifications first.');
       return;
     }
-    sendAlert('🧪 Test Alert', 'Fintrail notifications are working perfectly!');
+    sendAlert(
+      'Fintrail Pro',
+      currentLang === 'es' ? 'Tu recordatorio de salud financiera está funcionando.' : 'Your financial health reminder is working.'
+    );
   }
 
   function sendAlert(title, body) {
     if (notifPermission === 'granted') {
-      new Notification(title, { body, icon: '💰' });
+      new Notification(title, { body });
     }
   }
 
   function updateNotifStatus(type, msg) {
     const el = document.getElementById('notif-status');
+    if (!el) return;
     el.className = 'notif-status ' + type;
     el.textContent = msg;
   }
@@ -8430,19 +8500,63 @@ Guidelines:
     bills.forEach(b => {
       const dueDate = new Date(today.getFullYear(), today.getMonth(), b.day);
       if (dueDate >= today && dueDate <= in3Days) {
-        sendAlert('📅 Bill Due Soon', `${b.name} ($${b.amount}) is due in ${b.day - today.getDate()} days!`);
+        const days = b.day - today.getDate();
+        sendAlert(
+          currentLang === 'es' ? 'Factura próxima' : 'Bill Due Soon',
+          currentLang === 'es'
+            ? `${b.name} ($${b.amount}) vence en ${days} días.`
+            : `${b.name} ($${b.amount}) is due in ${days} days.`
+        );
       }
     });
   }
 
-  function checkGoalMilestones() {
-    if (notifPermission !== 'granted') return;
-    goals.forEach(g => {
-      const pct = (g.saved / g.target) * 100;
-      [25, 50, 75, 100].forEach(milestone => {
-        if (pct >= milestone) sendAlert('🎯 Goal Milestone!', `${g.name} is ${milestone}% funded! Keep going!`);
+  function getGoalMilestoneId(goal) {
+    return String(goal?.id || goal?.createdAt || goal?.name || 'goal');
+  }
+
+  function getPassedGoalMilestones(goal) {
+    const target = parseFloat(goal?.target) || 0;
+    const saved = parseFloat(goal?.saved) || 0;
+    if (target <= 0) return [];
+    const pct = (saved / target) * 100;
+    return [25, 50, 75, 100].filter(milestone => pct >= milestone);
+  }
+
+  function ensureGoalMilestoneTrackingInitialized() {
+    if (!gameData.goalMilestoneNotifications) gameData.goalMilestoneNotifications = {};
+    if (gameData.goalMilestoneNotificationsInitialized) return false;
+    goals.forEach(goal => {
+      const goalId = getGoalMilestoneId(goal);
+      getPassedGoalMilestones(goal).forEach(milestone => {
+        gameData.goalMilestoneNotifications[`${goalId}:${milestone}`] = true;
       });
     });
+    gameData.goalMilestoneNotificationsInitialized = true;
+    return true;
+  }
+
+  function checkGoalMilestones() {
+    if (notifPermission !== 'granted') return;
+    const initializedNow = ensureGoalMilestoneTrackingInitialized();
+    let changed = initializedNow;
+    goals.forEach(g => {
+      const goalId = getGoalMilestoneId(g);
+      getPassedGoalMilestones(g).forEach(milestone => {
+        const key = `${goalId}:${milestone}`;
+        if (!gameData.goalMilestoneNotifications[key]) {
+          gameData.goalMilestoneNotifications[key] = true;
+          changed = true;
+          sendAlert(
+            currentLang === 'es' ? 'Meta de ahorro alcanzada' : 'Savings Goal Milestone',
+            currentLang === 'es'
+              ? `${g.name} alcanzó el ${milestone}% de progreso.`
+              : `${g.name} reached ${milestone}% progress.`
+          );
+        }
+      });
+    });
+    if (changed) saveGameData();
   }
 
   function updatePremiumTab() {
@@ -10063,6 +10177,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   function loadGameData() {
     const saved = safeGet('fintrail_game_' + (currentUser?.id || 'demo'));
     if (saved) { try { gameData = mergeGameDataProgress(gameData, JSON.parse(saved)); } catch(e) {} }
+    if (typeof loadAlertPrefs === 'function') loadAlertPrefs();
     checkLoginStreak();
     checkPendingXP(); // release any XP that's been waiting 48hrs
     renderStreaks();
@@ -10071,6 +10186,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
 
   function saveGameData() {
     const uid = currentUser?.id || 'demo';
+    if (typeof normalizeAlertPrefs === 'function') gameData.alertPrefs = normalizeAlertPrefs(gameData.alertPrefs || alertPrefs);
     safeSet('fintrail_game_' + uid, JSON.stringify(gameData));
     // Sync to Supabase so XP/level is consistent across all devices
     if (sbClient && currentUser) {
