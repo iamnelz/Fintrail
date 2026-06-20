@@ -1068,7 +1068,7 @@
   }
   @keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
   .paywall-top {
-    background: linear-gradient(135deg, var(--dark) 0%, #1a1020 100%);
+    background: linear-gradient(135deg, #111111 0%, #2A0F0F 48%, #E53935 100%);
     padding:2rem 2rem 1.5rem; text-align:center; position:relative; overflow:hidden;
   }
   .paywall-top::before {
@@ -1084,9 +1084,10 @@
     cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s; z-index:1;
   }
   .paywall-close:hover { background:rgba(255,255,255,0.15); color:var(--text); }
-  .paywall-icon { font-size:2.5rem; margin-bottom:0.5rem; position:relative; }
-  .paywall-top h2 { font-family:'Playfair Display',serif; color:var(--text); font-size:1.5rem; margin-bottom:0.35rem; position:relative; }
-  .paywall-top p { color:var(--text-soft); font-size:0.875rem; position:relative; }
+  .paywall-icon { color:#fff; display:inline-flex; align-items:center; justify-content:center; width:42px; height:42px; margin-bottom:0.5rem; position:relative; }
+  .paywall-icon .ft-lucide-icon { width:38px; height:38px; }
+  .paywall-top h2 { font-family:'Playfair Display',serif; color:#fff; font-size:1.5rem; margin-bottom:0.35rem; position:relative; }
+  .paywall-top p { color:rgba(255,255,255,0.82); font-size:0.875rem; position:relative; }
   .paywall-price { text-align:center; padding:1.25rem 2rem 0; }
   .price-display { display:flex; align-items:baseline; justify-content:center; gap:0.25rem; margin-bottom:0.3rem; }
   .price-amount { font-family:'Playfair Display',serif; font-size:3rem; color:var(--text); line-height:1; }
@@ -4512,7 +4513,7 @@
 
 <!-- ACCOUNT BAR -->
 <div class="account-bar" id="account-bar">
-  <div class="ab-left">👤 <span id="ab-status">Free Plan — upgrade to unlock all features</span></div>
+  <div class="ab-left"><span id="ab-status">Free Plan — upgrade to unlock all features</span></div>
   <div class="ab-right">
     <span class="ab-plan" id="ab-plan-badge">Free</span>
     <button class="ab-manage" id="ab-action-btn" onclick="showPaywall('bar')">Upgrade to Pro →</button>
@@ -4525,7 +4526,7 @@
   <div class="paywall-modal">
     <div class="paywall-top">
       <button class="paywall-close" onclick="closePaywall()">✕</button>
-      <div class="paywall-icon">⭐</div>
+      <div class="paywall-icon" data-paywall-icon="star"></div>
       <h2>Fintrail Pro</h2>
       <p>Unlock the full toolkit and take control of your finances.</p>
     </div>
@@ -6817,6 +6818,7 @@
 
   function showPaywall(source) {
     document.getElementById('paywall-overlay').style.display = 'flex';
+    if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
   }
   function closePaywall() {
     document.getElementById('paywall-overlay').style.display = 'none';
@@ -18199,9 +18201,7 @@ window.addEventListener('load', function(){
   }
   function replaceLeadingIcon(el, iconName, label){
     if (!el) return;
-    var text = label || cleanLabel(el.textContent);
-    var html = icon(iconName) + '<span>' + text + '</span>';
-    if (el.innerHTML !== html) el.innerHTML = html;
+    setInlineIconLabel(el, iconName, label || cleanLabel(el.textContent));
   }
   function setInlineIconLabel(el, iconName, label){
     if (!el) return;
@@ -18290,6 +18290,14 @@ window.addEventListener('load', function(){
       var iconName = (chips[index] && chips[index][1]) || pickByText(label);
       replaceLeadingIcon(chip, iconName, label);
     });
+  }
+
+  function refreshBudgetSubTabIcons(){
+    var trackerBtn = document.querySelector('.sched-tab-btn[onclick*="tracker"]');
+    var scheduleBtn = document.querySelector('.sched-tab-btn[onclick*="schedule"]');
+    var es = typeof currentLang !== 'undefined' && currentLang === 'es';
+    if (trackerBtn) setInlineIconLabel(trackerBtn, 'bar-chart-3', es ? 'Rastreador' : 'Tracker');
+    if (scheduleBtn) setInlineIconLabel(scheduleBtn, 'calendar', es ? 'Horario de Facturas' : 'Bill Schedule');
   }
 
   function refreshSavingsGoalIcons(){
@@ -18405,6 +18413,8 @@ window.addEventListener('load', function(){
     refreshDebtMethodIcons();
 
     root.querySelectorAll('span').forEach(function(el){
+      if (el.children.length > 0) return;
+      if (el.closest('.ft-stable-inline-icon, .ft-stable-inline-text, .debt-method-title, .debt-method-icon')) return;
       var txt = cleanLabel(el.textContent);
       if (/^(Focus|Prioridad|Prioridad ahora|Prioridad actual|Enfoque ahora)$/i.test(txt)) {
         setInlineIconLabel(el, 'target', txt);
@@ -18434,6 +18444,12 @@ window.addEventListener('load', function(){
   function refreshDebtMethodIcons(){
     document.querySelectorAll('.debt-method-icon[data-debt-method-icon]').forEach(function(el){
       replaceSingleIcon(el, el.getAttribute('data-debt-method-icon') || 'mountain');
+    });
+  }
+
+  function refreshPaywallIcons(){
+    document.querySelectorAll('.paywall-icon[data-paywall-icon]').forEach(function(el){
+      replaceSingleIcon(el, el.getAttribute('data-paywall-icon') || 'star');
     });
   }
 
@@ -18500,11 +18516,11 @@ window.addEventListener('load', function(){
     var leadingSelectors = [
       'button:not(.mobile-nav-tile):not(.nav-group-btn)',
       'h1', 'h2', 'h3', 'h4',
-      '.filter-btn', '.sched-tab-btn', '.method-btn', '.step-impact',
+      '.filter-btn', '.method-btn', '.step-impact',
       '.fm-badge-large', '.fm-visible-badge', '#fm-modal-title',
       '#report-title', '#report-credit-next-label', '#report-monthly-achievement-label',
       '#script-output-title', '#script-title', '#receipt-modal-title', '#uz-file-name',
-      '.reward-locked', '.pw-feature', '.pw-trial', '.ab-left',
+      '.reward-locked', '.pw-feature', '.pw-trial',
       '.cal-event', '.cal-week-event', '.cal-legend-item', '.activity-text'
     ].join(',');
     document.querySelectorAll(leadingSelectors).forEach(function(el){
@@ -18514,6 +18530,7 @@ window.addEventListener('load', function(){
 
   function refreshFintrailIcons(){
     refreshNavIcons();
+    refreshBudgetSubTabIcons();
     refreshHeroChips();
     refreshSavingsGoalIcons();
     refreshResourceIcons();
@@ -18522,6 +18539,7 @@ window.addEventListener('load', function(){
     refreshMembershipIcons();
     refreshNetWorthIcons();
     refreshDebtPlannerIcons();
+    refreshPaywallIcons();
     refreshBillScheduleIcons();
     refreshInvestmentIcons();
     refreshProIcons();
