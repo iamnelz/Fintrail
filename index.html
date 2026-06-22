@@ -8215,6 +8215,10 @@ Guidelines:
 
     let titleEl = explanation.querySelector(':scope > .debt-method-title');
     let bodyEl = explanation.querySelector(':scope > .debt-method-body');
+    explanation.style.display = 'flex';
+    explanation.style.alignItems = 'baseline';
+    explanation.style.flexWrap = 'wrap';
+    explanation.style.gap = '0.35rem';
     if (!titleEl || !bodyEl) {
       explanation.textContent = '';
       titleEl = document.createElement('strong');
@@ -8223,13 +8227,18 @@ Guidelines:
       titleEl.style.display = 'inline-flex';
       titleEl.style.alignItems = 'center';
       titleEl.style.gap = '0.4rem';
+      titleEl.style.lineHeight = 'inherit';
+      titleEl.style.marginTop = '0';
       titleEl.innerHTML = '<span class="debt-method-icon"></span><span class="debt-method-title-text"></span>';
       bodyEl = document.createElement('span');
       bodyEl.className = 'debt-method-body';
+      bodyEl.style.lineHeight = 'inherit';
       explanation.appendChild(titleEl);
-      explanation.appendChild(document.createTextNode(' '));
       explanation.appendChild(bodyEl);
     }
+    titleEl.style.lineHeight = 'inherit';
+    titleEl.style.marginTop = '0';
+    bodyEl.style.lineHeight = 'inherit';
     const iconEl = titleEl.querySelector('.debt-method-icon');
     const titleTextEl = titleEl.querySelector('.debt-method-title-text');
     if (iconEl) iconEl.setAttribute('data-debt-method-icon', iconName);
