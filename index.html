@@ -8215,10 +8215,11 @@ Guidelines:
 
     let titleEl = explanation.querySelector(':scope > .debt-method-title');
     let bodyEl = explanation.querySelector(':scope > .debt-method-body');
-    explanation.style.display = 'flex';
-    explanation.style.alignItems = 'baseline';
-    explanation.style.flexWrap = 'wrap';
-    explanation.style.gap = '0.35rem';
+    explanation.style.display = 'block';
+    explanation.style.alignItems = '';
+    explanation.style.flexWrap = '';
+    explanation.style.gap = '';
+    explanation.style.lineHeight = '1.6';
     if (!titleEl || !bodyEl) {
       explanation.textContent = '';
       titleEl = document.createElement('strong');
@@ -8229,18 +8230,37 @@ Guidelines:
       titleEl.style.gap = '0.4rem';
       titleEl.style.lineHeight = 'inherit';
       titleEl.style.marginTop = '0';
+      titleEl.style.marginRight = '0.35rem';
+      titleEl.style.verticalAlign = 'baseline';
       titleEl.innerHTML = '<span class="debt-method-icon"></span><span class="debt-method-title-text"></span>';
       bodyEl = document.createElement('span');
       bodyEl.className = 'debt-method-body';
+      bodyEl.style.display = 'inline';
       bodyEl.style.lineHeight = 'inherit';
+      bodyEl.style.verticalAlign = 'baseline';
       explanation.appendChild(titleEl);
       explanation.appendChild(bodyEl);
     }
+    titleEl.style.display = 'inline-flex';
+    titleEl.style.alignItems = 'center';
     titleEl.style.lineHeight = 'inherit';
     titleEl.style.marginTop = '0';
+    titleEl.style.marginRight = '0.35rem';
+    titleEl.style.verticalAlign = 'baseline';
+    bodyEl.style.display = 'inline';
     bodyEl.style.lineHeight = 'inherit';
+    bodyEl.style.verticalAlign = 'baseline';
     const iconEl = titleEl.querySelector('.debt-method-icon');
     const titleTextEl = titleEl.querySelector('.debt-method-title-text');
+    if (iconEl) {
+      iconEl.style.marginTop = '0';
+      iconEl.style.transform = 'none';
+      iconEl.style.verticalAlign = 'baseline';
+    }
+    if (titleTextEl) {
+      titleTextEl.style.lineHeight = 'inherit';
+      titleTextEl.style.marginTop = '0';
+    }
     if (iconEl) iconEl.setAttribute('data-debt-method-icon', iconName);
     if (titleTextEl && titleTextEl.textContent !== title) titleTextEl.textContent = title;
     if (bodyEl.textContent !== body) bodyEl.textContent = body;
