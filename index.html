@@ -8213,53 +8213,44 @@ Guidelines:
         ? 'Paga los mínimos en todas tus deudas y destina TODO el dinero extra a la deuda con la tasa de interés más alta primero. Matemáticamente, es el método que más dinero ahorra en intereses.'
         : 'Pay minimums on all debts, then put ALL extra money toward the highest interest debt first. Mathematically, this method saves the most money on interest.');
 
-    let titleEl = explanation.querySelector(':scope > .debt-method-title');
-    let bodyEl = explanation.querySelector(':scope > .debt-method-body');
+    let descEl = explanation.querySelector(':scope > .method-description');
+    let iconEl = descEl?.querySelector('.debt-method-icon');
+    let titleTextEl = descEl?.querySelector('.debt-method-title-text');
+    let bodyEl = descEl?.querySelector('.debt-method-body');
     explanation.style.display = 'block';
     explanation.style.alignItems = '';
     explanation.style.flexWrap = '';
     explanation.style.gap = '';
     explanation.style.lineHeight = '1.6';
-    if (!titleEl || !bodyEl) {
+    if (!descEl || !iconEl || !titleTextEl || !bodyEl) {
       explanation.textContent = '';
-      titleEl = document.createElement('strong');
-      titleEl.className = 'debt-method-title';
-      titleEl.style.color = 'var(--text)';
-      titleEl.style.display = 'inline-flex';
-      titleEl.style.alignItems = 'center';
-      titleEl.style.gap = '0.4rem';
-      titleEl.style.lineHeight = 'inherit';
-      titleEl.style.marginTop = '0';
-      titleEl.style.marginRight = '0.35rem';
-      titleEl.style.verticalAlign = 'baseline';
-      titleEl.innerHTML = '<span class="debt-method-icon"></span><span class="debt-method-title-text"></span>';
+      descEl = document.createElement('p');
+      descEl.className = 'method-description';
+      iconEl = document.createElement('span');
+      iconEl.className = 'debt-method-icon';
+      titleTextEl = document.createElement('strong');
+      titleTextEl.className = 'debt-method-title-text';
       bodyEl = document.createElement('span');
       bodyEl.className = 'debt-method-body';
-      bodyEl.style.display = 'inline';
-      bodyEl.style.lineHeight = 'inherit';
-      bodyEl.style.verticalAlign = 'baseline';
-      explanation.appendChild(titleEl);
-      explanation.appendChild(bodyEl);
+      descEl.appendChild(iconEl);
+      descEl.appendChild(titleTextEl);
+      descEl.appendChild(document.createTextNode(' '));
+      descEl.appendChild(bodyEl);
+      explanation.appendChild(descEl);
     }
-    titleEl.style.display = 'inline-flex';
-    titleEl.style.alignItems = 'center';
-    titleEl.style.lineHeight = 'inherit';
-    titleEl.style.marginTop = '0';
-    titleEl.style.marginRight = '0.35rem';
-    titleEl.style.verticalAlign = 'baseline';
+    descEl.style.lineHeight = '1.6';
+    descEl.style.margin = '0';
+    titleTextEl.style.lineHeight = 'inherit';
+    titleTextEl.style.marginTop = '0';
+    titleTextEl.style.verticalAlign = 'baseline';
     bodyEl.style.display = 'inline';
     bodyEl.style.lineHeight = 'inherit';
     bodyEl.style.verticalAlign = 'baseline';
-    const iconEl = titleEl.querySelector('.debt-method-icon');
-    const titleTextEl = titleEl.querySelector('.debt-method-title-text');
     if (iconEl) {
       iconEl.style.marginTop = '0';
+      iconEl.style.marginRight = '8px';
       iconEl.style.transform = 'none';
-      iconEl.style.verticalAlign = 'baseline';
-    }
-    if (titleTextEl) {
-      titleTextEl.style.lineHeight = 'inherit';
-      titleTextEl.style.marginTop = '0';
+      iconEl.style.verticalAlign = 'middle';
     }
     if (iconEl) iconEl.setAttribute('data-debt-method-icon', iconName);
     if (titleTextEl && titleTextEl.textContent !== title) titleTextEl.textContent = title;
@@ -17020,6 +17011,21 @@ window.addEventListener('load', function(){
   .debt-method-icon .ft-lucide-icon {
     width:18px;
     height:18px;
+  }
+  .method-description {
+    display:block;
+    line-height:1.6;
+    margin:0;
+  }
+  .method-description strong,
+  .method-description span {
+    vertical-align:baseline;
+    line-height:inherit;
+  }
+  .method-description .debt-method-icon {
+    display:inline-flex;
+    vertical-align:middle;
+    margin-right:8px;
   }
   .debt-helper-text {
     display:flex;
