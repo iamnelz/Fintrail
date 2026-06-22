@@ -7933,6 +7933,7 @@ Guidelines:
       originalBalance: isEs ? 'Saldo original' : 'Original balance',
       paidOffDate: isEs ? 'Fecha de pago' : 'Paid off date',
       xpEarned: isEs ? 'XP ganado' : 'XP earned',
+      earlyPayoff: isEs ? 'Pago anticipado' : 'Early payoff',
       focus: isEs ? 'Prioridad' : 'Focus',
       deleteLabel: isEs ? 'Eliminar' : 'Delete',
       editLabel: isEs ? 'Editar' : 'Edit',
@@ -8111,7 +8112,8 @@ Guidelines:
             </div>
             <div style="text-align:right">
               <div>${labels.paidOffDate}: ${formatDebtPaidDate(d.paidOffDate)}</div>
-              <div>${labels.xpEarned}: ${parseInt(d.payoffXpEarned || (d.paidOffEarly ? 100 : 50)) || 50}</div>
+              <div>${labels.xpEarned}: ${parseInt(d.payoffXpAmount || d.payoffXpEarned || (d.paidOffEarly ? 100 : 50)) || 50}</div>
+              ${d.paidOffEarly ? `<div style="color:var(--accent);font-weight:800">${labels.earlyPayoff}</div>` : ''}
             </div>
           </div>`).join('')}
       </div>` : '';
@@ -8196,20 +8198,23 @@ Guidelines:
     debt.originalBalance = debt.originalBalance || debt.balance;
     if (!alreadyAwarded) {
       debt.xpAwardedForPayoff = true;
+      debt.payoffXpAmount = xp;
       debt.payoffXpEarned = xp;
       if (typeof addXP === 'function') {
         addXP(xp, currentLang === 'es' ? `Deuda pagada: ${debt.name}` : `Debt paid off: ${debt.name}`);
       }
+    } else if (!debt.payoffXpAmount && debt.payoffXpEarned) {
+      debt.payoffXpAmount = debt.payoffXpEarned;
     }
 
     closeDebtPaidConfirm();
     renderDebtList();
     runPayoffPlan();
     saveUserData();
-    showDebtPaidSuccess(debt, debt.payoffXpEarned || xp, paidEarly && !alreadyAwarded);
+    showDebtPaidSuccess(debt, debt.payoffXpAmount || debt.payoffXpEarned || xp, paidEarly, !alreadyAwarded);
   }
 
-  function showDebtPaidSuccess(debt, xp, early) {
+  function showDebtPaidSuccess(debt, xp, early, awardedNow = true) {
     const isEs = currentLang === 'es';
     const labels = getDebtPaidLabels();
     const title = document.getElementById('debt-paid-success-title');
@@ -8217,13 +8222,17 @@ Guidelines:
     const button = document.getElementById('debt-paid-success-btn');
     if (title) title.textContent = labels.successTitle;
     if (message) {
-      message.textContent = early
-        ? (isEs
-          ? `¡Felicidades! Pagaste ${debt.name} antes de lo previsto y ganaste 100 XP de bonificación.`
-          : `Congratulations! You paid off ${debt.name} ahead of schedule and earned 100 bonus XP.`)
+      message.textContent = awardedNow
+        ? (early
+          ? (isEs
+            ? `¡Felicidades! Pagaste ${debt.name} antes de lo previsto y ganaste ${xp} XP de bonificación.`
+            : `Congratulations! You paid off ${debt.name} ahead of schedule and earned ${xp} bonus XP.`)
+          : (isEs
+            ? `¡Felicidades! Pagaste ${debt.name} y ganaste ${xp} XP.`
+            : `Congratulations! You paid off ${debt.name} and earned ${xp} XP.`))
         : (isEs
-          ? `¡Felicidades! Pagaste ${debt.name} y ganaste 50 XP.`
-          : `Congratulations! You paid off ${debt.name} and earned 50 XP.`);
+          ? `¡Felicidades! Pagaste ${debt.name}. El XP de esta deuda ya fue otorgado.`
+          : `Congratulations! You paid off ${debt.name}. XP for this payoff was already awarded.`);
     }
     if (button) button.textContent = labels.continueLabel;
     const modal = document.getElementById('debt-paid-success-modal');
@@ -11430,7 +11439,14 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   }
 
   function getReportPaidDebtsForMonth(reportDate = new Date()) {
-    if (!Array.isArray(planDebts)) return [];
+    const uid = currentUser?.id || 'demo';
+    if (!Array.isArray(planDebts)) planDebts = [];
+    if (!planDebts.length) {
+      try {
+        const raw = safeGet('fintrail_debts_' + uid) || safeGet('fintrail_debts_demo');
+        if (raw) planDebts = JSON.parse(raw) || [];
+      } catch(e) {}
+    }
     const year = reportDate.getFullYear();
     const month = reportDate.getMonth();
     return planDebts.filter(d => {
@@ -11446,15 +11462,34 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const isEs = currentLang === 'es';
     const debt = paidThisMonth[0];
     const dateText = formatDebtPaidDate(debt.paidOffDate);
+    const xp = parseInt(debt.payoffXpAmount || debt.payoffXpEarned || (debt.paidOffEarly ? 100 : 50)) || 0;
+    const totalXp = paidThisMonth.reduce((sum, item) => {
+      return sum + (parseInt(item.payoffXpAmount || item.payoffXpEarned || (item.paidOffEarly ? 100 : 50)) || 0);
+    }, 0);
+    const countText = paidThisMonth.length > 1
+      ? (isEs
+        ? `${paidThisMonth.length} deudas fueron marcadas como pagadas este mes y generaron ${totalXp} XP. `
+        : `${paidThisMonth.length} debts were marked paid off this month and earned ${totalXp} XP. `)
+      : '';
     const paidText = isEs
-      ? `Deuda pagada este mes: ${debt.name} fue marcada como pagada el ${dateText}.`
-      : `Debt Paid Off This Month: ${debt.name} was marked paid off on ${dateText}.`;
+      ? `${countText}Deuda pagada este mes: ${debt.name} fue marcada como pagada el ${dateText}${xp ? ` y ganó ${xp} XP` : ''}.`
+      : `${countText}Debt Paid Off This Month: ${debt.name} was marked paid off on ${dateText}${xp ? ` and earned ${xp} XP` : ''}.`;
     const earlyText = debt.paidOffEarly
       ? (isEs
-        ? ` Logro de pago anticipado: Pagaste ${debt.name} antes de lo previsto y ganaste XP de bonificación.`
-        : ` Early Payoff Achievement: You paid off ${debt.name} ahead of schedule and earned bonus XP.`)
+        ? ` Logro de pago anticipado: Pagaste ${debt.name} antes de lo previsto y ganaste ${xp || 100} XP de bonificación.`
+        : ` Early Payoff Achievement: You paid off ${debt.name} ahead of schedule and earned ${xp || 100} bonus XP.`)
       : '';
     return paidText + earlyText;
+  }
+
+  function getMonthlyReportDateFromSelect() {
+    const select = document.getElementById('report-month-select');
+    const value = select?.value || 'current';
+    if (/^\d{4}-\d{2}$/.test(value)) {
+      const [year, month] = value.split('-').map(Number);
+      return new Date(year, month - 1, 1);
+    }
+    return new Date();
   }
 
   function getReportCreditScore() {
@@ -11558,7 +11593,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     reportSetText('report-download-btn', t('⇩ Download Report (PDF)', '⇩ Descargar Reporte (PDF)'));
     reportSetText('report-share-btn', t('⇧ Share Your Progress', '⇧ Comparte Tu Progreso'));
 
-    const nowForReport = new Date();
+    const nowForReport = getMonthlyReportDateFromSelect();
     const monthName = typeof formatFintrailMonthYear === 'function'
       ? formatFintrailMonthYear(nowForReport.getFullYear(), nowForReport.getMonth())
       : new Date().toLocaleDateString(isEs ? 'es-US' : 'en-US', { month:'long', year:'numeric' }).replace(/^\w/, c => c.toUpperCase());
