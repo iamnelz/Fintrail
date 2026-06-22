@@ -2228,6 +2228,122 @@
   }
   .debt-paid-card:first-of-type { border-top:0; }
   .debt-paid-card strong { color:var(--text); }
+  .debt-freedom-timeline {
+    border:1px solid var(--border);
+    background:var(--surface);
+    border-radius:14px;
+    padding:1rem;
+    margin-top:1rem;
+  }
+  .debt-freedom-timeline h3 {
+    display:flex;
+    align-items:center;
+    gap:0.45rem;
+    font-size:0.95rem;
+    margin:0 0 0.85rem;
+    color:var(--text);
+  }
+  .debt-freedom-timeline .ft-reference-icon {
+    width:18px;
+    height:18px;
+    flex-shrink:0;
+  }
+  .debt-freedom-summary {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:0.6rem;
+    margin-bottom:0.9rem;
+  }
+  .debt-freedom-stat {
+    background:var(--bg);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:0.7rem;
+  }
+  .debt-freedom-stat span {
+    display:block;
+    font-size:0.66rem;
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    font-weight:800;
+    margin-bottom:0.25rem;
+  }
+  .debt-freedom-stat strong {
+    font-family:'Playfair Display',serif;
+    font-size:1.25rem;
+    color:var(--text);
+  }
+  .debt-freedom-list {
+    display:flex;
+    flex-direction:column;
+    gap:0.6rem;
+  }
+  .debt-freedom-item {
+    display:grid;
+    grid-template-columns:auto 1fr auto;
+    gap:0.7rem;
+    align-items:center;
+    padding:0.75rem;
+    border:1px solid var(--border);
+    background:var(--bg);
+    border-radius:12px;
+  }
+  .debt-freedom-icon {
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(16,185,129,0.12);
+    color:var(--income-color);
+  }
+  .debt-freedom-icon .ft-reference-icon {
+    width:18px;
+    height:18px;
+  }
+  .debt-freedom-name {
+    font-weight:800;
+    color:var(--text);
+    margin-bottom:0.15rem;
+  }
+  .debt-freedom-meta {
+    color:var(--text-soft);
+    font-size:0.76rem;
+  }
+  .debt-freedom-xp {
+    font-weight:900;
+    color:var(--income-color);
+    white-space:nowrap;
+    text-align:right;
+  }
+  .debt-freedom-badge {
+    display:inline-flex;
+    align-items:center;
+    gap:0.25rem;
+    margin-top:0.25rem;
+    border-radius:999px;
+    border:1px solid rgba(16,185,129,0.28);
+    background:rgba(16,185,129,0.10);
+    color:var(--income-color);
+    font-size:0.66rem;
+    font-weight:800;
+    padding:0.12rem 0.45rem;
+  }
+  .debt-freedom-badge .ft-reference-icon {
+    width:12px;
+    height:12px;
+  }
+  .debt-freedom-empty {
+    border:1px dashed var(--border);
+    border-radius:12px;
+    padding:1rem;
+    color:var(--text-soft);
+    font-size:0.85rem;
+    line-height:1.55;
+    background:var(--bg);
+  }
   .debt-paid-modal-overlay {
     display:none;
     position:fixed;
@@ -2292,6 +2408,9 @@
     .debt-add-grid .add-btn { grid-column:1/-1; margin-top:0.25rem; }
     .debt-paid-card, .debt-paid-modal-actions { flex-direction:column; align-items:stretch; }
     .debt-paid-card { align-items:flex-start; }
+    .debt-freedom-summary { grid-template-columns:1fr; }
+    .debt-freedom-item { grid-template-columns:auto 1fr; }
+    .debt-freedom-xp { grid-column:2; text-align:left; }
   }
 
   /* ─── TABLET (768px – 1024px) ─── */
@@ -5158,6 +5277,7 @@
           </div>
         </div>
         <div id="plan-empty" style="text-align:center;color:var(--muted);font-size:0.85rem;padding:1.5rem">Add your debts above to generate your personalized payoff plan.</div>
+        <div id="debt-freedom-timeline" class="debt-freedom-timeline"></div>
       </div>
 
   </div>
@@ -7957,6 +8077,77 @@ Guidelines:
     }).replace(/^./, c => c.toUpperCase());
   }
 
+  function getDebtPayoffXpValue(debt) {
+    return parseInt(debt?.payoffXpAmount || debt?.payoffXpEarned || (debt?.paidOffEarly ? 100 : 50)) || 0;
+  }
+
+  function getDebtFreedomStats() {
+    const paidDebts = getPaidPlanDebts();
+    return {
+      debtsEliminated: paidDebts.length,
+      xpEarned: paidDebts.reduce((sum, debt) => sum + getDebtPayoffXpValue(debt), 0),
+      earlyPayoffs: paidDebts.filter(debt => !!debt.paidOffEarly).length
+    };
+  }
+
+  function renderDebtFreedomTimeline() {
+    const container = document.getElementById('debt-freedom-timeline');
+    if (!container) return;
+    const isEs = currentLang === 'es';
+    const paidDebts = getPaidPlanDebts().slice().sort((a, b) => {
+      const dateA = String(a.paidOffDate || '');
+      const dateB = String(b.paidOffDate || '');
+      return dateB.localeCompare(dateA);
+    });
+    const stats = getDebtFreedomStats();
+    const labels = {
+      title: isEs ? 'Cronología de Libertad Financiera' : 'Debt Freedom Timeline',
+      summaryTitle: isEs ? 'Progreso hacia la Libertad Financiera' : 'Debt Freedom Progress',
+      eliminated: isEs ? 'Deudas Eliminadas' : 'Debts Eliminated',
+      xp: isEs ? 'XP Ganado' : 'XP Earned',
+      early: isEs ? 'Logros por Pago Anticipado' : 'Early Payoff Achievements',
+      paidOff: isEs ? 'Pagada el' : 'Paid Off',
+      paidEarly: isEs ? 'Pagada Antes de Tiempo' : 'Paid Early',
+      emptyTitle: isEs ? 'Tu camino hacia la libertad financiera comienza aquí.' : 'Your debt freedom journey starts here.',
+      emptyBody: isEs ? 'Paga tu primera deuda para comenzar tu cronología.' : 'Pay off your first debt to begin building your timeline.'
+    };
+
+    const summaryHTML = `
+      <div class="debt-freedom-summary" aria-label="${labels.summaryTitle}">
+        <div class="debt-freedom-stat"><span>${labels.eliminated}</span><strong>${stats.debtsEliminated}</strong></div>
+        <div class="debt-freedom-stat"><span>${labels.xp}</span><strong>${stats.xpEarned}</strong></div>
+        <div class="debt-freedom-stat"><span>${labels.early}</span><strong>${stats.earlyPayoffs}</strong></div>
+      </div>`;
+
+    const timelineHTML = paidDebts.length ? `
+      <div class="debt-freedom-list">
+        ${paidDebts.map(debt => {
+          const xp = getDebtPayoffXpValue(debt);
+          return `
+            <div class="debt-freedom-item">
+              <div class="debt-freedom-icon"><span class="ft-reference-icon" data-fixed-icon="check-circle"></span></div>
+              <div>
+                <div class="debt-freedom-name">${escHtml(debt.name || '')}</div>
+                <div class="debt-freedom-meta">${labels.paidOff} ${formatDebtPaidDate(debt.paidOffDate)}</div>
+                ${debt.paidOffEarly ? `<div class="debt-freedom-badge"><span class="ft-reference-icon" data-fixed-icon="award"></span><span>${labels.paidEarly}</span></div>` : ''}
+              </div>
+              <div class="debt-freedom-xp">+${xp} XP</div>
+            </div>`;
+        }).join('')}
+      </div>` : `
+      <div class="debt-freedom-empty">
+        <strong>${labels.emptyTitle}</strong><br>
+        ${labels.emptyBody}
+      </div>`;
+
+    container.innerHTML = `
+      <h3><span class="ft-reference-icon" data-fixed-icon="trophy"></span><span>${labels.title}</span></h3>
+      <div style="font-size:0.75rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.55rem">${labels.summaryTitle}</div>
+      ${summaryHTML}
+      ${timelineHTML}`;
+    if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
+  }
+
   function getDebtPayoffEstimateDates(extraPayment = 0) {
     const estimates = {};
     const debts = getActivePlanDebts().map(d => ({
@@ -8079,7 +8270,11 @@ Guidelines:
     const labels = getDebtPaidLabels();
     const activeDebts = getActivePlanDebts();
     const paidDebts = getPaidPlanDebts().slice().sort((a,b) => String(b.paidOffDate || '').localeCompare(String(a.paidOffDate || '')));
-    if (activeDebts.length === 0 && paidDebts.length === 0) { list.innerHTML = ''; return; }
+    if (activeDebts.length === 0 && paidDebts.length === 0) {
+      list.innerHTML = '';
+      renderDebtFreedomTimeline();
+      return;
+    }
     const sorted = activeDebts.slice().sort((a,b) =>
       payoffMethod === 'avalanche' ? b.apr - a.apr : a.balance - b.balance
     );
@@ -8118,6 +8313,7 @@ Guidelines:
           </div>`).join('')}
       </div>` : '';
     list.innerHTML = activeHTML + paidHTML;
+    renderDebtFreedomTimeline();
     if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
   }
 
@@ -8245,6 +8441,7 @@ Guidelines:
     if (activeDebts.length === 0) {
       document.getElementById('plan-result').style.display = 'none';
       document.getElementById('plan-empty').style.display = 'block';
+      renderDebtFreedomTimeline();
       return;
     }
     const extra = parseFloat(document.getElementById('extra-payment').value) || 0;
@@ -8393,6 +8590,7 @@ Guidelines:
         </div>`;
       }).join('')}`;
 
+    renderDebtFreedomTimeline();
     calculateHealthScore();
   }
 
@@ -11482,6 +11680,16 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     return paidText + earlyText;
   }
 
+  function buildDebtFreedomReportSummary() {
+    const stats = typeof getDebtFreedomStats === 'function'
+      ? getDebtFreedomStats()
+      : { debtsEliminated: 0, xpEarned: 0 };
+    if (!stats.debtsEliminated) return '';
+    return currentLang === 'es'
+      ? ` Deudas eliminadas: ${stats.debtsEliminated}. XP ganado por pago de deudas: ${stats.xpEarned}.`
+      : ` Debts eliminated: ${stats.debtsEliminated}. XP earned from debt payoff: ${stats.xpEarned}.`;
+  }
+
   function getMonthlyReportDateFromSelect() {
     const select = document.getElementById('report-month-select');
     const value = select?.value || 'current';
@@ -11658,6 +11866,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     // Debt — live from Debt Payoff Planner
     const debts = getReportDebts();
     const paidDebtInsight = buildMonthlyReportPaidDebtInsight(nowForReport);
+    const debtFreedomSummary = buildDebtFreedomReportSummary();
     const totalDebt = debts.reduce((s,d) => s + d.balance, 0);
     const sortedDebts = [...debts].sort((a,b) => payoffMethod === 'snowball' ? a.balance - b.balance : b.apr - a.apr);
     const focusDebt = sortedDebts[0];
@@ -11671,11 +11880,11 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       reportSetText('report-debt-insight', t(
         `You are tracking ${debts.length} debt${debts.length === 1 ? '' : 's'} totaling $${totalDebt.toLocaleString(undefined,{maximumFractionDigits:0})}. Focus extra payments on ${focusDebt.name} first.`,
         `Estás registrando ${debts.length} deuda${debts.length === 1 ? '' : 's'} con un total de $${totalDebt.toLocaleString(undefined,{maximumFractionDigits:0})}. Enfoca los pagos extra primero en ${focusDebt.name}.`
-      ) + (paidDebtInsight ? ` ${paidDebtInsight}` : ''));
+      ) + (paidDebtInsight ? ` ${paidDebtInsight}` : '') + debtFreedomSummary);
     } else {
       reportSetText('report-debt-focus', paidDebtInsight ? t('Paid off this month', 'Pagada este mes') : t('No debt added', 'No hay deudas agregadas'));
       reportSetText('report-debt-note', paidDebtInsight || t('Add debts to generate payoff insights.', 'Agrega deudas para generar consejos de pago.'));
-      reportSetText('report-debt-insight', paidDebtInsight || t('Your debt report will show your total balances and recommended focus debt.', 'Tu reporte de deudas mostrará tus saldos totales y la deuda recomendada para enfocarte.'));
+      reportSetText('report-debt-insight', (paidDebtInsight || t('Your debt report will show your total balances and recommended focus debt.', 'Tu reporte de deudas mostrará tus saldos totales y la deuda recomendada para enfocarte.')) + debtFreedomSummary);
     }
 
     // Credit — live from Credit Simulator saved score
