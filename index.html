@@ -5504,7 +5504,7 @@
         <div id="plan-result" style="display:none">
           <!-- PAYMENT ALLOCATION -->
           <div style="background:var(--bg);border-radius:12px;padding:1.25rem;margin-bottom:1rem;border:1px solid var(--border)">
-            <div class="debt-payment-plan-title" style="font-size:0.82rem;font-weight:700;color:var(--text);margin-bottom:0.75rem;text-transform:uppercase;letter-spacing:0.06em">This Month's Payment Plan</div>
+            <div class="debt-payment-plan-title" id="debt-payment-plan-title" data-en="THIS MONTH'S PAYMENT PLAN" data-es="PLAN DE PAGOS DE ESTE MES" style="font-size:0.82rem;font-weight:700;color:var(--text);margin-bottom:0.75rem;text-transform:uppercase;letter-spacing:0.06em">THIS MONTH'S PAYMENT PLAN</div>
             <div id="payment-allocation"></div>
           </div>
 
@@ -6973,6 +6973,7 @@
   // DATA PERSISTENCE — save & load from Supabase
   async function saveUserData() {
     if (typeof normalizePlanDebts === 'function') normalizePlanDebts();
+    if (typeof syncCreditScoreStorageFromGameData === 'function') syncCreditScoreStorageFromGameData();
     // Always save to localStorage as reliable fallback with timestamp
     const _uid2 = currentUser?.id || 'demo';
     const _ts = Date.now();
@@ -7135,14 +7136,7 @@
           gameData = mergeGameDataProgress(mergeGameDataProgress(gameData, parsedLocalGame), data.game_data);
           safeSet('fintrail_game_' + currentUser.id, JSON.stringify(gameData));
           if (typeof loadAlertPrefs === 'function') loadAlertPrefs();
-          const syncedCreditScore = getCreditScoreNumber(gameData.currentCreditScore ?? gameData.creditScore ?? gameData.credit_score);
-          const syncedCreditBaseline = getCreditScoreNumber(gameData.creditScoreBaseline);
-          if (syncedCreditScore !== null) {
-            safeSet('fintrail_credit_score_' + currentUser.id, String(syncedCreditScore));
-            safeSet('fintrail_current_credit_score_' + currentUser.id, String(syncedCreditScore));
-          }
-          if (syncedCreditBaseline !== null) safeSet('fintrail_credit_score_baseline_' + currentUser.id, String(syncedCreditBaseline));
-          if (gameData.creditScoreUserSet === true) safeSet('fintrail_credit_score_user_set_' + currentUser.id, 'true');
+          if (typeof syncCreditScoreStorageFromGameData === 'function') syncCreditScoreStorageFromGameData();
         }
         if (data.is_pro) {
           isPro = true;
@@ -7163,6 +7157,7 @@
       try { const loc = safeGet('fintrail_debts_' + _fuid); if (loc) planDebts = JSON.parse(loc); } catch(e) {}
     }
     if (typeof normalizePlanDebts === 'function') normalizePlanDebts();
+    if (typeof syncCreditScoreStorageFromGameData === 'function') syncCreditScoreStorageFromGameData();
     render(); renderBillList(); renderSchedule(); renderGoals();
     applySavedCreditScore();
     if (typeof updateSimulator === 'function' && document.getElementById('base-score')) updateSimulator();
@@ -10124,9 +10119,14 @@ Guidelines:
     return currentUser?.id || 'demo';
   }
 
+  function getCreditScoreTimestampValue(value) {
+    const ts = Date.parse(value || '');
+    return Number.isFinite(ts) ? ts : 0;
+  }
+
   function hasNoCreditScoreStatus() {
     const status = String(gameData?.creditScoreStatus || gameData?.credit_status || '').toLowerCase();
-    return status === 'no_score' || status === 'no-score' || status === 'no_credit_score';
+    return status === 'no_score' || status === 'no-score' || status === 'no_credit_score' || gameData?.noCreditScoreYet === true;
   }
 
   function getCurrentCreditScore() {
@@ -10175,6 +10175,28 @@ Guidelines:
     return value;
   }
 
+  function syncCreditScoreStorageFromGameData() {
+    const uid = getCreditScoreUid();
+    const current = getCreditScoreNumber(gameData?.currentCreditScore ?? gameData?.creditScore ?? gameData?.credit_score);
+    const baseline = getCreditScoreNumber(gameData?.creditScoreBaseline ?? gameData?.credit_score_baseline);
+    if (current !== null) {
+      safeSet('fintrail_credit_score_' + uid, String(current));
+      safeSet('fintrail_current_credit_score_' + uid, String(current));
+      safeSet('fintrail_credit_score_local', String(current));
+      safeSet('fintrail_current_credit_score_local', String(current));
+    }
+    if (baseline !== null) {
+      safeSet('fintrail_credit_score_baseline_' + uid, String(baseline));
+      safeSet('fintrail_credit_score_baseline_local', String(baseline));
+    }
+    if (gameData?.creditScoreUpdatedAt) {
+      safeSet('fintrail_credit_score_updated_at_' + uid, gameData.creditScoreUpdatedAt);
+      safeSet('fintrail_credit_score_updated_at_local', gameData.creditScoreUpdatedAt);
+    }
+    if (gameData?.creditScoreUserSet === true) safeSet('fintrail_credit_score_user_set_' + uid, 'true');
+    safeSet('fintrail_game_' + uid, JSON.stringify(gameData || {}));
+  }
+
   function getCreditScoreHistory() {
     const current = getCurrentCreditScore();
     let baseline = getCreditScoreBaseline();
@@ -10212,25 +10234,30 @@ Guidelines:
     const val = Math.min(850, Math.max(300, parsed));
     const uid = currentUser?.id || 'demo';
     const previousCurrentScore = getCurrentCreditScore();
-    if (gameData.creditScoreStatus || gameData.credit_status) {
-      gameData.creditScoreStatus = 'scored';
-      gameData.credit_status = 'scored';
-    }
+    const alreadyUserSet = gameData.creditScoreUserSet === true || safeGet('fintrail_credit_score_user_set_' + uid) === 'true';
+    if (!options.setBaseline && previousCurrentScore === null && !alreadyUserSet && val === 680) return;
+    gameData.creditScoreStatus = 'scored';
+    gameData.credit_status = 'scored';
+    gameData.noCreditScoreYet = false;
     if (options.setBaseline) {
-      const priorWasUserSet = gameData.creditScoreUserSet === true || safeGet('fintrail_credit_score_user_set_' + uid) === 'true';
-      const baselineCandidate = previousCurrentScore !== null && previousCurrentScore !== val && (priorWasUserSet || previousCurrentScore !== 680)
+      const baselineCandidate = previousCurrentScore !== null && previousCurrentScore !== val && (alreadyUserSet || previousCurrentScore !== 680)
         ? previousCurrentScore
         : val;
       setCreditScoreBaselineIfMissing(baselineCandidate);
+    } else if (alreadyUserSet) {
+      setCreditScoreBaselineIfMissing(val);
     }
     gameData.currentCreditScore = val;
     gameData.creditScore = val;
     gameData.creditScoreUserSet = gameData.creditScoreUserSet || !!options.setBaseline;
+    if (gameData.creditScoreUserSet) setCreditScoreBaselineIfMissing(val);
+    gameData.creditScoreUpdatedAt = new Date().toISOString();
     safeSet('fintrail_credit_score_' + uid, String(val));
     safeSet('fintrail_current_credit_score_' + uid, String(val));
     safeSet('fintrail_credit_score_local', String(val));
     safeSet('fintrail_current_credit_score_local', String(val));
     if (options.setBaseline) safeSet('fintrail_credit_score_user_set_' + uid, 'true');
+    syncCreditScoreStorageFromGameData();
     if (creditScoreSaveTimer) clearTimeout(creditScoreSaveTimer);
     creditScoreSaveTimer = setTimeout(async () => {
       if (!sbClient || !currentUser) return;
@@ -11296,6 +11323,37 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
 
     merged.totalXP = Math.max(Number(base.totalXP || 0), Number(incoming.totalXP || 0));
     merged.earnedBadges = Array.from(new Set([...(base.earnedBadges || []), ...(incoming.earnedBadges || [])]));
+    const baseCreditTs = getCreditScoreTimestampValue(base.creditScoreUpdatedAt || base.credit_score_updated_at);
+    const incomingCreditTs = getCreditScoreTimestampValue(incoming.creditScoreUpdatedAt || incoming.credit_score_updated_at);
+    const baseCredit = getCreditScoreNumber(base.currentCreditScore ?? base.creditScore ?? base.credit_score);
+    const incomingCredit = getCreditScoreNumber(incoming.currentCreditScore ?? incoming.creditScore ?? incoming.credit_score);
+    const baseNoScore = String(base.creditScoreStatus || base.credit_status || '').toLowerCase().replace(/-/g, '_') === 'no_score' || base.noCreditScoreYet === true;
+    const incomingNoScore = String(incoming.creditScoreStatus || incoming.credit_status || '').toLowerCase().replace(/-/g, '_') === 'no_score' || incoming.noCreditScoreYet === true;
+    const useIncomingCredit = (incomingCredit !== null || incomingNoScore) && (incomingCreditTs >= baseCreditTs || baseCredit === null);
+    const creditSource = useIncomingCredit ? incoming : base;
+    const sourceCredit = getCreditScoreNumber(creditSource.currentCreditScore ?? creditSource.creditScore ?? creditSource.credit_score);
+    const sourceNoScore = String(creditSource.creditScoreStatus || creditSource.credit_status || '').toLowerCase().replace(/-/g, '_') === 'no_score' || creditSource.noCreditScoreYet === true;
+    const baseline = getCreditScoreNumber(base.creditScoreBaseline ?? base.credit_score_baseline)
+      ?? getCreditScoreNumber(incoming.creditScoreBaseline ?? incoming.credit_score_baseline)
+      ?? sourceCredit;
+    if (sourceNoScore && sourceCredit === null) {
+      merged.currentCreditScore = null;
+      merged.creditScore = null;
+      merged.creditScoreStatus = 'no_score';
+      merged.credit_status = 'no_score';
+      merged.noCreditScoreYet = true;
+    } else if (sourceCredit !== null) {
+      merged.currentCreditScore = sourceCredit;
+      merged.creditScore = sourceCredit;
+      merged.creditScoreStatus = 'scored';
+      merged.credit_status = 'scored';
+      merged.noCreditScoreYet = false;
+      if (baseline !== null) merged.creditScoreBaseline = baseline;
+      merged.creditScoreUserSet = base.creditScoreUserSet === true || incoming.creditScoreUserSet === true;
+    }
+    if (base.creditScoreUpdatedAt || incoming.creditScoreUpdatedAt) {
+      merged.creditScoreUpdatedAt = useIncomingCredit ? incoming.creditScoreUpdatedAt : base.creditScoreUpdatedAt;
+    }
     return merged;
   }
 
@@ -12672,7 +12730,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const creditBaseline = hasCreditScore && creditHistory.baseline !== null ? creditHistory.baseline : credit;
     const creditChange = hasCreditScore && creditHistory.change !== null ? creditHistory.change : 0;
     const noCreditScoreYet = typeof hasNoCreditScoreStatus === 'function' && hasNoCreditScoreStatus() && !hasCreditScore;
-    reportSetText('report-credit-current', noCreditScoreYet ? t('No score yet', 'Sin puntaje') : creditBaseline);
+    reportSetText('report-credit-current', noCreditScoreYet ? t('No credit score yet', 'Aún no hay puntaje de crédito') : creditBaseline);
     reportSetText('report-credit-simulated', noCreditScoreYet ? '' : credit);
     const creditFill = document.getElementById('report-credit-progress');
     if (creditFill) creditFill.style.width = noCreditScoreYet ? '0%' : Math.max(0, Math.min(100, ((credit - 300) / 550) * 100)) + '%';
@@ -14150,8 +14208,8 @@ window.addEventListener('load', function(){
     ['e.g. Visa Card', 'ej. Tarjeta Visa'],
     ['Focus now', 'Prioridad ahora'],
     ['Focus', 'Prioridad'],
-    ["THIS MONTH'S PAYMENT PLAN", 'PLAN DE PAGO DE ESTE MES'],
-    ["This Month's Payment Plan", 'Plan de Pago de Este Mes'],
+    ["THIS MONTH'S PAYMENT PLAN", 'PLAN DE PAGOS DE ESTE MES'],
+    ["This Month's Payment Plan", 'Plan de Pagos de Este Mes'],
     ['Total Monthly Payment', 'Pago mensual total'],
     ['MINIMUMS ONLY', 'SOLO MÍNIMOS'],
     ['Time to debt free', 'Tiempo para quedar libre de deudas'],
@@ -18223,7 +18281,11 @@ window.addEventListener('load', function(){
     setInlineIconLabel(root.querySelector('button[onclick="downloadDebtPlanPDF()"]'), 'file-text');
     setInlineIconLabel(document.getElementById('method-avalanche'), 'mountain');
     setInlineIconLabel(document.getElementById('method-snowball'), 'circle-dot');
-    setInlineIconLabel(root.querySelector('.debt-payment-plan-title'), 'clipboard-list');
+    setInlineIconLabel(root.querySelector('.debt-payment-plan-title'), 'clipboard-list',
+      (typeof currentLang !== 'undefined' && currentLang === 'es')
+        ? 'PLAN DE PAGOS DE ESTE MES'
+        : "THIS MONTH'S PAYMENT PLAN"
+    );
 
     root.querySelectorAll('.debt-helper-icon').forEach(function(el){
       replaceSingleIcon(el, 'info');
