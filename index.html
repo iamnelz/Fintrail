@@ -2228,6 +2228,79 @@
   }
   .debt-paid-card:first-of-type { border-top:0; }
   .debt-paid-card strong { color:var(--text); }
+  .debt-progress-dashboard {
+    border:1px solid var(--border);
+    background:var(--surface);
+    border-radius:14px;
+    padding:1rem;
+    margin:1rem 0;
+  }
+  .debt-progress-dashboard h3 {
+    display:flex;
+    align-items:center;
+    gap:0.45rem;
+    font-size:0.95rem;
+    margin:0 0 0.85rem;
+    color:var(--text);
+  }
+  .debt-progress-dashboard .ft-reference-icon {
+    width:18px;
+    height:18px;
+    flex-shrink:0;
+  }
+  .debt-progress-grid {
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:0.7rem;
+  }
+  .debt-progress-card {
+    background:var(--bg);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:0.8rem;
+    min-height:112px;
+    display:flex;
+    flex-direction:column;
+    gap:0.45rem;
+  }
+  .debt-progress-icon {
+    width:34px;
+    height:34px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(240,85,85,0.10);
+    color:var(--accent);
+  }
+  .debt-progress-icon .ft-reference-icon {
+    width:18px;
+    height:18px;
+  }
+  .debt-progress-label {
+    font-size:0.65rem;
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    font-weight:800;
+    line-height:1.35;
+  }
+  .debt-progress-value {
+    font-family:'Playfair Display',serif;
+    font-size:1.35rem;
+    line-height:1;
+    font-weight:800;
+    color:var(--text);
+  }
+  .debt-progress-empty {
+    border:1px dashed var(--border);
+    border-radius:12px;
+    padding:1rem;
+    color:var(--text-soft);
+    font-size:0.85rem;
+    line-height:1.55;
+    background:var(--bg);
+  }
   .debt-freedom-timeline {
     border:1px solid var(--border);
     background:var(--surface);
@@ -2408,10 +2481,12 @@
     .debt-add-grid .add-btn { grid-column:1/-1; margin-top:0.25rem; }
     .debt-paid-card, .debt-paid-modal-actions { flex-direction:column; align-items:stretch; }
     .debt-paid-card { align-items:flex-start; }
+    .debt-progress-grid { grid-template-columns:1fr 1fr; }
     .debt-freedom-summary { grid-template-columns:1fr; }
     .debt-freedom-item { grid-template-columns:auto 1fr; }
     .debt-freedom-xp { grid-column:2; text-align:left; }
   }
+  @media(max-width:520px){ .debt-progress-grid { grid-template-columns:1fr; } }
 
   /* ─── TABLET (768px – 1024px) ─── */
   @media (max-width:1024px) and (min-width:701px) {
@@ -5277,6 +5352,7 @@
           </div>
         </div>
         <div id="plan-empty" style="text-align:center;color:var(--muted);font-size:0.85rem;padding:1.5rem">Add your debts above to generate your personalized payoff plan.</div>
+        <div id="debt-progress-dashboard" class="debt-progress-dashboard"></div>
         <div id="debt-freedom-timeline" class="debt-freedom-timeline"></div>
       </div>
 
@@ -8088,13 +8164,76 @@ Guidelines:
     return parseInt(debt?.payoffXpAmount || debt?.payoffXpEarned || (debt?.paidOffEarly ? 100 : 50)) || 0;
   }
 
+  function getDebtEliminatedAmount(debt) {
+    const candidates = [
+      debt?.originalBalance,
+      debt?.startingBalance,
+      debt?.initialBalance,
+      debt?.originalAmount,
+      debt?.paidOffAmount,
+      debt?.amount,
+      debt?.balance
+    ];
+    for (const candidate of candidates) {
+      const value = parseFloat(candidate);
+      if (!isNaN(value) && value > 0) return value;
+    }
+    return 0;
+  }
+
   function getDebtFreedomStats() {
     const paidDebts = getPaidPlanDebts();
     return {
       debtsEliminated: paidDebts.length,
+      totalDebtEliminated: paidDebts.reduce((sum, debt) => sum + getDebtEliminatedAmount(debt), 0),
       xpEarned: paidDebts.reduce((sum, debt) => sum + getDebtPayoffXpValue(debt), 0),
       earlyPayoffs: paidDebts.filter(debt => !!debt.paidOffEarly).length
     };
+  }
+
+  function renderDebtProgressDashboard() {
+    const container = document.getElementById('debt-progress-dashboard');
+    if (!container) return;
+    const isEs = currentLang === 'es';
+    const stats = getDebtFreedomStats();
+    const hasPaidDebts = stats.debtsEliminated > 0;
+    const labels = {
+      title: isEs ? 'Panel de Progreso de Deudas' : 'Debt Progress Dashboard',
+      debts: isEs ? 'Deudas Eliminadas' : 'Debts Eliminated',
+      total: isEs ? 'Total de Deuda Eliminada' : 'Total Debt Eliminated',
+      xp: isEs ? 'XP Ganado por Pago de Deudas' : 'XP Earned From Debt Payoff',
+      early: isEs ? 'Logros por Pago Anticipado' : 'Early Payoff Achievements',
+      empty: isEs
+        ? 'Paga tu primera deuda para desbloquear tu panel de progreso de deudas.'
+        : 'Pay off your first debt to unlock your debt progress dashboard.'
+    };
+
+    if (!hasPaidDebts) {
+      container.innerHTML = `
+        <h3><span class="ft-reference-icon" data-fixed-icon="bar-chart-3"></span><span>${labels.title}</span></h3>
+        <div class="debt-progress-empty">${labels.empty}</div>`;
+      if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
+      return;
+    }
+
+    const cards = [
+      { icon: 'check-circle', label: labels.debts, value: stats.debtsEliminated.toLocaleString() },
+      { icon: 'wallet', label: labels.total, value: '$' + Math.round(stats.totalDebtEliminated).toLocaleString() },
+      { icon: 'trophy', label: labels.xp, value: `${stats.xpEarned.toLocaleString()} XP` },
+      { icon: 'target', label: labels.early, value: stats.earlyPayoffs.toLocaleString() }
+    ];
+
+    container.innerHTML = `
+      <h3><span class="ft-reference-icon" data-fixed-icon="bar-chart-3"></span><span>${labels.title}</span></h3>
+      <div class="debt-progress-grid">
+        ${cards.map(card => `
+          <div class="debt-progress-card">
+            <div class="debt-progress-icon"><span class="ft-reference-icon" data-fixed-icon="${card.icon}"></span></div>
+            <div class="debt-progress-label">${card.label}</div>
+            <div class="debt-progress-value">${card.value}</div>
+          </div>`).join('')}
+      </div>`;
+    if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
   }
 
   function renderDebtFreedomTimeline() {
@@ -8299,6 +8438,7 @@ Guidelines:
     const paidDebts = getPaidPlanDebts().slice().sort((a,b) => String(b.paidOffDate || '').localeCompare(String(a.paidOffDate || '')));
     if (activeDebts.length === 0 && paidDebts.length === 0) {
       list.innerHTML = '';
+      renderDebtProgressDashboard();
       renderDebtFreedomTimeline();
       return;
     }
@@ -8340,6 +8480,7 @@ Guidelines:
           </div>`).join('')}
       </div>` : '';
     list.innerHTML = activeHTML + paidHTML;
+    renderDebtProgressDashboard();
     renderDebtFreedomTimeline();
     if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
   }
@@ -8468,6 +8609,7 @@ Guidelines:
     if (activeDebts.length === 0) {
       document.getElementById('plan-result').style.display = 'none';
       document.getElementById('plan-empty').style.display = 'block';
+      renderDebtProgressDashboard();
       renderDebtFreedomTimeline();
       return;
     }
@@ -8571,6 +8713,7 @@ Guidelines:
 
     document.getElementById('plan-result').style.display = 'block';
     document.getElementById('plan-empty').style.display = 'none';
+    renderDebtProgressDashboard();
 
     document.getElementById('plan-summary').innerHTML = `
       <div class="plan-col">
@@ -11802,11 +11945,12 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   function buildDebtFreedomReportSummary() {
     const stats = typeof getDebtFreedomStats === 'function'
       ? getDebtFreedomStats()
-      : { debtsEliminated: 0, xpEarned: 0 };
+      : { debtsEliminated: 0, totalDebtEliminated: 0, xpEarned: 0 };
     if (!stats.debtsEliminated) return '';
+    const eliminatedAmount = '$' + Math.round(stats.totalDebtEliminated || 0).toLocaleString();
     return currentLang === 'es'
-      ? ` Deudas eliminadas: ${stats.debtsEliminated}. XP ganado por pago de deudas: ${stats.xpEarned}.`
-      : ` Debts eliminated: ${stats.debtsEliminated}. XP earned from debt payoff: ${stats.xpEarned}.`;
+      ? ` Resumen de Progreso de Deudas: Has eliminado ${stats.debtsEliminated} deuda${stats.debtsEliminated===1?'':'s'}, pagado ${eliminatedAmount} en deudas y ganado ${stats.xpEarned} XP por pagos de deudas.`
+      : ` Debt Progress Summary: You have eliminated ${stats.debtsEliminated} debt${stats.debtsEliminated===1?'':'s'}, paid off ${eliminatedAmount} in debt, and earned ${stats.xpEarned} XP from debt payoff.`;
   }
 
   function getMonthlyReportDateFromSelect() {
