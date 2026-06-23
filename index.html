@@ -6868,10 +6868,30 @@
     if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
   }
 
+  function getMembershipTierStyles(tier) {
+    const styles = {
+      bronze: { background: 'linear-gradient(135deg,#f3d0ad,#cd7f32)', color: '#2f1b0b', border: '1px solid rgba(205,127,50,0.55)', icon: '#92400e' },
+      silver: { background: 'linear-gradient(135deg,#f8fafc,#d1d5db,#aeb6c2)', color: '#1f2933', border: '1px solid rgba(148,163,184,0.65)', icon: '#6b7280' },
+      gold: { background: 'linear-gradient(135deg,#fff7cc,#f59e0b,#b45309)', color: '#1f1300', border: '1px solid rgba(245,158,11,0.65)', icon: '#92400e' },
+      platinum: { background: 'linear-gradient(135deg,#eff6ff,#93c5fd,#5b6ee1)', color: '#0f172a', border: '1px solid rgba(147,197,253,0.7)', icon: '#1d4ed8' },
+      diamond: { background: 'linear-gradient(135deg,#ccfbf1,#2dd4bf,#0f766e)', color: '#042f2e', border: '1px solid rgba(45,212,191,0.68)', icon: '#0f766e' }
+    };
+    return styles[tier] || styles.bronze;
+  }
+
   function applyAccountBadgeTierClass(el, tier) {
     if (!el) return;
     ['tier-bronze','tier-silver','tier-gold','tier-platinum','tier-diamond'].forEach(cls => el.classList.remove(cls));
     if (tier) el.classList.add('tier-' + tier);
+    const tierStyles = getMembershipTierStyles(tier);
+    el.style.background = tierStyles.background;
+    el.style.color = tierStyles.color;
+    el.style.border = tierStyles.border;
+    const icon = el.querySelector('.ft-reference-icon');
+    if (icon) {
+      icon.style.color = tierStyles.icon;
+      icon.style.stroke = tierStyles.icon;
+    }
   }
 
   function setProUI() {
@@ -9214,16 +9234,10 @@ Guidelines:
       badge.innerHTML = `<span class="ft-reference-icon" data-fixed-icon="${level.badge || 'medal'}"></span><span>${level.name} · Pro</span>`;
       badge.classList.add('pro');
       applyAccountBadgeTierClass(badge, level.tier);
-      badge.style.background = '';
-      badge.style.color = '';
-      badge.style.border = '';
     } else {
       badge.textContent = `${level.name} · Free Plan`;
       badge.classList.remove('pro');
       applyAccountBadgeTierClass(badge, level.tier);
-      badge.style.background = '';
-      badge.style.color = '';
-      badge.style.border = '';
     }
     if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
   }
@@ -10862,6 +10876,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     ];
     saveGameData();
     checkLevelUp(prevXP, gameData.totalXP);
+    if (typeof setProUI === 'function') setProUI();
+    if (typeof loadProfileUI === 'function' && document.getElementById('profile-plan-badge')) loadProfileUI();
     renderStreaks();
     renderActivityFeed();
   }
@@ -11069,6 +11085,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
 
   function renderLevelCard() {
     const level = getCurrentLevel();
+    const tierStyles = getMembershipTierStyles(level.tier);
     const xp = gameData.totalXP || 0;
     const nextLevel = getLEVELS()[level.index + 1];
     const progress = nextLevel ? ((xp - level.minXP) / (nextLevel.minXP - level.minXP)) * 100 : 100;
@@ -11076,9 +11093,9 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const levelCard = document.querySelector('.level-card');
     if (levelCard) levelCard.setAttribute('data-tier', level.tier || '');
     document.getElementById('level-badge').innerHTML = `<span class="ft-reference-icon" data-fixed-icon="${level.badge || 'medal'}"></span>`;
-    document.getElementById('level-badge').style.color = level.color;
+    document.getElementById('level-badge').style.color = tierStyles.icon;
     document.getElementById('level-name').textContent = level.name;
-    document.getElementById('level-name').style.color = level.color;
+    document.getElementById('level-name').style.color = tierStyles.icon;
     document.getElementById('level-subtitle').innerHTML = `
       ${level.subtitle}
       ${level.statusTitle ? `<div class="status-badge-display">${level.statusTitle}</div>` : ''}
