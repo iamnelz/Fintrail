@@ -1349,6 +1349,11 @@
   .sb-bar-track { flex:1; height:6px; background:var(--border); border-radius:3px; overflow:hidden; }
   .sb-bar-fill { height:100%; border-radius:3px; transition:width 0.8s ease; }
   .sb-score { font-size:0.78rem; font-weight:700; width:32px; text-align:right; }
+  .health-recommendations { display:flex; flex-direction:column; gap:0.65rem; margin-top:1rem; text-align:left; }
+  .health-rec-heading { font-size:0.76rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); }
+  .health-rec-item { display:flex; gap:0.6rem; align-items:flex-start; padding:0.75rem 0.85rem; border:1px solid var(--border); border-radius:12px; background:var(--bg); color:var(--text-soft); font-size:0.78rem; line-height:1.45; }
+  .health-rec-item .ft-reference-icon { width:18px; height:18px; color:var(--accent); stroke:var(--accent); flex-shrink:0; margin-top:0.05rem; }
+  .health-rec-item strong { color:var(--text); font-weight:800; }
 
   /* DEBT PAYOFF PLANNER */
   .planner-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:1.75rem; }
@@ -5378,6 +5383,7 @@
             </div>
           </div>
           <div class="score-breakdown" id="score-breakdown"></div>
+          <div class="health-recommendations" id="health-recommendations"></div>
           <button class="add-btn" style="margin-top:1rem;width:100%" onclick="calculateHealthScore()" data-en="Recalculate Score" data-es="Recalcular Puntaje">Recalculate Score</button>
         </div>
 
@@ -7508,6 +7514,7 @@
     document.getElementById('amount').value = '';
     render();
     saveUserData();
+    refreshHealthScoreAfterDataChange();
     updateBudgetStreakForToday();
     awardXPForAction('transaction');
   }
@@ -7516,6 +7523,7 @@
   function deleteTransaction(id) {
     transactions = transactions.filter(t => t.id !== id);
     render(); saveUserData();
+    refreshHealthScoreAfterDataChange();
   }
 
   // RENDER BUDGET
@@ -7964,6 +7972,7 @@ Guidelines:
     safeSet('fintrail_goals_' + _gUid, JSON.stringify(goals));
     safeSet('fintrail_goals_ts_' + _gUid, String(Date.now()));
     renderGoals(); saveUserData();
+    refreshHealthScoreAfterDataChange();
     awardXPForAction('goal');
   }
 
@@ -7976,6 +7985,7 @@ Guidelines:
     safeSet('fintrail_goals_ts_' + _dUid, String(Date.now()));
     saveUserData();
     renderGoals();
+    refreshHealthScoreAfterDataChange();
   }
 
   function deposit(id) {
@@ -7991,6 +8001,7 @@ Guidelines:
       safeSet('fintrail_goals_ts_' + _depUid, String(Date.now()));
       renderGoals();
       saveUserData();
+      refreshHealthScoreAfterDataChange();
       // Require receipt for XP
       showReceiptModal('goal', id, null, amount, goal.name);
     }
@@ -8111,6 +8122,7 @@ Guidelines:
     document.getElementById('bill-amount').value = '';
     document.getElementById('bill-per-paycheck').value = '';
     renderBillList(); renderSchedule(); saveUserData();
+    refreshHealthScoreAfterDataChange();
     awardXPForAction('bill');
   }
 
@@ -8118,6 +8130,8 @@ Guidelines:
     bills = bills.filter(b => b.id !== id);
     renderBillList();
     renderSchedule();
+    saveUserData();
+    refreshHealthScoreAfterDataChange();
   }
 
   function togglePaid(key, el) {
@@ -8366,22 +8380,126 @@ Guidelines:
   // =============================================
   // FINANCIAL HEALTH SCORE
   // =============================================
+  function getHealthScoreSnapshot() {
+    const txns = Array.isArray(transactions) ? transactions : [];
+    const safeGoals = Array.isArray(goals) ? goals : [];
+    const safeBills = Array.isArray(bills) ? bills : [];
+    if (typeof normalizePlanDebts === 'function') normalizePlanDebts();
+    const activeDebts = typeof getActivePlanDebts === 'function'
+      ? getActivePlanDebts()
+      : (Array.isArray(planDebts) ? planDebts.filter(d => d && d.status !== 'paid') : []);
+    const getBalance = debt => typeof getDebtCurrentBalance === 'function'
+      ? getDebtCurrentBalance(debt)
+      : (parseFloat(debt?.currentBalance ?? debt?.balance) || 0);
+    const income = txns.filter(t => t.type === 'income').reduce((s,t) => s + (parseFloat(t.amount) || 0), 0);
+    const expenses = txns.filter(t => t.type === 'expense').reduce((s,t) => s + (parseFloat(t.amount) || 0), 0);
+    const balance = income - expenses;
+    const totalGoalTarget = safeGoals.reduce((s,g) => s + (parseFloat(g.target) || 0), 0);
+    const totalGoalSaved = safeGoals.reduce((s,g) => s + (parseFloat(g.saved) || 0), 0);
+    const totalDebt = activeDebts.reduce((s,d) => s + getBalance(d), 0);
+    const creditScore = typeof getCurrentCreditScore === 'function' ? getCurrentCreditScore() : null;
+
+    const budgetScore = income > 0 ? Math.max(0, Math.min(25, Math.round((balance / income) * 100))) : 0;
+    const savingsScore = totalGoalTarget > 0 ? Math.max(0, Math.min(25, Math.round((totalGoalSaved / totalGoalTarget) * 25))) : 0;
+    const debtScore = income > 0 ? Math.max(0, 25 - Math.round((totalDebt / Math.max(income * 12, 1)) * 10)) : (totalDebt > 0 ? 12 : 25);
+    const billScore = safeBills.length > 0 ? 25 : 10;
+    const total = Math.min(100, Math.max(0, budgetScore + savingsScore + debtScore + billScore));
+
+    return {
+      income,
+      expenses,
+      balance,
+      totalGoalTarget,
+      totalGoalSaved,
+      totalDebt,
+      activeDebts,
+      bills: safeBills,
+      goals: safeGoals,
+      creditScore,
+      budgetScore,
+      savingsScore,
+      debtScore,
+      billScore,
+      total
+    };
+  }
+
+  function getHealthScoreRecommendations(snapshot = getHealthScoreSnapshot()) {
+    const isEs = currentLang === 'es';
+    const recs = [];
+    const add = (icon, titleEn, titleEs, bodyEn, bodyEs) => {
+      recs.push({ icon, title: isEs ? titleEs : titleEn, body: isEs ? bodyEs : bodyEn });
+    };
+    if (snapshot.income <= 0 && snapshot.expenses <= 0) {
+      add('wallet', 'Start with your budget', 'Comienza con tu presupuesto',
+        'Add income and expenses in Budget Tracker so Fintrail can calculate your score more accurately.',
+        'Agrega ingresos y gastos en el Rastreador de Presupuesto para que Fintrail calcule tu puntaje con más precisión.');
+    } else if (snapshot.balance < 0) {
+      add('alert-triangle', 'Bring spending back in line', 'Ajusta tus gastos',
+        `You are $${Math.abs(snapshot.balance).toLocaleString(undefined,{maximumFractionDigits:0})} over your tracked income. Review flexible categories first.`,
+        `Estás $${Math.abs(snapshot.balance).toLocaleString(undefined,{maximumFractionDigits:0})} por encima de tus ingresos registrados. Revisa primero las categorías flexibles.`);
+    } else if (snapshot.budgetScore < 18) {
+      add('bar-chart-3', 'Build more breathing room', 'Crea más margen',
+        'Try increasing your monthly surplus so your budget balance can contribute more to your health score.',
+        'Intenta aumentar tu excedente mensual para que tu balance de presupuesto aporte más a tu salud financiera.');
+    }
+
+    const savingsPct = snapshot.totalGoalTarget > 0 ? snapshot.totalGoalSaved / snapshot.totalGoalTarget : 0;
+    if (snapshot.totalGoalTarget <= 0 || savingsPct < 0.15) {
+      add('target', 'Strengthen savings goals', 'Refuerza tus metas de ahorro',
+        'Add or update a savings goal to improve your financial stability score.',
+        'Agrega o actualiza una meta de ahorro para mejorar tu estabilidad financiera.');
+    }
+
+    if (snapshot.totalDebt > 0 && snapshot.debtScore < 23) {
+      add('credit-card', 'Debt payoff is helping', 'El pago de deudas está ayudando',
+        'Keep reducing active debt balances. Paid-off debts are now excluded from your Debt Load score.',
+        'Sigue reduciendo los saldos activos. Las deudas pagadas ahora se excluyen de tu Carga de Deuda.');
+    } else if (snapshot.totalDebt <= 0) {
+      add('check-circle', 'Debt load looks strong', 'Tu carga de deuda se ve fuerte',
+        'No active debt is currently counted in your health score. Keep that momentum going.',
+        'No hay deuda activa contada en tu salud financiera. Mantén ese impulso.');
+    }
+
+    if (!snapshot.bills.length) {
+      add('calendar-check', 'Track recurring bills', 'Registra facturas recurrentes',
+        'Add bills to Bill Schedule so payment tracking can strengthen your score.',
+        'Agrega facturas al Horario de Facturas para que el seguimiento de pagos fortalezca tu puntaje.');
+    }
+
+    if (snapshot.creditScore !== null) {
+      add('shield-check', 'Keep credit updated', 'Mantén tu crédito actualizado',
+        'Keep your credit score updated so your report and health score stay accurate.',
+        'Mantén actualizado tu puntaje de crédito para que tu reporte y salud financiera sean precisos.');
+    }
+
+    if (!recs.length) {
+      add('activity', 'Keep tracking progress', 'Sigue registrando tu progreso',
+        'Your score has enough data to guide you. Keep updating budget, debt, savings, bills, and credit activity.',
+        'Tu puntaje tiene suficientes datos para guiarte. Sigue actualizando presupuesto, deudas, ahorros, facturas y crédito.');
+    }
+    return recs.slice(0, 4);
+  }
+
+  function renderRecommendations(snapshot = getHealthScoreSnapshot()) {
+    const container = document.getElementById('health-recommendations');
+    if (!container) return;
+    const recs = getHealthScoreRecommendations(snapshot);
+    const heading = currentLang === 'es' ? 'Recomendaciones' : 'Recommendations';
+    container.innerHTML = `<div class="health-rec-heading">${heading}</div>` + recs.map(rec => `
+      <div class="health-rec-item">
+        <span class="ft-reference-icon" data-fixed-icon="${rec.icon}"></span>
+        <span><strong>${rec.title}</strong><br>${rec.body}</span>
+      </div>
+    `).join('');
+    if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
+  }
+
   function calculateHealthScore() {
     if (!document.getElementById('gauge-fill')) return;
     if (typeof applyAlertPrefsToUI === 'function') applyAlertPrefsToUI();
-    const income = transactions.filter(t => t.type === 'income').reduce((s,t) => s+t.amount, 0);
-    const expenses = transactions.filter(t => t.type === 'expense').reduce((s,t) => s+t.amount, 0);
-    const balance = income - expenses;
-    const totalGoalTarget = goals.reduce((s,g) => s+g.target, 0);
-    const totalGoalSaved = goals.reduce((s,g) => s+g.saved, 0);
-    const totalDebt = planDebts.reduce((s,d) => s+d.balance, 0);
-
-    // Score components (each out of 25)
-    const budgetScore = income > 0 ? Math.min(25, Math.round((balance / income) * 100)) : 0;
-    const savingsScore = totalGoalTarget > 0 ? Math.min(25, Math.round((totalGoalSaved / totalGoalTarget) * 25)) : 0;
-    const debtScore = income > 0 ? Math.max(0, 25 - Math.round((totalDebt / (income * 12)) * 10)) : 25;
-    const billScore = bills.length > 0 ? 25 : 10;
-    const total = Math.min(100, Math.max(0, budgetScore + savingsScore + debtScore + billScore));
+    const snapshot = getHealthScoreSnapshot();
+    const { income, balance, total, budgetScore, savingsScore, debtScore, billScore } = snapshot;
 
     // Update gauge
     const circumference = 251.2;
@@ -8414,7 +8532,14 @@ Guidelines:
         <div class="sb-bar-track"><div class="sb-bar-fill" style="width:${(item.score/item.max)*100}%;background:${item.color}"></div></div>
         <div class="sb-score" style="color:${item.color}">${item.score}</div>
       </div>`).join('');
+    renderRecommendations(snapshot);
     if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
+    if (typeof gameData === 'object' && gameData) {
+      const previousHealthScore = parseInt(gameData.healthScore);
+      gameData.healthScore = total;
+      gameData.healthScoreUpdatedAt = new Date().toISOString();
+      if (previousHealthScore !== total && typeof saveGameData === 'function') saveGameData();
+    }
 
     // Check goal milestone alerts
     if (alertPrefs.goals) checkGoalMilestones();
@@ -8426,6 +8551,18 @@ Guidelines:
           ? `Estás $${Math.abs(balance).toFixed(2)} por encima de tu presupuesto este mes.`
           : `You're $${Math.abs(balance).toFixed(2)} over budget this month.`
       );
+    }
+  }
+
+  function renderHealthScore() {
+    calculateHealthScore();
+  }
+
+  function refreshHealthScoreAfterDataChange() {
+    const tab = document.getElementById('tab-healthscore');
+    const visible = !!(tab && tab.classList.contains('visible'));
+    if (visible || document.getElementById('gauge-fill')) {
+      try { calculateHealthScore(); } catch(e) {}
     }
   }
 
@@ -8938,6 +9075,7 @@ Guidelines:
     renderDebtList();
     runPayoffPlan();
     saveUserData();
+    refreshHealthScoreAfterDataChange();
   }
 
   function removeDebt(id) {
@@ -8945,6 +9083,7 @@ Guidelines:
     renderDebtList();
     runPayoffPlan();
     saveUserData();
+    refreshHealthScoreAfterDataChange();
   }
 
   function renderDebtList() {
@@ -9086,6 +9225,7 @@ Guidelines:
     renderDebtList();
     runPayoffPlan();
     saveUserData();
+    refreshHealthScoreAfterDataChange();
   }
 
   function closeDebtModal() {
@@ -9157,6 +9297,7 @@ Guidelines:
     renderDebtList();
     runPayoffPlan();
     saveUserData();
+    refreshHealthScoreAfterDataChange();
     showDebtPaidSuccess(debt, debt.payoffXpAmount || debt.payoffXpEarned || xp, paidEarly, !alreadyAwarded);
   }
 
@@ -10396,6 +10537,7 @@ Guidelines:
       creditScoreBaseline: gameData.creditScoreBaseline,
       noCreditScoreYet: gameData.noCreditScoreYet === true
     });
+    refreshHealthScoreAfterDataChange();
     if (creditScoreSaveTimer) clearTimeout(creditScoreSaveTimer);
     creditScoreSaveTimer = null;
     saveUserData().then(result => console.log('CREDIT SCORE SAVE RESULT', result));
@@ -16616,6 +16758,7 @@ window.addEventListener('load', function(){
 
       if (typeof render === 'function') render();
       if (typeof saveUserData === 'function') saveUserData();
+      if (typeof refreshHealthScoreAfterDataChange === 'function') refreshHealthScoreAfterDataChange();
       if (typeof awardXPForAction === 'function') awardXPForAction('transaction');
 
       if (typeof applyLanguage === 'function') setTimeout(applyLanguage, 50);
@@ -16755,6 +16898,7 @@ window.addEventListener('load', function(){
       if (typeof renderBillList === 'function') renderBillList();
       if (typeof renderSchedule === 'function') renderSchedule();
       if (typeof saveUserData === 'function') saveUserData();
+      if (typeof refreshHealthScoreAfterDataChange === 'function') refreshHealthScoreAfterDataChange();
       if (typeof awardXPForAction === 'function') awardXPForAction('bill');
       if (typeof applyLanguage === 'function') setTimeout(applyLanguage, 50);
       if (typeof fintrailSafeBillScheduleSpanish === 'function') setTimeout(fintrailSafeBillScheduleSpanish, 80);
