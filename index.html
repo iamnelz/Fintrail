@@ -12934,6 +12934,13 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     safeSet('fintrail_cal_' + (currentUser?.id || 'demo'), JSON.stringify(calCustomEvents));
   }
 
+  function parseCalendarDateKey(dateStr) {
+    const match = String(dateStr || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!match) return null;
+    const [year, month, day] = String(dateStr).split('-').map(Number);
+    return new Date(year, month - 1, day);
+  }
+
   function getCalEvents(year, month) {
     const events = [];
     const monthStr = `${year}-${String(month+1).padStart(2,'0')}`;
@@ -12962,8 +12969,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     // Savings goals target dates
     goals.forEach(g => {
       if (g.date) {
-        const gDate = new Date(g.date);
-        if (gDate.getFullYear() === year && gDate.getMonth() === month) {
+        const gDate = parseCalendarDateKey(g.date);
+        if (gDate && gDate.getFullYear() === year && gDate.getMonth() === month) {
           events.push({ date:g.date, title:`🎯 ${g.name} Goal`, type:'goal', icon:'🎯' });
         }
       }
@@ -12972,7 +12979,16 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     // Debt milestones (estimated payoff)
     if (planDebts.length > 0) {
       planDebts.forEach(d => {
-        const months = Math.ceil(d.balance / Math.max(25, d.balance * 0.02));
+        if (d.status === 'paid' && d.paidOffDate) {
+          const paidDate = parseCalendarDateKey(d.paidOffDate);
+          if (paidDate && paidDate.getFullYear() === year && paidDate.getMonth() === month) {
+            events.push({ date:d.paidOffDate, title:`💳 ${d.name} Paid Off`, type:'debt', icon:'💳' });
+          }
+          return;
+        }
+        const balance = typeof getDebtCurrentBalance === 'function' ? getDebtCurrentBalance(d) : (parseFloat(d.balance) || 0);
+        if (balance <= 0) return;
+        const months = Math.ceil(balance / Math.max(25, balance * 0.02));
         const payoffDate = new Date();
         payoffDate.setMonth(payoffDate.getMonth() + months);
         if (payoffDate.getFullYear() === year && payoffDate.getMonth() === month) {
@@ -13095,14 +13111,15 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
 
   function renderUpcoming(year, month) {
     const today = new Date();
+    const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
     const allEvents = [];
 
     // Get events for next 60 days
     for (let m = 0; m <= 2; m++) {
       const d = new Date(today.getFullYear(), today.getMonth() + m, 1);
       getCalEvents(d.getFullYear(), d.getMonth()).forEach(e => {
-        const eDate = new Date(e.date);
-        if (eDate >= today) allEvents.push(e);
+        const eDate = parseCalendarDateKey(e.date);
+        if (eDate && eDate >= todayStart) allEvents.push(e);
       });
     }
 
@@ -13110,7 +13127,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const seen = new Set();
     const upcoming = allEvents
       .filter(e => { const key = e.date+e.title; if(seen.has(key)){return false;} seen.add(key); return true; })
-      .sort((a,b) => new Date(a.date) - new Date(b.date))
+      .sort((a,b) => parseCalendarDateKey(a.date) - parseCalendarDateKey(b.date))
       .slice(0, 8);
 
     const colors = { bill:'#f05555', payday:'#00b894', goal:'#f5a623', debt:'#818cf8', custom:'#06d6a0', reminder:'#06d6a0', milestone:'#818cf8' };
@@ -13118,8 +13135,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     if (upcoming.length === 0) { container.innerHTML = '<div class="empty-state" style="font-size:0.82rem">No upcoming events — add bills, goals or custom events!</div>'; return; }
 
     container.innerHTML = upcoming.map(e => {
-      const eDate = new Date(e.date);
-      const diff = Math.ceil((eDate - today) / (1000*60*60*24));
+      const eDate = parseCalendarDateKey(e.date);
+      const diff = Math.ceil((eDate - todayStart) / (1000*60*60*24));
       const dateLabel = diff === 0 ? 'Today' : diff === 1 ? 'Tomorrow' : `${diff} days`;
       return `<div class="cal-upcoming-item">
         <div class="cal-upcoming-dot" style="background:${colors[e.type]||'#888'}"></div>
