@@ -7591,19 +7591,23 @@
   }
 
   function filterResources(tag, btn) {
+    if (currentFilter === tag && btn?.classList?.contains('active')) return;
     currentFilter = tag;
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+    if (btn) btn.classList.add('active');
     renderResources();
   }
 
   function renderResources() {
     const grid = document.getElementById('resources-grid');
+    if (!grid) return;
     const affiliateTags = ['mortgage','personal','auto','refi'];
     let filtered = currentFilter === 'all' ? resources : resources.filter(r => r.tag === currentFilter);
     // Free users only see non-affiliate categories
     if (!isPro) filtered = filtered.filter(r => !affiliateTags.includes(r.tag));
     const sorted = [...filtered].sort((a,b) => (b.featured?1:0) - (a.featured?1:0));
+    const renderKey = `${currentLang}|${isPro ? 'pro' : 'free'}|${currentFilter}|${sorted.map(r => r.title).join('|')}`;
+    if (grid.dataset.renderKey === renderKey && grid.children.length) return;
 
     grid.innerHTML = sorted.map(r => {
       const badgesHtml = (r.badges||[]).map(b => {
@@ -7637,6 +7641,7 @@
         ${r.commission ? `<div class="commission-note">Partner details will be added as agreements are finalized.</div>` : ''}
       </div>`;
     }).join('');
+    grid.dataset.renderKey = renderKey;
   }
 
   // GUIDE SWITCHING
@@ -17076,6 +17081,7 @@ window.addEventListener('load', function(){
   }
 
   function patchResources(){
+    if (!window.__fintrailLanguageSwitching) return;
     document.querySelectorAll('#tab-resources .filter-btn, #tab-resources button').forEach(function(btn){
       var txt = (btn.textContent || '').trim();
       if (isSpanish()) {
@@ -17152,15 +17158,15 @@ window.addEventListener('load', function(){
   window.fintrailApplyFinalTranslationPolish = applyPolishPatch;
 
   window.addEventListener('load', function(){
-    ['applyLanguage','render','renderBudgetChart','renderCalendar','renderMonthView','renderWeekView','renderMonthlyReport','initNetWorth','filterResources'].forEach(wrapRender);
+    ['applyLanguage','render','renderBudgetChart','renderCalendar','renderMonthView','renderWeekView','renderMonthlyReport','initNetWorth'].forEach(wrapRender);
     applyPolishPatch();
     setTimeout(applyPolishPatch, 500);
     setTimeout(applyPolishPatch, 1500);
     setTimeout(applyPolishPatch, 3000);
   });
-  document.addEventListener('click', schedule, true);
-  document.addEventListener('change', schedule, true);
-  document.addEventListener('input', schedule, true);
+  document.addEventListener('click', function(e){ if (!(e.target && e.target.closest && e.target.closest('#tab-resources'))) schedule(); }, true);
+  document.addEventListener('change', function(e){ if (!(e.target && e.target.closest && e.target.closest('#tab-resources'))) schedule(); }, true);
+  document.addEventListener('input', function(e){ if (!(e.target && e.target.closest && e.target.closest('#tab-resources'))) schedule(); }, true);
 })();
 </script>
 
@@ -17310,6 +17316,7 @@ window.addEventListener('load', function(){
   }
 
   function fixResources(){
+    if (!window.__fintrailLanguageSwitching) return;
     var root = document.getElementById('tab-resources');
     if (!root) return;
     setDataLanguage(root);
@@ -17364,7 +17371,7 @@ window.addEventListener('load', function(){
     setTimeout(applyEnglishModeCleanup, 500);
   }
 
-  ['applyLanguage','renderGoals','calcInvestment','renderCalendar','renderMonthlyReport','renderResources','filterResources','setProUI','setUserUI'].forEach(function(name){
+  ['applyLanguage','renderGoals','calcInvestment','renderCalendar','renderMonthlyReport','setProUI','setUserUI'].forEach(function(name){
     try {
       var fn = window[name];
       if (typeof fn === 'function' && !fn.__fintrailEnglishModeCleanup) {
@@ -17380,9 +17387,9 @@ window.addEventListener('load', function(){
 
   window.fintrailApplyEnglishModeCleanup = applyEnglishModeCleanup;
   window.addEventListener('load', schedule);
-  document.addEventListener('click', schedule, true);
-  document.addEventListener('change', schedule, true);
-  document.addEventListener('input', schedule, true);
+  document.addEventListener('click', function(e){ if (!(e.target && e.target.closest && e.target.closest('#tab-resources'))) schedule(); }, true);
+  document.addEventListener('change', function(e){ if (!(e.target && e.target.closest && e.target.closest('#tab-resources'))) schedule(); }, true);
+  document.addEventListener('input', function(e){ if (!(e.target && e.target.closest && e.target.closest('#tab-resources'))) schedule(); }, true);
 })();
 </script>
 
