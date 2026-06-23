@@ -6116,7 +6116,7 @@
             </div>
             <div class="form-group">
               <label data-en="Enter Your Credit Score" data-es="Ingresa Tu Puntaje de Crédito">Enter Your Credit Score</label>
-              <input type="range" class="score-range-input" id="base-score" min="300" max="850" value="680" oninput="updateSimulator()">
+              <input type="range" class="score-range-input" id="base-score" min="300" max="850" value="680" oninput="updateSimulator({ persist:true })">
               <div class="score-range-labels"><span data-en="300 Poor" data-es="300 Bajo">300 Poor</span><span id="base-score-display" style="font-weight:700;color:var(--accent)">680</span><span data-en="850 Exceptional" data-es="850 Excepcional">850 Exceptional</span></div>
             </div>
             <div class="form-group" style="margin-top:0.75rem">
@@ -6993,12 +6993,15 @@
     safeSet('fintrail_bills_' + _uid2,       JSON.stringify(bills));
     safeSet('fintrail_txns_' + _uid2,        JSON.stringify(transactions));
 
-    if (!sbClient || !currentUser) return;
+    if (!sbClient || !currentUser) return { ok: false, skipped: true, reason: 'no Supabase session' };
     try {
       const payload = { user_id: currentUser.id, transactions, bills, goals, plan_debts: planDebts, nw_assets: nwAssets, nw_liabilities: nwLiabilities, nw_history: nwHistory, game_data: gameData, is_pro: isPro, updated_at: new Date().toISOString() };
-      await sbClient.from('user_data').upsert(payload, { onConflict: 'user_id' });
+      const result = await sbClient.from('user_data').upsert(payload, { onConflict: 'user_id' });
+      if (result?.error) throw result.error;
+      return { ok: true, field: 'user_data.game_data.currentCreditScore', currentCreditScore: gameData.currentCreditScore, creditScoreBaseline: gameData.creditScoreBaseline, result };
     } catch(err) {
       console.log('saveUserData error:', err.message);
+      return { ok: false, error: err.message };
     }
   }
 
@@ -7172,6 +7175,12 @@
     }
     if (typeof normalizePlanDebts === 'function') normalizePlanDebts();
     if (typeof syncCreditScoreStorageFromGameData === 'function') syncCreditScoreStorageFromGameData();
+    console.log('LOADED CREDIT SCORE DATA', {
+      currentCreditScore: gameData?.currentCreditScore,
+      creditScoreBaseline: gameData?.creditScoreBaseline,
+      savedCreditScore: gameData?.savedCreditScore,
+      creditScore: gameData?.creditScore
+    });
     if (refreshAdminProBypass()) {
       applyProState();
       setProUI();
@@ -10305,22 +10314,7 @@ Guidelines:
   }
 
   async function syncCreditScoreToAccountDataNow() {
-    if (!sbClient || !currentUser) return;
-    try {
-      const { error } = await sbClient.from('user_data').upsert({
-        user_id: currentUser.id,
-        game_data: gameData,
-        updated_at: new Date().toISOString()
-      }, { onConflict: 'user_id' });
-      if (error) throw error;
-      console.log('credit score synced:', {
-        currentCreditScore: gameData.currentCreditScore,
-        creditScoreBaseline: gameData.creditScoreBaseline,
-        creditScoreUpdatedAt: gameData.creditScoreUpdatedAt
-      });
-    } catch (e) {
-      console.log('credit score sync err:', e.message);
-    }
+    return saveUserData();
   }
 
   function getCreditScoreHistory() {
@@ -10351,6 +10345,7 @@ Guidelines:
     if (slider) slider.value = score;
     if (input) input.value = score;
     if (document.getElementById('base-score-display')) document.getElementById('base-score-display').textContent = score;
+    console.log('RENDERING CREDIT SIMULATOR SCORE', score);
   }
 
   let creditScoreSaveTimer = null;
@@ -10358,6 +10353,7 @@ Guidelines:
     const parsed = getCreditScoreNumber(score);
     if (parsed === null) return;
     const val = Math.min(850, Math.max(300, parsed));
+    console.log('CREDIT SCORE CHANGE', val);
     const uid = currentUser?.id || 'demo';
     const previousCurrentScore = getCurrentCreditScore();
     const alreadyUserSet = gameData.creditScoreUserSet === true || safeGet('fintrail_credit_score_user_set_' + uid) === 'true';
@@ -10384,8 +10380,14 @@ Guidelines:
     safeSet('fintrail_current_credit_score_local', String(val));
     if (options.setBaseline) safeSet('fintrail_credit_score_user_set_' + uid, 'true');
     syncCreditScoreStorageFromGameData();
+    console.log('SAVING CREDIT SCORE', {
+      currentCreditScore: gameData.currentCreditScore,
+      creditScoreBaseline: gameData.creditScoreBaseline,
+      noCreditScoreYet: gameData.noCreditScoreYet === true
+    });
     if (creditScoreSaveTimer) clearTimeout(creditScoreSaveTimer);
-    syncCreditScoreToAccountDataNow();
+    creditScoreSaveTimer = null;
+    saveUserData().then(result => console.log('CREDIT SCORE SAVE RESULT', result));
   }
 
   function syncScoreSlider() {
@@ -10399,12 +10401,12 @@ Guidelines:
     updateSimulator();
   }
 
-  function updateSimulator() {
+  function updateSimulator(options = {}) {
     const base = parseInt(document.getElementById('base-score').value);
     document.getElementById('base-score-num').value = base;
     document.getElementById('base-score-display').textContent = base;
-    const activeScoreField = document.activeElement?.id === 'base-score' || document.activeElement?.id === 'base-score-num';
-    persistCreditScore(base, { setBaseline: activeScoreField });
+    console.log('RENDERING CREDIT SIMULATOR SCORE', base);
+    if (options.persist === true) persistCreditScore(base, { setBaseline: true });
 
     // Calculate total impact from selected actions
     let totalImpact = 0;
