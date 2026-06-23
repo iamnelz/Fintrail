@@ -7143,6 +7143,10 @@
           applyProState();
           setProUI();
         }
+        if (refreshAdminProBypass()) {
+          applyProState();
+          setProUI();
+        }
       }
     } catch (err) {
       console.log('No existing user data:', err.message);
@@ -7158,6 +7162,10 @@
     }
     if (typeof normalizePlanDebts === 'function') normalizePlanDebts();
     if (typeof syncCreditScoreStorageFromGameData === 'function') syncCreditScoreStorageFromGameData();
+    if (refreshAdminProBypass()) {
+      applyProState();
+      setProUI();
+    }
     render(); renderBillList(); renderSchedule(); renderGoals();
     applySavedCreditScore();
     if (typeof updateSimulator === 'function' && document.getElementById('base-score')) updateSimulator();
@@ -7169,8 +7177,51 @@
 
   // PREMIUM STATE
   let isPro = false;
+  const ADMIN_PRO_BYPASS_EMAILS = [
+    'lexymiranda2002.lg@gmail.com',
+    'ewmx04@gmail.com'
+  ];
+
+  function normalizeProBypassEmail(email) {
+    return String(email || '').trim().toLowerCase();
+  }
+
+  function isAdminProBypassUser(user = currentUser) {
+    const email = normalizeProBypassEmail(user?.email);
+    return !!email && ADMIN_PRO_BYPASS_EMAILS.includes(email);
+  }
+
+  function refreshAdminProBypass() {
+    if (!isAdminProBypassUser()) return false;
+    isPro = true;
+    syncAdminProBypassAccess();
+    return true;
+  }
+
+  function syncAdminProBypassAccess() {
+    if (!sbClient || !currentUser || !isAdminProBypassUser()) return;
+    const email = normalizeProBypassEmail(currentUser.email);
+    if (syncAdminProBypassAccess._syncedEmail === email) return;
+    syncAdminProBypassAccess._syncedEmail = email;
+    (async () => {
+      try {
+        await sbClient.from('user_data').upsert({
+          user_id: currentUser.id,
+          is_pro: true,
+          updated_at: new Date().toISOString()
+        }, { onConflict: 'user_id' });
+      } catch (e) {
+        console.log('admin pro bypass sync err:', e.message);
+      }
+    })();
+  }
 
   function showPaywall(source) {
+    if (refreshAdminProBypass()) {
+      applyProState();
+      setProUI();
+      return;
+    }
     document.getElementById('paywall-overlay').style.display = 'flex';
     if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
   }
@@ -7243,6 +7294,7 @@
   }
 
   function applyProState() {
+    refreshAdminProBypass();
     // Null-safe — elements may not exist in all contexts
     const setDisplay = (id, show) => { const el = document.getElementById(id); if (el) el.style.display = show ? 'block' : 'none'; };
     setDisplay('guide-gate',       !isPro);
@@ -10003,6 +10055,7 @@ Guidelines:
   }
 
   async function getCreditSimulationUsage() {
+    if (isAdminProBypassUser()) return { unlimited: true };
     if (isPro) return { unlimited: true };
 
     const month = getCurrentCreditSimMonth();
@@ -10077,6 +10130,7 @@ Guidelines:
   }
 
   async function checkCreditSimulationLimit() {
+    if (isAdminProBypassUser()) return true;
     if (isPro) return true;
 
     const month = getCurrentCreditSimMonth();
