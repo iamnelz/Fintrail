@@ -7232,15 +7232,39 @@
     if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
   }
   function closePaywall() {
+    resetGoProCheckoutState();
     document.getElementById('paywall-overlay').style.display = 'none';
   }
   function closePaywallOutside(e) {
     if (e.target === document.getElementById('paywall-overlay')) closePaywall();
   }
 
-  async function activatePro() {
+  let checkoutLoading = false;
+  function getGoProCheckoutButtonText() {
+    return currentLang === 'es' ? 'Comenzar Pro — $4.99/mes' : 'Start Pro — $4.99/mo';
+  }
+
+  function getGoProCheckoutLoadingText() {
+    return currentLang === 'es' ? 'Redirigiendo al pago...' : 'Redirecting to checkout...';
+  }
+
+  function resetGoProModalButton() {
     const btn = document.querySelector('.pw-cta.primary');
-    if (btn) { btn.disabled = true; btn.textContent = 'Redirecting to checkout...'; }
+    if (!btn) return;
+    btn.disabled = false;
+    btn.textContent = getGoProCheckoutButtonText();
+  }
+
+  function resetGoProCheckoutState() {
+    checkoutLoading = false;
+    resetGoProModalButton();
+  }
+
+  async function activatePro() {
+    if (checkoutLoading) return;
+    const btn = document.querySelector('.pw-cta.primary');
+    checkoutLoading = true;
+    if (btn) { btn.disabled = true; btn.textContent = getGoProCheckoutLoadingText(); }
     try {
       const response = await fetch('/.netlify/functions/create-checkout', {
         method: 'POST',
@@ -7252,13 +7276,21 @@
         window.location.href = data.url;
       } else {
         alert('Something went wrong. Please try again.');
-        if (btn) { btn.disabled = false; btn.textContent = 'Start Pro — $4.99/mo'; }
+        resetGoProCheckoutState();
       }
     } catch (err) {
       alert('Something went wrong. Please try again.');
-      if (btn) { btn.disabled = false; btn.textContent = 'Start Pro — $4.99/mo'; }
+      resetGoProCheckoutState();
     }
   }
+
+  window.addEventListener('pageshow', () => {
+    resetGoProCheckoutState();
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') resetGoProCheckoutState();
+  });
 
   function handleUpgradeReturn() {
     const params = new URLSearchParams(window.location.search);
@@ -14575,6 +14607,9 @@ window.addEventListener('load', function(){
       modals.forEach(function(modal){
         walk(modal);
       });
+      if (typeof checkoutLoading !== 'undefined' && !checkoutLoading && typeof resetGoProModalButton === 'function') {
+        resetGoProModalButton();
+      }
     } catch(e) {
       console.log('Pro modal Spanish fix skipped:', e.message);
     }
