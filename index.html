@@ -6827,7 +6827,17 @@
     }
     // Listen for auth changes
     sbClient.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) { currentUser = session.user; showApp(currentUser); }
+      if (session?.user) {
+        const nextUser = session.user;
+        const sameLoadedUser = currentUser?.id === nextUser.id && document.getElementById('auth-screen')?.style.display === 'none';
+        currentUser = nextUser;
+        if (sameLoadedUser && _event !== 'SIGNED_IN') {
+          setUserUI(currentUser);
+          if (isPro) setProUI();
+          return;
+        }
+        showApp(currentUser);
+      }
       else { currentUser = null; showPublicHome(); }
     });
   }
@@ -7093,11 +7103,6 @@
 
   async function loadUserData() {
     if (!sbClient || !currentUser) return;
-    const metadataCreditSnapshot = getCreditScoreMetadataSnapshot(currentUser);
-    if (metadataCreditSnapshot) {
-      gameData = mergeGameDataProgress(gameData, metadataCreditSnapshot);
-      syncCreditScoreStorageFromGameData();
-    }
     try {
       const { data } = await sbClient.from('user_data').select('*').eq('user_id', currentUser.id).single();
       if (data) {
@@ -7139,7 +7144,6 @@
           let parsedLocalGame = {};
           try { parsedLocalGame = localGame ? JSON.parse(localGame) : {}; } catch(e) {}
           gameData = mergeGameDataProgress(mergeGameDataProgress(gameData, parsedLocalGame), data.game_data);
-          if (metadataCreditSnapshot) gameData = mergeGameDataProgress(gameData, metadataCreditSnapshot);
           safeSet('fintrail_game_' + currentUser.id, JSON.stringify(gameData));
           if (typeof loadAlertPrefs === 'function') loadAlertPrefs();
           if (typeof syncCreditScoreStorageFromGameData === 'function') syncCreditScoreStorageFromGameData();
@@ -10300,67 +10304,22 @@ Guidelines:
     safeSet('fintrail_game_' + uid, JSON.stringify(gameData || {}));
   }
 
-  function getCreditScoreMetadataSnapshot(user = currentUser) {
-    const meta = user?.user_metadata || {};
-    const current = getCreditScoreNumber(meta.currentCreditScore ?? meta.current_credit_score);
-    const baseline = getCreditScoreNumber(meta.creditScoreBaseline ?? meta.credit_score_baseline);
-    const status = String(meta.creditScoreStatus || meta.credit_status || '').toLowerCase().replace(/-/g, '_');
-    const noScore = status === 'no_score' || meta.noCreditScoreYet === true;
-    if (current === null && baseline === null && !noScore) return null;
-    const snapshot = {};
-    if (current !== null) {
-      snapshot.currentCreditScore = current;
-      snapshot.creditScore = current;
-      snapshot.creditScoreStatus = 'scored';
-      snapshot.credit_status = 'scored';
-      snapshot.noCreditScoreYet = false;
-    }
-    if (baseline !== null) snapshot.creditScoreBaseline = baseline;
-    if (meta.creditScoreUpdatedAt || meta.credit_score_updated_at) snapshot.creditScoreUpdatedAt = meta.creditScoreUpdatedAt || meta.credit_score_updated_at;
-    if (meta.creditScoreUserSet === true || meta.credit_score_user_set === true) snapshot.creditScoreUserSet = true;
-    if (noScore && current === null) {
-      snapshot.currentCreditScore = null;
-      snapshot.creditScore = null;
-      snapshot.creditScoreStatus = 'no_score';
-      snapshot.credit_status = 'no_score';
-      snapshot.noCreditScoreYet = true;
-    }
-    return snapshot;
-  }
-
   async function syncCreditScoreToAccountDataNow() {
     if (!sbClient || !currentUser) return;
     try {
-      await sbClient.from('user_data').upsert({
+      const { error } = await sbClient.from('user_data').upsert({
         user_id: currentUser.id,
         game_data: gameData,
         updated_at: new Date().toISOString()
       }, { onConflict: 'user_id' });
+      if (error) throw error;
+      console.log('credit score synced:', {
+        currentCreditScore: gameData.currentCreditScore,
+        creditScoreBaseline: gameData.creditScoreBaseline,
+        creditScoreUpdatedAt: gameData.creditScoreUpdatedAt
+      });
     } catch (e) {
       console.log('credit score sync err:', e.message);
-    }
-  }
-
-  async function syncCreditScoreToAuthMetadataNow() {
-    if (!sbClient || !currentUser) return;
-    const current = getCreditScoreNumber(gameData?.currentCreditScore);
-    const baseline = getCreditScoreNumber(gameData?.creditScoreBaseline);
-    const creditPatch = {
-      currentCreditScore: current,
-      creditScoreBaseline: baseline,
-      creditScoreUpdatedAt: gameData?.creditScoreUpdatedAt || new Date().toISOString(),
-      creditScoreStatus: hasNoCreditScoreStatus() && current === null ? 'no_score' : 'scored',
-      noCreditScoreYet: hasNoCreditScoreStatus() && current === null,
-      creditScoreUserSet: gameData?.creditScoreUserSet === true
-    };
-    try {
-      const merged = { ...(currentUser.user_metadata || {}), ...creditPatch };
-      const { data, error } = await sbClient.auth.updateUser({ data: merged });
-      if (error) throw error;
-      if (data?.user) currentUser = data.user;
-      else currentUser.user_metadata = merged;
-    } catch (e) {
-      console.log('credit score metadata sync err:', e.message);
     }
   }
 
@@ -10427,7 +10386,6 @@ Guidelines:
     syncCreditScoreStorageFromGameData();
     if (creditScoreSaveTimer) clearTimeout(creditScoreSaveTimer);
     syncCreditScoreToAccountDataNow();
-    syncCreditScoreToAuthMetadataNow();
   }
 
   function syncScoreSlider() {
