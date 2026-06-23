@@ -2316,6 +2316,153 @@
     line-height:1.55;
     background:var(--bg);
   }
+  .debt-momentum-panel {
+    border:1px solid var(--border);
+    background:var(--surface);
+    border-radius:14px;
+    padding:1rem;
+    margin:1rem 0;
+  }
+  .debt-momentum-grid {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:0.75rem;
+  }
+  .debt-momentum-card {
+    background:var(--bg);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:0.85rem;
+    min-height:132px;
+  }
+  .debt-momentum-heading {
+    display:flex;
+    align-items:center;
+    gap:0.45rem;
+    color:var(--text);
+    font-weight:900;
+    font-size:0.9rem;
+    margin-bottom:0.7rem;
+  }
+  .debt-momentum-heading .ft-reference-icon {
+    width:18px;
+    height:18px;
+    color:var(--accent);
+    stroke:var(--accent);
+  }
+  .debt-momentum-label {
+    color:var(--muted);
+    font-size:0.66rem;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    margin-top:0.55rem;
+  }
+  .debt-momentum-value {
+    font-family:'Playfair Display',serif;
+    font-size:1.2rem;
+    font-weight:800;
+    color:var(--text);
+    margin-top:0.1rem;
+  }
+  .debt-momentum-sub {
+    color:var(--text-soft);
+    font-size:0.78rem;
+    line-height:1.45;
+    margin-top:0.25rem;
+  }
+  .debt-momentum-progress {
+    height:9px;
+    background:#e5e7eb;
+    border-radius:999px;
+    overflow:hidden;
+    margin:0.55rem 0 0.3rem;
+  }
+  .debt-momentum-progress-fill {
+    height:100%;
+    border-radius:999px;
+    background:linear-gradient(90deg,var(--accent),#f59e0b);
+    width:0%;
+  }
+  .debt-achievement-grid {
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:0.65rem;
+    margin-top:0.75rem;
+  }
+  .debt-achievement-preview {
+    border:1px solid var(--border);
+    background:var(--bg);
+    border-radius:12px;
+    padding:0.75rem;
+  }
+  .debt-achievement-preview h4 {
+    margin:0 0 0.35rem;
+    color:var(--text);
+    font-size:0.82rem;
+  }
+  .debt-achievement-preview p {
+    margin:0;
+    color:var(--text-soft);
+    font-size:0.72rem;
+    line-height:1.45;
+  }
+  .debt-victory-card {
+    border:1px solid rgba(16,185,129,0.25);
+    background:rgba(16,185,129,0.08);
+    border-radius:12px;
+    padding:0.8rem;
+    margin-top:0.8rem;
+    text-align:left;
+  }
+  .debt-victory-card h4 {
+    display:flex;
+    align-items:center;
+    gap:0.4rem;
+    color:var(--income-color);
+    font-size:0.85rem;
+    margin:0 0 0.45rem;
+  }
+  .debt-victory-card .ft-reference-icon {
+    width:18px;
+    height:18px;
+  }
+  .debt-victory-card p {
+    margin:0.18rem 0;
+    color:var(--text-soft);
+    font-size:0.78rem;
+    line-height:1.45;
+  }
+  .debt-milestone-modal-overlay {
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:1003;
+    align-items:center;
+    justify-content:center;
+    background:rgba(17,24,39,0.58);
+    backdrop-filter:blur(4px);
+  }
+  .debt-milestone-modal {
+    width:min(420px,calc(100% - 2rem));
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:1.5rem;
+    text-align:center;
+    box-shadow:0 22px 70px rgba(0,0,0,0.3);
+  }
+  .debt-milestone-modal .debt-momentum-heading {
+    justify-content:center;
+    margin-bottom:0.3rem;
+  }
+  .debt-milestone-modal strong {
+    display:block;
+    font-family:'Playfair Display',serif;
+    font-size:2rem;
+    color:var(--accent);
+    margin:0.35rem 0;
+  }
   .debt-freedom-timeline {
     border:1px solid var(--border);
     background:var(--surface);
@@ -2496,12 +2643,12 @@
     .debt-add-grid .add-btn { grid-column:1/-1; margin-top:0.25rem; }
     .debt-paid-card, .debt-paid-modal-actions { flex-direction:column; align-items:stretch; }
     .debt-paid-card { align-items:flex-start; }
-    .debt-progress-grid { grid-template-columns:1fr 1fr; }
+    .debt-progress-grid, .debt-momentum-grid, .debt-achievement-grid { grid-template-columns:1fr 1fr; }
     .debt-freedom-summary { grid-template-columns:1fr; }
     .debt-freedom-item { grid-template-columns:auto 1fr; }
     .debt-freedom-xp { grid-column:2; text-align:left; }
   }
-  @media(max-width:520px){ .debt-progress-grid { grid-template-columns:1fr; } }
+  @media(max-width:520px){ .debt-progress-grid, .debt-momentum-grid, .debt-achievement-grid { grid-template-columns:1fr; } }
 
   /* ─── TABLET (768px – 1024px) ─── */
   @media (max-width:1024px) and (min-width:701px) {
@@ -5367,6 +5514,7 @@
           </div>
         </div>
         <div id="plan-empty" style="text-align:center;color:var(--muted);font-size:0.85rem;padding:1.5rem">Add your debts above to generate your personalized payoff plan.</div>
+        <div id="debt-momentum-panel" class="debt-momentum-panel"></div>
         <div id="debt-progress-dashboard" class="debt-progress-dashboard"></div>
         <div id="debt-freedom-timeline" class="debt-freedom-timeline"></div>
       </div>
@@ -5702,6 +5850,7 @@
           <div class="report-big orange" id="report-debt-focus">No debt added</div>
           <div class="report-small-row"><span class="round" style="background:#fff0df;color:#e85a28">↑</span><span id="report-debt-note">Add debts to generate payoff insights.</span></div>
           <div class="report-insight orange"><strong id="report-debt-ai-label">✦ AI Insight</strong><span id="report-debt-insight">Your debt report will show your total balances and recommended focus debt.</span></div>
+          <div class="debt-victory-card" id="report-debt-victory" style="display:none"></div>
         </div>
 
         <div class="report-card">
@@ -6388,6 +6537,16 @@
     <div class="debt-paid-modal-actions">
       <button type="button" class="primary" id="debt-paid-success-btn" onclick="closeDebtPaidSuccess()">Continue</button>
     </div>
+  </div>
+</div>
+
+<div class="debt-milestone-modal-overlay" id="debt-progress-milestone-modal">
+  <div class="debt-milestone-modal">
+    <div class="debt-momentum-heading"><span class="ft-reference-icon" data-fixed-icon="trophy"></span><span id="debt-progress-milestone-kicker">Debt Progress Milestone</span></div>
+    <strong id="debt-progress-milestone-percent">25%</strong>
+    <h3 id="debt-progress-milestone-title" style="margin:0 0 0.5rem;color:var(--text)">Debt Momentum Started</h3>
+    <p id="debt-progress-milestone-body" style="color:var(--text-soft);line-height:1.55;margin:0 0 1rem">Your payoff progress is building momentum.</p>
+    <button type="button" class="primary" id="debt-progress-milestone-btn" onclick="closeDebtProgressMilestone()" style="background:var(--accent);color:#fff;border:none;border-radius:10px;padding:0.75rem 1.4rem;font-family:'Sora',sans-serif;font-weight:800;cursor:pointer">Continue</button>
   </div>
 </div>
 
@@ -8280,6 +8439,163 @@ Guidelines:
     };
   }
 
+  function getDebtMomentumTotals() {
+    normalizePlanDebts();
+    const allDebts = Array.isArray(planDebts) ? planDebts : [];
+    const totalOriginal = allDebts.reduce((sum, debt) => sum + (parseFloat(debt?.originalBalance) || getDebtEliminatedAmount(debt)), 0);
+    const currentRemaining = getActivePlanDebts().reduce((sum, debt) => sum + getDebtCurrentBalance(debt), 0);
+    const totalPaid = Math.max(0, totalOriginal - currentRemaining);
+    const progressPct = totalOriginal > 0 ? Math.min(100, Math.round((totalPaid / totalOriginal) * 100)) : 0;
+    return { totalOriginal, currentRemaining, totalPaid, progressPct };
+  }
+
+  function formatDebtMonthsLong(months) {
+    const safeMonths = Math.max(0, Math.round(months || 0));
+    const years = Math.floor(safeMonths / 12);
+    const mos = safeMonths % 12;
+    const isEs = currentLang === 'es';
+    if (!years) return isEs ? `${mos} ${mos === 1 ? 'mes' : 'meses'}` : `${mos} ${mos === 1 ? 'month' : 'months'}`;
+    if (!mos) return isEs ? `${years} ${years === 1 ? 'año' : 'años'}` : `${years} ${years === 1 ? 'year' : 'years'}`;
+    return isEs
+      ? `${years} ${years === 1 ? 'año' : 'años'}, ${mos} ${mos === 1 ? 'mes' : 'meses'}`
+      : `${years} ${years === 1 ? 'year' : 'years'}, ${mos} ${mos === 1 ? 'month' : 'months'}`;
+  }
+
+  function formatDebtMonthYear(date) {
+    return date.toLocaleDateString(currentLang === 'es' ? 'es-US' : 'en-US', { month:'long', year:'numeric' }).replace(/^./, c => c.toUpperCase());
+  }
+
+  function renderDebtMomentumPanel(payoffResult = null, sortedDebtsForPlan = []) {
+    const container = document.getElementById('debt-momentum-panel');
+    if (!container) return;
+    const isEs = currentLang === 'es';
+    const activeDebts = getActivePlanDebts();
+    const totals = getDebtMomentumTotals();
+    const labels = {
+      countdown: isEs ? 'Cuenta Regresiva de Libertad Financiera' : 'Debt Freedom Countdown',
+      debtFreeBy: isEs ? 'Libre de Deudas Para' : 'Debt Free By',
+      timeRemaining: isEs ? 'Tiempo Restante' : 'Time Remaining',
+      nextMilestone: isEs ? 'Próximo Logro' : 'Next Milestone',
+      remaining: isEs ? 'restante' : 'remaining',
+      complete: isEs ? 'completo' : 'complete',
+      progress: isEs ? 'Progreso Hacia Libertad Financiera' : 'Debt Free Progress',
+      paid: isEs ? 'pagado' : 'paid',
+      ofTotal: isEs ? 'de' : 'of',
+      total: isEs ? 'total' : 'total',
+      achievements: isEs ? 'Próximos Logros' : 'Upcoming Achievements',
+      current: isEs ? 'Progreso actual' : 'Current Progress',
+      goal: isEs ? 'Meta' : 'Goal Requirement',
+      noDebts: isEs ? 'Agrega deudas para ver tu impulso de pago.' : 'Add debts to see your payoff momentum.',
+      debtCrusherName: isEs ? 'Destructor de Deudas' : 'Debt Crusher',
+      debtWarriorName: isEs ? 'Guerrero de Deudas' : 'Debt Warrior',
+      momentumBuilderName: isEs ? 'Constructor de Impulso' : 'Momentum Builder',
+      financialFreedomName: isEs ? 'Libertad Financiera' : 'Financial Freedom',
+      debtCrusher: isEs ? 'Elimina 1 deuda más' : 'Pay off 1 more debt',
+      debtWarrior: isEs ? 'Elimina $10,000 en deuda total' : 'Eliminate $10,000 total debt',
+      momentumBuilder: isEs ? 'Mantén 6 meses de progreso de deuda' : 'Make 6 months of debt payments',
+      financialFreedom: isEs ? 'Queda libre de deudas' : 'Become debt free',
+      inProgress: isEs ? 'En progreso' : 'In progress',
+      noMonthlyHistory: isEs ? 'Sin historial mensual aún' : 'No monthly history yet'
+    };
+
+    if (!totals.totalOriginal) {
+      container.innerHTML = `<div class="debt-progress-empty">${labels.noDebts}</div>`;
+      return;
+    }
+
+    const payoffMonths = payoffResult?.months || 0;
+    const payoffDate = new Date();
+    payoffDate.setMonth(payoffDate.getMonth() + payoffMonths);
+    const planDebts = sortedDebtsForPlan.length ? sortedDebtsForPlan : activeDebts;
+    const nextDebt = planDebts
+      .filter(debt => getDebtCurrentBalance(debt) > 0)
+      .sort((a, b) => {
+        const aMonth = payoffResult?.debtMonths?.[a.id] || 9999;
+        const bMonth = payoffResult?.debtMonths?.[b.id] || 9999;
+        return aMonth - bMonth;
+      })[0];
+    const nextOriginal = nextDebt ? (parseFloat(nextDebt.originalBalance) || getDebtEliminatedAmount(nextDebt)) : 0;
+    const nextCurrent = nextDebt ? getDebtCurrentBalance(nextDebt) : 0;
+    const nextPct = nextOriginal > 0 ? Math.min(100, Math.round(((nextOriginal - nextCurrent) / nextOriginal) * 100)) : 0;
+    const paidDebts = getPaidPlanDebts();
+    const achievements = [
+      { name: labels.debtCrusherName, progress: paidDebts.length, goal: labels.debtCrusher },
+      { name: labels.debtWarriorName, progress: '$' + Math.round(totals.totalPaid).toLocaleString(), goal: labels.debtWarrior },
+      { name: labels.momentumBuilderName, progress: (activeDebts.length || paidDebts.length) ? labels.inProgress : labels.noMonthlyHistory, goal: labels.momentumBuilder },
+      { name: labels.financialFreedomName, progress: `${totals.progressPct}%`, goal: labels.financialFreedom }
+    ];
+
+    container.innerHTML = `
+      <div class="debt-momentum-grid">
+        <div class="debt-momentum-card">
+          <div class="debt-momentum-heading"><span class="ft-reference-icon" data-fixed-icon="check-circle"></span><span>${labels.countdown}</span></div>
+          <div class="debt-momentum-label">${labels.debtFreeBy}</div>
+          <div class="debt-momentum-value">${activeDebts.length ? formatDebtMonthYear(payoffDate) : (isEs ? 'Completado' : 'Complete')}</div>
+          <div class="debt-momentum-label">${labels.timeRemaining}</div>
+          <div class="debt-momentum-sub">${activeDebts.length ? formatDebtMonthsLong(payoffMonths) : (isEs ? 'Ya no queda deuda activa.' : 'No active debt remaining.')}</div>
+        </div>
+        <div class="debt-momentum-card">
+          <div class="debt-momentum-heading"><span class="ft-reference-icon" data-fixed-icon="target"></span><span>${labels.nextMilestone}</span></div>
+          <div class="debt-momentum-value">${nextDebt ? escHtml(nextDebt.name || '') : (isEs ? 'Sin deuda activa' : 'No active debt')}</div>
+          <div class="debt-momentum-sub">${nextDebt ? `$${nextCurrent.toLocaleString(undefined,{maximumFractionDigits:0})} ${labels.remaining}` : ''}</div>
+          <div class="debt-momentum-progress"><div class="debt-momentum-progress-fill" style="width:${nextPct}%"></div></div>
+          <div class="debt-momentum-sub">${nextPct}% ${labels.complete}</div>
+        </div>
+        <div class="debt-momentum-card">
+          <div class="debt-momentum-heading"><span class="ft-reference-icon" data-fixed-icon="bar-chart-3"></span><span>${labels.progress}</span></div>
+          <div class="debt-momentum-value">$${Math.round(totals.totalPaid).toLocaleString()} ${labels.paid}</div>
+          <div class="debt-momentum-sub">${labels.ofTotal} $${Math.round(totals.totalOriginal).toLocaleString()} ${labels.total}</div>
+          <div class="debt-momentum-progress"><div class="debt-momentum-progress-fill" style="width:${totals.progressPct}%"></div></div>
+          <div class="debt-momentum-sub">${totals.progressPct}% ${labels.complete}</div>
+        </div>
+      </div>
+      <div class="debt-momentum-heading" style="margin-top:1rem"><span class="ft-reference-icon" data-fixed-icon="trophy"></span><span>${labels.achievements}</span></div>
+      <div class="debt-achievement-grid">
+        ${achievements.map(item => `
+          <div class="debt-achievement-preview">
+            <h4>${item.name}</h4>
+            <p>${labels.current}: ${item.progress}</p>
+            <p>${labels.goal}: ${item.goal}</p>
+          </div>`).join('')}
+      </div>`;
+    checkDebtProgressMilestone(totals.progressPct);
+    if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
+  }
+
+  function checkDebtProgressMilestone(progressPct) {
+    const milestones = [25, 50, 75, 100];
+    const hit = milestones.filter(m => progressPct >= m).pop();
+    if (!hit) return;
+    gameData.debtProgressMilestonesShown = gameData.debtProgressMilestonesShown || {};
+    if (gameData.debtProgressMilestonesShown[String(hit)]) return;
+    gameData.debtProgressMilestonesShown[String(hit)] = true;
+    saveGameData();
+    showDebtProgressMilestone(hit);
+  }
+
+  function showDebtProgressMilestone(percent) {
+    const isEs = currentLang === 'es';
+    const copy = {
+      25: [isEs ? 'Impulso de Deuda Iniciado' : 'Debt Momentum Started', isEs ? 'Tu progreso de pago ya está tomando fuerza.' : 'Your payoff progress is building momentum.'],
+      50: [isEs ? 'A Mitad del Camino' : 'Halfway There', isEs ? 'Has eliminado la mitad de tu carga de deuda.' : 'You have eliminated half of your debt load.'],
+      75: [isEs ? 'Casi Libre de Deudas' : 'Almost Debt Free', isEs ? 'Estás muy cerca de tu meta de libertad financiera.' : 'You are getting close to financial freedom.'],
+      100: [isEs ? 'Libre de Deudas' : 'Debt Free!', isEs ? 'Completaste tu camino de pago de deudas.' : 'You completed your debt payoff journey.']
+    };
+    reportSetText('debt-progress-milestone-kicker', isEs ? 'Logro de Progreso de Deudas' : 'Debt Progress Milestone');
+    reportSetText('debt-progress-milestone-percent', `${percent}%`);
+    reportSetText('debt-progress-milestone-title', copy[percent][0]);
+    reportSetText('debt-progress-milestone-body', copy[percent][1]);
+    reportSetText('debt-progress-milestone-btn', isEs ? 'Continuar' : 'Continue');
+    const modal = document.getElementById('debt-progress-milestone-modal');
+    if (modal) modal.style.display = 'flex';
+    if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
+  }
+
+  function closeDebtProgressMilestone() {
+    const modal = document.getElementById('debt-progress-milestone-modal');
+    if (modal) modal.style.display = 'none';
+  }
+
   function renderDebtProgressDashboard() {
     const container = document.getElementById('debt-progress-dashboard');
     if (!container) return;
@@ -8531,6 +8847,7 @@ Guidelines:
     const paidDebts = getPaidPlanDebts().slice().sort((a,b) => String(b.paidOffDate || '').localeCompare(String(a.paidOffDate || '')));
     if (activeDebts.length === 0 && paidDebts.length === 0) {
       list.innerHTML = '';
+      renderDebtMomentumPanel({ months: 0, debtMonths: {} }, []);
       renderDebtProgressDashboard();
       renderDebtFreedomTimeline();
       return;
@@ -8573,6 +8890,7 @@ Guidelines:
           </div>`).join('')}
       </div>` : '';
     list.innerHTML = activeHTML + paidHTML;
+    if (activeDebts.length === 0) renderDebtMomentumPanel({ months: 0, debtMonths: {} }, []);
     renderDebtProgressDashboard();
     renderDebtFreedomTimeline();
     if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
@@ -8764,6 +9082,7 @@ Guidelines:
     if (activeDebts.length === 0) {
       document.getElementById('plan-result').style.display = 'none';
       document.getElementById('plan-empty').style.display = 'block';
+      renderDebtMomentumPanel({ months: 0, debtMonths: {} }, []);
       renderDebtProgressDashboard();
       renderDebtFreedomTimeline();
       return;
@@ -8868,6 +9187,7 @@ Guidelines:
 
     document.getElementById('plan-result').style.display = 'block';
     document.getElementById('plan-empty').style.display = 'none';
+    renderDebtMomentumPanel(extraResult, sortedDebts);
     renderDebtProgressDashboard();
 
     document.getElementById('plan-summary').innerHTML = `
@@ -12103,6 +12423,36 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     return paidText + earlyText;
   }
 
+  function renderMonthlyDebtVictoryCard(reportDate = new Date()) {
+    const card = document.getElementById('report-debt-victory');
+    if (!card) return;
+    const paidThisMonth = getReportPaidDebtsForMonth(reportDate)
+      .slice()
+      .sort((a,b) => String(b.paidOffDate || '').localeCompare(String(a.paidOffDate || '')));
+    if (!paidThisMonth.length) {
+      card.style.display = 'none';
+      card.innerHTML = '';
+      return;
+    }
+    const isEs = currentLang === 'es';
+    const debt = paidThisMonth[0];
+    const amount = '$' + Math.round(getDebtEliminatedAmount(debt)).toLocaleString();
+    const xp = getDebtPayoffXpValue(debt);
+    const multiple = paidThisMonth.length > 1
+      ? (isEs ? `${paidThisMonth.length} deudas pagadas este mes.` : `${paidThisMonth.length} debts paid off this month.`)
+      : '';
+    card.style.display = 'block';
+    card.innerHTML = `
+      <h4><span class="ft-reference-icon" data-fixed-icon="award"></span><span>${isEs ? 'Victoria de Deuda' : 'Debt Victory'}</span></h4>
+      <p><strong>${isEs ? '¡Felicidades!' : 'Congratulations!'}</strong></p>
+      <p>${isEs ? 'Pagaste' : 'You paid off'}: <strong>${escHtml(debt.name || '')}</strong></p>
+      <p>${isEs ? 'Balance Original' : 'Original Balance'}: ${amount}</p>
+      <p>${isEs ? 'Pagada' : 'Paid Off'}: ${formatDebtPaidDate(debt.paidOffDate)}</p>
+      <p>XP: ${xp} XP</p>
+      ${multiple ? `<p>${multiple}</p>` : ''}`;
+    if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
+  }
+
   function buildDebtFreedomReportSummary() {
     const stats = typeof getDebtFreedomStats === 'function'
       ? getDebtFreedomStats()
@@ -12293,6 +12643,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     // Debt — live from Debt Payoff Planner
     const debts = getReportDebts();
     const paidDebtInsight = buildMonthlyReportPaidDebtInsight(nowForReport);
+    renderMonthlyDebtVictoryCard(nowForReport);
     const debtFreedomSummary = buildDebtFreedomReportSummary();
     const totalDebt = debts.reduce((s,d) => s + d.balance, 0);
     const sortedDebts = [...debts].sort((a,b) => payoffMethod === 'snowball' ? a.balance - b.balance : b.apr - a.apr);
