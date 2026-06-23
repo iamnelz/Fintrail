@@ -1035,6 +1035,11 @@
   .ab-right { display: flex; align-items: center; gap: 0.4rem; flex-shrink:0; }
   .ab-plan { font-size: 0.68rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 20px; background: var(--surface2); color: var(--muted); border: 1px solid var(--border); white-space:nowrap; }
   .ab-plan.premium-plan { background: linear-gradient(135deg, #b8860b, #e9c46a); color: #1a1a0f; border: none; }
+  .ab-plan.tier-bronze, .profile-plan-badge.tier-bronze { background:linear-gradient(135deg,#f3d0ad,#cd7f32); color:#2f1b0b; border:1px solid rgba(205,127,50,0.55); }
+  .ab-plan.tier-silver, .profile-plan-badge.tier-silver { background:linear-gradient(135deg,#f8fafc,#d1d5db,#aeb6c2); color:#1f2933; border:1px solid rgba(148,163,184,0.65); }
+  .ab-plan.tier-gold, .profile-plan-badge.tier-gold { background:linear-gradient(135deg,#fff7cc,#f59e0b,#b45309); color:#1f1300; border:1px solid rgba(245,158,11,0.65); }
+  .ab-plan.tier-platinum, .profile-plan-badge.tier-platinum { background:linear-gradient(135deg,#eff6ff,#93c5fd,#5b6ee1); color:#0f172a; border:1px solid rgba(147,197,253,0.7); }
+  .ab-plan.tier-diamond, .profile-plan-badge.tier-diamond { background:linear-gradient(135deg,#ccfbf1,#2dd4bf,#0f766e); color:#042f2e; border:1px solid rgba(45,212,191,0.68); }
   .ab-manage { background: none; border: 1px solid var(--border); color: var(--muted); font-family: 'Sora', sans-serif; font-size: 0.7rem; padding: 0.2rem 0.55rem; border-radius: 6px; cursor: pointer; transition: all 0.15s; white-space:nowrap; }
   .ab-manage:hover { color: var(--text); border-color: var(--accent); }
   .ab-signout-mobile { display:none; }
@@ -1537,6 +1542,16 @@
   .profile-plan-badge { display:inline-flex; align-items:center; justify-content:center; gap:0.35rem; font-size:0.72rem; font-weight:700; padding:0.2rem 0.65rem; border-radius:20px; background:var(--surface2); color:var(--muted); border:1px solid var(--border); }
   .profile-plan-badge.pro { background:linear-gradient(135deg,#e5e7eb,#f8fafc,#cbd5e1); color:#1f2933; border:1px solid rgba(148,163,184,0.65); }
   .profile-plan-badge .ft-reference-icon { width:18px; height:18px; color:#6b7280; }
+  .profile-plan-badge.tier-bronze { background:linear-gradient(135deg,#f3d0ad,#cd7f32); color:#2f1b0b; border:1px solid rgba(205,127,50,0.55); }
+  .profile-plan-badge.tier-silver { background:linear-gradient(135deg,#f8fafc,#d1d5db,#aeb6c2); color:#1f2933; border:1px solid rgba(148,163,184,0.65); }
+  .profile-plan-badge.tier-gold { background:linear-gradient(135deg,#fff7cc,#f59e0b,#b45309); color:#1f1300; border:1px solid rgba(245,158,11,0.65); }
+  .profile-plan-badge.tier-platinum { background:linear-gradient(135deg,#eff6ff,#93c5fd,#5b6ee1); color:#0f172a; border:1px solid rgba(147,197,253,0.7); }
+  .profile-plan-badge.tier-diamond { background:linear-gradient(135deg,#ccfbf1,#2dd4bf,#0f766e); color:#042f2e; border:1px solid rgba(45,212,191,0.68); }
+  .profile-plan-badge.tier-bronze .ft-reference-icon { color:#92400e; stroke:#92400e; }
+  .profile-plan-badge.tier-silver .ft-reference-icon { color:#6b7280; stroke:#6b7280; }
+  .profile-plan-badge.tier-gold .ft-reference-icon { color:#92400e; stroke:#92400e; }
+  .profile-plan-badge.tier-platinum .ft-reference-icon { color:#1d4ed8; stroke:#1d4ed8; }
+  .profile-plan-badge.tier-diamond .ft-reference-icon { color:#0f766e; stroke:#0f766e; }
 
   .profile-panel { display:none; }
   .profile-panel.visible { display:block; }
@@ -6334,7 +6349,7 @@
 <div id="edit-debt-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1001;align-items:center;justify-content:center;backdrop-filter:blur(4px)">
   <div style="background:var(--surface);border-radius:16px;padding:1.5rem;width:100%;max-width:380px;margin:1.5rem;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem">
-      <h3 style="font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--text)">✏️ Edit Debt</h3>
+      <h3 class="icon-heading" style="font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--text)"><span class="ft-reference-icon" data-fixed-icon="clipboard-list"></span><span id="edit-debt-title">Edit Debt</span></h3>
       <button onclick="closeDebtModal()" style="background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--muted)">✕</button>
     </div>
     <input type="hidden" id="edit-debt-id">
@@ -6853,6 +6868,12 @@
     if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
   }
 
+  function applyAccountBadgeTierClass(el, tier) {
+    if (!el) return;
+    ['tier-bronze','tier-silver','tier-gold','tier-platinum','tier-diamond'].forEach(cls => el.classList.remove(cls));
+    if (tier) el.classList.add('tier-' + tier);
+  }
+
   function setProUI() {
     const bar = document.getElementById('account-bar');
     const badge = document.getElementById('ab-plan-badge');
@@ -6867,6 +6888,7 @@
       bar.classList.add('premium');
       badge.textContent = `${level.name}`;
       badge.classList.add('premium-plan');
+      applyAccountBadgeTierClass(badge, level.tier);
       setAccountBannerStatus(`${currentLang === 'es' ? 'Plan Pro' : 'Pro Plan'}${statusTitle ? ' · ' + statusTitle : ''} · ${currentUser?.email || ''}`, currentUser?.email || '', 'crown');
       actionBtn.textContent = currentLang === 'es' ? 'Administrar Suscripción' : 'Manage Subscription';
       actionBtn.onclick = cancelSubscription;
@@ -6874,6 +6896,7 @@
       bar.classList.remove('premium');
       badge.textContent = `${level.name}`;
       badge.classList.remove('premium-plan');
+      applyAccountBadgeTierClass(badge, level.tier);
       setAccountBannerStatus(`${currentUser?.user_metadata?.full_name || currentUser?.email?.split('@')[0] || 'User'} · Free Plan`, currentUser?.email || '', 'user');
       actionBtn.textContent = 'Upgrade to Pro →';
       actionBtn.onclick = () => showPaywall('bar');
@@ -8544,6 +8567,7 @@ Guidelines:
     const currentBalance = getDebtCurrentBalance(d);
     const amountPaid = Math.max(0, originalBalance - currentBalance);
     const labelMap = {
+      'edit-debt-title': isEs ? 'Editar Deuda' : 'Edit Debt',
       'edit-debt-name-label': isEs ? 'Nombre de la Deuda' : 'Debt Name',
       'edit-debt-original-label': isEs ? 'Balance Original ($)' : 'Original Balance ($)',
       'edit-debt-current-label': isEs ? 'Balance Actual ($)' : 'Current Balance ($)',
@@ -8564,6 +8588,7 @@ Guidelines:
     document.getElementById('edit-debt-apr').value = d.apr;
     document.getElementById('edit-debt-min').value = d.minPayment;
     document.getElementById('edit-debt-modal').style.display = 'flex';
+    if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
   }
 
   function syncDebtEditFromCurrent() {
@@ -9188,12 +9213,14 @@ Guidelines:
     if (isPro) {
       badge.innerHTML = `<span class="ft-reference-icon" data-fixed-icon="${level.badge || 'medal'}"></span><span>${level.name} · Pro</span>`;
       badge.classList.add('pro');
+      applyAccountBadgeTierClass(badge, level.tier);
       badge.style.background = '';
       badge.style.color = '';
       badge.style.border = '';
     } else {
       badge.textContent = `${level.name} · Free Plan`;
       badge.classList.remove('pro');
+      applyAccountBadgeTierClass(badge, level.tier);
       badge.style.background = '';
       badge.style.color = '';
       badge.style.border = '';
