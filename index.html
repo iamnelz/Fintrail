@@ -10132,18 +10132,29 @@ Guidelines:
   function getCurrentCreditScore() {
     if (hasNoCreditScoreStatus() && gameData?.currentCreditScore == null && gameData?.creditScore == null) return null;
     const uid = getCreditScoreUid();
-    const candidates = [
+    const currentCandidates = [
       gameData?.currentCreditScore,
-      gameData?.creditScore,
-      gameData?.credit_score,
       safeGet('fintrail_current_credit_score_' + uid),
-      safeGet('fintrail_credit_score_' + uid),
-      safeGet('fintrail_current_credit_score_local'),
-      safeGet('fintrail_credit_score_local')
+      safeGet('fintrail_current_credit_score_local')
     ];
-    for (const candidate of candidates) {
+    for (const candidate of currentCandidates) {
       const value = getCreditScoreNumber(candidate);
       if (value !== null) return value;
+    }
+    const legacyCandidates = [
+      gameData?.creditScore,
+      gameData?.credit_score,
+      safeGet('fintrail_credit_score_' + uid),
+      safeGet('fintrail_credit_score_local')
+    ];
+    for (const candidate of legacyCandidates) {
+      const value = getCreditScoreNumber(candidate);
+      if (value !== null) {
+        gameData.currentCreditScore = value;
+        if (!gameData.creditScoreUpdatedAt) gameData.creditScoreUpdatedAt = new Date().toISOString();
+        syncCreditScoreStorageFromGameData();
+        return value;
+      }
     }
     return null;
   }
@@ -10195,6 +10206,19 @@ Guidelines:
     }
     if (gameData?.creditScoreUserSet === true) safeSet('fintrail_credit_score_user_set_' + uid, 'true');
     safeSet('fintrail_game_' + uid, JSON.stringify(gameData || {}));
+  }
+
+  async function syncCreditScoreToAccountDataNow() {
+    if (!sbClient || !currentUser) return;
+    try {
+      await sbClient.from('user_data').upsert({
+        user_id: currentUser.id,
+        game_data: gameData,
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'user_id' });
+    } catch (e) {
+      console.log('credit score sync err:', e.message);
+    }
   }
 
   function getCreditScoreHistory() {
@@ -10259,18 +10283,7 @@ Guidelines:
     if (options.setBaseline) safeSet('fintrail_credit_score_user_set_' + uid, 'true');
     syncCreditScoreStorageFromGameData();
     if (creditScoreSaveTimer) clearTimeout(creditScoreSaveTimer);
-    creditScoreSaveTimer = setTimeout(async () => {
-      if (!sbClient || !currentUser) return;
-      try {
-        await sbClient.from('user_data').upsert({
-          user_id: currentUser.id,
-          game_data: gameData,
-          updated_at: new Date().toISOString()
-        }, { onConflict: 'user_id' });
-      } catch (e) {
-        console.log('credit score sync err:', e.message);
-      }
-    }, 450);
+    syncCreditScoreToAccountDataNow();
   }
 
   function syncScoreSlider() {
@@ -11325,13 +11338,21 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     merged.earnedBadges = Array.from(new Set([...(base.earnedBadges || []), ...(incoming.earnedBadges || [])]));
     const baseCreditTs = getCreditScoreTimestampValue(base.creditScoreUpdatedAt || base.credit_score_updated_at);
     const incomingCreditTs = getCreditScoreTimestampValue(incoming.creditScoreUpdatedAt || incoming.credit_score_updated_at);
-    const baseCredit = getCreditScoreNumber(base.currentCreditScore ?? base.creditScore ?? base.credit_score);
-    const incomingCredit = getCreditScoreNumber(incoming.currentCreditScore ?? incoming.creditScore ?? incoming.credit_score);
+    const baseCurrentCredit = getCreditScoreNumber(base.currentCreditScore);
+    const incomingCurrentCredit = getCreditScoreNumber(incoming.currentCreditScore);
+    const baseLegacyCredit = getCreditScoreNumber(base.creditScore ?? base.credit_score);
+    const incomingLegacyCredit = getCreditScoreNumber(incoming.creditScore ?? incoming.credit_score);
+    const baseCredit = baseCurrentCredit ?? baseLegacyCredit;
+    const incomingCredit = incomingCurrentCredit ?? incomingLegacyCredit;
     const baseNoScore = String(base.creditScoreStatus || base.credit_status || '').toLowerCase().replace(/-/g, '_') === 'no_score' || base.noCreditScoreYet === true;
     const incomingNoScore = String(incoming.creditScoreStatus || incoming.credit_status || '').toLowerCase().replace(/-/g, '_') === 'no_score' || incoming.noCreditScoreYet === true;
-    const useIncomingCredit = (incomingCredit !== null || incomingNoScore) && (incomingCreditTs >= baseCreditTs || baseCredit === null);
+    const incomingIsLegacyOnly = incomingCurrentCredit === null && incomingLegacyCredit !== null;
+    const baseHasCurrent = baseCurrentCredit !== null;
+    const useIncomingCredit = (incomingCredit !== null || incomingNoScore)
+      && !((incomingIsLegacyOnly || incomingCreditTs === 0) && baseHasCurrent)
+      && (incomingCreditTs > baseCreditTs || baseCredit === null || incomingCurrentCredit !== null && baseCurrentCredit === null);
     const creditSource = useIncomingCredit ? incoming : base;
-    const sourceCredit = getCreditScoreNumber(creditSource.currentCreditScore ?? creditSource.creditScore ?? creditSource.credit_score);
+    const sourceCredit = getCreditScoreNumber(creditSource.currentCreditScore) ?? getCreditScoreNumber(creditSource.creditScore ?? creditSource.credit_score);
     const sourceNoScore = String(creditSource.creditScoreStatus || creditSource.credit_status || '').toLowerCase().replace(/-/g, '_') === 'no_score' || creditSource.noCreditScoreYet === true;
     const baseline = getCreditScoreNumber(base.creditScoreBaseline ?? base.credit_score_baseline)
       ?? getCreditScoreNumber(incoming.creditScoreBaseline ?? incoming.credit_score_baseline)
