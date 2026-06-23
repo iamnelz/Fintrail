@@ -6338,10 +6338,12 @@
       <button onclick="closeDebtModal()" style="background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--muted)">✕</button>
     </div>
     <input type="hidden" id="edit-debt-id">
-    <div class="form-group" style="margin-bottom:0.75rem"><label>Debt Name</label><input class="profile-input" style="font-size:16px;width:100%" type="text" id="edit-debt-name" placeholder="e.g. Chase Visa"></div>
-    <div class="form-group" style="margin-bottom:0.75rem"><label>Current Balance ($)</label><input class="profile-input" style="font-size:16px;width:100%" type="number" id="edit-debt-balance" placeholder="0.00" min="0" step="0.01"></div>
-    <div class="form-group" style="margin-bottom:0.75rem"><label>APR (%)</label><input class="profile-input" style="font-size:16px;width:100%" type="number" id="edit-debt-apr" placeholder="e.g. 19.99" min="0" step="0.01"></div>
-    <div class="form-group" style="margin-bottom:1.25rem"><label>Minimum Payment ($)</label><input class="profile-input" style="font-size:16px;width:100%" type="number" id="edit-debt-min" placeholder="e.g. 35.00" min="0" step="0.01"></div>
+    <div class="form-group" style="margin-bottom:0.75rem"><label id="edit-debt-name-label">Debt Name</label><input class="profile-input" style="font-size:16px;width:100%" type="text" id="edit-debt-name" placeholder="e.g. Chase Visa"></div>
+    <div class="form-group" style="margin-bottom:0.75rem"><label id="edit-debt-original-label">Original Balance ($)</label><input class="profile-input" style="font-size:16px;width:100%" type="number" id="edit-debt-original" placeholder="0.00" min="0" step="0.01" oninput="syncDebtEditFromOriginal()"></div>
+    <div class="form-group" style="margin-bottom:0.75rem"><label id="edit-debt-current-label">Current Balance ($)</label><input class="profile-input" style="font-size:16px;width:100%" type="number" id="edit-debt-balance" placeholder="0.00" min="0" step="0.01" oninput="syncDebtEditFromCurrent()"></div>
+    <div class="form-group" style="margin-bottom:0.75rem"><label id="edit-debt-paid-label">Amount Paid So Far ($)</label><input class="profile-input" style="font-size:16px;width:100%" type="number" id="edit-debt-paid" placeholder="0.00" min="0" step="0.01" oninput="syncDebtEditFromPaid()"></div>
+    <div class="form-group" style="margin-bottom:0.75rem"><label id="edit-debt-apr-label">APR (%)</label><input class="profile-input" style="font-size:16px;width:100%" type="number" id="edit-debt-apr" placeholder="e.g. 19.99" min="0" step="0.01"></div>
+    <div class="form-group" style="margin-bottom:1.25rem"><label id="edit-debt-min-label">Minimum Payment ($)</label><input class="profile-input" style="font-size:16px;width:100%" type="number" id="edit-debt-min" placeholder="e.g. 35.00" min="0" step="0.01"></div>
     <div style="display:flex;gap:0.75rem">
       <button onclick="saveDebtEdit()" style="flex:1;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:0.75rem;font-family:'Sora',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer">Save Changes</button>
       <button onclick="closeDebtModal()" style="background:none;border:1.5px solid var(--border);color:var(--muted);border-radius:10px;padding:0.75rem 1rem;font-family:'Sora',sans-serif;font-size:0.9rem;cursor:pointer">Cancel</button>
@@ -6796,6 +6798,7 @@
 
   // DATA PERSISTENCE — save & load from Supabase
   async function saveUserData() {
+    if (typeof normalizePlanDebts === 'function') normalizePlanDebts();
     // Always save to localStorage as reliable fallback with timestamp
     const _uid2 = currentUser?.id || 'demo';
     const _ts = Date.now();
@@ -6902,6 +6905,7 @@
         // else keep existing goals (localStorage will restore below)
         if (data.plan_debts?.length) {
           planDebts = data.plan_debts;
+          if (typeof normalizePlanDebts === 'function') normalizePlanDebts();
           safeSet('fintrail_debts_' + currentUser.id, JSON.stringify(planDebts));
         }
         // NW data: use timestamp to pick the newest version across devices
@@ -6956,6 +6960,7 @@
     if (!planDebts.length) {
       try { const loc = safeGet('fintrail_debts_' + _fuid); if (loc) planDebts = JSON.parse(loc); } catch(e) {}
     }
+    if (typeof normalizePlanDebts === 'function') normalizePlanDebts();
     render(); renderBillList(); renderSchedule(); renderGoals();
     applySavedCreditScore();
     if (typeof updateSimulator === 'function' && document.getElementById('base-score')) updateSimulator();
@@ -8120,11 +8125,51 @@ Guidelines:
   let payoffMethod = 'avalanche';
   let pendingPaidDebtId = null;
 
+  function getDebtCurrentBalance(debt) {
+    const current = parseFloat(debt?.currentBalance);
+    if (!isNaN(current)) return Math.max(0, current);
+    const balance = parseFloat(debt?.balance);
+    if (!isNaN(balance)) return Math.max(0, balance);
+    return 0;
+  }
+
+  function normalizeDebtRecord(debt) {
+    if (!debt) return debt;
+    const fallbackBalance = getDebtCurrentBalance(debt);
+    const original = parseFloat(debt.originalBalance);
+    const paid = parseFloat(debt.amountPaid);
+    const originalBalance = !isNaN(original) && original >= 0
+      ? original
+      : (debt.status === 'paid'
+        ? getDebtEliminatedAmount(debt)
+        : (!isNaN(paid) && paid > 0 ? fallbackBalance + paid : fallbackBalance));
+    let currentBalance = debt.status === 'paid' ? 0 : fallbackBalance;
+    let amountPaid = !isNaN(paid) && paid >= 0 ? paid : Math.max(0, originalBalance - currentBalance);
+    currentBalance = Math.max(0, Math.min(originalBalance, currentBalance));
+    amountPaid = Math.max(0, Math.min(originalBalance, amountPaid));
+    if (debt.status === 'paid') {
+      currentBalance = 0;
+      amountPaid = originalBalance;
+    }
+    debt.originalBalance = originalBalance;
+    debt.currentBalance = currentBalance;
+    debt.amountPaid = amountPaid;
+    debt.balance = currentBalance;
+    return debt;
+  }
+
+  function normalizePlanDebts() {
+    if (!Array.isArray(planDebts)) planDebts = [];
+    planDebts.forEach(normalizeDebtRecord);
+  }
+
   function getActivePlanDebts() {
+    normalizePlanDebts();
     return (Array.isArray(planDebts) ? planDebts : []).filter(d => d && d.status !== 'paid');
   }
 
   function getPaidPlanDebts() {
+    normalizePlanDebts();
     return (Array.isArray(planDebts) ? planDebts : []).filter(d => d && d.status === 'paid');
   }
 
@@ -8171,6 +8216,7 @@ Guidelines:
       debt?.initialBalance,
       debt?.originalAmount,
       debt?.paidOffAmount,
+      debt?.amountPaid,
       debt?.amount,
       debt?.balance
     ];
@@ -8253,6 +8299,7 @@ Guidelines:
       xp: isEs ? 'XP Ganado' : 'XP Earned',
       early: isEs ? 'Logros por Pago Anticipado' : 'Early Payoff Achievements',
       paidOff: isEs ? 'Pagada el' : 'Paid Off',
+      amountPaid: isEs ? 'Monto pagado' : 'Amount paid',
       paidEarly: isEs ? 'Pagada Antes de Tiempo' : 'Paid Early',
       emptyTitle: isEs ? 'Tu camino hacia la libertad financiera comienza aquí.' : 'Your debt freedom journey starts here.',
       emptyBody: isEs ? 'Paga tu primera deuda para comenzar tu cronología.' : 'Pay off your first debt to begin building your timeline.'
@@ -8269,12 +8316,13 @@ Guidelines:
       <div class="debt-freedom-list">
         ${paidDebts.map(debt => {
           const xp = getDebtPayoffXpValue(debt);
+          const paidAmount = getDebtEliminatedAmount(debt);
           return `
             <div class="debt-freedom-item">
               <div class="debt-freedom-icon"><span class="ft-reference-icon" data-fixed-icon="check-circle"></span></div>
               <div>
                 <div class="debt-freedom-name">${escHtml(debt.name || '')}</div>
-                <div class="debt-freedom-meta">${labels.paidOff} ${formatDebtPaidDate(debt.paidOffDate)}</div>
+                <div class="debt-freedom-meta">${labels.amountPaid}: $${paidAmount.toLocaleString(undefined,{maximumFractionDigits:0})} · ${labels.paidOff} ${formatDebtPaidDate(debt.paidOffDate)}</div>
                 ${debt.paidOffEarly ? `<div class="debt-freedom-badge"><span class="ft-reference-icon" data-fixed-icon="award"></span><span>${labels.paidEarly}</span></div>` : ''}
               </div>
               <div class="debt-freedom-xp">+${xp} XP</div>
@@ -8298,8 +8346,9 @@ Guidelines:
     const estimates = {};
     const debts = getActivePlanDebts().map(d => ({
       ...d,
-      remaining: parseFloat(d.balance) || 0,
-      monthlyMin: parseFloat(d.minPayment || d.monthlyMin) || Math.max(25, (parseFloat(d.balance) || 0) * 0.02),
+      balance: getDebtCurrentBalance(d),
+      remaining: getDebtCurrentBalance(d),
+      monthlyMin: parseFloat(d.minPayment || d.monthlyMin) || Math.max(25, getDebtCurrentBalance(d) * 0.02),
       apr: parseFloat(d.apr) || 0
     })).filter(d => d.remaining > 0);
     debts.sort((a,b) => payoffMethod === 'avalanche' ? b.apr - a.apr : a.balance - b.balance);
@@ -8413,7 +8462,7 @@ Guidelines:
     const minInput = parseFloat(document.getElementById('debt-min').value);
     if (!name || isNaN(balance) || isNaN(apr)) { alert('Please fill in debt name, balance and APR.'); return; }
     const minPayment = !isNaN(minInput) && minInput > 0 ? minInput : Math.max(25, balance * 0.02);
-    planDebts.push({ id: Date.now(), name, balance, apr, minPayment, originalBalance: balance, status: 'active' });
+    planDebts.push({ id: Date.now(), name, balance, currentBalance: balance, amountPaid: 0, apr, minPayment, originalBalance: balance, status: 'active' });
     document.getElementById('debt-name').value = '';
     document.getElementById('debt-balance').value = '';
     document.getElementById('debt-apr').value = '';
@@ -8433,6 +8482,7 @@ Guidelines:
   function renderDebtList() {
     const list = document.getElementById('debt-list');
     if (!list) return;
+    normalizePlanDebts();
     const labels = getDebtPaidLabels();
     const activeDebts = getActivePlanDebts();
     const paidDebts = getPaidPlanDebts().slice().sort((a,b) => String(b.paidOffDate || '').localeCompare(String(a.paidOffDate || '')));
@@ -8443,10 +8493,10 @@ Guidelines:
       return;
     }
     const sorted = activeDebts.slice().sort((a,b) =>
-      payoffMethod === 'avalanche' ? b.apr - a.apr : a.balance - b.balance
+      payoffMethod === 'avalanche' ? b.apr - a.apr : getDebtCurrentBalance(a) - getDebtCurrentBalance(b)
     );
     const activeHTML = sorted.map((d, i) => {
-      const balance = parseFloat(d.balance) || 0;
+      const balance = getDebtCurrentBalance(d);
       const apr = parseFloat(d.apr) || 0;
       const minPayment = parseFloat(d.minPayment || d.monthlyMin) || Math.max(25, balance * 0.02);
       return `
@@ -8470,7 +8520,7 @@ Guidelines:
           <div class="debt-paid-card">
             <div>
               <strong>${escHtml(d.name || '')}</strong>
-              <div>${labels.originalBalance}: $${(parseFloat(d.originalBalance || d.balance) || 0).toLocaleString(undefined,{maximumFractionDigits:0})}</div>
+              <div>${labels.originalBalance}: $${getDebtEliminatedAmount(d).toLocaleString(undefined,{maximumFractionDigits:0})}</div>
             </div>
             <div style="text-align:right">
               <div>${labels.paidOffDate}: ${formatDebtPaidDate(d.paidOffDate)}</div>
@@ -8486,25 +8536,80 @@ Guidelines:
   }
 
   function editDebt(id) {
+    normalizePlanDebts();
     const d = planDebts.find(x => x.id === id);
     if (!d) return;
+    const isEs = currentLang === 'es';
+    const originalBalance = parseFloat(d.originalBalance) || getDebtCurrentBalance(d);
+    const currentBalance = getDebtCurrentBalance(d);
+    const amountPaid = Math.max(0, originalBalance - currentBalance);
+    const labelMap = {
+      'edit-debt-name-label': isEs ? 'Nombre de la Deuda' : 'Debt Name',
+      'edit-debt-original-label': isEs ? 'Balance Original ($)' : 'Original Balance ($)',
+      'edit-debt-current-label': isEs ? 'Balance Actual ($)' : 'Current Balance ($)',
+      'edit-debt-paid-label': isEs ? 'Cantidad Pagada Hasta Ahora ($)' : 'Amount Paid So Far ($)',
+      'edit-debt-apr-label': isEs ? 'TNA (%)' : 'APR (%)',
+      'edit-debt-min-label': isEs ? 'Pago Mínimo ($)' : 'Minimum Payment ($)'
+    };
+    Object.entries(labelMap).forEach(([id, text]) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    });
     // Populate the edit modal
     document.getElementById('edit-debt-id').value = id;
     document.getElementById('edit-debt-name').value = d.name;
-    document.getElementById('edit-debt-balance').value = d.balance;
+    document.getElementById('edit-debt-original').value = originalBalance.toFixed(2);
+    document.getElementById('edit-debt-balance').value = currentBalance.toFixed(2);
+    document.getElementById('edit-debt-paid').value = amountPaid.toFixed(2);
     document.getElementById('edit-debt-apr').value = d.apr;
     document.getElementById('edit-debt-min').value = d.minPayment;
     document.getElementById('edit-debt-modal').style.display = 'flex';
   }
 
+  function syncDebtEditFromCurrent() {
+    const originalInput = document.getElementById('edit-debt-original');
+    const currentInput = document.getElementById('edit-debt-balance');
+    const paidInput = document.getElementById('edit-debt-paid');
+    if (!originalInput || !currentInput || !paidInput) return;
+    const original = Math.max(0, parseFloat(originalInput.value) || 0);
+    let current = Math.max(0, parseFloat(currentInput.value) || 0);
+    current = Math.min(original, current);
+    currentInput.value = current.toFixed(2);
+    paidInput.value = Math.max(0, original - current).toFixed(2);
+  }
+
+  function syncDebtEditFromPaid() {
+    const originalInput = document.getElementById('edit-debt-original');
+    const currentInput = document.getElementById('edit-debt-balance');
+    const paidInput = document.getElementById('edit-debt-paid');
+    if (!originalInput || !currentInput || !paidInput) return;
+    const original = Math.max(0, parseFloat(originalInput.value) || 0);
+    let paid = Math.max(0, parseFloat(paidInput.value) || 0);
+    paid = Math.min(original, paid);
+    paidInput.value = paid.toFixed(2);
+    currentInput.value = Math.max(0, original - paid).toFixed(2);
+  }
+
+  function syncDebtEditFromOriginal() {
+    const originalInput = document.getElementById('edit-debt-original');
+    const paidInput = document.getElementById('edit-debt-paid');
+    if (!originalInput || !paidInput) return;
+    const original = Math.max(0, parseFloat(originalInput.value) || 0);
+    const paid = Math.min(original, Math.max(0, parseFloat(paidInput.value) || 0));
+    paidInput.value = paid.toFixed(2);
+    syncDebtEditFromPaid();
+  }
+
   function saveDebtEdit() {
     const id = parseInt(document.getElementById('edit-debt-id').value);
     const name = document.getElementById('edit-debt-name').value.trim();
-    const balance = parseFloat(document.getElementById('edit-debt-balance').value);
+    const originalBalance = Math.max(0, parseFloat(document.getElementById('edit-debt-original').value) || 0);
+    const currentBalance = Math.min(originalBalance, Math.max(0, parseFloat(document.getElementById('edit-debt-balance').value) || 0));
+    const amountPaid = Math.max(0, originalBalance - currentBalance);
     const apr = parseFloat(document.getElementById('edit-debt-apr').value);
-    const minPayment = parseFloat(document.getElementById('edit-debt-min').value) || Math.max(25, balance * 0.02);
-    if (!name || isNaN(balance) || isNaN(apr)) { alert('Please fill in name, balance, and APR.'); return; }
-    planDebts = planDebts.map(d => d.id === id ? { ...d, name, balance, apr, minPayment } : d);
+    const minPayment = parseFloat(document.getElementById('edit-debt-min').value) || Math.max(25, currentBalance * 0.02);
+    if (!name || isNaN(originalBalance) || isNaN(currentBalance) || isNaN(apr)) { alert('Please fill in name, balance, and APR.'); return; }
+    planDebts = planDebts.map(d => d.id === id ? normalizeDebtRecord({ ...d, name, originalBalance, currentBalance, amountPaid, balance: currentBalance, apr, minPayment }) : d);
     document.getElementById('edit-debt-modal').style.display = 'none';
     renderDebtList();
     runPayoffPlan();
@@ -8555,11 +8660,16 @@ Guidelines:
     const paidEarly = !!estimate && today < estimate;
     const alreadyAwarded = !!debt.xpAwardedForPayoff;
     const xp = paidEarly ? 100 : 50;
+    normalizeDebtRecord(debt);
+    const originalBalance = parseFloat(debt.originalBalance) || getDebtEliminatedAmount(debt);
 
     debt.status = 'paid';
     debt.paidOffDate = today;
     debt.paidOffEarly = paidEarly;
-    debt.originalBalance = debt.originalBalance || debt.balance;
+    debt.originalBalance = originalBalance;
+    debt.currentBalance = 0;
+    debt.amountPaid = originalBalance;
+    debt.balance = 0;
     if (!alreadyAwarded) {
       debt.xpAwardedForPayoff = true;
       debt.payoffXpAmount = xp;
@@ -8619,10 +8729,10 @@ Guidelines:
     function getSortedDebts() {
       const debts = activeDebts.map(d => ({
         ...d,
-        balance: parseFloat(d.balance) || 0,
+        balance: getDebtCurrentBalance(d),
         apr: parseFloat(d.apr) || 0,
-        remaining: parseFloat(d.balance) || 0,
-        monthlyMin: parseFloat(d.minPayment || d.monthlyMin) || Math.max(25, (parseFloat(d.balance) || 0) * 0.02)
+        remaining: getDebtCurrentBalance(d),
+        monthlyMin: parseFloat(d.minPayment || d.monthlyMin) || Math.max(25, getDebtCurrentBalance(d) * 0.02)
       }));
       if (payoffMethod === 'avalanche') return debts.sort((a,b) => b.apr - a.apr);
       return debts.sort((a,b) => a.balance - b.balance);
@@ -8700,7 +8810,7 @@ Guidelines:
 
     const minResult = simulate(0);
     const extraResult = simulate(extra);
-    const totalDebt = activeDebts.reduce((s,d) => s+d.balance, 0);
+    const totalDebt = activeDebts.reduce((s,d) => s + getDebtCurrentBalance(d), 0);
     const interestSaved = minResult.totalInterest - extraResult.totalInterest;
     const monthsSaved = minResult.months - extraResult.months;
 
@@ -8739,7 +8849,7 @@ Guidelines:
     const maxM = Math.max(...Object.values(extraResult.debtMonths).filter(Boolean), 1);
     const methodLabel = payoffMethod === 'avalanche' ? 'Avalanche' : 'Snowball';
     const sortedForTimeline = activeDebts.slice().sort((a,b) =>
-      payoffMethod === 'avalanche' ? b.apr - a.apr : a.balance - b.balance
+      payoffMethod === 'avalanche' ? b.apr - a.apr : getDebtCurrentBalance(a) - getDebtCurrentBalance(b)
     );
     document.getElementById('payoff-timeline').innerHTML = `
       <div style="font-size:0.78rem;font-weight:700;color:var(--muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.06em">${methodLabel} Payoff Order</div>
@@ -9397,7 +9507,10 @@ Guidelines:
     const extra = parseFloat(document.getElementById('extra-payment').value) || 0;
 
     function simulate(extraPayment) {
-      let debts = activeDebts.map(d => ({ ...d, remaining: d.balance, monthlyMin: Math.max(25, d.balance * 0.02) }));
+      let debts = activeDebts.map(d => {
+        const currentBalance = getDebtCurrentBalance(d);
+        return { ...d, balance: currentBalance, remaining: currentBalance, monthlyMin: Math.max(25, currentBalance * 0.02) };
+      });
       if (payoffMethod === 'avalanche') debts.sort((a,b) => b.apr - a.apr);
       else debts.sort((a,b) => a.balance - b.balance);
       let month = 0; let totalInterest = 0;
@@ -9418,7 +9531,7 @@ Guidelines:
 
     const minResult = simulate(0);
     const extraResult = simulate(extra);
-    const totalDebt = activeDebts.reduce((s,d) => s+d.balance, 0);
+    const totalDebt = activeDebts.reduce((s,d) => s + getDebtCurrentBalance(d), 0);
     const interestSaved = minResult.totalInterest - extraResult.totalInterest;
     const monthsSaved = minResult.months - extraResult.months;
 
@@ -9440,11 +9553,12 @@ Guidelines:
           const minMonths = minResult.debtMonths[d.id] || minResult.months;
           const extraMonths = extraResult.debtMonths[d.id] || extraResult.months;
           const payoffDate = new Date(); payoffDate.setMonth(payoffDate.getMonth() + extraMonths);
+          const currentBalance = getDebtCurrentBalance(d);
           return `<tr>
             <td><strong>${d.name}</strong></td>
-            <td class="bad">$${d.balance.toLocaleString()}</td>
+            <td class="bad">$${currentBalance.toLocaleString()}</td>
             <td>${d.apr}%</td>
-            <td>$${Math.max(25, d.balance*0.02).toFixed(2)}</td>
+            <td>$${Math.max(25, currentBalance*0.02).toFixed(2)}</td>
             <td>${fmtM(minMonths)}</td>
             <td class="good">${fmtM(extraMonths)}</td>
           </tr>`;
@@ -11890,9 +12004,10 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
         if (raw) planDebts = JSON.parse(raw) || [];
       } catch(e) {}
     }
+    if (typeof normalizePlanDebts === 'function') normalizePlanDebts();
     return (planDebts || []).map(d => ({
       ...d,
-      balance: parseFloat(d.balance) || 0,
+      balance: typeof getDebtCurrentBalance === 'function' ? getDebtCurrentBalance(d) : (parseFloat(d.balance) || 0),
       apr: parseFloat(d.apr) || 0,
       minPayment: parseFloat(d.minPayment || d.monthlyMin || 0) || 0
     })).filter(d => d.balance > 0 && d.status !== 'paid');
@@ -11907,6 +12022,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
         if (raw) planDebts = JSON.parse(raw) || [];
       } catch(e) {}
     }
+    if (typeof normalizePlanDebts === 'function') normalizePlanDebts();
     const year = reportDate.getFullYear();
     const month = reportDate.getMonth();
     return planDebts.filter(d => {
@@ -11922,6 +12038,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const isEs = currentLang === 'es';
     const debt = paidThisMonth[0];
     const dateText = formatDebtPaidDate(debt.paidOffDate);
+    const paidAmount = '$' + Math.round(getDebtEliminatedAmount(debt)).toLocaleString();
     const xp = parseInt(debt.payoffXpAmount || debt.payoffXpEarned || (debt.paidOffEarly ? 100 : 50)) || 0;
     const totalXp = paidThisMonth.reduce((sum, item) => {
       return sum + (parseInt(item.payoffXpAmount || item.payoffXpEarned || (item.paidOffEarly ? 100 : 50)) || 0);
@@ -11932,8 +12049,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
         : `${paidThisMonth.length} debts were marked paid off this month and earned ${totalXp} XP. `)
       : '';
     const paidText = isEs
-      ? `${countText}Deuda pagada este mes: ${debt.name} fue marcada como pagada el ${dateText}${xp ? ` y ganó ${xp} XP` : ''}.`
-      : `${countText}Debt Paid Off This Month: ${debt.name} was marked paid off on ${dateText}${xp ? ` and earned ${xp} XP` : ''}.`;
+      ? `${countText}Deuda pagada este mes: ${debt.name} (${paidAmount}) fue marcada como pagada el ${dateText}${xp ? ` y ganó ${xp} XP` : ''}.`
+      : `${countText}Debt Paid Off This Month: ${debt.name} (${paidAmount}) was marked paid off on ${dateText}${xp ? ` and earned ${xp} XP` : ''}.`;
     const earlyText = debt.paidOffEarly
       ? (isEs
         ? ` Logro de pago anticipado: Pagaste ${debt.name} antes de lo previsto y ganaste ${xp || 100} XP de bonificación.`
