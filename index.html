@@ -9630,6 +9630,7 @@ Guidelines:
       return;
     }
     const extra = parseFloat(document.getElementById('extra-payment').value) || 0;
+    const isEs = currentLang === 'es';
 
     // Sort debts by method
     function getSortedDebts() {
@@ -9722,10 +9723,35 @@ Guidelines:
 
     function fmtMonths(m) {
       const yrs = Math.floor(m/12); const mos = m % 12;
+      if (isEs) {
+        const yearText = `${yrs} año${yrs === 1 ? '' : 's'}`;
+        const monthText = `${mos} mes${mos === 1 ? '' : 'es'}`;
+        if (yrs === 0) return monthText;
+        if (mos === 0) return yearText;
+        return `${yearText} ${monthText}`;
+      }
       if (yrs === 0) return `${mos}mo`;
       if (mos === 0) return `${yrs}yr`;
       return `${yrs}yr ${mos}mo`;
     }
+
+    const planLabels = {
+      minimumsOnly: isEs ? 'SOLO PAGOS MÍNIMOS' : 'MINIMUMS ONLY',
+      methodName: isEs
+        ? (payoffMethod === 'avalanche' ? 'Avalancha' : 'Bola de Nieve')
+        : (payoffMethod === 'avalanche' ? 'Avalanche' : 'Snowball'),
+      perMonth: isEs ? 'mes' : 'mo',
+      timeToDebtFree: isEs ? 'Tiempo para quedar libre de deudas' : 'Time to debt free',
+      totalInterest: isEs ? 'Interés total' : 'Total interest',
+      totalPaid: isEs ? 'Total pagado' : 'Total paid',
+      savePrefix: isEs ? 'Ahorra' : 'Save',
+      monthsSooner: isEs
+        ? `${monthsSaved} mes${monthsSaved === 1 ? '' : 'es'} antes para quedar libre de deudas!`
+        : `and get debt free ${monthsSaved} months sooner!`,
+      usingMethod: isEs ? 'usando' : 'using',
+      withExtra: isEs ? 'con' : 'with',
+      extraLabel: isEs ? 'extra' : 'extra'
+    };
 
     document.getElementById('plan-result').style.display = 'block';
     document.getElementById('plan-empty').style.display = 'none';
@@ -9734,21 +9760,21 @@ Guidelines:
 
     document.getElementById('plan-summary').innerHTML = `
       <div class="plan-col">
-        <div class="plan-col-title">Minimums Only</div>
-        <div class="plan-stat"><div class="plan-stat-val bad">${fmtMonths(minResult.months)}</div><div class="plan-stat-label">Time to debt free</div></div>
-        <div class="plan-stat"><div class="plan-stat-val bad">$${Math.round(minResult.totalInterest).toLocaleString()}</div><div class="plan-stat-label">Total interest</div></div>
-        <div class="plan-stat"><div class="plan-stat-val">$${Math.round(totalDebt + minResult.totalInterest).toLocaleString()}</div><div class="plan-stat-label">Total paid</div></div>
+        <div class="plan-col-title">${planLabels.minimumsOnly}</div>
+        <div class="plan-stat"><div class="plan-stat-val bad">${fmtMonths(minResult.months)}</div><div class="plan-stat-label">${planLabels.timeToDebtFree}</div></div>
+        <div class="plan-stat"><div class="plan-stat-val bad">$${Math.round(minResult.totalInterest).toLocaleString()}</div><div class="plan-stat-label">${planLabels.totalInterest}</div></div>
+        <div class="plan-stat"><div class="plan-stat-val">$${Math.round(totalDebt + minResult.totalInterest).toLocaleString()}</div><div class="plan-stat-label">${planLabels.totalPaid}</div></div>
       </div>
       <div class="plan-col highlight">
-        <div class="plan-col-title">${payoffMethod === 'avalanche' ? 'Avalanche' : 'Snowball'} + $${extra}/mo</div>
-        <div class="plan-stat"><div class="plan-stat-val good">${fmtMonths(extraResult.months)}</div><div class="plan-stat-label">Time to debt free</div></div>
-        <div class="plan-stat"><div class="plan-stat-val good">$${Math.round(extraResult.totalInterest).toLocaleString()}</div><div class="plan-stat-label">Total interest</div></div>
-        <div class="plan-stat"><div class="plan-stat-val">$${Math.round(totalDebt + extraResult.totalInterest).toLocaleString()}</div><div class="plan-stat-label">Total paid</div></div>
+        <div class="plan-col-title">${planLabels.methodName} + $${extra}/${planLabels.perMonth}</div>
+        <div class="plan-stat"><div class="plan-stat-val good">${fmtMonths(extraResult.months)}</div><div class="plan-stat-label">${planLabels.timeToDebtFree}</div></div>
+        <div class="plan-stat"><div class="plan-stat-val good">$${Math.round(extraResult.totalInterest).toLocaleString()}</div><div class="plan-stat-label">${planLabels.totalInterest}</div></div>
+        <div class="plan-stat"><div class="plan-stat-val">$${Math.round(totalDebt + extraResult.totalInterest).toLocaleString()}</div><div class="plan-stat-label">${planLabels.totalPaid}</div></div>
       </div>
       ${interestSaved > 0 ? `
       <div class="plan-savings-banner" style="grid-column:1/-1">
-        <div class="psb-val">Save $${Math.round(interestSaved).toLocaleString()} and get debt free ${monthsSaved} months sooner!</div>
-        <div class="psb-label">using ${payoffMethod === 'avalanche' ? 'Avalanche' : 'Snowball'} with $${extra}/mo extra</div>
+        <div class="psb-val">${planLabels.savePrefix} $${Math.round(interestSaved).toLocaleString()} ${planLabels.monthsSooner}</div>
+        <div class="psb-label">${planLabels.usingMethod} ${planLabels.methodName} ${planLabels.withExtra} $${extra}/${planLabels.perMonth} ${planLabels.extraLabel}</div>
       </div>` : ''}`;
 
     // Timeline
@@ -14896,7 +14922,7 @@ window.addEventListener('load', function(){
     ["THIS MONTH'S PAYMENT PLAN", 'PLAN DE PAGOS DE ESTE MES'],
     ["This Month's Payment Plan", 'Plan de Pagos de Este Mes'],
     ['Total Monthly Payment', 'Pago mensual total'],
-    ['MINIMUMS ONLY', 'SOLO MÍNIMOS'],
+    ['MINIMUMS ONLY', 'SOLO PAGOS MÍNIMOS'],
     ['Time to debt free', 'Tiempo para quedar libre de deudas'],
     ['Total interest', 'Interés total'],
     ['Total paid', 'Total pagado'],
@@ -14937,7 +14963,7 @@ window.addEventListener('load', function(){
 
       // Time labels only when formatted like 3yr 10mo, not inside regular words.
       text = text.replace(/(\d+)yr\s+(\d+)mo/g, '$1 año $2 meses');
-      text = text.replace(/(\d+)yr/g, '$1 año');
+      text = text.replace(/(\d+)yr/g, function(_, y){ return y + ' año' + (Number(y) === 1 ? '' : 's'); });
       text = text.replace(/(\d+)mo\b/g, '$1 mes');
 
       // Minimum payment abbreviations only.
@@ -14964,7 +14990,7 @@ window.addEventListener('load', function(){
       text = text.replace(/usando Bola de Nieve con \$([0-9,]+)\/mes extra/g, 'using Snowball with $$$1/mo extra');
 
       text = text.replace(/(\d+) año (\d+) meses/g, '$1yr $2mo');
-      text = text.replace(/(\d+) año/g, '$1yr');
+      text = text.replace(/(\d+) años?/g, '$1yr');
       text = text.replace(/(\d+) mes\b/g, '$1mo');
 
       text = text.replace(/\bMín\. \$([0-9,.]+)\/mes\b/g, 'Min $$$1/mo');
@@ -16085,7 +16111,7 @@ window.addEventListener('load', function(){
 
     if (isSpanish()) {
       s = s.replace(/Total Monthly Payment/g, 'Pago Mensual Total');
-      s = s.replace(/MINIMUMS ONLY/g, 'SOLO MÍNIMOS');
+      s = s.replace(/MINIMUMS ONLY/g, 'SOLO PAGOS MÍNIMOS');
       s = s.replace(/AVALANCHE \+ \$([0-9,]+)\/MO/g, 'AVALANCHA + $$$1/MES');
       s = s.replace(/SNOWBALL \+ \$([0-9,]+)\/MO/g, 'BOLA DE NIEVE + $$$1/MES');
       s = s.replace(/Time to debt free/g, 'Tiempo para quedar libre de deudas');
@@ -16100,12 +16126,12 @@ window.addEventListener('load', function(){
       s = s.replace(/Focus now/g, 'Prioridad ahora');
       s = s.replace(/Paid off by/g, 'Pagado para');
       s = s.replace(/(\d+)yr\s+(\d+)mo/g, '$1 año $2 meses');
-      s = s.replace(/(\d+)yr/g, '$1 año');
+      s = s.replace(/(\d+)yr/g, function(_, y){ return y + ' año' + (Number(y) === 1 ? '' : 's'); });
       s = s.replace(/(\d+)mo\b/g, '$1 mes');
       monthMap.forEach(function(p){ s = s.replace(new RegExp('\\b' + p[0] + '\\b', 'g'), p[1]); });
     } else {
       s = s.replace(/Pago Mensual Total/g, 'Total Monthly Payment');
-      s = s.replace(/SOLO MÍNIMOS/g, 'MINIMUMS ONLY');
+      s = s.replace(/SOLO PAGOS MÍNIMOS/g, 'MINIMUMS ONLY');
       s = s.replace(/AVALANCHA \+ \$([0-9,]+)\/MES/g, 'AVALANCHE + $$$1/MO');
       s = s.replace(/BOLA DE NIEVE \+ \$([0-9,]+)\/MES/g, 'SNOWBALL + $$$1/MO');
       s = s.replace(/Tiempo para quedar libre de deudas/g, 'Time to debt free');
@@ -16120,7 +16146,7 @@ window.addEventListener('load', function(){
       s = s.replace(/Prioridad ahora/g, 'Focus now');
       s = s.replace(/Pagado para/g, 'Paid off by');
       s = s.replace(/(\d+) año (\d+) meses/g, '$1yr $2mo');
-      s = s.replace(/(\d+) año/g, '$1yr');
+      s = s.replace(/(\d+) años?/g, '$1yr');
       s = s.replace(/(\d+) mes\b/g, '$1mo');
       monthMap.forEach(function(p){ s = s.replace(new RegExp('\\b' + p[1] + '\\b', 'g'), p[0]); });
     }
@@ -16287,7 +16313,7 @@ window.addEventListener('load', function(){
       s = s.replace(/using Snowball with \$([0-9,]+)\/mo extra/g, 'usando Bola de Nieve con $$$1/mes extra');
 
       s = s.replace(/(\d+)yr\s+(\d+)mo/g, '$1 año $2 meses');
-      s = s.replace(/(\d+)yr/g, '$1 año');
+      s = s.replace(/(\d+)yr/g, function(_, y){ return y + ' año' + (Number(y) === 1 ? '' : 's'); });
       s = s.replace(/(\d+)mo\b/g, '$1 mes');
 
       monthMap.forEach(function(pair){
@@ -16318,7 +16344,7 @@ window.addEventListener('load', function(){
       s = s.replace(/usando Bola de Nieve con \$([0-9,]+)\/mes extra/g, 'using Snowball with $$$1/mo extra');
 
       s = s.replace(/(\d+) año (\d+) meses/g, '$1yr $2mo');
-      s = s.replace(/(\d+) año/g, '$1yr');
+      s = s.replace(/(\d+) años?/g, '$1yr');
       s = s.replace(/(\d+) mes\b/g, '$1mo');
 
       monthMap.forEach(function(pair){
@@ -17341,20 +17367,24 @@ window.addEventListener('load', function(){
           'Total Monthly Payment': 'Pago Mensual Total',
           'This Month': 'Este Mes',
           'this month': 'Este Mes',
+          'Minimums Only': 'Solo Pagos Mínimos',
+          'MINIMUMS ONLY': 'SOLO PAGOS MÍNIMOS',
           'Balance:': 'Saldo:',
           'Balance': 'Saldo',
           'Min:': 'Mín.:',
-          'Min': 'Mín.',
+          'Min ': 'Mín. ',
           'Focus': 'Prioridad'
         });
       } else {
         replaceTextNodes(root, {
           'Pago Mensual Total': 'Total Monthly Payment',
           'Este Mes': 'This Month',
+          'Solo Pagos Mínimos': 'Minimums Only',
+          'SOLO PAGOS MÍNIMOS': 'MINIMUMS ONLY',
           'Saldo:': 'Balance:',
           'Saldo': 'Balance',
           'Mín.:': 'Min:',
-          'Mín.': 'Min',
+          'Mín. ': 'Min ',
           'Prioridad': 'Focus'
         });
       }
