@@ -4802,6 +4802,12 @@
             <input type="text" id="desc" placeholder="e.g. Salary, Rent, Groceries">
           </div>
           <div class="form-group">
+            <label id="label-category" data-en="Category" data-es="Categoría">Category</label>
+            <input type="text" id="category-search" list="category-options" placeholder="Search or choose a category" autocomplete="off" oninput="syncBudgetCategoryFromSearch()" onfocus="refreshBudgetCategoryOptions()">
+            <datalist id="category-options"></datalist>
+            <input type="hidden" id="category" value="Other">
+          </div>
+          <div class="form-group">
             <label id="label-amount" data-en="Amount ($)" data-es="Monto ($)">Amount ($)</label>
             <input type="number" id="amount" placeholder="0.00" min="0" step="0.01">
           </div>
@@ -6600,6 +6606,63 @@
   let currentType = 'income';
   let currentFilter = 'all';
 
+  const budgetCategories = [
+    { value: 'Salary', en: 'Salary', es: 'Salario', types: ['income'] },
+    { value: 'Freelance', en: 'Freelance', es: 'Freelance', types: ['income'] },
+    { value: 'Investment', en: 'Investment', es: 'Inversión', types: ['income'] },
+    { value: 'Housing', en: 'Housing', es: 'Vivienda', types: ['expense'] },
+    { value: 'Transportation', en: 'Transportation', es: 'Transporte', types: ['expense'] },
+    { value: 'Food', en: 'Food', es: 'Comida', types: ['expense'] },
+    { value: 'Utilities', en: 'Utilities', es: 'Servicios Públicos', types: ['expense'] },
+    { value: 'Healthcare', en: 'Healthcare', es: 'Salud', types: ['expense'] },
+    { value: 'Insurance', en: 'Insurance', es: 'Seguros', types: ['expense'] },
+    { value: 'Debt Payments', en: 'Debt Payments', es: 'Pago de Deudas', types: ['expense'] },
+    { value: 'Entertainment', en: 'Entertainment', es: 'Entretenimiento', types: ['expense'] },
+    { value: 'Shopping', en: 'Shopping', es: 'Compras', types: ['expense'] },
+    { value: 'Education', en: 'Education', es: 'Educación', types: ['expense'] },
+    { value: 'Savings', en: 'Savings', es: 'Ahorros', types: ['expense'] },
+    { value: 'Other', en: 'Other', es: 'Otro', types: ['income', 'expense'] }
+  ];
+
+  function getBudgetCategoryDisplay(value) {
+    const item = budgetCategories.find(c => c.value === value || c.en === value || c.es === value);
+    if (!item) return value || (currentLang === 'es' ? 'Otro' : 'Other');
+    return currentLang === 'es' ? item.es : item.en;
+  }
+
+  function getBudgetCategoryValue(displayValue) {
+    const raw = String(displayValue || '').trim();
+    if (!raw) return 'Other';
+    const item = budgetCategories.find(c =>
+      c.value.toLowerCase() === raw.toLowerCase() ||
+      c.en.toLowerCase() === raw.toLowerCase() ||
+      c.es.toLowerCase() === raw.toLowerCase()
+    );
+    return item ? item.value : raw;
+  }
+
+  function refreshBudgetCategoryOptions() {
+    const list = document.getElementById('category-options');
+    const search = document.getElementById('category-search');
+    const hidden = document.getElementById('category');
+    if (!list || !search || !hidden) return;
+    const allowed = budgetCategories.filter(c => c.types.includes(currentType));
+    list.innerHTML = allowed.map(c => `<option value="${currentLang === 'es' ? c.es : c.en}"></option>`).join('');
+    const fallback = currentType === 'income' ? 'Salary' : 'Other';
+    const currentValue = hidden.value || fallback;
+    const currentItem = allowed.find(c => c.value === currentValue) || allowed[0] || budgetCategories[budgetCategories.length - 1];
+    hidden.value = currentItem.value;
+    search.value = currentLang === 'es' ? currentItem.es : currentItem.en;
+    search.placeholder = currentLang === 'es' ? 'Busca o elige una categoría' : 'Search or choose a category';
+  }
+
+  function syncBudgetCategoryFromSearch() {
+    const search = document.getElementById('category-search');
+    const hidden = document.getElementById('category');
+    if (!search || !hidden) return;
+    hidden.value = getBudgetCategoryValue(search.value);
+  }
+
   // RESOURCES DATA — affiliate-ready
   const resources = [
     // MORTGAGES
@@ -7501,6 +7564,7 @@
     const isEs = currentLang === 'es';
     document.getElementById('btn-income').textContent = isEs ? '+ Ingreso' : '+ Income';
     document.getElementById('btn-expense').textContent = isEs ? '− Gasto' : '− Expense';
+    refreshBudgetCategoryOptions();
   }
 
   // ADD TRANSACTION
@@ -7512,6 +7576,7 @@
     transactions.push({ id: Date.now(), type: currentType, desc, amount, category, date: getLocalDateKey() });
     document.getElementById('desc').value = '';
     document.getElementById('amount').value = '';
+    refreshBudgetCategoryOptions();
     render();
     saveUserData();
     refreshHealthScoreAfterDataChange();
@@ -7545,7 +7610,7 @@
         <div class="transaction-item ${t.type}">
           <div class="t-info">
             <span class="t-name">${escHtml(t.desc)}</span>
-            <span class="t-cat">${t.category}</span>
+            <span class="t-cat">${getBudgetCategoryDisplay(t.category)}</span>
           </div>
           <div class="t-right">
             <span class="t-amount">${t.type === 'income' ? '+' : '−'}${fmt(t.amount)}</span>
@@ -12509,15 +12574,11 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     // Description placeholder
     const descInput = document.getElementById('desc');
     if (descInput) descInput.placeholder = isEs ? 'ej. Salario, Renta, Comida' : 'e.g. Salary, Rent, Groceries';
+    if (typeof refreshBudgetCategoryOptions === 'function') refreshBudgetCategoryOptions();
 
     // Add transaction button
     const addTxBtn = document.getElementById('btn-add-transaction');
     if (addTxBtn) addTxBtn.textContent = isEs ? '+ Agregar Transacción' : '+ Add Transaction';
-
-    // Translate category dropdown options
-    document.querySelectorAll('#category option[data-en]').forEach(opt => {
-      opt.textContent = opt.getAttribute(`data-${currentLang}`) || opt.getAttribute('data-en');
-    });
 
     // Translate investment calculator frequency options
     document.querySelectorAll('#inv-frequency option[data-en]').forEach(opt => {
@@ -16755,6 +16816,7 @@ window.addEventListener('load', function(){
 
       if (descEl) descEl.value = '';
       if (amountEl) amountEl.value = '';
+      if (typeof refreshBudgetCategoryOptions === 'function') refreshBudgetCategoryOptions();
 
       if (typeof render === 'function') render();
       if (typeof saveUserData === 'function') saveUserData();
