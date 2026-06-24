@@ -16291,85 +16291,36 @@ window.addEventListener('load', function(){
   }
 
   function wrap(name){
-    try {
-      var fn = window[name];
-      if (typeof fn === 'function' && !fn.__fintrailNetWorthSafeSpanishWrapped) {
-        var wrapped = function(){
-          var result = fn.apply(this, arguments);
-          setTimeout(apply, 40);
-          setTimeout(apply, 250);
-          setTimeout(apply, 700);
-          return result;
-        };
-        wrapped.__fintrailNetWorthSafeSpanishWrapped = true;
-        window[name] = wrapped;
-      }
-    } catch(e) {}
+    return;
   }
 
   function install(){
-    [
-      'renderNetWorth',
-      'renderNetWorthCalculator',
-      'updateNetWorth',
-      'showTab',
-      'setLanguage',
-      'switchLanguage',
-      'applyLanguage',
-      'addAsset',
-      'addLiability'
-    ].forEach(wrap);
+    return;
   }
 
   function startObserver(){
-    if (observerStarted) return;
-    var root = findRoot();
-    if (!root) return;
-    observerStarted = true;
-
-    var observer = new MutationObserver(function(){
-      if (!applying) schedule();
-    });
-    observer.observe(root, { childList:true, subtree:true, characterData:true });
+    return;
   }
 
   window.fintrailNetWorthSafeSpanishFix = function(){
-    install();
-    startObserver();
     apply();
   };
 
   window.addEventListener('load', function(){
-    install();
-    startObserver();
-    [300, 900, 1800, 3000].forEach(function(ms){ setTimeout(apply, ms); });
+    setTimeout(apply, 300);
   });
 
   document.addEventListener('click', function(e){
-    install();
-    startObserver();
     var t = e.target;
     if (!t) return;
 
-    if ((t.closest && (
-        t.closest('#tab-networth') ||
-        t.closest('#tab-net-worth') ||
-        t.closest('[id*="networth"]') ||
-        t.closest('[id*="net-worth"]')
-      )) || /English|Español|Spanish|^EN|^ES|Net Worth|Patrimonio/.test(String(t.textContent || ''))) {
+    if (/English|Español|Spanish|^EN|^ES/.test(String(t.textContent || ''))) {
       schedule();
-      setTimeout(apply, 300);
-      setTimeout(apply, 800);
     }
   });
 
   document.addEventListener('input', function(e){
-    if (e.target && e.target.closest && (
-      e.target.closest('#tab-networth') ||
-      e.target.closest('#tab-net-worth') ||
-      e.target.closest('[id*="networth"]') ||
-      e.target.closest('[id*="net-worth"]')
-    )) schedule();
+    return;
   });
 })();
 </script>
@@ -17388,9 +17339,12 @@ window.addEventListener('load', function(){
     setTimeout(applyPolishPatch, 1500);
     setTimeout(applyPolishPatch, 3000);
   });
-  document.addEventListener('click', function(e){ if (!(e.target && e.target.closest && e.target.closest('#tab-resources'))) schedule(); }, true);
-  document.addEventListener('change', function(e){ if (!(e.target && e.target.closest && e.target.closest('#tab-resources'))) schedule(); }, true);
-  document.addEventListener('input', function(e){ if (!(e.target && e.target.closest && e.target.closest('#tab-resources'))) schedule(); }, true);
+  function shouldSkipPolishEvent(e) {
+    return !!(e.target && e.target.closest && (e.target.closest('#tab-resources') || e.target.closest('#tab-networth')));
+  }
+  document.addEventListener('click', function(e){ if (!shouldSkipPolishEvent(e)) schedule(); }, true);
+  document.addEventListener('change', function(e){ if (!shouldSkipPolishEvent(e)) schedule(); }, true);
+  document.addEventListener('input', function(e){ if (!shouldSkipPolishEvent(e)) schedule(); }, true);
 })();
 </script>
 
@@ -17612,9 +17566,12 @@ window.addEventListener('load', function(){
 
   window.fintrailApplyEnglishModeCleanup = applyEnglishModeCleanup;
   window.addEventListener('load', schedule);
-  document.addEventListener('click', function(e){ if (!(e.target && e.target.closest && e.target.closest('#tab-resources'))) schedule(); }, true);
-  document.addEventListener('change', function(e){ if (!(e.target && e.target.closest && e.target.closest('#tab-resources'))) schedule(); }, true);
-  document.addEventListener('input', function(e){ if (!(e.target && e.target.closest && e.target.closest('#tab-resources'))) schedule(); }, true);
+  function shouldSkipCleanupEvent(e) {
+    return !!(e.target && e.target.closest && (e.target.closest('#tab-resources') || e.target.closest('#tab-networth')));
+  }
+  document.addEventListener('click', function(e){ if (!shouldSkipCleanupEvent(e)) schedule(); }, true);
+  document.addEventListener('change', function(e){ if (!shouldSkipCleanupEvent(e)) schedule(); }, true);
+  document.addEventListener('input', function(e){ if (!shouldSkipCleanupEvent(e)) schedule(); }, true);
 })();
 </script>
 
