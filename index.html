@@ -4749,11 +4749,11 @@
   <h1 data-en="Budget Smarter, <em>Live Better.</em>" data-es="Presupuesta Mejor, <em>Vive Mejor.</em>">Budget Smarter, <em>Live Better.</em></h1>
   <p data-en="Fintrail Pro gives you the AI-powered tools to track spending, eliminate debt, and build lasting financial health — all in one place." data-es="Fintrail Pro te da las herramientas con IA para controlar tus gastos, eliminar deudas y construir una salud financiera duradera — todo en un solo lugar.">Fintrail Pro gives you the AI-powered tools to track spending, eliminate debt, and build lasting financial health — all in one place.</p>
   <div class="hero-chips">
-    <span class="hero-chip">📊 Budget Tracker</span>
-    <span class="hero-chip">🎯 Savings Goals</span>
-    <span class="hero-chip">💬 AI Advisor</span>
-    <span class="hero-chip">🏦 Lender Rates</span>
-    <span class="hero-chip">📅 Bill Schedule</span>
+    <span class="hero-chip" data-en="Budget Tracker" data-es="Presupuesto">📊 Budget Tracker</span>
+    <span class="hero-chip" data-en="Savings Goals" data-es="Metas de Ahorro">🎯 Savings Goals</span>
+    <span class="hero-chip" data-en="AI Advisor" data-es="Asesor IA">💬 AI Advisor</span>
+    <span class="hero-chip" data-en="Lender Rates" data-es="Tasas de Prestamistas">🏦 Lender Rates</span>
+    <span class="hero-chip" data-en="Bill Schedule" data-es="Calendario de Facturas">📅 Bill Schedule</span>
   </div>
 </div>
 
@@ -18538,12 +18538,17 @@ window.addEventListener('load', function(){
 
   function refreshHeroChips(){
     var chips = [
-      ["Budget Tracker","bar-chart-3"], ["Savings Goals","target"], ["AI Advisor","bot"],
-      ["Lender Rates","landmark"], ["Bill Schedule","calendar"]
+      ["Budget Tracker","Presupuesto","bar-chart-3"],
+      ["Savings Goals","Metas de Ahorro","target"],
+      ["AI Advisor","Asesor IA","bot"],
+      ["Lender Rates","Tasas de Prestamistas","landmark"],
+      ["Bill Schedule","Calendario de Facturas","calendar"]
     ];
+    var es = typeof currentLang !== 'undefined' && currentLang === 'es';
     document.querySelectorAll('.hero-chip').forEach(function(chip, index){
-      var label = cleanLabel(chip.textContent) || (chips[index] && chips[index][0]) || '';
-      var iconName = (chips[index] && chips[index][1]) || pickByText(label);
+      var cfg = chips[index] || [];
+      var label = es ? (chip.getAttribute('data-es') || cfg[1] || cleanLabel(chip.textContent)) : (chip.getAttribute('data-en') || cfg[0] || cleanLabel(chip.textContent));
+      var iconName = cfg[2] || pickByText(label);
       replaceLeadingIcon(chip, iconName, label);
     });
   }
