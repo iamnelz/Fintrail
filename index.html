@@ -8558,7 +8558,7 @@ Guidelines:
       : new Date(dateValue);
     if (!(date instanceof Date) || isNaN(date.getTime())) return isSavingsGoalsSpanish() ? 'Sin fecha límite' : 'No deadline';
     if (isSavingsGoalsSpanish()) {
-      const monthsEs = ['Ene.', 'Feb.', 'Mar.', 'Abr.', 'May.', 'Jun.', 'Jul.', 'Ago.', 'Sept.', 'Oct.', 'Nov.', 'Dic.'];
+      const monthsEs = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
       return `${monthsEs[date.getMonth()]} ${date.getFullYear()}`;
     }
     return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
@@ -8572,6 +8572,23 @@ Guidelines:
       const deadline = card.querySelector('.goal-deadline');
       if (!deadline || !goalDate) return;
       deadline.textContent = `📅 ${formatSavingsGoalDate(goalDate)}`;
+    });
+  }
+
+  function updateSavingsGoalsLanguage() {
+    if (typeof renderGoals === 'function') renderGoals();
+    if (typeof normalizeSavingsGoalDeadlineLabels === 'function') normalizeSavingsGoalDeadlineLabels();
+    requestAnimationFrame(function(){
+      try {
+        if (typeof renderGoals === 'function') renderGoals();
+        if (typeof window.fintrailSavingsGoalCardTrackingLanguage === 'function') window.fintrailSavingsGoalCardTrackingLanguage();
+        if (typeof normalizeSavingsGoalDeadlineLabels === 'function') normalizeSavingsGoalDeadlineLabels();
+      } catch(e) {}
+    });
+    [120, 360, 760].forEach(function(ms){
+      setTimeout(function(){
+        if (typeof normalizeSavingsGoalDeadlineLabels === 'function') normalizeSavingsGoalDeadlineLabels();
+      }, ms);
     });
   }
 
@@ -13059,19 +13076,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     safeSet('fintrail_lang', currentLang);
     window.__fintrailLanguageSwitching = true;
     applyLanguage();
-    if (document.getElementById('tab-savings')?.classList.contains('visible') && typeof renderGoals === 'function') {
-      renderGoals();
-      if (typeof normalizeSavingsGoalDeadlineLabels === 'function') normalizeSavingsGoalDeadlineLabels();
-      requestAnimationFrame(function(){
-        try {
-          renderGoals();
-          if (typeof window.fintrailSavingsGoalCardTrackingLanguage === 'function') window.fintrailSavingsGoalCardTrackingLanguage();
-          if (typeof normalizeSavingsGoalDeadlineLabels === 'function') normalizeSavingsGoalDeadlineLabels();
-        } catch(e) {}
-      });
-      setTimeout(function(){
-        if (typeof normalizeSavingsGoalDeadlineLabels === 'function') normalizeSavingsGoalDeadlineLabels();
-      }, 180);
+    if (document.getElementById('tab-savings')?.classList.contains('visible') && typeof updateSavingsGoalsLanguage === 'function') {
+      updateSavingsGoalsLanguage();
     }
     if (typeof refreshVisibleLocalizedUI === 'function') refreshVisibleLocalizedUI();
     if (typeof window.fintrailRefreshDesignIcons === 'function') requestAnimationFrame(window.fintrailRefreshDesignIcons);
@@ -13361,8 +13367,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
         call('renderBudgetChart');
       }
     } else if (activeId === 'tab-goals' || activeId === 'tab-savings') {
-      call('renderGoals');
-      call('normalizeSavingsGoalDeadlineLabels');
+      call('updateSavingsGoalsLanguage');
     } else if (activeId === 'tab-networth') {
       call('renderNWLists');
       call('renderNWHistory');
@@ -16196,8 +16201,8 @@ window.addEventListener('load', function(){
   ];
 
   var months = [
-    ['Jan','ene'],['Feb','feb'],['Mar','mar'],['Apr','abr'],['May','may'],['Jun','jun'],
-    ['Jul','jul'],['Aug','ago'],['Sep','sep'],['Oct','oct'],['Nov','nov'],['Dec','dic']
+    ['Jan','Ene'],['Feb','Feb'],['Mar','Mar'],['Apr','Abr'],['May','May'],['Jun','Jun'],
+    ['Jul','Jul'],['Aug','Ago'],['Sep','Sep'],['Oct','Oct'],['Nov','Nov'],['Dec','Dic']
   ];
 
   function replaceLiteral(s, from, to){
