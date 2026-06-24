@@ -1761,6 +1761,9 @@
   .level-card[data-tier="silver"] .level-badge,
   .level-card[data-tier="silver"] .level-name { color:#cbd5e1; }
   .level-card[data-tier="silver"] .level-badge .ft-lucide-icon { color:#cbd5e1; stroke:#cbd5e1; }
+  .level-card[data-tier="gold"] .level-badge,
+  .level-card[data-tier="gold"] .level-name { color:#fbbf24; }
+  .level-card[data-tier="gold"] .level-badge .ft-lucide-icon { color:#fbbf24; stroke:#fbbf24; }
   .level-subtitle { font-size:0.78rem; color:rgba(255,255,255,0.6); margin-top:0.2rem; }
   .xp-bar-track { height:10px; background:rgba(255,255,255,0.15); border-radius:5px; margin:1rem 0 0.4rem; overflow:hidden; }
   .xp-bar-fill { height:100%; border-radius:5px; background:linear-gradient(90deg,var(--accent),var(--accent2)); transition:width 0.8s ease; }
@@ -4558,7 +4561,7 @@
 
     <!-- INSIGHTS GROUP -->
     <div class="nav-group">
-      <button class="nav-group-btn" id="nav-insights">💡 Insights <span class="nav-arrow">▾</span></button>
+      <button class="nav-group-btn" id="nav-insights">Insights <span class="nav-arrow">▾</span></button>
       <div class="nav-dropdown">
         <div class="nav-dropdown-section" data-en="Insights" data-es="Análisis">Insights</div>
         <button class="nav-dropdown-item" onclick="guardedNavTo('ai', this)">
@@ -7124,7 +7127,7 @@
     const styles = {
       bronze: { background: 'linear-gradient(135deg,#f3d0ad,#cd7f32)', color: '#2f1b0b', border: '1px solid rgba(205,127,50,0.55)', icon: '#92400e' },
       silver: { background: 'linear-gradient(135deg,#f8fafc,#d1d5db,#aeb6c2)', color: '#1f2933', border: '1px solid rgba(148,163,184,0.65)', icon: '#6b7280' },
-      gold: { background: 'linear-gradient(135deg,#fff7cc,#f59e0b,#b45309)', color: '#1f1300', border: '1px solid rgba(245,158,11,0.65)', icon: '#92400e' },
+      gold: { background: 'linear-gradient(135deg,#fff7cc,#f59e0b,#b45309)', color: '#1f1300', border: '1px solid rgba(245,158,11,0.65)', icon: '#fbbf24' },
       platinum: { background: 'linear-gradient(135deg,#eff6ff,#93c5fd,#5b6ee1)', color: '#0f172a', border: '1px solid rgba(147,197,253,0.7)', icon: '#1d4ed8' },
       diamond: { background: 'linear-gradient(135deg,#ccfbf1,#2dd4bf,#0f766e)', color: '#042f2e', border: '1px solid rgba(45,212,191,0.68)', icon: '#0f766e' }
     };
@@ -14570,6 +14573,9 @@ window.addEventListener('load', function(){
                  document.querySelector('.negotiate-layout') ||
                  document.querySelector('.script-output-card');
       if (!root) return;
+      var visibleResult = document.getElementById('script-result');
+      if (!visibleResult || visibleResult.style.display === 'none') return;
+      root = visibleResult;
 
       var c = scriptContent();
 
@@ -14646,9 +14652,9 @@ window.addEventListener('load', function(){
     setTimeout(fillVisibleScriptBoxes, 2500);
   });
 
-  document.addEventListener('click', function(){
+  document.addEventListener('click', function(e){
+    if (!e.target || !e.target.closest || !e.target.closest('#script-result')) return;
     setTimeout(fillVisibleScriptBoxes, 120);
-    setTimeout(fillVisibleScriptBoxes, 650);
   });
 })();
 </script>
