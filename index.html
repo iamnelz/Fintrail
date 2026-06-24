@@ -4949,7 +4949,7 @@
         <p data-en="Curated lenders, grants, tools &amp; education. Compare rates and find the best fit for you." data-es="Prestamistas, becas, herramientas y educación. Compara tasas y encuentra la mejor opción para ti.">Curated lenders, grants, tools & education. Compare rates and find the best fit for you.</p>
       </div>
       <div class="filter-row" id="filter-row">
-        <button class="filter-btn active" onclick="filterResources('all', this)">All</button>
+        <button class="filter-btn active" onclick="filterResources('all', this)" data-en="All" data-es="Todo">All</button>
         <button class="filter-btn" onclick="filterResources('mortgage', this)" data-en="🏠 Mortgages" data-es="🏠 Hipotecas">🏠 Mortgages</button>
         <button class="filter-btn" onclick="filterResources('personal', this)" data-en="💳 Personal Loans" data-es="💳 Préstamos Personales">💳 Personal Loans</button>
         <button class="filter-btn" onclick="filterResources('auto', this)" data-en="🚗 Auto Loans" data-es="🚗 Préstamos de Auto">🚗 Auto Loans</button>
@@ -4976,10 +4976,10 @@
             <option value="48" data-en="4 years" data-es="4 años">4 years</option>
             <option value="60" data-en="5 years" data-es="5 años">5 years</option>
             <option value="84" data-en="7 years" data-es="7 años">7 years</option>
-            <option value="120">10 years</option>
-            <option value="180">15 years</option>
-            <option value="240">20 years</option>
-            <option value="360">30 years</option>
+            <option value="120" data-en="10 years" data-es="10 años">10 years</option>
+            <option value="180" data-en="15 years" data-es="15 años">15 years</option>
+            <option value="240" data-en="20 years" data-es="20 años">20 years</option>
+            <option value="360" data-en="30 years" data-es="30 años">30 years</option>
           </select>
         </div>
       </div>
@@ -6441,7 +6441,7 @@
         <button class="cal-nav-btn" onclick="calNav(-1)">‹</button>
         <div class="cal-month-label" id="cal-month-label">May 2026</div>
         <button class="cal-nav-btn" onclick="calNav(1)">›</button>
-        <button class="cal-nav-btn" onclick="goToToday()" style="font-size:0.75rem">Today</button>
+        <button class="cal-nav-btn" id="cal-today-btn" onclick="goToToday()" style="font-size:0.75rem" data-en="Today" data-es="Hoy">Today</button>
       </div>
       <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap">
         <div class="cal-view-toggle">
@@ -6456,9 +6456,9 @@
     <div class="cal-legend">
       <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#f05555"></div> <span data-en="Bills Due" data-es="Facturas Vencidas">Bills Due</span></div>
       <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#00b894"></div> <span data-en="Payday" data-es="Día de Pago">Payday</span></div>
-      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#f5a623"></div> Savings Goals</div>
-      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#818cf8"></div> Debt Milestones</div>
-      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#06d6a0"></div> Custom Events</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#f5a623"></div> <span data-en="Savings Goals" data-es="Metas de Ahorro">Savings Goals</span></div>
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#818cf8"></div> <span data-en="Debt Milestones" data-es="Hitos de Deuda">Debt Milestones</span></div>
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#06d6a0"></div> <span data-en="Custom Events" data-es="Eventos Personalizados">Custom Events</span></div>
     </div>
 
     <div class="cal-layout">
@@ -6802,10 +6802,10 @@
   function getRateBannerData() {
     const es = currentLang === 'es';
     return [
-      { type: es ? 'Hipoteca 30 años' : '30-yr Mortgage', rate: '6.49%', note: 'via Better' },
-      { type: es ? 'Préstamo Personal' : 'Personal Loan', rate: '7.49%', note: 'via LightStream' },
-      { type: es ? 'Préstamo de Auto' : 'Auto Loan', rate: '4.74%', note: 'via PenFed' },
-      { type: es ? 'Refi Estudiantil' : 'Student Refi', rate: '4.99%', note: 'via SoFi' },
+      { type: es ? 'Hipoteca a 30 años' : '30-yr Mortgage', rate: '6.49%', note: es ? 'por Better' : 'via Better' },
+      { type: es ? 'Préstamo personal' : 'Personal Loan', rate: '7.49%', note: es ? 'por LightStream' : 'via LightStream' },
+      { type: es ? 'Préstamo de auto' : 'Auto Loan', rate: '4.74%', note: es ? 'por PenFed' : 'via PenFed' },
+      { type: es ? 'Refi estudiantil' : 'Student Refi', rate: '4.99%', note: es ? 'por SoFi' : 'via SoFi' },
     ];
   }
 
@@ -7654,13 +7654,131 @@
     return '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
 
+  const resourceSpanishCopy = {
+    '⭐ Featured': 'Destacado',
+    'Low Rates': 'Tasas bajas',
+    '100% Online': '100% en línea',
+    'Fast Approval': 'Aprobación rápida',
+    'No Hidden Fees': 'Sin cargos ocultos',
+    'Competitive Rates': 'Tasas competitivas',
+    'Fast Close': 'Cierre rápido',
+    'No Fees': 'Sin cargos',
+    'Low APR': 'APR bajo',
+    'Lowest Rates': 'Tasas más bajas',
+    'Fair Credit OK': 'Crédito regular aceptado',
+    'AI-Powered Approval': 'Aprobación con IA',
+    'Lowest Auto Rates': 'Tasas de auto bajas',
+    'No Restrictions': 'Sin restricciones',
+    'Same-Day Funding': 'Fondos el mismo día',
+    '4 Offers in Minutes': '4 ofertas en minutos',
+    'Compare Rates': 'Compara tasas',
+    'Compare 10+ Lenders': 'Compara más de 10 prestamistas',
+    'Free': 'Gratis',
+    'Community Focus': 'Enfoque comunitario',
+    'Small Business': 'Pequeñas empresas',
+    'Free Forever': 'Gratis siempre',
+    'Best Budgeting App': 'Mejor app de presupuesto',
+    '100% Free': '100% gratis',
+    'Expert Guides': 'Guías expertas',
+    'Official Bureau': 'Buró oficial',
+    'Free Score': 'Puntaje gratis',
+    'Official Gov Site': 'Sitio oficial del gobierno',
+    'Always Free': 'Siempre gratis',
+    'Instant Score': 'Puntaje instantáneo',
+    'All 3 Bureaus': 'Los 3 burós',
+    '30-yr Fixed': 'Fija 30 años',
+    '15-yr Fixed': 'Fija 15 años',
+    '5/1 ARM': 'ARM 5/1',
+    'Starting APR': 'APR inicial',
+    'Loan Range': 'Rango del préstamo',
+    'New Auto APR': 'APR auto nuevo',
+    'Used Auto APR': 'APR auto usado',
+    'Lenders': 'Prestamistas',
+    'Refi from': 'Refi desde',
+    'Credit Check': 'Revisión de crédito',
+    'Fixed from': 'Fija desde',
+    'Variable from': 'Variable desde',
+    'Check Your Rate': 'Ver tu tasa',
+    'Get Pre-Approved': 'Obtén preaprobación',
+    'Get a Quote': 'Solicitar cotización',
+    'Apply Now': 'Solicitar ahora',
+    'Check Rate': 'Ver tasa',
+    'Apply for Auto Loan': 'Solicitar préstamo de auto',
+    'Get Auto Loan': 'Obtener préstamo de auto',
+    'Compare Offers': 'Comparar ofertas',
+    'Compare Refi Rates': 'Comparar tasas de refinanciamiento',
+    'Refinance Student Loans': 'Refinanciar préstamos estudiantiles',
+    'Browse Grants': 'Explorar ayudas',
+    'Learn More': 'Más información',
+    'Find Grants': 'Buscar ayudas',
+    'Check Score Free': 'Ver puntaje gratis',
+    'Try Free 34 Days': 'Probar gratis 34 días',
+    'Start Learning': 'Comenzar a aprender',
+    'Read Guides': 'Leer guías',
+    'Get Free Score': 'Obtener puntaje gratis',
+    'Check Your Report': 'Revisar tu reporte',
+    'View Report': 'Ver reporte',
+    'Get Free Reports': 'Obtener reportes gratis',
+    'Check for Free': 'Revisar gratis',
+    'See All 3 Scores': 'Ver los 3 puntajes',
+    'Commission-free mortgage lender with an entirely online process. Pre-approval in as little as 3 minutes.': 'Prestamista hipotecario sin comisiones con un proceso completamente en línea. Preaprobación en tan solo 3 minutos.',
+    'Rates shown are representative APRs. Your rate depends on credit score, down payment & loan amount.': 'Las tasas mostradas son APR representativas. Tu tasa depende de tu puntaje de crédito, pago inicial y monto del préstamo.',
+    "America's largest mortgage lender. Easy online application, verified approval in minutes.": 'El prestamista hipotecario más grande de Estados Unidos. Solicitud en línea sencilla y aprobación verificada en minutos.',
+    'Rates change daily. Rate shown is sample APR for illustrative purposes.': 'Las tasas cambian a diario. La tasa mostrada es un APR de ejemplo con fines ilustrativos.',
+    "One of the nation's largest non-bank lenders. Offers FHA, VA, jumbo, and conventional loans.": 'Uno de los prestamistas no bancarios más grandes del país. Ofrece préstamos FHA, VA, jumbo y convencionales.',
+    'Advertised rates are for well-qualified borrowers. Verify current rates on their site.': 'Las tasas anunciadas son para prestatarios muy calificados. Verifica las tasas actuales en su sitio.',
+    'No origination fees, no prepayment penalties. Borrow $5K–$100K with same-day funding available.': 'Sin cargos de originación ni penalidades por pago anticipado. Pide entre $5K y $100K con fondos disponibles el mismo día.',
+    'APR range: 8.99%–29.99%. Rate depends on creditworthiness. Soft credit check for pre-qualification.': 'Rango APR: 8.99%–29.99%. La tasa depende de tu perfil crediticio. Consulta suave para precalificación.',
+    "Truist's online lending division. Offers the lowest rates for excellent credit borrowers.": 'La división de préstamos en línea de Truist. Ofrece tasas bajas para prestatarios con crédito excelente.',
+    'Rates start at 7.49% APR with AutoPay. Requires good to excellent credit.': 'Las tasas comienzan en 7.49% APR con AutoPay. Requiere crédito bueno a excelente.',
+    'Uses AI and education/employment data — not just credit score — to offer better rates to more people.': 'Usa IA y datos de educación/empleo, no solo el puntaje de crédito, para ofrecer mejores tasas a más personas.',
+    'Average APR 21.97%. Available to borrowers with limited credit history.': 'APR promedio 21.97%. Disponible para prestatarios con historial crediticio limitado.',
+    'Pentagon Federal Credit Union offers some of the lowest auto loan rates nationwide. Open to everyone.': 'Pentagon Federal Credit Union ofrece algunas de las tasas de auto más bajas a nivel nacional. Abierto para todos.',
+    'Rates as low as 4.74% APR for new autos with excellent credit. Membership required.': 'Tasas desde 4.74% APR para autos nuevos con crédito excelente. Requiere membresía.',
+    'Finance any vehicle — new, used, or private party. No restrictions on age or mileage.': 'Financia cualquier vehículo: nuevo, usado o de venta privada. Sin restricciones de antigüedad o millaje.',
+    'Rate with AutoPay discount. Subject to credit approval.': 'Tasa con descuento de AutoPay. Sujeta a aprobación crediticia.',
+    'Get up to 4 competing loan offers from lenders in minutes. Best for comparison shopping.': 'Recibe hasta 4 ofertas de préstamo competitivas de prestamistas en minutos. Ideal para comparar opciones.',
+    'Rates vary by lender, credit score, and vehicle. Soft pull for initial offers.': 'Las tasas varían según el prestamista, puntaje de crédito y vehículo. Consulta suave para ofertas iniciales.',
+    'Compare real pre-qualified refinance rates from 10+ lenders in 2 minutes. No hard credit pull.': 'Compara tasas reales de refinanciamiento precalificadas de más de 10 prestamistas en 2 minutos. Sin consulta dura.',
+    'Rates shown are lowest available. Your rate depends on credit, LTV, and loan term.': 'Las tasas mostradas son las más bajas disponibles. Tu tasa depende del crédito, LTV y plazo del préstamo.',
+    'Refinance federal or private student loans. No origination fees, career coaching included.': 'Refinancia préstamos estudiantiles federales o privados. Sin cargos de originación; incluye orientación profesional.',
+    'Refinancing federal loans removes federal protections. Consider carefully before refinancing.': 'Refinanciar préstamos federales elimina protecciones federales. Considéralo cuidadosamente antes de refinanciar.',
+    'The official U.S. government site listing thousands of federal grant opportunities across all sectors.': 'El sitio oficial del gobierno de EE. UU. con miles de oportunidades de ayudas federales en todos los sectores.',
+    'Grants for low-income and underserved communities from the U.S. Treasury Department.': 'Ayudas para comunidades de bajos ingresos y desatendidas del Departamento del Tesoro de EE. UU.',
+    'Small Business Administration grant programs for qualifying businesses and entrepreneurs.': 'Programas de ayudas de la Administración de Pequeñas Empresas para negocios y emprendedores elegibles.',
+    'Free credit score monitoring, personalized recommendations, and financial insights.': 'Monitoreo gratuito del puntaje de crédito, recomendaciones personalizadas e información financiera.',
+    'Proactive budgeting software. Average user saves $600 in the first 2 months.': 'Software de presupuesto proactivo. El usuario promedio ahorra $600 en los primeros 2 meses.',
+    'World-class finance and economics courses from basic budgeting to advanced investing.': 'Cursos de finanzas y economía de primer nivel, desde presupuesto básico hasta inversión avanzada.',
+    'Expert personal finance advice, product comparisons, and guides for every financial decision.': 'Consejos expertos de finanzas personales, comparaciones de productos y guías para cada decisión financiera.',
+    'One of the three major credit bureaus. Get your official Experian credit report and FICO score for free. Includes score monitoring and alerts.': 'Uno de los tres principales burós de crédito. Obtén gratis tu reporte oficial de Experian y puntaje FICO. Incluye monitoreo y alertas.',
+    'Free basic score available. Premium monitoring plans available separately.': 'Puntaje básico gratis disponible. Planes premium de monitoreo disponibles por separado.',
+    'One of the three major credit bureaus. Access your Equifax credit report and monitor for changes that could indicate identity theft.': 'Uno de los tres principales burós de crédito. Accede a tu reporte de Equifax y monitorea cambios que podrían indicar robo de identidad.',
+    'Free annual report available at AnnualCreditReport.com.': 'Reporte anual gratis disponible en AnnualCreditReport.com.',
+    'The third major credit bureau. View your TransUnion credit report, monitor your score, and get alerts for suspicious activity.': 'El tercer buró de crédito principal. Consulta tu reporte de TransUnion, monitorea tu puntaje y recibe alertas por actividad sospechosa.',
+    'Free report available. Paid monitoring plans available.': 'Reporte gratis disponible. Planes de monitoreo pagados disponibles.',
+    'The only federally authorized source for free credit reports from all three bureaus — Equifax, Experian, and TransUnion. You are entitled by law to one free report per bureau per year.': 'La única fuente autorizada federalmente para reportes gratuitos de los tres burós: Equifax, Experian y TransUnion. Por ley tienes derecho a un reporte gratis por buró cada año.',
+    'This is the official government-mandated free credit report site.': 'Este es el sitio oficial de reportes de crédito gratuitos exigido por el gobierno.',
+    'Free credit scores and reports from TransUnion and Equifax. Updated weekly with personalized recommendations for credit cards and loans.': 'Puntajes y reportes gratuitos de TransUnion y Equifax. Actualizados semanalmente con recomendaciones personalizadas para tarjetas y préstamos.',
+    'Shows TransUnion and Equifax scores. Does not include Experian.': 'Muestra puntajes de TransUnion y Equifax. No incluye Experian.',
+    'Get your official FICO scores from all three bureaus — the exact scores most lenders use. Includes score simulators and monitoring alerts.': 'Obtén tus puntajes FICO oficiales de los tres burós, los mismos que usan muchos prestamistas. Incluye simuladores y alertas de monitoreo.',
+    'Paid service. Prices start around $19.95/mo for all three bureau scores.': 'Servicio pagado. Los precios comienzan alrededor de $19.95/mes para puntajes de los tres burós.'
+  };
+
+  function resourceCopy(text) {
+    if (currentLang !== 'es') return text;
+    return resourceSpanishCopy[text] || text;
+  }
+
   function renderRateBanner() {
-    document.getElementById('rate-banner').innerHTML = getRateBannerData().map(r => `
+    const banner = document.getElementById('rate-banner');
+    if (!banner) return;
+    const html = getRateBannerData().map(r => `
       <div class="rate-chip">
         <div class="rc-type">${r.type}</div>
         <div class="rc-rate">${r.rate}</div>
         <div class="rc-label">${currentLang==='es'?'desde · ':'as low as · '}${r.note}</div>
       </div>`).join('');
+    if (banner.innerHTML !== html) banner.innerHTML = html;
   }
 
   function filterResources(tag, btn) {
@@ -7674,6 +7792,7 @@
   function renderResources() {
     const grid = document.getElementById('resources-grid');
     if (!grid) return;
+    renderRateBanner();
     const affiliateTags = ['mortgage','personal','auto','refi'];
     let filtered = currentFilter === 'all' ? resources : resources.filter(r => r.tag === currentFilter);
     // Free users only see non-affiliate categories
@@ -7685,7 +7804,7 @@
     grid.innerHTML = sorted.map(r => {
       const badgesHtml = (r.badges||[]).map(b => {
         const [cls, label] = b.split('|');
-        return `<span class="rc-badge ${cls}">${label}</span>`;
+        return `<span class="rc-badge ${cls}">${resourceCopy(label)}</span>`;
       }).join('');
 
       const ratesHtml = r.rates.length ? `
@@ -7694,7 +7813,7 @@
             ${i>0 ? '<div class="rc-divider"></div>' : ''}
             <div class="rc-rate-item">
               <div class="rri-val">${rt.val}</div>
-              <div class="rri-label">${rt.label}</div>
+              <div class="rri-label">${resourceCopy(rt.label)}</div>
             </div>`).join('')}
         </div>` : '';
 
@@ -7708,10 +7827,10 @@
         </div>
         <div class="rc-badges">${badgesHtml}</div>
         ${ratesHtml}
-        <p>${r.desc}</p>
-        ${r.fine ? `<p class="rc-fine" style="margin-bottom:0.6rem">${r.fine}</p>` : ''}
-        <a class="rc-cta ${r.ctaStyle||''}" href="${r.url}" target="_blank" rel="noopener noreferrer">${r.cta} →</a>
-        ${r.commission ? `<div class="commission-note">Partner details will be added as agreements are finalized.</div>` : ''}
+        <p>${resourceCopy(r.desc)}</p>
+        ${r.fine ? `<p class="rc-fine" style="margin-bottom:0.6rem">${resourceCopy(r.fine)}</p>` : ''}
+        <a class="rc-cta ${r.ctaStyle||''}" href="${r.url}" target="_blank" rel="noopener noreferrer">${resourceCopy(r.cta)} →</a>
+        ${r.commission ? `<div class="commission-note">${currentLang === 'es' ? 'Los detalles de socios se agregarán a medida que se finalicen los acuerdos.' : 'Partner details will be added as agreements are finalized.'}</div>` : ''}
       </div>`;
     }).join('');
     grid.dataset.renderKey = renderKey;
@@ -8449,16 +8568,18 @@ Guidelines:
     const n = parseInt(document.getElementById('cmp-term').value) || 12;
     const r = annualRate / 100 / 12;
     const container = document.getElementById('compare-results');
-    if (!P || !annualRate) { container.innerHTML = ''; return; }
+    if (!container) return;
+    if (!P || !annualRate) { if (container.innerHTML) container.innerHTML = ''; return; }
     const monthly = r === 0 ? P/n : P * r * Math.pow(1+r,n) / (Math.pow(1+r,n) - 1);
     const totalPaid = monthly * n;
     const totalInterest = totalPaid - P;
-    container.innerHTML = `
+    const html = `
       <div class="compare-result-card"><div class="crr-label">${currentLang==='es'?'PAGO MENSUAL':'MONTHLY PAYMENT'}</div><div class="crr-val" style="color:var(--accent)">$${monthly.toFixed(2)}</div><div class="crr-sub">${currentLang==='es'?'cada mes':'every month'}</div></div>
       <div class="compare-result-card"><div class="crr-label">${currentLang==='es'?'INTERÉS TOTAL':'TOTAL INTEREST'}</div><div class="crr-val" style="color:var(--expense-color)">$${totalInterest.toFixed(2)}</div><div class="crr-sub">${currentLang==='es'?'costo del préstamo':'cost of borrowing'}</div></div>
       <div class="compare-result-card"><div class="crr-label">${currentLang==='es'?'TOTAL PAGADO':'TOTAL PAID'}</div><div class="crr-val">$${totalPaid.toFixed(2)}</div><div class="crr-sub">${currentLang==='es'?'en':'over'} ${n} ${currentLang==='es'?'meses':'months'}</div></div>
       <div class="compare-result-card"><div class="crr-label">${currentLang==='es'?'CAPITAL':'PRINCIPAL'}</div><div class="crr-val">$${P.toLocaleString()}</div><div class="crr-sub">${currentLang==='es'?'monto prestado':'borrowed amount'}</div></div>
     `;
+    if (container.innerHTML !== html) container.innerHTML = html;
   }
 
   // =============================================
@@ -12683,6 +12804,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       call('renderMonthlyReport');
       call('renderCalendar');
       call('renderResources');
+      call('renderRateBanner');
+      call('calcLoan');
       call('renderStreaks');
       call('renderActivityFeed');
       call('setUserUI', currentUser ? [currentUser] : []);
@@ -12749,6 +12872,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       call('renderCalendar');
     } else if (activeId === 'tab-resources') {
       call('renderResources');
+      call('renderRateBanner');
+      call('calcLoan');
     } else if (activeId === 'tab-streaks') {
       call('renderStreaks');
       call('renderActivityFeed');
@@ -13262,6 +13387,16 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     else renderWeekView();
 
     renderUpcoming(year, month);
+    refreshCalendarStaticLabels();
+  }
+
+  function refreshCalendarStaticLabels() {
+    const isEs = currentLang === 'es';
+    const todayBtn = document.getElementById('cal-today-btn');
+    if (todayBtn) todayBtn.textContent = isEs ? 'Hoy' : 'Today';
+    document.querySelectorAll('#tab-calendar .cal-legend span[data-en][data-es]').forEach(el => {
+      el.textContent = isEs ? el.getAttribute('data-es') : el.getAttribute('data-en');
+    });
   }
 
   function renderMonthView(year, month) {
@@ -17273,17 +17408,8 @@ window.addEventListener('load', function(){
   }
 
   function patchResources(){
-    if (!window.__fintrailLanguageSwitching) return;
-    document.querySelectorAll('#tab-resources .filter-btn, #tab-resources button').forEach(function(btn){
-      var txt = (btn.textContent || '').trim();
-      if (isSpanish()) {
-        if (/Tools\s*$/.test(txt)) btn.textContent = txt.replace(/Tools\s*$/, 'Herramientas');
-        if (/Education\s*$/.test(txt)) btn.textContent = txt.replace(/Education\s*$/, 'Educación');
-      } else {
-        if (/Herramientas\s*$/.test(txt)) btn.textContent = txt.replace(/Herramientas\s*$/, 'Tools');
-        if (/Educación\s*$/.test(txt)) btn.textContent = txt.replace(/Educación\s*$/, 'Education');
-      }
-    });
+    // Resource Center labels now render from stable EN/ES sources directly.
+    // Avoid mutating its DOM after render; that caused Spanish-mode flicker.
   }
 
   function patchMonthlyReport(){
@@ -17512,30 +17638,8 @@ window.addEventListener('load', function(){
   }
 
   function fixResources(){
-    if (!window.__fintrailLanguageSwitching) return;
-    var root = document.getElementById('tab-resources');
-    if (!root) return;
-    setDataLanguage(root);
-    if (!isSpanish()) {
-      var map = {
-        'Productos Financieros':'Financial Products',
-        'Crédito y Reportes':'Credit & Reports',
-        'Educación Financiera':'Financial Education',
-        'Asistencia Financiera':'Financial Hardship Assistance',
-        'Gobierno y Becas':'Government & Grants',
-        'Socios Destacados de Fintrail':'Featured Fintrail Partners',
-        'Comenzar':'Start Learning',
-        'Leer Guías':'Read Guides',
-        'Visitar':'Visit',
-        'Más información':'Learn More'
-      };
-      root.querySelectorAll('h2,h3,p,button,a,span').forEach(function(el){
-        if (el.children.length > 0) return;
-        var text = el.textContent || '';
-        Object.keys(map).forEach(function(k){ text = text.split(k).join(map[k]); });
-        el.textContent = text;
-      });
-    }
+    // Resource Center handles translation in its own render functions.
+    // Leave this as a no-op so cleanup passes do not rewrite cards/buttons.
   }
 
   function fixAccountBanner(){
