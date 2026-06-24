@@ -4971,14 +4971,14 @@
       </div>
       <div class="filter-row" id="filter-row">
         <button class="filter-btn active" onclick="filterResources('all', this)" data-en="All" data-es="Todo">All</button>
-        <button class="filter-btn" onclick="filterResources('mortgage', this)" data-en="🏠 Mortgages" data-es="🏠 Hipotecas">🏠 Mortgages</button>
-        <button class="filter-btn" onclick="filterResources('personal', this)" data-en="💳 Personal Loans" data-es="💳 Préstamos Personales">💳 Personal Loans</button>
-        <button class="filter-btn" onclick="filterResources('auto', this)" data-en="🚗 Auto Loans" data-es="🚗 Préstamos de Auto">🚗 Auto Loans</button>
-        <button class="filter-btn" onclick="filterResources('refi', this)" data-en="🔄 Refinance" data-es="🔄 Refinanciar">🔄 Refinance</button>
-        <button class="filter-btn" onclick="filterResources('grants', this)" data-en="🎁 Grants" data-es="🎁 Becas y Ayudas">🎁 Grants</button>
-        <button class="filter-btn" onclick="filterResources('tools', this)" data-en="🛠 Tools" data-es="🛠 Herramientas">🛠 Tools</button>
-        <button class="filter-btn" onclick="filterResources('education', this)" data-en="📚 Education" data-es="📚 Educación">📚 Education</button>
-        <button class="filter-btn" onclick="filterResources('credit', this)" data-en="📊 Credit Scores" data-es="📊 Puntajes de Crédito">📊 Credit Scores</button>
+        <button class="filter-btn" onclick="filterResources('mortgage', this)" data-en="Mortgages" data-es="Hipotecas">Mortgages</button>
+        <button class="filter-btn" onclick="filterResources('personal', this)" data-en="Personal Loans" data-es="Préstamos Personales">Personal Loans</button>
+        <button class="filter-btn" onclick="filterResources('auto', this)" data-en="Auto Loans" data-es="Préstamos de Auto">Auto Loans</button>
+        <button class="filter-btn" onclick="filterResources('refi', this)" data-en="Refinance" data-es="Refinanciar">Refinance</button>
+        <button class="filter-btn" onclick="filterResources('grants', this)" data-en="Grants" data-es="Becas y Ayudas">Grants</button>
+        <button class="filter-btn" onclick="filterResources('tools', this)" data-en="Tools" data-es="Herramientas">Tools</button>
+        <button class="filter-btn" onclick="filterResources('education', this)" data-en="Education" data-es="Educación">Education</button>
+        <button class="filter-btn" onclick="filterResources('credit', this)" data-en="Credit Scores" data-es="Puntajes de Crédito">Credit Scores</button>
       </div>
     </div>
 
@@ -6251,7 +6251,7 @@
 
         <!-- STREAKS -->
         <div class="card">
-          <h2 style="margin-bottom:1rem" data-en="🔥 Active Streaks" data-es="🔥 Rachas Activas">🔥 Active Streaks</h2>
+          <h2 style="margin-bottom:1rem;display:flex;align-items:center;gap:0.45rem"><span class="ft-stable-inline-icon" data-ft-stable-icon="flame"></span><span data-en="Active Streaks" data-es="Rachas Activas">Active Streaks</span></h2>
           <div class="streak-cards" id="streak-cards"></div>
           <div class="tip-bar" style="margin-top:1rem">
             <div class="tip-icon">💡</div>
@@ -6264,14 +6264,14 @@
       <div>
         <div class="card" style="margin-bottom:1.5rem">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
-            <h2 style="margin-bottom:0" data-en="🏆 Achievements" data-es="🏆 Logros">🏆 Achievements</h2>
+            <h2 style="margin-bottom:0;display:flex;align-items:center;gap:0.45rem"><span class="ft-stable-inline-icon" data-ft-stable-icon="trophy"></span><span data-en="Achievements" data-es="Logros">Achievements</span></h2>
             <span id="badges-count" style="font-size:0.78rem;color:var(--muted)">0 earned</span>
           </div>
           <div class="badges-grid" id="badges-grid"></div>
         </div>
 
         <div class="card">
-          <h2 style="margin-bottom:1rem" data-en="⚡ Recent Activity" data-es="⚡ Actividad Reciente">⚡ Recent Activity</h2>
+          <h2 style="margin-bottom:1rem;display:flex;align-items:center;gap:0.45rem"><span class="ft-stable-inline-icon" data-ft-stable-icon="zap"></span><span data-en="Recent Activity" data-es="Actividad Reciente">Recent Activity</span></h2>
           <div class="activity-feed" id="activity-feed">
             <div class="empty-state" data-en="No activity yet — start using Fintrail to earn XP!" data-es="Aún no hay actividad — ¡comienza a usar Fintrail para ganar XP!">No activity yet — start using Fintrail to earn XP!</div>
           </div>
@@ -6291,7 +6291,7 @@
       <!-- LEFT: INPUTS -->
       <div>
         <div class="card">
-          <h2 style="margin-bottom:0.35rem" data-en="💬 Debt Negotiation Scripts" data-es="💬 Scripts de Negociación de Deuda">💬 Debt Negotiation Scripts</h2>
+          <h2 style="margin-bottom:0.35rem;display:flex;align-items:center;gap:0.45rem"><span class="ft-stable-inline-icon" data-ft-stable-icon="message-circle"></span><span data-en="Debt Negotiation Scripts" data-es="Scripts de Negociación de Deuda">Debt Negotiation Scripts</span></h2>
           <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:1.25rem;line-height:1.6" data-en="Fill in your details and Claude AI will write a personalized script you can read word-for-word when calling your creditor." data-es="Ingresa tus detalles y la IA de Claude escribirá un guion personalizado que podrás leer palabra por palabra cuando llames a tu acreedor.">Fill in your details and Claude AI will write a personalized script you can read word-for-word when calling your creditor.</p>
 
           <!-- SCRIPT TYPE -->
@@ -6378,7 +6378,7 @@
       <div>
         <div class="script-output-card">
           <div class="script-output-header">
-            <h3 id="script-output-title" data-en="📄 Your Personalized Script" data-es="📄 Tu Guion Personalizado">📄 Your Personalized Script</h3>
+            <h3 id="script-output-title" style="display:flex;align-items:center;gap:0.45rem"><span class="ft-stable-inline-icon" data-ft-stable-icon="file-text"></span><span data-en="Your Personalized Script" data-es="Tu Guion Personalizado">Your Personalized Script</span></h3>
             <p id="script-output-subtitle" data-en="Fill in your details and click Generate to get your custom script" data-es="Ingresa tus detalles y haz clic en Generar para obtener tu guion personalizado">Fill in your details and click Generate to get your custom script</p>
           </div>
           <div class="script-output-body" id="script-output-body">
@@ -11159,6 +11159,14 @@ Guidelines:
     btn.classList.add('selected');
   }
 
+  function setScriptOutputTitleText(text) {
+    const title = document.getElementById('script-output-title');
+    if (!title) return;
+    const label = title.querySelector('span[data-en]');
+    if (label) label.textContent = text;
+    else title.textContent = text;
+  }
+
   async function generateNegotiationScript() {
     const creditor = document.getElementById('neg-creditor').value.trim();
     const balance = document.getElementById('neg-balance').value;
@@ -11243,7 +11251,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
         document.getElementById('script-closing').textContent = '';
         document.getElementById('script-before').innerHTML = `<div class="script-tip"><span class="script-tip-icon">📋</span><span>${currentLang === 'es' ? 'Guion generado — revisa la sección de inicio' : 'Script generated — see Opening section'}</span></div>`;
         document.getElementById('script-tips-list').innerHTML = '';
-        document.getElementById('script-output-title').textContent = currentLang === 'es' ? '📄 Tu Guion de Negociación' : '📄 Your Negotiation Script';
+        setScriptOutputTitleText(currentLang === 'es' ? 'Tu Guion de Negociación' : 'Your Negotiation Script');
         document.getElementById('script-output-subtitle').textContent = (currentLang === 'es' ? 'Personalizado para ' : 'Personalized for ') + creditor;
         document.getElementById('script-loading-state').style.display = 'none';
         document.getElementById('script-result').style.display = 'block';
@@ -11273,7 +11281,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       ).join('');
 
       // Update header
-      document.getElementById('script-output-title').textContent = currentLang === 'es' ? `📄 Guion para ${typeLabels[selectedScriptType]}` : `📄 ${typeLabels[selectedScriptType].charAt(0).toUpperCase() + typeLabels[selectedScriptType].slice(1)} Script`;
+      setScriptOutputTitleText(currentLang === 'es' ? `Guion para ${typeLabels[selectedScriptType]}` : `${typeLabels[selectedScriptType].charAt(0).toUpperCase() + typeLabels[selectedScriptType].slice(1)} Script`);
       document.getElementById('script-output-subtitle').textContent = currentLang === 'es' ? `Personalizado para ${creditor}${balance ? ' · saldo de $' + parseFloat(balance).toLocaleString() : ''}` : `Personalized for ${creditor}${balance ? ' · $' + parseFloat(balance).toLocaleString() + ' balance' : ''}`;
 
       document.getElementById('script-loading-state').style.display = 'none';
@@ -12306,7 +12314,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   }
 
   function renderStreaks() {
-    if (!document.getElementById('streak-cards')) return;
+    const streakCardsEl = document.getElementById('streak-cards');
+    if (!streakCardsEl) return;
     const budgetStreakCount = Number(gameData.budgetStreak || 0) || (transactions.length > 0 ? 1 : 0);
     const streaks = [
       { icon: '🔥', label: currentLang==='es'?'Racha de Inicio':'Login Streak', desc: currentLang==='es'?'Inicia sesión diario':'Log in daily', count: gameData.loginStreak || 0, unit: currentLang==='es'?'días':'days' },
@@ -12315,7 +12324,10 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       { icon: '🎯', label: currentLang==='es'?'Metas Activas':'Goals Active', desc: currentLang==='es'?'Metas de ahorro en progreso':'Savings goals in progress', count: goals.filter(g => g.saved < g.target).length, unit: currentLang==='es'?'metas':'goals' },
     ];
 
-    document.getElementById('streak-cards').innerHTML = streaks.map(s => `
+    const renderKey = `${currentLang}|${streaks.map(s => `${s.label}:${s.count}:${s.unit}`).join('|')}`;
+    if (streakCardsEl.dataset.renderKey === renderKey && streakCardsEl.children.length) return;
+
+    streakCardsEl.innerHTML = streaks.map(s => `
       <div class="streak-card ${s.count > 0 ? 'active' : ''}">
         <div class="sc-left">
           <span class="sc-icon">${s.icon}</span>
@@ -12329,6 +12341,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
           <div class="streak-unit">${s.unit}</div>
         </div>
       </div>`).join('');
+    streakCardsEl.dataset.renderKey = renderKey;
   }
 
   function renderBadges() {
@@ -12338,7 +12351,12 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     if (!badgesCountEl) return;
     badgesCountEl.textContent = `${earnedCount}/${BADGES_DEF.length} ${currentLang==='es'?'logrados':'earned'}`;
 
-    document.getElementById('badges-grid').innerHTML = BADGES_DEF.map(b => {
+    const badgesGrid = document.getElementById('badges-grid');
+    if (!badgesGrid) return;
+    const renderKey = `${currentLang}|${earned.slice().sort().join(',')}|${BADGES_DEF.length}`;
+    if (badgesGrid.dataset.renderKey === renderKey && badgesGrid.children.length) return;
+
+    badgesGrid.innerHTML = BADGES_DEF.map(b => {
       const isEarned = earned.includes(b.id);
       const bt = getBadgeText(b);
       return `<div class="badge-item ${isEarned ? 'earned' : 'locked'}" title="${bt.desc}">
@@ -12349,6 +12367,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
         <div class="badge-xp">+${b.xp} XP</div>
       </div>`;
     }).join('');
+    badgesGrid.dataset.renderKey = renderKey;
   }
 
   function renderActivityFeed() {
@@ -17840,7 +17859,12 @@ window.addEventListener('load', function(){
     setTimeout(applyPolishPatch, 3000);
   });
   function shouldSkipPolishEvent(e) {
-    return !!(e.target && e.target.closest && (e.target.closest('#tab-resources') || e.target.closest('#tab-networth')));
+    return !!(e.target && e.target.closest && (
+      e.target.closest('#tab-resources') ||
+      e.target.closest('#tab-networth') ||
+      e.target.closest('#tab-negotiate') ||
+      e.target.closest('#tab-streaks')
+    ));
   }
   document.addEventListener('click', function(e){ if (!shouldSkipPolishEvent(e)) schedule(); }, true);
   document.addEventListener('change', function(e){ if (!shouldSkipPolishEvent(e)) schedule(); }, true);
@@ -18045,7 +18069,12 @@ window.addEventListener('load', function(){
   window.fintrailApplyEnglishModeCleanup = applyEnglishModeCleanup;
   window.addEventListener('load', schedule);
   function shouldSkipCleanupEvent(e) {
-    return !!(e.target && e.target.closest && (e.target.closest('#tab-resources') || e.target.closest('#tab-networth')));
+    return !!(e.target && e.target.closest && (
+      e.target.closest('#tab-resources') ||
+      e.target.closest('#tab-networth') ||
+      e.target.closest('#tab-negotiate') ||
+      e.target.closest('#tab-streaks')
+    ));
   }
   document.addEventListener('click', function(e){ if (!shouldSkipCleanupEvent(e)) schedule(); }, true);
   document.addEventListener('change', function(e){ if (!shouldSkipCleanupEvent(e)) schedule(); }, true);
