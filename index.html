@@ -5388,7 +5388,7 @@
             </svg>
             <div style="position:absolute;bottom:0;width:100%;text-align:center;">
               <span class="score-number" id="health-score-num">--</span>
-              <span class="score-label" id="health-score-label" data-en="Calculating..." data-es="Calculando...">Calculating...</span>
+              <span class="score-label" id="health-score-label">Calculating...</span>
             </div>
           </div>
           <div class="score-breakdown" id="score-breakdown"></div>
@@ -8707,6 +8707,21 @@ Guidelines:
     if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
   }
 
+  function getHealthScoreStatusLabel(score) {
+    if (currentLang === 'es') {
+      if (score >= 85) return 'Excelente';
+      if (score >= 75) return 'Muy Bueno';
+      if (score >= 65) return 'Bueno';
+      if (score >= 50) return 'Regular';
+      return 'Necesita Atención';
+    }
+    if (score >= 85) return 'Excellent';
+    if (score >= 75) return 'Very Good';
+    if (score >= 65) return 'Good';
+    if (score >= 50) return 'Fair';
+    return 'Needs Attention';
+  }
+
   function calculateHealthScore() {
     if (!document.getElementById('gauge-fill')) return;
     if (typeof applyAlertPrefsToUI === 'function') applyAlertPrefsToUI();
@@ -8723,13 +8738,9 @@ Guidelines:
     document.getElementById('health-score-num').textContent = total;
     document.getElementById('health-score-num').style.color = total >= 75 ? '#00b894' : total >= 50 ? '#f5a623' : '#f05555';
 
-    let label;
-    if (currentLang === 'es') {
-      label = total >= 80 ? 'Excelente' : total >= 65 ? 'Bueno' : total >= 50 ? 'Regular' : 'Necesita Mejorar';
-    } else {
-      label = total >= 80 ? 'Excellent' : total >= 65 ? 'Good' : total >= 50 ? 'Fair' : 'Needs Work';
-    }
-    document.getElementById('health-score-label').textContent = label;
+    const label = getHealthScoreStatusLabel(total);
+    const labelEl = document.getElementById('health-score-label');
+    if (labelEl) labelEl.textContent = label;
 
     const breakdown = document.getElementById('score-breakdown');
     const items = [
