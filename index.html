@@ -1718,8 +1718,7 @@
     height: 10px;
     z-index: 199;
   }
-  .nav-group:hover::after,
-  .nav-group:focus-within::after { display: block; }
+  .nav-group.open::after { display: block; }
   .nav-group-btn {
     background: none; border: none; color: var(--text-soft);
     font-family: 'Sora', sans-serif; font-size: 0.8rem; font-weight: 600;
@@ -1730,7 +1729,7 @@
   .nav-group-btn:hover { color: var(--dark); background: var(--surface2); }
   .nav-group-btn.active { color: var(--accent); background: rgba(240,85,85,0.08); border-bottom: 2px solid var(--accent); border-radius: 8px 8px 0 0; }
   .nav-group-btn .nav-arrow { font-size: 0.6rem; transition: transform 0.2s; }
-  .nav-group:hover .nav-arrow { transform: rotate(180deg); }
+  .nav-group.open .nav-arrow { transform: rotate(180deg); }
 
   .nav-dropdown {
     position: absolute; top: 100%; left: 0; margin-top: 0;
@@ -1741,8 +1740,7 @@
     transform: translateZ(0);
   }
   @keyframes dropIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
-  .nav-group:hover .nav-dropdown,
-  .nav-group:focus-within .nav-dropdown { display: block; }
+  .nav-group.open .nav-dropdown { display: block; }
   .nav-dropdown-item {
     display: flex; align-items: center; gap: 0.65rem;
     padding: 0.6rem 0.75rem; border-radius: 8px; cursor: pointer;
@@ -7549,7 +7547,74 @@
     if (isPro) { renderRateBanner(); calcLoan(); }
   }
 
+  let activeDropdown = null;
+
+  function getTopNavDropdownKey(group) {
+    const btn = group?.querySelector?.('.nav-group-btn');
+    return (btn?.id || '').replace(/^nav-/, '') || null;
+  }
+
+  function closeAllDropdowns() {
+    document.querySelectorAll('nav .nav-group.open').forEach(group => group.classList.remove('open'));
+    activeDropdown = null;
+  }
+
+  function openTopNavDropdown(group) {
+    const key = getTopNavDropdownKey(group);
+    if (!group || !key) return;
+    if (activeDropdown !== key) closeAllDropdowns();
+    group.classList.add('open');
+    activeDropdown = key;
+  }
+
+  function toggleTopNavDropdown(group) {
+    const key = getTopNavDropdownKey(group);
+    if (!group || !key) return;
+    if (activeDropdown === key && group.classList.contains('open')) closeAllDropdowns();
+    else openTopNavDropdown(group);
+  }
+
+  function initTopNavDropdowns() {
+    if (initTopNavDropdowns.initialized) return;
+    const nav = document.querySelector('header nav');
+    if (!nav) return;
+    initTopNavDropdowns.initialized = true;
+
+    nav.querySelectorAll('.nav-group').forEach(group => {
+      const btn = group.querySelector('.nav-group-btn');
+      if (!btn) return;
+      group.addEventListener('mouseenter', () => openTopNavDropdown(group));
+      btn.addEventListener('click', event => {
+        event.preventDefault();
+        event.stopPropagation();
+        toggleTopNavDropdown(group);
+      });
+    });
+
+    nav.addEventListener('click', event => {
+      if (event.target.closest('.nav-dropdown-item')) {
+        setTimeout(closeAllDropdowns, 0);
+      }
+    });
+
+    document.addEventListener('click', event => {
+      if (!event.target.closest('header nav')) closeAllDropdowns();
+    });
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeAllDropdowns();
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTopNavDropdowns);
+  } else {
+    initTopNavDropdowns();
+  }
+
+
   function navTo(tab, btn) {
+    closeAllDropdowns();
     if (tab === 'budget-schedule') {
       showTab('budget', document.getElementById('nav-budget'));
       showBudgetSub('schedule', document.querySelector('.sched-tab-btn:nth-child(2)'));
@@ -7580,6 +7645,7 @@
   }
 
   function guardedNavTo(tab, btn) {
+    closeAllDropdowns();
     if (tab === 'premium') tab = 'healthscore'; // legacy desktop nav safeguard after splitting Debt Planner + Health Score
 
     // AI Advisor and Credit Simulator use soft paywalls. Free users can open them;
@@ -18848,7 +18914,7 @@ window.addEventListener('load', function(){
 
   function refreshNavIcons(){
     try {
-      if (document.querySelector('nav .nav-group:hover, nav .nav-group:focus-within')) return;
+      if (document.querySelector('nav .nav-group.open')) return;
     } catch(e) {}
     var navGroups = {
       "nav-budget": "bar-chart-3",
@@ -19192,7 +19258,7 @@ window.addEventListener('load', function(){
 
   function isTopNavDropdownOpen(){
     try {
-      return !!document.querySelector('nav .nav-group:hover, nav .nav-group:focus-within');
+      return !!document.querySelector('nav .nav-group.open');
     } catch(e) {
       return false;
     }
