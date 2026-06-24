@@ -8549,6 +8549,17 @@ Guidelines:
       : `<div class="goal-monthly">Save <strong>$${amount}/mo</strong> to reach your goal in <strong>${safeMonths} ${monthWord}</strong></div>`;
   }
 
+  function formatSavingsGoalDate(dateValue) {
+    if (!dateValue) return isSavingsGoalsSpanish() ? 'Sin fecha límite' : 'No deadline';
+    const parts = String(dateValue).split('-').map(Number);
+    const date = parts.length >= 3 && parts.every(Number.isFinite)
+      ? new Date(parts[0], parts[1] - 1, parts[2])
+      : new Date(dateValue);
+    if (!(date instanceof Date) || isNaN(date.getTime())) return isSavingsGoalsSpanish() ? 'Sin fecha límite' : 'No deadline';
+    const locale = isSavingsGoalsSpanish() ? 'es-US' : 'en-US';
+    return date.toLocaleDateString(locale, { month: 'short', year: 'numeric' });
+  }
+
   function goalColor(pct) {
     if (pct >= 100) return '#2d6a4f';
     if (pct >= 60) return '#2196a3';
@@ -8580,13 +8591,14 @@ Guidelines:
 
     empty.style.display = 'none';
     grid.innerHTML = goals.map(g => {
+      const isEs = isSavingsGoalsSpanish();
       const pct = Math.min((g.saved / g.target) * 100, 100);
       const color = goalColor(pct);
       const remaining = g.target - g.saved;
       const months = monthsUntil(g.date);
       const monthlyNeeded = (months && months > 0 && remaining > 0) ? (remaining / months) : null;
       const complete = pct >= 100;
-      const dateLabel = g.date ? new Date(g.date).toLocaleDateString('en-US', {month:'short', year:'numeric'}) : 'No deadline';
+      const dateLabel = formatSavingsGoalDate(g.date);
 
       return `
       <div class="goal-card">
@@ -8604,21 +8616,21 @@ Guidelines:
         </div>
         <div class="goal-amounts">
           <span class="goal-saved" style="color:${color}">$${g.saved.toLocaleString('en-US',{maximumFractionDigits:0})}</span>
-          <span class="goal-target">of $${g.target.toLocaleString('en-US',{maximumFractionDigits:0})}</span>
+          <span class="goal-target">${isEs ? 'de' : 'of'} $${g.target.toLocaleString('en-US',{maximumFractionDigits:0})}</span>
         </div>
         <div class="goal-progress-track">
           <div class="goal-progress-fill" style="width:${pct}%;background:${color}"></div>
         </div>
         <div class="goal-meta">
-          <span class="goal-pct" style="color:${color}">${pct.toFixed(0)}% complete</span>
+          <span class="goal-pct" style="color:${color}">${pct.toFixed(0)}% ${isEs ? 'completado' : 'complete'}</span>
           <span class="goal-deadline">📅 ${dateLabel}</span>
         </div>
-        ${complete ? '<div class="goal-complete-badge">🎉 Goal Reached!</div>' : ''}
+        ${complete ? `<div class="goal-complete-badge">${isEs ? 'Meta Alcanzada!' : 'Goal Reached!'}</div>` : ''}
         ${renderSavingsGoalMonthlyRecommendation(monthlyNeeded, months)}
         ${!complete ? `
         <div class="add-deposit-row">
-          <input class="deposit-input" id="dep-${g.id}" type="number" placeholder="${currentLang === 'es' ? 'Agregar ahorro...' : 'Add savings...'}" min="0" onkeydown="if(event.key==='Enter')deposit(${g.id})">
-          <button class="deposit-btn" onclick="deposit('${g.id}')">${currentLang === 'es' ? '+ Agregar' : '+ Add'}</button>
+          <input class="deposit-input" id="dep-${g.id}" type="number" placeholder="${isEs ? 'Agregar ahorro...' : 'Add savings...'}" min="0" onkeydown="if(event.key==='Enter')deposit(${g.id})">
+          <button class="deposit-btn" onclick="deposit('${g.id}')">${isEs ? '+ Agregar' : '+ Add'}</button>
         </div>` : ''}
       </div>`;
     }).join('');
@@ -13318,7 +13330,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       } else {
         call('renderBudgetChart');
       }
-    } else if (activeId === 'tab-goals') {
+    } else if (activeId === 'tab-goals' || activeId === 'tab-savings') {
       call('renderGoals');
     } else if (activeId === 'tab-networth') {
       call('renderNWLists');
