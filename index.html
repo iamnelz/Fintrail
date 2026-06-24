@@ -7701,10 +7701,14 @@
 
   // TAB SWITCHING
   function showTab(tab, btn) {
+    syncLanguageState(currentLang, { save: false });
     document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('visible'));
     document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
     document.getElementById('tab-' + tab).classList.add('visible');
-    btn.classList.add('active');
+    if (btn) btn.classList.add('active');
+    if (typeof refreshVisibleLocalizedUI === 'function') {
+      requestAnimationFrame(refreshVisibleLocalizedUI);
+    }
   }
 
   // TRANSACTION TYPE
@@ -8134,11 +8138,14 @@
   }
 
   function renderResources() {
+    syncLanguageState(currentLang, { save: false });
     const grid = document.getElementById('resources-grid');
     if (!grid) return;
     const creditItems = resources.filter(r => r.tag === 'credit').concat(buildCreditFromScratchCard());
     const renderKey = `${currentLang}|resource-v2|${resources.length}|${creditItems.length}`;
-    if (grid.dataset.renderKey === renderKey && grid.children.length) return;
+    const firstResourceTitle = grid.querySelector('#resource-products h3')?.textContent?.trim() || '';
+    const expectedFirstTitle = currentLang === 'es' ? 'Productos Financieros' : 'Financial Products';
+    if (grid.dataset.renderKey === renderKey && grid.dataset.renderLang === currentLang && firstResourceTitle === expectedFirstTitle && grid.children.length) return;
     grid.innerHTML = [
       renderResourceSection('resource-products', 'Financial Products', 'Productos Financieros', 'Compare representative rates and product options directly with lenders.', 'Compara tasas representativas y opciones directamente con las instituciones.', resourceProductsHtml()),
       renderResourceSection('resource-credit', 'Credit & Reports', 'Crédito y Reportes', 'Credit bureaus, reports, scores, monitoring, and first-credit education.', 'Burós, reportes, puntajes, monitoreo y educación para comenzar con crédito.', resourceCards(creditItems)),
@@ -8158,6 +8165,7 @@
         </div>`)
     ].join('');
     grid.dataset.renderKey = renderKey;
+    grid.dataset.renderLang = currentLang;
   }
 
   // GUIDE SWITCHING
@@ -12844,7 +12852,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     safeSet('fintrail_lang', lang);
     safeSet(ftOnboardingV5Key('language'), lang);
     try {
-      currentLang = lang;
+      syncLanguageState(lang);
+      invalidateLocalizedRenderCaches();
       applyLanguage();
     } catch(e) {}
     renderOnboarding();
@@ -12863,7 +12872,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   async function ftOnboardingV5Complete(){
     const now = new Date().toISOString();
     const goals = ftOnboardingV5State.goals.slice(0, 3);
-    safeSet('fintrail_lang', ftOnboardingV5State.lang);
+    syncLanguageState(ftOnboardingV5State.lang);
+    invalidateLocalizedRenderCaches();
     safeSet(ftOnboardingV5Key('language'), ftOnboardingV5State.lang);
     safeSet(ftOnboardingV5Key('goals'), JSON.stringify(goals));
     safeSet(ftOnboardingV5Key('complete'), 'true');
@@ -12955,6 +12965,30 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
 
   // LANGUAGE SYSTEM
   let currentLang = safeGet('fintrail_lang') || 'en';
+
+  function normalizeLanguageCode(lang) {
+    return String(lang || 'en').toLowerCase().slice(0, 2) === 'es' ? 'es' : 'en';
+  }
+
+  function syncLanguageState(lang = currentLang, options = {}) {
+    currentLang = normalizeLanguageCode(lang);
+    window.currentLang = currentLang;
+    document.documentElement.lang = currentLang;
+    if (options.save !== false) safeSet('fintrail_lang', currentLang);
+    return currentLang;
+  }
+
+  function getCurrentLanguage() {
+    return syncLanguageState(currentLang, { save: false });
+  }
+
+  function invalidateLocalizedRenderCaches() {
+    const resourcesGrid = document.getElementById('resources-grid');
+    if (resourcesGrid) delete resourcesGrid.dataset.renderKey;
+  }
+
+  window.getCurrentLanguage = getCurrentLanguage;
+  syncLanguageState(currentLang, { save: false });
 
   const translations = {
     en: {
@@ -13072,8 +13106,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   };
 
   function toggleLanguage() {
-    currentLang = currentLang === 'en' ? 'es' : 'en';
-    safeSet('fintrail_lang', currentLang);
+    syncLanguageState(currentLang === 'en' ? 'es' : 'en');
+    invalidateLocalizedRenderCaches();
     window.__fintrailLanguageSwitching = true;
     applyLanguage();
     if (document.getElementById('tab-savings')?.classList.contains('visible') && typeof updateSavingsGoalsLanguage === 'function') {
@@ -13086,6 +13120,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   }
 
   function applyLanguage() {
+    syncLanguageState(currentLang);
     const isEs = currentLang === 'es';
     const t = translations[currentLang];
 
@@ -13283,6 +13318,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   function refreshAllLocalizedUI(options = {}) {
     if (refreshAllLocalizedUI._running) return;
     refreshAllLocalizedUI._running = true;
+    syncLanguageState(currentLang);
 
     const call = (name, args = []) => {
       try {
@@ -13349,6 +13385,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   window.refreshAllLocalizedUI = refreshAllLocalizedUI;
 
   function refreshVisibleLocalizedUI() {
+    syncLanguageState(currentLang);
     const call = (name, args = []) => {
       try {
         if (typeof window[name] === 'function') window[name].apply(window, args);
@@ -13426,10 +13463,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   function loadLanguagePreference() {
     try {
       const saved = safeGet('fintrail_lang');
-      if (saved && saved !== 'en') {
-        currentLang = saved;
-        applyLanguage();
-      }
+      if (saved) syncLanguageState(saved, { save: false });
+      applyLanguage();
     } catch(e) {}
   }
 
