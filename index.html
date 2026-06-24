@@ -6144,6 +6144,10 @@
                 onkeydown="if(event.key==='Enter')syncScoreSlider()"
                 style="font-size:1.1rem;font-weight:700;text-align:center">
             </div>
+            <label class="credit-no-score-option" style="display:flex;align-items:center;gap:0.55rem;margin-top:0.85rem;font-size:0.82rem;font-weight:700;color:var(--text-soft);cursor:pointer">
+              <input type="checkbox" id="no-credit-score-toggle" onchange="toggleNoCreditScoreYet(this.checked)" style="width:18px;height:18px;accent-color:var(--accent)">
+              <span data-en="I don’t have a credit score yet" data-es="Aún no tengo puntaje de crédito">I don’t have a credit score yet</span>
+            </label>
           </div>
 
           <div class="score-input-card">
@@ -10592,7 +10596,7 @@ Guidelines:
   }
 
   function getCurrentCreditScore() {
-    if (hasNoCreditScoreStatus() && gameData?.currentCreditScore == null && gameData?.creditScore == null) return null;
+    if (hasNoCreditScoreStatus()) return null;
     const uid = getCreditScoreUid();
     const currentCandidates = [
       gameData?.currentCreditScore,
@@ -10702,7 +10706,46 @@ Guidelines:
     if (slider) slider.value = score;
     if (input) input.value = score;
     if (document.getElementById('base-score-display')) document.getElementById('base-score-display').textContent = score;
+    applyNoCreditScoreUI();
     console.log('RENDERING CREDIT SIMULATOR SCORE', score);
+  }
+
+  function applyNoCreditScoreUI() {
+    const checked = hasNoCreditScoreStatus();
+    const toggle = document.getElementById('no-credit-score-toggle');
+    const slider = document.getElementById('base-score');
+    const input = document.getElementById('base-score-num');
+    if (toggle) toggle.checked = checked;
+    if (slider) slider.disabled = checked;
+    if (input) input.disabled = checked;
+    [slider, input].forEach(el => {
+      if (!el) return;
+      el.style.opacity = checked ? '0.55' : '';
+      el.style.cursor = checked ? 'not-allowed' : '';
+    });
+  }
+
+  async function toggleNoCreditScoreYet(checked) {
+    gameData.noCreditScoreYet = !!checked;
+    gameData.creditScoreStatus = checked ? 'no_score' : 'scored';
+    gameData.credit_status = checked ? 'no_score' : 'scored';
+
+    if (!checked) {
+      const input = document.getElementById('base-score-num');
+      const slider = document.getElementById('base-score');
+      const score = getCreditScoreNumber(input?.value ?? slider?.value);
+      applyNoCreditScoreUI();
+      if (score !== null) {
+        persistCreditScore(score, { setBaseline: true });
+        updateSimulator();
+        return;
+      }
+    }
+
+    applyNoCreditScoreUI();
+    refreshHealthScoreAfterDataChange();
+    if (typeof renderMonthlyReport === 'function') renderMonthlyReport();
+    await saveUserData();
   }
 
   let creditScoreSaveTimer = null;
@@ -10764,6 +10807,35 @@ Guidelines:
     document.getElementById('base-score-num').value = base;
     document.getElementById('base-score-display').textContent = base;
     console.log('RENDERING CREDIT SIMULATOR SCORE', base);
+    applyNoCreditScoreUI();
+    if (hasNoCreditScoreStatus()) {
+      const noScoreLabel = currentLang === 'es' ? 'Aún no hay puntaje' : 'No score yet';
+      const noScoreBody = currentLang === 'es'
+        ? 'Empieza con una tarjeta asegurada, préstamo constructor de crédito o como usuario autorizado. Agrega tu primer puntaje cuando esté disponible.'
+        : 'Start with a secured card, credit builder loan, or authorized user account. Add your first score when it becomes available.';
+      const simCurrentScore = document.getElementById('sim-current-score');
+      const simCurrentRating = document.getElementById('sim-current-rating');
+      if (simCurrentScore) simCurrentScore.textContent = '—';
+      if (simCurrentRating) simCurrentRating.textContent = noScoreLabel;
+      ['result-current','result-simulated'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = '—'; });
+      const rating = document.getElementById('result-current-rating');
+      if (rating) rating.textContent = noScoreLabel;
+      const changeEl = document.getElementById('result-change');
+      if (changeEl) { changeEl.textContent = noScoreBody; changeEl.style.color = 'var(--muted)'; }
+      const currentNeedle = document.getElementById('needle-current');
+      const simulatedNeedle = document.getElementById('needle-simulated');
+      if (currentNeedle) currentNeedle.style.left = '0%';
+      if (simulatedNeedle) simulatedNeedle.style.left = '0%';
+      const timeline = document.getElementById('score-timeline');
+      if (timeline) {
+        timeline.innerHTML = `<div class="tl-card" style="grid-column:1/-1"><div class="tl-label">${noScoreLabel}</div><div class="tl-time">${noScoreBody}</div></div>`;
+      }
+      const actionPlan = document.getElementById('action-plan');
+      if (actionPlan) {
+        actionPlan.innerHTML = `<div class="ap-item"><div class="ap-rank">1</div><div class="ap-content"><h4>${currentLang === 'es' ? 'Construye tu primer historial' : 'Build your first history'}</h4><p>${noScoreBody}</p></div></div>`;
+      }
+      return;
+    }
     if (options.persist === true) persistCreditScore(base, { setBaseline: true });
 
     // Calculate total impact from selected actions
@@ -12448,10 +12520,10 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   const translations = {
     en: {
       // NAV
-      'nav-budget': '📊 Budget',
-      'nav-planning': '🎯 Planning',
-      'nav-tools': '🛠 Tools',
-      'nav-insights': '💡 Insights',
+      'nav-budget': 'Budget',
+      'nav-planning': 'Planning',
+      'nav-tools': 'Tools',
+      'nav-insights': 'Insights',
       'go-pro-btn': 'Go Pro',
       // ACCOUNT BAR
       'free-plan': 'Free Plan',
@@ -12504,10 +12576,10 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     },
     es: {
       // NAV
-      'nav-budget': '📊 Presupuesto',
-      'nav-planning': '🎯 Planificación',
-      'nav-tools': '🛠 Herramientas',
-      'nav-insights': '💡 Análisis',
+      'nav-budget': 'Presupuesto',
+      'nav-planning': 'Planificación',
+      'nav-tools': 'Herramientas',
+      'nav-insights': 'Análisis',
       'go-pro-btn': 'Hazte Pro',
       // ACCOUNT BAR
       'free-plan': 'Plan Gratuito',
