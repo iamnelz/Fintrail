@@ -4806,8 +4806,10 @@
           </div>
           <div class="form-group">
             <label id="label-category" data-en="Category" data-es="Categoría">Category</label>
-            <input type="text" id="category-search" list="category-options" placeholder="Search or choose a category" autocomplete="off" oninput="syncBudgetCategoryFromSearch()" onfocus="refreshBudgetCategoryOptions()">
-            <datalist id="category-options"></datalist>
+            <div class="budget-category-combobox">
+              <input type="text" id="category-search" placeholder="Search or choose a category" autocomplete="off" oninput="syncBudgetCategoryFromSearch()" onfocus="refreshBudgetCategoryOptions(); showBudgetCategoryMenu()" onkeydown="handleBudgetCategoryKey(event)">
+              <div id="category-options" class="budget-category-options" role="listbox"></div>
+            </div>
             <input type="hidden" id="category" value="Other">
           </div>
           <div class="form-group">
@@ -6617,18 +6619,21 @@
     { value: 'Salary', en: 'Salary', es: 'Salario', types: ['income'] },
     { value: 'Freelance', en: 'Freelance', es: 'Freelance', types: ['income'] },
     { value: 'Investment', en: 'Investment', es: 'Inversión', types: ['income'] },
+    { value: 'Other Income', en: 'Other', es: 'Otro', types: ['income'] },
     { value: 'Housing', en: 'Housing', es: 'Vivienda', types: ['expense'] },
-    { value: 'Transportation', en: 'Transportation', es: 'Transporte', types: ['expense'] },
+    { value: 'Utilities', en: 'Utilities', es: 'Servicios', types: ['expense'] },
     { value: 'Food', en: 'Food', es: 'Comida', types: ['expense'] },
-    { value: 'Utilities', en: 'Utilities', es: 'Servicios Públicos', types: ['expense'] },
-    { value: 'Healthcare', en: 'Healthcare', es: 'Salud', types: ['expense'] },
-    { value: 'Insurance', en: 'Insurance', es: 'Seguros', types: ['expense'] },
-    { value: 'Debt Payments', en: 'Debt Payments', es: 'Pago de Deudas', types: ['expense'] },
+    { value: 'Transportation', en: 'Transportation', es: 'Transporte', types: ['expense'] },
+    { value: 'Insurance', en: 'Insurance', es: 'Seguro', types: ['expense'] },
+    { value: 'Health', en: 'Health', es: 'Salud', types: ['expense'] },
+    { value: 'Debt Payments', en: 'Debt Payments', es: 'Deudas', types: ['expense'] },
     { value: 'Entertainment', en: 'Entertainment', es: 'Entretenimiento', types: ['expense'] },
     { value: 'Shopping', en: 'Shopping', es: 'Compras', types: ['expense'] },
     { value: 'Education', en: 'Education', es: 'Educación', types: ['expense'] },
-    { value: 'Savings', en: 'Savings', es: 'Ahorros', types: ['expense'] },
-    { value: 'Other', en: 'Other', es: 'Otro', types: ['income', 'expense'] }
+    { value: 'Personal Care', en: 'Personal Care', es: 'Cuidado Personal', types: ['expense'] },
+    { value: 'Pets', en: 'Pets', es: 'Mascotas', types: ['expense'] },
+    { value: 'Travel', en: 'Travel', es: 'Viajes', types: ['expense'] },
+    { value: 'Other', en: 'Other', es: 'Otro', types: ['expense'] }
   ];
 
   function getBudgetCategoryDisplay(value) {
@@ -6639,13 +6644,17 @@
 
   function getBudgetCategoryValue(displayValue) {
     const raw = String(displayValue || '').trim();
-    if (!raw) return 'Other';
+    if (!raw) return currentType === 'income' ? 'Other Income' : 'Other';
     const item = budgetCategories.find(c =>
+      c.types.includes(currentType) && (
       c.value.toLowerCase() === raw.toLowerCase() ||
       c.en.toLowerCase() === raw.toLowerCase() ||
       c.es.toLowerCase() === raw.toLowerCase()
+      )
     );
-    return item ? item.value : raw;
+    if (item) return item.value;
+    const fallback = budgetCategories.find(c => c.value === (currentType === 'income' ? 'Other Income' : 'Other'));
+    return fallback ? fallback.value : raw;
   }
 
   function refreshBudgetCategoryOptions() {
@@ -6654,12 +6663,20 @@
     const hidden = document.getElementById('category');
     if (!list || !search || !hidden) return;
     const allowed = budgetCategories.filter(c => c.types.includes(currentType));
-    list.innerHTML = allowed.map(c => `<option value="${currentLang === 'es' ? c.es : c.en}"></option>`).join('');
+    const query = String(search.value || '').trim().toLowerCase();
+    const matches = allowed.filter(c => {
+      const label = currentLang === 'es' ? c.es : c.en;
+      return !query || label.toLowerCase().includes(query) || c.en.toLowerCase().includes(query) || c.es.toLowerCase().includes(query);
+    });
+    list.innerHTML = (matches.length ? matches : allowed).map(c => {
+      const label = currentLang === 'es' ? c.es : c.en;
+      return `<button type="button" class="budget-category-option" role="option" data-value="${c.value}" onclick="selectBudgetCategory('${c.value}')">${label}</button>`;
+    }).join('');
     const fallback = currentType === 'income' ? 'Salary' : 'Other';
     const currentValue = hidden.value || fallback;
     const currentItem = allowed.find(c => c.value === currentValue) || allowed[0] || budgetCategories[budgetCategories.length - 1];
     hidden.value = currentItem.value;
-    search.value = currentLang === 'es' ? currentItem.es : currentItem.en;
+    if (!document.activeElement || document.activeElement !== search) search.value = currentLang === 'es' ? currentItem.es : currentItem.en;
     search.placeholder = currentLang === 'es' ? 'Busca o elige una categoría' : 'Search or choose a category';
   }
 
@@ -6668,7 +6685,44 @@
     const hidden = document.getElementById('category');
     if (!search || !hidden) return;
     hidden.value = getBudgetCategoryValue(search.value);
+    refreshBudgetCategoryOptions();
+    showBudgetCategoryMenu();
   }
+
+  function selectBudgetCategory(value) {
+    const item = budgetCategories.find(c => c.value === value && c.types.includes(currentType));
+    if (!item) return;
+    const search = document.getElementById('category-search');
+    const hidden = document.getElementById('category');
+    if (hidden) hidden.value = item.value;
+    if (search) search.value = currentLang === 'es' ? item.es : item.en;
+    hideBudgetCategoryMenu();
+  }
+
+  function showBudgetCategoryMenu() {
+    const menu = document.getElementById('category-options');
+    if (menu) menu.classList.add('open');
+  }
+
+  function hideBudgetCategoryMenu() {
+    const menu = document.getElementById('category-options');
+    if (menu) menu.classList.remove('open');
+  }
+
+  function handleBudgetCategoryKey(event) {
+    if (event.key === 'Escape') hideBudgetCategoryMenu();
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      syncBudgetCategoryFromSearch();
+      const hidden = document.getElementById('category');
+      if (hidden) selectBudgetCategory(hidden.value);
+    }
+  }
+
+  document.addEventListener('click', function(event) {
+    const combo = document.querySelector('.budget-category-combobox');
+    if (combo && !combo.contains(event.target)) hideBudgetCategoryMenu();
+  });
 
   // RESOURCES DATA — affiliate-ready
   const resources = [
@@ -7576,6 +7630,7 @@
 
   // ADD TRANSACTION
   function addTransaction() {
+    if (typeof syncBudgetCategoryFromSearch === 'function') syncBudgetCategoryFromSearch();
     const desc = document.getElementById('desc').value.trim();
     const amount = parseFloat(document.getElementById('amount').value);
     const category = document.getElementById('category').value;
@@ -7584,6 +7639,7 @@
     document.getElementById('desc').value = '';
     document.getElementById('amount').value = '';
     refreshBudgetCategoryOptions();
+    hideBudgetCategoryMenu();
     render();
     saveUserData();
     refreshHealthScoreAfterDataChange();
@@ -16993,11 +17049,12 @@ window.addEventListener('load', function(){
       var descEl = document.getElementById('desc');
       var amountEl = document.getElementById('amount');
       var catEl = document.getElementById('category');
+      if (typeof syncBudgetCategoryFromSearch === 'function') syncBudgetCategoryFromSearch();
 
       var desc = descEl ? String(descEl.value || '').trim() : '';
       var amount = amountEl ? parseFloat(amountEl.value) : NaN;
-      var category = catEl ? String(catEl.value || '') : 'Other';
       var type = getSelectedTransactionType();
+      var category = catEl ? String(catEl.value || '') : (type === 'income' ? 'Other Income' : 'Other');
 
       var isEs = false;
       try { isEs = (typeof currentLang !== 'undefined' && currentLang === 'es'); } catch(e) {}
@@ -17027,6 +17084,7 @@ window.addEventListener('load', function(){
       if (descEl) descEl.value = '';
       if (amountEl) amountEl.value = '';
       if (typeof refreshBudgetCategoryOptions === 'function') refreshBudgetCategoryOptions();
+      if (typeof hideBudgetCategoryMenu === 'function') hideBudgetCategoryMenu();
 
       if (typeof render === 'function') render();
       if (typeof saveUserData === 'function') saveUserData();
@@ -17383,6 +17441,51 @@ window.addEventListener('load', function(){
     height: auto !important;
     max-height: none !important;
     overflow: visible !important;
+  }
+  .budget-category-combobox {
+    position: relative;
+  }
+  #category-search {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .budget-category-options {
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 6px);
+    z-index: 50;
+    max-height: 230px;
+    overflow-y: auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: 0 18px 42px rgba(15, 23, 42, 0.16);
+    padding: 0.35rem;
+  }
+  .budget-category-options.open {
+    display: grid;
+    gap: 0.2rem;
+  }
+  .budget-category-option {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    color: var(--text);
+    border-radius: 10px;
+    padding: 0.65rem 0.75rem;
+    text-align: left;
+    font-family: 'Sora', sans-serif;
+    font-size: 0.86rem;
+    font-weight: 650;
+    cursor: pointer;
+  }
+  .budget-category-option:hover,
+  .budget-category-option:focus {
+    background: rgba(229,57,53,0.08);
+    color: var(--accent);
+    outline: none;
   }
   #bsub-tracker #chart-section {
     padding-bottom: 1.6rem !important;
