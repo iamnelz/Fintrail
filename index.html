@@ -7973,12 +7973,15 @@
     const title = r.titleEs ? resourceLang(r.title, r.titleEs) : r.title;
     const cardStyle = r.featured ? 'border-color:var(--accent2);box-shadow:0 2px 12px rgba(233,196,106,0.15)' : '';
     const url = r.url || '#';
+    const logoHtml = r.logo === 'fintrail-red-star'
+      ? '<span class="ft-reference-icon ft-resource-star-icon" data-fixed-icon="star"></span>'
+      : (r.logo || '📘');
 
     return `
       <div class="resource-card" style="${cardStyle}">
         <div class="rc-header">
           <div style="display:flex;align-items:center;gap:0.5rem">
-            <span style="font-size:1.4rem">${r.logo || '📘'}</span>
+            <span style="font-size:1.4rem">${logoHtml}</span>
             <h3 style="margin:0">${title}</h3>
           </div>
         </div>
@@ -8098,7 +8101,7 @@
       {
         title: 'Building Credit Guide',
         titleEs: 'Guía para Construir Crédito',
-        logo: '⭐',
+        logo: 'fintrail-red-star',
         badges: ['badge-nofe|Fintrail Guide'],
         desc: 'Learn payment history, utilization, account age, and habits that build credit.',
         descEs: 'Aprende sobre historial de pagos, utilización, antigüedad de cuentas y hábitos que construyen crédito.',
@@ -8124,7 +8127,7 @@
   function grantsCards() {
     const base = resources.filter(r => ['Grants.gov', 'SBA Grants', 'CDFI Fund'].includes(r.title));
     return base.concat([
-      { title:'Veteran Resources', titleEs:'Recursos para Veteranos', logo:'⭐', badges:['badge-nofe|Government'], desc:'Benefits, housing, education, and financial resources for veterans and families.', descEs:'Beneficios, vivienda, educación y recursos financieros para veteranos y familias.', cta:'Visit VA', ctaEs:'Visitar VA', url:'https://www.va.gov' },
+      { title:'Veteran Resources', titleEs:'Recursos para Veteranos', logo:'fintrail-red-star', badges:['badge-nofe|Government'], desc:'Benefits, housing, education, and financial resources for veterans and families.', descEs:'Beneficios, vivienda, educación y recursos financieros para veteranos y familias.', cta:'Visit VA', ctaEs:'Visitar VA', url:'https://www.va.gov' },
       { title:'Disaster Assistance Resources', titleEs:'Recursos de Asistencia por Desastres', logo:'⚠️', badges:['badge-nofe|Government'], desc:'Federal disaster assistance, recovery resources, and emergency support.', descEs:'Asistencia federal por desastres, recursos de recuperación y apoyo de emergencia.', cta:'Find Assistance', ctaEs:'Buscar asistencia', url:'https://www.disasterassistance.gov' }
     ]);
   }
@@ -18781,6 +18784,20 @@ window.addEventListener('load', function(){
     width:28px;
     height:28px;
     color:var(--accent);
+  }
+  .resource-card .ft-resource-star-icon {
+    width:28px;
+    height:28px;
+    color:var(--accent);
+    stroke:var(--accent);
+    fill:#fff;
+  }
+  .resource-card .ft-resource-star-icon .ft-lucide-icon {
+    width:28px;
+    height:28px;
+    color:var(--accent);
+    stroke:var(--accent);
+    fill:#fff;
   }
   .ft-iconized-text {
     display:inline-flex;
