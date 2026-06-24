@@ -8558,7 +8558,7 @@ Guidelines:
       : new Date(dateValue);
     if (!(date instanceof Date) || isNaN(date.getTime())) return isSavingsGoalsSpanish() ? 'Sin fecha límite' : 'No deadline';
     if (isSavingsGoalsSpanish()) {
-      const monthsEs = ['ene.', 'feb.', 'mar.', 'abr.', 'may.', 'jun.', 'jul.', 'ago.', 'sept.', 'oct.', 'nov.', 'dic.'];
+      const monthsEs = ['Ene.', 'Feb.', 'Mar.', 'Abr.', 'May.', 'Jun.', 'Jul.', 'Ago.', 'Sept.', 'Oct.', 'Nov.', 'Dic.'];
       return `${monthsEs[date.getMonth()]} ${date.getFullYear()}`;
     }
     return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
