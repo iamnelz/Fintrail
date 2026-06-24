@@ -10975,9 +10975,6 @@ Guidelines:
     if (usage.unlimited) return true;
 
     if (usage.used >= FREE_MONTHLY_CREDIT_SIM_LIMIT) {
-      alert(currentLang === 'es'
-        ? 'Has usado tus 3 simulaciones de crédito gratis este mes. Hazte Pro para simulaciones ilimitadas.'
-        : 'You’ve used your 3 free credit simulations this month. Upgrade to Pro for unlimited simulations.');
       showPaywall('creditsim-limit');
       return false;
     }
