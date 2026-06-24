@@ -8564,6 +8564,17 @@ Guidelines:
     return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
   }
 
+  function normalizeSavingsGoalDeadlineLabels() {
+    const root = document.getElementById('tab-savings') || document.getElementById('tab-goals');
+    if (!root) return;
+    root.querySelectorAll('.goal-card[data-goal-date]').forEach(card => {
+      const goalDate = card.getAttribute('data-goal-date');
+      const deadline = card.querySelector('.goal-deadline');
+      if (!deadline || !goalDate) return;
+      deadline.textContent = `📅 ${formatSavingsGoalDate(goalDate)}`;
+    });
+  }
+
   function goalColor(pct) {
     if (pct >= 100) return '#2d6a4f';
     if (pct >= 60) return '#2196a3';
@@ -8605,7 +8616,7 @@ Guidelines:
       const dateLabel = formatSavingsGoalDate(g.date);
 
       return `
-      <div class="goal-card">
+      <div class="goal-card" data-goal-id="${escHtml(String(g.id || ''))}" data-goal-date="${escHtml(g.date || '')}">
         <div class="goal-card-header">
           <div class="goal-card-title">
             <span class="goal-icon">${g.icon}</span>
@@ -8638,6 +8649,7 @@ Guidelines:
         </div>` : ''}
       </div>`;
     }).join('');
+    normalizeSavingsGoalDeadlineLabels();
   }
 
   // BILL SCHEDULE
@@ -13049,12 +13061,17 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     applyLanguage();
     if (document.getElementById('tab-savings')?.classList.contains('visible') && typeof renderGoals === 'function') {
       renderGoals();
+      if (typeof normalizeSavingsGoalDeadlineLabels === 'function') normalizeSavingsGoalDeadlineLabels();
       requestAnimationFrame(function(){
         try {
           renderGoals();
           if (typeof window.fintrailSavingsGoalCardTrackingLanguage === 'function') window.fintrailSavingsGoalCardTrackingLanguage();
+          if (typeof normalizeSavingsGoalDeadlineLabels === 'function') normalizeSavingsGoalDeadlineLabels();
         } catch(e) {}
       });
+      setTimeout(function(){
+        if (typeof normalizeSavingsGoalDeadlineLabels === 'function') normalizeSavingsGoalDeadlineLabels();
+      }, 180);
     }
     if (typeof refreshVisibleLocalizedUI === 'function') refreshVisibleLocalizedUI();
     if (typeof window.fintrailRefreshDesignIcons === 'function') requestAnimationFrame(window.fintrailRefreshDesignIcons);
@@ -13345,6 +13362,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       }
     } else if (activeId === 'tab-goals' || activeId === 'tab-savings') {
       call('renderGoals');
+      call('normalizeSavingsGoalDeadlineLabels');
     } else if (activeId === 'tab-networth') {
       call('renderNWLists');
       call('renderNWHistory');
@@ -13387,6 +13405,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     if (typeof window.fintrailNormalizeDebtEditButtons === 'function') window.fintrailNormalizeDebtEditButtons();
     if (typeof window.fintrailSavingsGoalCardTrackingLanguage === 'function') window.fintrailSavingsGoalCardTrackingLanguage();
     if (typeof window.fintrailPhase3Localization === 'function') window.fintrailPhase3Localization();
+    if (activeId === 'tab-goals' || activeId === 'tab-savings') call('normalizeSavingsGoalDeadlineLabels');
   }
 
   window.refreshVisibleLocalizedUI = refreshVisibleLocalizedUI;
