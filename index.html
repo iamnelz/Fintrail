@@ -8080,6 +8080,25 @@ Guidelines:
     return Math.max(months, 0);
   }
 
+  function isSavingsGoalsSpanish() {
+    try {
+      return currentLang === 'es' || safeGet('fintrail_lang') === 'es' || document.documentElement.lang === 'es';
+    } catch(e) {
+      return false;
+    }
+  }
+
+  function renderSavingsGoalMonthlyRecommendation(monthlyNeeded, months) {
+    if (!monthlyNeeded || !months) return '';
+    const amount = Math.max(0, Math.round(monthlyNeeded)).toLocaleString('en-US');
+    const safeMonths = Math.max(1, parseInt(months, 10) || 1);
+    const isEs = isSavingsGoalsSpanish();
+    const monthWord = isEs ? (safeMonths === 1 ? 'mes' : 'meses') : (safeMonths === 1 ? 'month' : 'months');
+    return isEs
+      ? `<div class="goal-monthly">Ahorra <strong>$${amount}/mes</strong> para alcanzar tu meta en <strong>${safeMonths} ${monthWord}</strong></div>`
+      : `<div class="goal-monthly">Save <strong>$${amount}/mo</strong> to reach your goal in <strong>${safeMonths} ${monthWord}</strong></div>`;
+  }
+
   function goalColor(pct) {
     if (pct >= 100) return '#2d6a4f';
     if (pct >= 60) return '#2196a3';
@@ -8145,7 +8164,7 @@ Guidelines:
           <span class="goal-deadline">📅 ${dateLabel}</span>
         </div>
         ${complete ? '<div class="goal-complete-badge">🎉 Goal Reached!</div>' : ''}
-        ${monthlyNeeded ? `<div class="goal-monthly">${currentLang === 'es' ? 'Ahorra' : 'Save'} <strong>$${monthlyNeeded.toFixed(0)}${currentLang === 'es' ? '/mes' : '/mo'}</strong> ${currentLang === 'es' ? 'para alcanzar tu meta en' : 'to reach your goal in'} <strong>${months} ${currentLang === 'es' ? (months === 1 ? 'mes' : 'meses') : ('month' + (months !== 1 ? 's' : ''))}</strong></div>` : ''}
+        ${renderSavingsGoalMonthlyRecommendation(monthlyNeeded, months)}
         ${!complete ? `
         <div class="add-deposit-row">
           <input class="deposit-input" id="dep-${g.id}" type="number" placeholder="${currentLang === 'es' ? 'Agregar ahorro...' : 'Add savings...'}" min="0" onkeydown="if(event.key==='Enter')deposit(${g.id})">
@@ -15604,10 +15623,9 @@ window.addEventListener('load', function(){
     root.querySelectorAll('.goal-monthly').forEach(function(el){
       var txt = el.textContent || '';
       var m = txt.match(/\$([0-9,.]+)\s*\/\s*(?:mo|mes).*?(\d+)\s*(?:months|meses|month|mes)/i);
-      if (m && isSpanish()) {
-        el.innerHTML = 'Ahorra <strong>$' + m[1] + '/mes</strong> para alcanzar tu meta en <strong>' + m[2] + ' meses</strong>';
-      } else if (m && !isSpanish()) {
-        el.innerHTML = 'Save <strong>$' + m[1] + '/mo</strong> to reach your goal in <strong>' + m[2] + ' months</strong>';
+      if (m && typeof renderSavingsGoalMonthlyRecommendation === 'function') {
+        var html = renderSavingsGoalMonthlyRecommendation(parseFloat(String(m[1]).replace(/,/g, '')), parseInt(m[2], 10));
+        if (html) el.outerHTML = html;
       }
     });
   }
@@ -17457,9 +17475,10 @@ window.addEventListener('load', function(){
       var txt = el.textContent || '';
       var match = txt.match(/\$([0-9,.]+)\s*\/\s*(?:mo|mes).*?([0-9]+)\s*(?:months|month|meses|mes)/i);
       if (!match) return;
-      el.innerHTML = isSpanish()
-        ? 'Ahorra <strong>$' + match[1] + '/mes</strong> para alcanzar tu meta en <strong>' + match[2] + ' ' + (match[2] === '1' ? 'mes' : 'meses') + '</strong>'
-        : 'Save <strong>$' + match[1] + '/mo</strong> to reach your goal in <strong>' + match[2] + ' ' + (match[2] === '1' ? 'month' : 'months') + '</strong>';
+      if (typeof renderSavingsGoalMonthlyRecommendation === 'function') {
+        var html = renderSavingsGoalMonthlyRecommendation(parseFloat(String(match[1]).replace(/,/g, '')), parseInt(match[2], 10));
+        if (html) el.outerHTML = html;
+      }
     });
     root.querySelectorAll('.deposit-input').forEach(function(input){
       input.placeholder = isSpanish() ? 'Agregar ahorro...' : 'Add savings...';
