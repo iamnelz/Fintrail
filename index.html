@@ -12927,6 +12927,9 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     try {
       const overlay = document.getElementById('ft-onboarding-v5');
       if (overlay && overlay.classList.contains('ft-onboarding-v5-visible')) return;
+      const fm = document.getElementById('fm-feedback-overlay');
+      if (window.__fintrailFeedbackModalSessionClosed) return;
+      if (window.__fintrailFeedbackModalOpen || (fm && fm.classList.contains('visible'))) return;
       if (safeGet(ftOnboardingV5Key('feedback_submitted')) === 'true' || safeGet(ftOnboardingV5Key('feedback_done')) === 'true') return;
       const meta = ftOnboardingV5Meta();
       const eligible = Date.parse(meta.fintrail_feedback_eligible_after || safeGet(ftOnboardingV5Key('feedback_eligible_after')) || ((currentUser && currentUser.created_at) ? new Date(Date.parse(currentUser.created_at) + 7 * 86400000).toISOString() : ''));
@@ -12942,7 +12945,11 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       const submit = document.getElementById('fm-submit-btn');
       if (title) title.textContent = c.feedbackTitle;
       if (sub) sub.textContent = c.feedbackSubtitle;
-      if (badge) badge.textContent = 'Fintrail Pro';
+      if (badge) {
+        const text = badge.querySelector('span:last-child');
+        if (text) text.textContent = 'Fintrail Pro';
+        else badge.textContent = 'Fintrail Pro';
+      }
       if (later) later.textContent = c.remind;
       if (submit) submit.textContent = c.leave;
       if (later) later.onclick = function(){
@@ -12958,8 +12965,10 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
         safeSet(ftOnboardingV5Key('feedback_submitted'), 'true');
         submitFoundingFeedback();
       };
-      const fm = document.getElementById('fm-feedback-overlay');
-      if (fm) fm.classList.add('visible');
+      if (fm) {
+        window.__fintrailFeedbackModalOpen = true;
+        fm.classList.add('visible');
+      }
     } catch(e) {}
   }
 
@@ -14189,6 +14198,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
 // FOUNDING MEMBER + FEEDBACK — VISIBLE PROFILE FIX
 // ======================================================
 let foundingRating = 0;
+window.__fintrailFeedbackModalOpen = false;
+window.__fintrailFeedbackModalSessionClosed = false;
 
 function getFoundingMemberKey(){
   const uid = (typeof currentUser !== 'undefined' && currentUser && (currentUser.id || currentUser.email)) || 'demo';
@@ -14231,6 +14242,8 @@ function updateFoundingMemberUI(){
 }
 function applyFoundingFeedbackLanguage(){
   const es = (typeof currentLang !== 'undefined' && currentLang === 'es');
+  const overlay = document.getElementById('fm-feedback-overlay');
+  const modalVisible = !!(overlay && overlay.classList.contains('visible'));
   const labels = {
     'fm-modal-title': es ? '¡Eres Miembro Fundador!' : 'You’re a Founding Member!',
     'fm-modal-subtitle': es ? 'Tus comentarios ayudan a construir el futuro de Fintrail Pro.' : 'Your feedback helps shape the future of Fintrail Pro.',
@@ -14243,21 +14256,43 @@ function applyFoundingFeedbackLanguage(){
   };
   Object.entries(labels).forEach(([id,val]) => { const el = document.getElementById(id); if (el) el.textContent = val; });
   const largeBadge = document.getElementById('fm-badge-large');
-  if (largeBadge) largeBadge.innerHTML = `<span class="ft-reference-icon" data-fixed-icon="star"></span><span>${es ? 'Miembro Fundador' : 'Founding Member'}</span>`;
+  if (largeBadge) {
+    let icon = largeBadge.querySelector('.ft-reference-icon');
+    let text = largeBadge.querySelector('.fm-badge-text');
+    if (!icon) {
+      icon = document.createElement('span');
+      icon.className = 'ft-reference-icon';
+      icon.setAttribute('data-fixed-icon', 'star');
+      largeBadge.prepend(icon);
+    }
+    if (!text) {
+      text = document.createElement('span');
+      text.className = 'fm-badge-text';
+      largeBadge.appendChild(text);
+    }
+    text.textContent = text.textContent === 'Fintrail Pro' && modalVisible ? 'Fintrail Pro' : (es ? 'Miembro Fundador' : 'Founding Member');
+  }
   if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
   const sel = document.getElementById('fm-feature-request');
-  if (sel){
+  if (sel && sel.dataset.lang !== (es ? 'es' : 'en')){
     const value = sel.value;
     sel.innerHTML = es
       ? `<option value="">Elige una opción</option><option value="Budgeting Tools">Herramientas de presupuesto</option><option value="Debt Payoff Planning">Planificación de deudas</option><option value="Credit Improvement">Mejorar crédito</option><option value="Savings Goals">Metas de ahorro</option><option value="Investing Tools">Herramientas de inversión</option><option value="Other">Otro</option>`
       : `<option value="">Choose one</option><option value="Budgeting Tools">Budgeting Tools</option><option value="Debt Payoff Planning">Debt Payoff Planning</option><option value="Credit Improvement">Credit Improvement</option><option value="Savings Goals">Savings Goals</option><option value="Investing Tools">Investing Tools</option><option value="Other">Other</option>`;
     sel.value = value;
+    sel.dataset.lang = es ? 'es' : 'en';
   }
   const ta = document.getElementById('fm-feedback-text');
   if (ta) ta.placeholder = es ? 'Comparte tus ideas, sugerencias, errores o comentarios...' : 'Share your ideas, suggestions, bugs, or feedback...';
 }
 function openFoundingFeedback(){
   if (!isFoundingMemberActive()){ safeSet(getFoundingMemberKey(), 'true'); updateFoundingMemberUI(); }
+  const overlay = document.getElementById('fm-feedback-overlay');
+  if (overlay && overlay.classList.contains('visible')) {
+    window.__fintrailFeedbackModalOpen = true;
+    applyFoundingFeedbackLanguage();
+    return;
+  }
   applyFoundingFeedbackLanguage();
   const laterBtn = document.getElementById('fm-later-btn');
   const submitBtn = document.getElementById('fm-submit-btn');
@@ -14265,12 +14300,16 @@ function openFoundingFeedback(){
   if (submitBtn) submitBtn.onclick = submitFoundingFeedback;
   const status = document.getElementById('fm-status');
   if (status){ status.className = 'fm-status'; status.textContent = ''; }
-  const overlay = document.getElementById('fm-feedback-overlay');
-  if (overlay) overlay.classList.add('visible');
+  if (overlay) {
+    window.__fintrailFeedbackModalOpen = true;
+    overlay.classList.add('visible');
+  }
 }
 function closeFoundingFeedback(){
   const overlay = document.getElementById('fm-feedback-overlay');
   if (overlay) overlay.classList.remove('visible');
+  window.__fintrailFeedbackModalOpen = false;
+  window.__fintrailFeedbackModalSessionClosed = true;
 }
 function setFoundingRating(rating){
   foundingRating = rating;
