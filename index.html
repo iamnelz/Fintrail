@@ -1723,11 +1723,13 @@
     background: none; border: none; color: var(--text-soft);
     font-family: 'Sora', sans-serif; font-size: 0.8rem; font-weight: 600;
     padding: 0.5rem 0.85rem; border-radius: 8px; cursor: pointer;
-    display: flex; align-items: center; gap: 0.35rem; transition: all 0.2s;
+    display: flex; align-items: center; gap: 0.35rem; transition: background-color 0.16s, color 0.16s, border-color 0.16s;
     white-space: nowrap;
+    border-bottom: 2px solid transparent;
   }
   .nav-group-btn:hover { color: var(--dark); background: var(--surface2); }
-  .nav-group-btn.active { color: var(--accent); background: rgba(240,85,85,0.08); border-bottom: 2px solid var(--accent); border-radius: 8px 8px 0 0; }
+  .nav-group-btn.active { color: var(--accent); background: rgba(240,85,85,0.08); border-bottom-color: var(--accent); border-radius: 8px 8px 0 0; }
+  .nav-group.open > .nav-group-btn:not(.active) { color: var(--dark); background: var(--surface2); border-bottom-color: transparent; }
   .nav-group-btn .nav-arrow { font-size: 0.6rem; transition: transform 0.2s; }
   .nav-group.open .nav-arrow { transform: rotate(180deg); }
 
@@ -4507,7 +4509,7 @@
   <nav>
     <!-- BUDGET GROUP -->
     <div class="nav-group">
-      <button class="nav-group-btn" id="nav-budget">📊 Budget <span class="nav-arrow">▾</span></button>
+      <button class="nav-group-btn" id="nav-budget"><span class="ft-stable-inline-icon" data-ft-stable-icon="bar-chart-3"></span><span class="nav-group-label">Budget</span><span class="nav-arrow">▾</span></button>
       <div class="nav-dropdown">
         <div class="nav-dropdown-section" data-en="Budget" data-es="Presupuesto">Budget</div>
         <button class="nav-dropdown-item" onclick="navTo('budget', this)">
@@ -4523,7 +4525,7 @@
 
     <!-- PLANNING GROUP -->
     <div class="nav-group">
-      <button class="nav-group-btn" id="nav-planning">🎯 Planning <span class="nav-arrow">▾</span></button>
+      <button class="nav-group-btn" id="nav-planning"><span class="ft-stable-inline-icon" data-ft-stable-icon="target"></span><span class="nav-group-label">Planning</span><span class="nav-arrow">▾</span></button>
       <div class="nav-dropdown">
         <div class="nav-dropdown-section" data-en="Planning" data-es="Planificación">Planning</div>
         <button class="nav-dropdown-item" onclick="navTo('savings', this)">
@@ -4551,7 +4553,7 @@
 
     <!-- TOOLS GROUP -->
     <div class="nav-group">
-      <button class="nav-group-btn" id="nav-tools">🛠 Tools <span class="nav-arrow">▾</span></button>
+      <button class="nav-group-btn" id="nav-tools"><span class="ft-stable-inline-icon" data-ft-stable-icon="wrench"></span><span class="nav-group-label">Tools</span><span class="nav-arrow">▾</span></button>
       <div class="nav-dropdown">
         <div class="nav-dropdown-section" data-en="Tools" data-es="Herramientas">Tools</div>
         <button class="nav-dropdown-item" onclick="navTo('resources', this)">
@@ -4575,7 +4577,7 @@
 
     <!-- INSIGHTS GROUP -->
     <div class="nav-group">
-      <button class="nav-group-btn" id="nav-insights">Insights <span class="nav-arrow">▾</span></button>
+      <button class="nav-group-btn" id="nav-insights"><span class="ft-stable-inline-icon" data-ft-stable-icon="lightbulb"></span><span class="nav-group-label">Insights</span><span class="nav-arrow">▾</span></button>
       <div class="nav-dropdown">
         <div class="nav-dropdown-section" data-en="Insights" data-es="Análisis">Insights</div>
         <button class="nav-dropdown-item" onclick="guardedNavTo('ai', this)">
@@ -4601,7 +4603,7 @@
       </div>
     </div>
 
-    <button class="upgrade-btn-nav" onclick="showPaywall('nav')">Go Pro</button>
+    <button class="upgrade-btn-nav" onclick="showPaywall('nav')"><span class="ft-stable-inline-icon" data-ft-stable-icon="crown"></span><span class="upgrade-btn-label">Go Pro</span></button>
     <button onclick="navTo('profile', this)" style="background:none;border:none;font-size:1.1rem;cursor:pointer;padding:0.45rem 0.65rem;border-radius:8px;color:var(--text-soft)" title="Profile">👤</button>
     <button id="lang-toggle" onclick="toggleLanguage()" style="background:none;border:1.5px solid var(--border);color:var(--text-soft);font-family:'Sora',sans-serif;font-size:0.72rem;font-weight:700;padding:0.3rem 0.65rem;border-radius:20px;cursor:pointer;transition:all 0.2s;letter-spacing:0.05em">EN</button>
   </nav>
@@ -13045,8 +13047,12 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     });
 
     // Go Pro button
-    const goProBtn = document.querySelector('.upgrade-btn-nav');
-    if (goProBtn) goProBtn.innerHTML = isEs ? 'Hazte Pro' : 'Go Pro';
+    const goProBtn = document.querySelector('header nav > .upgrade-btn-nav');
+    if (goProBtn) {
+      const label = goProBtn.querySelector('.upgrade-btn-label');
+      if (label) label.textContent = isEs ? 'Hazte Pro' : 'Go Pro';
+      else goProBtn.textContent = isEs ? 'Hazte Pro' : 'Go Pro';
+    }
 
     // Page title
     document.title = isEs ? 'Fintrail Pro — Presupuesta Mejor, Vive Mejor' : 'Fintrail Pro — Budget Smarter, Live Better';
@@ -19202,7 +19208,10 @@ window.addEventListener('load', function(){
 
   function refreshProIcons(){
     document.querySelectorAll('.upgrade-btn-nav').forEach(function(btn){
-      if (!btn.querySelector('.ft-lucide-icon')) {
+      var stableIcon = btn.querySelector(':scope > .ft-stable-inline-icon');
+      if (stableIcon) {
+        if (!stableIcon.querySelector('.ft-lucide-icon')) replaceSingleIcon(stableIcon, 'crown');
+      } else if (!btn.querySelector('.ft-lucide-icon')) {
         btn.insertBefore(iconNode('crown'), btn.firstChild);
       }
       btn.style.display = 'inline-flex';
