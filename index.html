@@ -378,6 +378,19 @@
   .compare-result-card { background:var(--surface2); border-radius:10px; padding:1rem; text-align:center; border:1px solid var(--border); }
   .crr-label { font-size:0.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.3rem; }
   .crr-val { font-family:'Playfair Display',serif; font-size:1.35rem; color:var(--text); }
+  .resource-shortcuts { position:sticky; top:0.75rem; z-index:5; display:flex; gap:0.5rem; overflow-x:auto; padding:0.5rem 0; margin:-0.35rem 0 1.25rem; background:linear-gradient(180deg,var(--bg) 70%,rgba(248,250,252,0)); scrollbar-width:none; }
+  .resource-shortcuts::-webkit-scrollbar { display:none; }
+  .resource-section { scroll-margin-top:5rem; margin-bottom:1.75rem; }
+  .resource-section-header { display:flex; align-items:flex-end; justify-content:space-between; gap:1rem; margin:0 0 0.85rem; }
+  .resource-section-header h3 { font-family:'Playfair Display',serif; font-size:1.2rem; margin:0; color:var(--text); }
+  .resource-section-header p { margin:0.2rem 0 0; color:var(--text-soft); font-size:0.82rem; line-height:1.5; }
+  .resource-subgroup { margin:1rem 0 0.65rem; font-size:0.74rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); }
+  .resource-disclosure { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:0.75rem 0.95rem; margin:0.85rem 0 1rem; font-size:0.76rem; color:var(--text-soft); line-height:1.55; }
+  .resource-partner-placeholder { background:linear-gradient(135deg,#151515,#2A0F0F); color:#fff; border-radius:16px; padding:1.4rem; border:1px solid rgba(229,57,53,0.28); }
+  .resource-partner-placeholder h3 { color:#fff; margin-bottom:0.45rem; }
+  .resource-partner-placeholder p { color:rgba(255,255,255,0.78); margin-bottom:0.9rem; }
+  .resource-partner-cats { display:flex; flex-wrap:wrap; gap:0.5rem; }
+  .resource-partner-cats span { border:1px solid rgba(255,255,255,0.22); background:rgba(255,255,255,0.08); border-radius:999px; padding:0.35rem 0.7rem; font-size:0.74rem; color:#fff; }
   .crr-sub { font-size:0.7rem; color:var(--muted); margin-top:0.2rem; }
 
   /* TIP BAR */
@@ -4930,7 +4943,10 @@
         <!-- 6-MONTH SCHEDULE -->
         <div class="card">
           <div class="schedule-header">
-            <h2 data-en="📅 6-Month Schedule" data-es="📅 Horario de 6 Meses">📅 6-Month Schedule</h2>
+            <h2 style="display:flex;align-items:center;gap:0.45rem">
+              <span class="ft-stable-inline-icon" data-ft-stable-icon="calendar"></span>
+              <span id="label-6mo-schedule" data-en="6-Month Schedule" data-es="Horario de 6 Meses">6-Month Schedule</span>
+            </h2>
             <div style="display:flex;flex-wrap:wrap;gap:0.75rem;align-items:center;">
               <div class="payday-row">
                 <label data-en="Pay Frequency" data-es="Frecuencia de Pago">Pay Frequency</label>
@@ -4967,63 +4983,17 @@
     <div class="resources-hero">
       <div>
         <h2 data-en="Financial Resources &amp; Partner Rates" data-es="Recursos Financieros y Tasas">Financial Resources & Partner Rates</h2>
-        <p data-en="Curated lenders, grants, tools &amp; education. Compare rates and find the best fit for you." data-es="Prestamistas, becas, herramientas y educación. Compara tasas y encuentra la mejor opción para ti.">Curated lenders, grants, tools & education. Compare rates and find the best fit for you.</p>
-      </div>
-      <div class="filter-row" id="filter-row">
-        <button class="filter-btn active" onclick="filterResources('all', this)" data-en="All" data-es="Todo">All</button>
-        <button class="filter-btn" onclick="filterResources('mortgage', this)" data-en="Mortgages" data-es="Hipotecas">Mortgages</button>
-        <button class="filter-btn" onclick="filterResources('personal', this)" data-en="Personal Loans" data-es="Préstamos Personales">Personal Loans</button>
-        <button class="filter-btn" onclick="filterResources('auto', this)" data-en="Auto Loans" data-es="Préstamos de Auto">Auto Loans</button>
-        <button class="filter-btn" onclick="filterResources('refi', this)" data-en="Refinance" data-es="Refinanciar">Refinance</button>
-        <button class="filter-btn" onclick="filterResources('grants', this)" data-en="Grants" data-es="Becas y Ayudas">Grants</button>
-        <button class="filter-btn" onclick="filterResources('tools', this)" data-en="Tools" data-es="Herramientas">Tools</button>
-        <button class="filter-btn" onclick="filterResources('education', this)" data-en="Education" data-es="Educación">Education</button>
-        <button class="filter-btn" onclick="filterResources('credit', this)" data-en="Credit Scores" data-es="Puntajes de Crédito">Credit Scores</button>
+        <p data-en="Budget Better. Eliminate Debt. Build Lasting Financial Health." data-es="Presupuesta Mejor. Elimina Deudas. Construye Salud Financiera Duradera.">Budget Better. Eliminate Debt. Build Lasting Financial Health.</p>
       </div>
     </div>
 
-    <!-- LOAN COMPARISON CALCULATOR -->
-    <div class="compare-tool">
-      <h2 data-en="🧮 Loan Payment Calculator" data-es="🧮 Calculadora de Préstamos">🧮 Loan Payment Calculator</h2>
-      <p data-en="Estimate your monthly payment before you apply. Adjust the numbers to compare scenarios." data-es="Estima tu pago mensual antes de aplicar. Ajusta los números para comparar escenarios.">Estimate your monthly payment before you apply. Adjust the numbers to compare scenarios.</p>
-      <div class="compare-inputs">
-        <div class="form-group"><label data-en="Loan Amount ($)" data-es="Monto del Préstamo ($)">Loan Amount ($)</label><input type="number" id="cmp-amount" value="25000" oninput="calcLoan()"></div>
-        <div class="form-group"><label data-en="Interest Rate (% APR)" data-es="Tasa de Interés (% APR)">Interest Rate (% APR)</label><input type="number" id="cmp-rate" value="6.99" step="0.01" oninput="calcLoan()"></div>
-        <div class="form-group"><label data-en="Loan Term" data-es="Plazo del Préstamo">Loan Term</label>
-          <select id="cmp-term" onchange="calcLoan()">
-            <option value="12" data-en="1 year" data-es="1 año">1 year</option>
-            <option value="24" data-en="2 years" data-es="2 años">2 years</option>
-            <option value="36" selected data-en="3 years" data-es="3 años">3 years</option>
-            <option value="48" data-en="4 years" data-es="4 años">4 years</option>
-            <option value="60" data-en="5 years" data-es="5 años">5 years</option>
-            <option value="84" data-en="7 years" data-es="7 años">7 years</option>
-            <option value="120" data-en="10 years" data-es="10 años">10 years</option>
-            <option value="180" data-en="15 years" data-es="15 años">15 years</option>
-            <option value="240" data-en="20 years" data-es="20 años">20 years</option>
-            <option value="360" data-en="30 years" data-es="30 años">30 years</option>
-          </select>
-        </div>
-      </div>
-      <div class="compare-results" id="compare-results"></div>
-    </div>
-
-    <!-- FEATURED RATE BANNER + AFFILIATE (Pro only) -->
-    <div id="affiliate-gate">
-      <div class="lock-gate" style="margin-bottom:1.5rem;">
-        <div class="lg-icon">🏦</div>
-        <h3>Partner Lender Rates <span class="premium-badge">PRO</span></h3>
-        <p>Access exclusive mortgage, personal loan, auto loan, and refinance rates from top lenders — plus our loan payment calculator and rate comparison tools.</p>
-        <button class="lock-gate-btn" onclick="showPaywall('resources')">Unlock with Pro — $4.99/mo</button>
-        <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--muted)" data-en="7-day free trial · Cancel anytime" data-es="Prueba gratis de 7 días · Cancela cuando quieras">7-day free trial · Cancel anytime</div>
-      </div>
-    </div>
-
-    <div id="affiliate-content" style="display:none">
-      <div id="rate-banner" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1.75rem;"></div>
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0.65rem 1rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:0.6rem;">
-        <span style="font-size:1rem;">ℹ️</span>
-        <p style="font-size:0.75rem;color:var(--muted);line-height:1.5;"><strong style="color:var(--dark);" data-en="Affiliate Disclosure:" data-es="Divulgación de Afiliados:">Affiliate Disclosure:</strong> <span data-en="Fintrail may earn a commission when you apply through our partner links, at no extra cost to you. Rates shown are representative and subject to change. Always verify current rates directly with the lender." data-es="Fintrail puede ganar una comisión cuando aplicas a través de nuestros enlaces de socios, sin costo adicional para ti. Las tasas mostradas son representativas y sujetas a cambio. Siempre verifica las tasas actuales directamente con el prestamista.">Fintrail may earn a commission when you apply through our partner links, at no extra cost to you. Rates shown are representative and subject to change. Always verify current rates directly with the lender.</span></p>
-      </div>
+    <div class="resource-shortcuts" aria-label="Resource Center shortcuts">
+      <button class="resource-shortcut" onclick="scrollResourceSection('resource-products')" data-en="Products" data-es="Productos">Products</button>
+      <button class="resource-shortcut" onclick="scrollResourceSection('resource-credit')" data-en="Credit" data-es="Crédito">Credit</button>
+      <button class="resource-shortcut" onclick="scrollResourceSection('resource-education')" data-en="Education" data-es="Educación">Education</button>
+      <button class="resource-shortcut" onclick="scrollResourceSection('resource-hardship')" data-en="Hardship" data-es="Dificultades">Hardship</button>
+      <button class="resource-shortcut" onclick="scrollResourceSection('resource-grants')" data-en="Grants" data-es="Ayudas">Grants</button>
+      <button class="resource-shortcut" onclick="scrollResourceSection('resource-partners')" data-en="Partners" data-es="Socios">Partners</button>
     </div>
 
     <div class="resources-grid" id="resources-grid"></div>
@@ -7868,6 +7838,10 @@
     'Always Free': 'Siempre gratis',
     'Instant Score': 'Puntaje instantáneo',
     'All 3 Bureaus': 'Los 3 burós',
+    'Education': 'Educación',
+    'Fintrail Guide': 'Guía de Fintrail',
+    'Support': 'Apoyo',
+    'Government': 'Gobierno',
     '30-yr Fixed': 'Fija 30 años',
     '15-yr Fixed': 'Fija 15 años',
     '5/1 ARM': 'ARM 5/1',
@@ -7964,57 +7938,221 @@
   }
 
   function filterResources(tag, btn) {
-    if (currentFilter === tag && btn?.classList?.contains('active')) return;
-    currentFilter = tag;
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    if (btn) btn.classList.add('active');
-    renderResources();
+    const target = tag === 'all' ? 'resource-products' : `resource-${tag}`;
+    scrollResourceSection(target);
+  }
+
+  function scrollResourceSection(id) {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function resourceLang(en, es) {
+    return currentLang === 'es' ? es : en;
+  }
+
+  function renderResourceCard(r, options = {}) {
+    const badgesHtml = (r.badges || []).map(b => {
+      const [cls, label] = b.split('|');
+      return `<span class="rc-badge ${cls}">${resourceCopy(label)}</span>`;
+    }).join('');
+
+    const ratesHtml = r.rates?.length ? `
+      <div class="rc-rate-display">
+        ${r.rates.map((rt, i) => `
+          ${i > 0 ? '<div class="rc-divider"></div>' : ''}
+          <div class="rc-rate-item">
+            <div class="rri-val">${rt.val}</div>
+            <div class="rri-label">${resourceCopy(rt.label)}</div>
+          </div>`).join('')}
+      </div>` : '';
+
+    const desc = r.descEs ? resourceLang(r.desc, r.descEs) : resourceCopy(r.desc || '');
+    const fine = r.fineEs ? resourceLang(r.fine, r.fineEs) : resourceCopy(r.fine || '');
+    const cta = r.ctaEs ? resourceLang(r.cta, r.ctaEs) : resourceCopy(r.cta || resourceLang('Learn More', 'Más información'));
+    const title = r.titleEs ? resourceLang(r.title, r.titleEs) : r.title;
+    const cardStyle = r.featured ? 'border-color:var(--accent2);box-shadow:0 2px 12px rgba(233,196,106,0.15)' : '';
+    const url = r.url || '#';
+
+    return `
+      <div class="resource-card" style="${cardStyle}">
+        <div class="rc-header">
+          <div style="display:flex;align-items:center;gap:0.5rem">
+            <span style="font-size:1.4rem">${r.logo || '📘'}</span>
+            <h3 style="margin:0">${title}</h3>
+          </div>
+        </div>
+        ${badgesHtml ? `<div class="rc-badges">${badgesHtml}</div>` : ''}
+        ${ratesHtml}
+        ${desc ? `<p>${desc}</p>` : ''}
+        ${fine ? `<p class="rc-fine" style="margin-bottom:0.6rem">${fine}</p>` : ''}
+        ${url !== '#' ? `<a class="rc-cta ${r.ctaStyle || options.ctaStyle || 'secondary'}" href="${url}" target="_blank" rel="noopener noreferrer">${cta} →</a>` : ''}
+      </div>`;
+  }
+
+  function renderResourceSection(id, titleEn, titleEs, descEn, descEs, contentHtml) {
+    return `
+      <section class="resource-section" id="${id}">
+        <div class="resource-section-header">
+          <div>
+            <h3>${resourceLang(titleEn, titleEs)}</h3>
+            ${descEn || descEs ? `<p>${resourceLang(descEn || '', descEs || descEn || '')}</p>` : ''}
+          </div>
+        </div>
+        ${contentHtml}
+      </section>`;
+  }
+
+  function resourceDisclosure() {
+    return `<div class="resource-disclosure">${resourceLang(
+      'Rates shown are representative estimates and may change. Verify current rates directly with the lender before applying.',
+      'Las tasas mostradas son estimaciones representativas y pueden cambiar. Verifica las tasas actuales directamente con la institución antes de solicitar.'
+    )}</div>`;
+  }
+
+  function resourceCards(items) {
+    return `<div class="resources-grid">${items.map(item => renderResourceCard(item)).join('')}</div>`;
+  }
+
+  function resourceProductsHtml() {
+    const byTitle = title => resources.find(r => r.title === title);
+    const groups = [
+      { label: resourceLang('Mortgage', 'Hipotecas'), items: ['Better Mortgage', 'Rocket Mortgage', 'LoanDepot'].map(byTitle).filter(Boolean) },
+      { label: resourceLang('Personal Loans', 'Préstamos Personales'), items: ['SoFi Personal Loans', 'LightStream', 'Upstart'].map(byTitle).filter(Boolean) },
+      { label: resourceLang('Auto Loans', 'Préstamos de Auto'), items: ['PenFed Credit Union', 'LightStream Auto', 'myAutoloan'].map(byTitle).filter(Boolean) },
+      { label: resourceLang('Student Loans', 'Préstamos Estudiantiles'), items: ['SoFi Student Loan Refi'].map(byTitle).filter(Boolean) }
+    ];
+    return groups.map(group => `
+      <div class="resource-subgroup">${group.label}</div>
+      ${resourceCards(group.items)}
+      ${resourceDisclosure()}
+    `).join('');
+  }
+
+  function buildCreditFromScratchCard() {
+    return {
+      tag: 'credit',
+      title: 'Build Credit From Scratch',
+      titleEs: 'Construir Crédito Desde Cero',
+      logo: '🎯',
+      badges: ['badge-nofe|Education'],
+      rates: [],
+      desc: 'No credit score yet, secured credit cards, authorized users, credit builder loans, and the first 6–12 months of credit history.',
+      descEs: 'Sin puntaje de crédito todavía, tarjetas aseguradas, usuarios autorizados, préstamos para construir crédito y los primeros 6–12 meses de historial.',
+      cta: 'Learn More',
+      ctaEs: 'Más información',
+      url: 'https://www.consumerfinance.gov/consumer-tools/credit-reports-and-scores/'
+    };
+  }
+
+  function resourceEducationCards() {
+    const byTitle = title => resources.find(r => r.title === title);
+    return [
+      byTitle('Khan Academy Finance'),
+      byTitle('NerdWallet'),
+      byTitle('YNAB'),
+      {
+        title: 'Budgeting Basics',
+        titleEs: 'Conceptos Básicos de Presupuesto',
+        logo: '📋',
+        badges: ['badge-nofe|Fintrail Guide'],
+        desc: '50/30/20 Rule and zero-based budgeting basics for everyday planning.',
+        descEs: 'Regla 50/30/20 y presupuesto de base cero para la planificación diaria.',
+        cta: 'Read Guide',
+        ctaEs: 'Leer guía',
+        url: 'https://www.consumer.gov/managing-your-money/making-budget'
+      },
+      {
+        title: 'Debt Payoff Methods',
+        titleEs: 'Métodos para Pagar Deudas',
+        logo: '💳',
+        badges: ['badge-nofe|Fintrail Guide'],
+        desc: 'Compare avalanche and snowball methods so you can choose a payoff strategy.',
+        descEs: 'Compara los métodos avalancha y bola de nieve para elegir una estrategia de pago.',
+        cta: 'Read Guide',
+        ctaEs: 'Leer guía',
+        url: 'https://www.consumerfinance.gov/consumer-tools/debt-collection/'
+      },
+      {
+        title: 'Emergency Fund Guide',
+        titleEs: 'Guía de Fondo de Emergencia',
+        logo: '🛡️',
+        badges: ['badge-nofe|Fintrail Guide'],
+        desc: 'Build a starter emergency fund and grow it into a stronger safety cushion.',
+        descEs: 'Crea un fondo de emergencia inicial y conviértelo en un colchón financiero más fuerte.',
+        cta: 'Read Guide',
+        ctaEs: 'Leer guía',
+        url: 'https://www.consumer.gov/managing-your-money/saving-money'
+      },
+      {
+        title: 'Beginner Investing Guide',
+        titleEs: 'Guía de Inversión para Principiantes',
+        logo: '📈',
+        badges: ['badge-nofe|Fintrail Guide'],
+        desc: 'Learn core investing terms, time horizon, diversification, and compounding.',
+        descEs: 'Aprende términos básicos de inversión, horizonte de tiempo, diversificación e interés compuesto.',
+        cta: 'Start Learning',
+        ctaEs: 'Comenzar a aprender',
+        url: 'https://www.investor.gov/introduction-investing'
+      },
+      {
+        title: 'Building Credit Guide',
+        titleEs: 'Guía para Construir Crédito',
+        logo: '⭐',
+        badges: ['badge-nofe|Fintrail Guide'],
+        desc: 'Learn payment history, utilization, account age, and habits that build credit.',
+        descEs: 'Aprende sobre historial de pagos, utilización, antigüedad de cuentas y hábitos que construyen crédito.',
+        cta: 'Read Guide',
+        ctaEs: 'Leer guía',
+        url: 'https://www.consumerfinance.gov/consumer-tools/credit-reports-and-scores/'
+      }
+    ].filter(Boolean);
+  }
+
+  function hardshipCards() {
+    return [
+      { title:'Housing Assistance', titleEs:'Asistencia de Vivienda', logo:'🏠', badges:['badge-nofe|Support'], desc:'HUD resources and HUD-approved housing counseling.', descEs:'Recursos de HUD y consejería de vivienda aprobada por HUD.', cta:'Visit HUD', ctaEs:'Visitar HUD', url:'https://www.hud.gov/topics/rental_assistance' },
+      { title:'Utility Assistance', titleEs:'Asistencia de Servicios', logo:'💡', badges:['badge-nofe|LIHEAP'], desc:'LIHEAP helps eligible households with energy bills and weatherization.', descEs:'LIHEAP ayuda a hogares elegibles con facturas de energía y climatización.', cta:'Learn More', ctaEs:'Más información', url:'https://www.acf.hhs.gov/ocs/programs/liheap' },
+      { title:'Food Assistance', titleEs:'Asistencia Alimentaria', logo:'❤️', badges:['badge-nofe|SNAP'], desc:'SNAP information and Feeding America food bank resources.', descEs:'Información de SNAP y recursos de bancos de alimentos de Feeding America.', cta:'Find Help', ctaEs:'Buscar ayuda', url:'https://www.fns.usda.gov/snap/supplemental-nutrition-assistance-program' },
+      { title:'Community Support', titleEs:'Apoyo Comunitario', logo:'📞', badges:['badge-nofe|211'], desc:'United Way 211 connects people with local help for housing, food, bills, and more.', descEs:'United Way 211 conecta con ayuda local para vivienda, comida, facturas y más.', cta:'Call 211', ctaEs:'Llamar al 211', url:'https://www.211.org' },
+      { title:'Debt Counseling', titleEs:'Consejería de Deudas', logo:'📋', badges:['badge-nofe|NFCC'], desc:'NFCC connects consumers with nonprofit credit counselors.', descEs:'NFCC conecta a consumidores con consejeros de crédito sin fines de lucro.', cta:'Find Counseling', ctaEs:'Buscar consejería', url:'https://www.nfcc.org' },
+      { title:'Consumer Protection', titleEs:'Protección al Consumidor', logo:'🛡️', badges:['badge-nofe|CFPB'], desc:'CFPB tools for complaints, consumer rights, and financial education.', descEs:'Herramientas de CFPB para quejas, derechos del consumidor y educación financiera.', cta:'Visit CFPB', ctaEs:'Visitar CFPB', url:'https://www.consumerfinance.gov' },
+      { title:'Fraud & Identity Theft', titleEs:'Fraude y Robo de Identidad', logo:'🔐', badges:['badge-nofe|FTC'], desc:'FTC identity theft resources and recovery steps.', descEs:'Recursos de FTC para robo de identidad y pasos de recuperación.', cta:'Get Help', ctaEs:'Obtener ayuda', url:'https://www.identitytheft.gov' }
+    ];
+  }
+
+  function grantsCards() {
+    const base = resources.filter(r => ['Grants.gov', 'SBA Grants', 'CDFI Fund'].includes(r.title));
+    return base.concat([
+      { title:'Veteran Resources', titleEs:'Recursos para Veteranos', logo:'⭐', badges:['badge-nofe|Government'], desc:'Benefits, housing, education, and financial resources for veterans and families.', descEs:'Beneficios, vivienda, educación y recursos financieros para veteranos y familias.', cta:'Visit VA', ctaEs:'Visitar VA', url:'https://www.va.gov' },
+      { title:'Disaster Assistance Resources', titleEs:'Recursos de Asistencia por Desastres', logo:'⚠️', badges:['badge-nofe|Government'], desc:'Federal disaster assistance, recovery resources, and emergency support.', descEs:'Asistencia federal por desastres, recursos de recuperación y apoyo de emergencia.', cta:'Find Assistance', ctaEs:'Buscar asistencia', url:'https://www.disasterassistance.gov' }
+    ]);
   }
 
   function renderResources() {
     const grid = document.getElementById('resources-grid');
     if (!grid) return;
-    renderRateBanner();
-    const affiliateTags = ['mortgage','personal','auto','refi'];
-    let filtered = currentFilter === 'all' ? resources : resources.filter(r => r.tag === currentFilter);
-    // Free users only see non-affiliate categories
-    if (!isPro) filtered = filtered.filter(r => !affiliateTags.includes(r.tag));
-    const sorted = [...filtered].sort((a,b) => (b.featured?1:0) - (a.featured?1:0));
-    const renderKey = `${currentLang}|${isPro ? 'pro' : 'free'}|${currentFilter}|${sorted.map(r => r.title).join('|')}`;
+    const creditItems = resources.filter(r => r.tag === 'credit').concat(buildCreditFromScratchCard());
+    const renderKey = `${currentLang}|resource-v2|${resources.length}|${creditItems.length}`;
     if (grid.dataset.renderKey === renderKey && grid.children.length) return;
-
-    grid.innerHTML = sorted.map(r => {
-      const badgesHtml = (r.badges||[]).map(b => {
-        const [cls, label] = b.split('|');
-        return `<span class="rc-badge ${cls}">${resourceCopy(label)}</span>`;
-      }).join('');
-
-      const ratesHtml = r.rates.length ? `
-        <div class="rc-rate-display">
-          ${r.rates.map((rt,i) => `
-            ${i>0 ? '<div class="rc-divider"></div>' : ''}
-            <div class="rc-rate-item">
-              <div class="rri-val">${rt.val}</div>
-              <div class="rri-label">${resourceCopy(rt.label)}</div>
-            </div>`).join('')}
-        </div>` : '';
-
-      return `
-      <div class="resource-card" style="${r.featured?'border-color:var(--accent2);box-shadow:0 2px 12px rgba(233,196,106,0.15)':''}">
-        <div class="rc-header">
-          <div style="display:flex;align-items:center;gap:0.5rem">
-            <span style="font-size:1.4rem">${r.logo}</span>
-            <h3 style="margin:0">${r.title}</h3>
+    grid.innerHTML = [
+      renderResourceSection('resource-products', 'Financial Products', 'Productos Financieros', 'Compare representative rates and product options directly with lenders.', 'Compara tasas representativas y opciones directamente con las instituciones.', resourceProductsHtml()),
+      renderResourceSection('resource-credit', 'Credit & Reports', 'Crédito y Reportes', 'Credit bureaus, reports, scores, monitoring, and first-credit education.', 'Burós, reportes, puntajes, monitoreo y educación para comenzar con crédito.', resourceCards(creditItems)),
+      renderResourceSection('resource-education', 'Financial Education', 'Educación Financiera', 'Guides and trusted education to build stronger money habits.', 'Guías y educación confiable para crear mejores hábitos financieros.', resourceCards(resourceEducationCards())),
+      renderResourceSection('resource-hardship', 'Financial Hardship Assistance', 'Asistencia por Dificultades Financieras', 'Housing, utilities, food, debt counseling, consumer protection, and fraud recovery resources.', 'Recursos para vivienda, servicios, comida, consejería de deudas, protección al consumidor y recuperación de fraude.', resourceCards(hardshipCards())),
+      renderResourceSection('resource-grants', 'Government & Grants', 'Gobierno y Ayudas', 'Government programs, grants, veteran resources, and disaster assistance.', 'Programas gubernamentales, ayudas, recursos para veteranos y asistencia por desastres.', resourceCards(grantsCards())),
+      renderResourceSection('resource-partners', 'Featured Fintrail Partners', 'Socios Destacados de Fintrail', '', '', `
+        <div class="resource-partner-placeholder">
+          <h3>${resourceLang('Featured Fintrail Partners', 'Socios Destacados de Fintrail')}</h3>
+          <p>${resourceLang('Partner offers will appear here as partnerships are finalized.', 'Las ofertas de socios aparecerán aquí cuando las alianzas se finalicen.')}</p>
+          <div class="resource-partner-cats">
+            ${['Banks|Bancos','Credit Unions|Cooperativas de Crédito','Credit Builders|Constructores de Crédito','High Yield Savings|Ahorros de Alto Rendimiento','Insurance|Seguros','Tax Services|Servicios de Impuestos'].map(pair => {
+              const [en, es] = pair.split('|');
+              return `<span>${resourceLang(en, es)}</span>`;
+            }).join('')}
           </div>
-        </div>
-        <div class="rc-badges">${badgesHtml}</div>
-        ${ratesHtml}
-        <p>${resourceCopy(r.desc)}</p>
-        ${r.fine ? `<p class="rc-fine" style="margin-bottom:0.6rem">${resourceCopy(r.fine)}</p>` : ''}
-        <a class="rc-cta ${r.ctaStyle||''}" href="${r.url}" target="_blank" rel="noopener noreferrer">${resourceCopy(r.cta)} →</a>
-        ${r.commission ? `<div class="commission-note">${currentLang === 'es' ? 'Los detalles de socios se agregarán a medida que se finalicen los acuerdos.' : 'Partner details will be added as agreements are finalized.'}</div>` : ''}
-      </div>`;
-    }).join('');
+        </div>`)
+    ].join('');
     grid.dataset.renderKey = renderKey;
   }
 
@@ -8753,12 +8891,15 @@ Guidelines:
   }
 
   function calcLoan() {
-    const P = parseFloat(document.getElementById('cmp-amount').value) || 0;
-    const annualRate = parseFloat(document.getElementById('cmp-rate').value) || 0;
-    const n = parseInt(document.getElementById('cmp-term').value) || 12;
-    const r = annualRate / 100 / 12;
+    const amountEl = document.getElementById('cmp-amount');
+    const rateEl = document.getElementById('cmp-rate');
+    const termEl = document.getElementById('cmp-term');
     const container = document.getElementById('compare-results');
-    if (!container) return;
+    if (!amountEl || !rateEl || !termEl || !container) return;
+    const P = parseFloat(amountEl.value) || 0;
+    const annualRate = parseFloat(rateEl.value) || 0;
+    const n = parseInt(termEl.value) || 12;
+    const r = annualRate / 100 / 12;
     if (!P || !annualRate) { if (container.innerHTML) container.innerHTML = ''; return; }
     const monthly = r === 0 ? P/n : P * r * Math.pow(1+r,n) / (Math.pow(1+r,n) - 1);
     const totalPaid = monthly * n;
@@ -12374,8 +12515,11 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const feed = gameData.activityFeed || [];
     const container = document.getElementById('activity-feed');
     if (!container) return;
+    const renderKey = `${currentLang}|${feed.slice(0, 10).map(a => `${a.text}:${a.xp}:${a.icon || ''}`).join('|')}`;
+    if (container.dataset.renderKey === renderKey && container.children.length) return;
     if (feed.length === 0) {
       container.innerHTML = `<div class="empty-state">${currentLang==='es'?'Aún no hay actividad — empieza a usar Fintrail para ganar XP.':'No activity yet — start using Fintrail to earn XP!'}</div>`;
+      container.dataset.renderKey = renderKey;
       return;
     }
     container.innerHTML = feed.slice(0, 10).map(a => {
@@ -12394,6 +12538,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
         <span class="activity-xp">${a.xp}</span>
       </div>`;
     }).join('');
+    container.dataset.renderKey = renderKey;
   }
 
   function renderStreaksTab() {
@@ -13022,7 +13167,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       'label-bill-day': isEs ? 'Día de Vencimiento' : 'Due Day of Month',
       'label-bill-cat': isEs ? 'Categoría' : 'Category',
       'label-your-bills': isEs ? 'Tus Facturas' : 'Your Bills',
-      'label-6mo-schedule': isEs ? '📅 Horario de 6 Meses' : '📅 6-Month Schedule',
+      'label-6mo-schedule': isEs ? 'Horario de 6 Meses' : '6-Month Schedule',
     };
     Object.entries(billLabels).forEach(([id, text]) => {
       const el = document.getElementById(id);
@@ -14721,7 +14866,9 @@ window.addEventListener('load', function(){
     setTimeout(applyStreaksSpanishFix, 2200);
   });
 
-  document.addEventListener('click', function(){
+  document.addEventListener('click', function(e){
+    var target = e.target;
+    if (!target || !target.closest || !target.closest('#lang-toggle, [onclick*="toggleLanguage"]')) return;
     setTimeout(applyStreaksSpanishFix, 120);
     setTimeout(applyStreaksSpanishFix, 650);
   });
@@ -15023,7 +15170,7 @@ window.addEventListener('load', function(){
     if (!target) return;
     var text = String(target.textContent || '');
     var isRelevant =
-      (target.closest && target.closest('#tab-streaks')) ||
+      (target.closest && target.closest('#lang-toggle, [onclick*="toggleLanguage"]')) ||
       text.indexOf('English') !== -1 ||
       text.indexOf('Español') !== -1 ||
       text.indexOf('Spanish') !== -1 ||
@@ -15520,6 +15667,7 @@ window.addEventListener('load', function(){
     if (!node) return;
 
     if (node.nodeType === 3) {
+      if (node.parentElement && node.parentElement.closest && node.parentElement.closest('.schedule-header')) return;
       var next = translateBillScheduleText(node.textContent);
       if (next !== node.textContent) node.textContent = next;
       return;
@@ -15527,6 +15675,7 @@ window.addEventListener('load', function(){
 
     if (node.nodeType !== 1) return;
     if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE') return;
+    if (node.closest && node.closest('.schedule-header')) return;
 
     if (node.placeholder) {
       var ph = translateBillScheduleText(node.placeholder);
@@ -15691,6 +15840,7 @@ window.addEventListener('load', function(){
     if (!node) return;
 
     if (node.nodeType === 3) {
+      if (node.parentElement && node.parentElement.closest && node.parentElement.closest('.schedule-header')) return;
       var next = applyPairs(node.textContent);
       if (next !== node.textContent) node.textContent = next;
       return;
@@ -15698,6 +15848,7 @@ window.addEventListener('load', function(){
 
     if (node.nodeType !== 1) return;
     if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE') return;
+    if (node.closest && node.closest('.schedule-header')) return;
 
     if (node.placeholder) {
       var nextPh = applyPairs(node.placeholder);
@@ -15885,6 +16036,7 @@ window.addEventListener('load', function(){
     if (!node) return;
 
     if (node.nodeType === 3) {
+      if (node.parentElement && node.parentElement.closest && node.parentElement.closest('.schedule-header')) return;
       var next = translateText(node.textContent);
       if (next !== node.textContent) node.textContent = next;
       return;
@@ -15892,6 +16044,7 @@ window.addEventListener('load', function(){
 
     if (node.nodeType !== 1) return;
     if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE') return;
+    if (node.closest && node.closest('.schedule-header')) return;
 
     if (node.placeholder) {
       var ph = translateText(node.placeholder);
@@ -17863,7 +18016,9 @@ window.addEventListener('load', function(){
       e.target.closest('#tab-resources') ||
       e.target.closest('#tab-networth') ||
       e.target.closest('#tab-negotiate') ||
-      e.target.closest('#tab-streaks')
+      e.target.closest('#tab-streaks') ||
+      e.target.closest('#tab-loancalc') ||
+      e.target.closest('#bsub-schedule')
     ));
   }
   document.addEventListener('click', function(e){ if (!shouldSkipPolishEvent(e)) schedule(); }, true);
@@ -18073,7 +18228,9 @@ window.addEventListener('load', function(){
       e.target.closest('#tab-resources') ||
       e.target.closest('#tab-networth') ||
       e.target.closest('#tab-negotiate') ||
-      e.target.closest('#tab-streaks')
+      e.target.closest('#tab-streaks') ||
+      e.target.closest('#tab-loancalc') ||
+      e.target.closest('#bsub-schedule')
     ));
   }
   document.addEventListener('click', function(e){ if (!shouldSkipCleanupEvent(e)) schedule(); }, true);
@@ -19355,6 +19512,18 @@ window.addEventListener('load', function(){
   window.fintrailRefreshAccountBannerIcons = refreshAccountBannerIcons;
   window.fintrailRefreshDebtMethodIcons = refreshDebtMethodIcons;
 
+  function shouldSkipActiveSectionIconRefresh(name){
+    try {
+      var active = document.querySelector('.tab-section.visible');
+      var activeId = active ? active.id : '';
+      if (activeId === 'tab-resources' && name === 'renderResources') return true;
+      if (activeId === 'tab-streaks' && ['renderLevelCard', 'renderStreaks', 'renderBadges', 'renderActivityFeed'].includes(name)) return true;
+      if (activeId === 'tab-negotiate' && ['selectScriptType', 'selectDebtType', 'generateNegotiationScript'].includes(name)) return true;
+      if (activeId === 'tab-budget' && document.getElementById('bsub-schedule')?.classList.contains('visible') && ['renderSchedule', 'renderBillList'].includes(name)) return true;
+    } catch(e) {}
+    return false;
+  }
+
   [
     "renderLevelCard",
     "renderStreaks",
@@ -19379,7 +19548,7 @@ window.addEventListener('load', function(){
     if (typeof original !== 'function' || original._ftIconWrapped) return;
     window[name] = function(){
       var result = original.apply(this, arguments);
-      scheduleIconRefresh();
+      if (!shouldSkipActiveSectionIconRefresh(name)) scheduleIconRefresh();
       return result;
     };
     window[name]._ftIconWrapped = true;
