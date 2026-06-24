@@ -4511,7 +4511,7 @@
         <div class="nav-dropdown-section" data-en="Planning" data-es="Planificación">Planning</div>
         <button class="nav-dropdown-item" onclick="navTo('savings', this)">
           <span class="ndi-icon">🎯</span>
-          <div class="ndi-info"><span class="ndi-label" data-en="Savings Goals" data-es="Metas de Ahorro" data-en="Savings Goals" data-es="Metas de Ahorro">Savings Goals</span><span class="ndi-desc" data-en="Track your goals" data-es="Rastrea tus metas">Track your goals</span></div>
+          <div class="ndi-info"><span class="ndi-label" data-en="Savings Goals" data-es="Metas de Ahorro">Savings Goals</span><span class="ndi-desc" data-en="Track your goals" data-es="Rastrea tus metas">Track your goals</span></div>
         </button>
         <button class="nav-dropdown-item" onclick="navTo('invest', this)">
           <span class="ndi-icon">📈</span>
@@ -12489,6 +12489,11 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
         // Only update direct text nodes (e.g. nav labels with PRO pills)
         // But skip <p> tags with mixed content — handled by data-es-html above
         if (tag === 'p') return;
+        if (el.classList && el.classList.contains('ndi-label')) {
+          const directText = Array.from(el.childNodes).find(node => node.nodeType === 3);
+          if (directText) directText.textContent = translation + ' ';
+          return;
+        }
         if (/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]\uFE0F?/u.test(translation || '')) {
           Array.from(el.children).forEach(child => {
             if (child.classList && child.classList.contains('ft-inline-icon')) child.remove();
@@ -12516,7 +12521,19 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const navMap = { 'nav-budget': t['nav-budget'], 'nav-planning': t['nav-planning'], 'nav-tools': t['nav-tools'], 'nav-insights': t['nav-insights'] };
     Object.entries(navMap).forEach(([id, label]) => {
       const btn = document.getElementById(id);
-      if (btn && label) btn.innerHTML = `${label} <span class="nav-arrow">▾</span>`;
+      if (btn && label) {
+        const text = label.replace(/▾/g, '').trim();
+        let textEl = btn.querySelector(':scope > .nav-group-label');
+        let arrowEl = btn.querySelector(':scope > .nav-arrow');
+        if (textEl) textEl.textContent = text;
+        else if (!btn.querySelector('.ft-stable-inline-text')) btn.firstChild && btn.firstChild.nodeType === 3 ? btn.firstChild.textContent = text + ' ' : btn.insertBefore(document.createTextNode(text + ' '), btn.firstChild);
+        if (!arrowEl) {
+          arrowEl = document.createElement('span');
+          arrowEl.className = 'nav-arrow';
+          arrowEl.textContent = '▾';
+          btn.appendChild(arrowEl);
+        }
+      }
     });
 
     // Hero
@@ -18448,14 +18465,35 @@ window.addEventListener('load', function(){
     Object.keys(navGroups).forEach(function(id){
       var btn = document.getElementById(id);
       if (!btn) return;
-      var arrow = btn.querySelector('.nav-arrow') ? '<span class="nav-arrow">▾</span>' : '<span class="nav-arrow">▾</span>';
       var label = cleanLabel(btn.textContent.replace('▾',''));
-      var html = icon(navGroups[id]) + '<span>' + label + '</span> ' + arrow;
-      if (btn.innerHTML !== html) btn.innerHTML = html;
+      var iconEl = btn.querySelector(':scope > .ft-stable-inline-icon');
+      var labelEl = btn.querySelector(':scope > .nav-group-label');
+      var arrowEl = btn.querySelector(':scope > .nav-arrow');
+      if (!iconEl) {
+        iconEl = document.createElement('span');
+        iconEl.className = 'ft-stable-inline-icon';
+        btn.insertBefore(iconEl, btn.firstChild);
+      }
+      replaceSingleIcon(iconEl, navGroups[id]);
+      if (!labelEl) {
+        labelEl = document.createElement('span');
+        labelEl.className = 'nav-group-label';
+        var textNode = Array.from(btn.childNodes).find(function(node){ return node.nodeType === 3 && node.textContent.trim(); });
+        if (textNode) textNode.remove();
+        btn.insertBefore(labelEl, arrowEl || null);
+      }
+      if (labelEl.textContent !== label) labelEl.textContent = label;
+      if (!arrowEl) {
+        arrowEl = document.createElement('span');
+        arrowEl.className = 'nav-arrow';
+        arrowEl.textContent = '▾';
+        btn.appendChild(arrowEl);
+      }
     });
 
     document.querySelectorAll('.nav-dropdown-item .ndi-icon').forEach(function(iconEl){
       var item = iconEl.closest('.nav-dropdown-item');
+      if (iconEl.querySelector('.ft-lucide-icon')) return;
       replaceSingleIcon(iconEl, pickByText(item ? item.textContent : ''));
     });
 
