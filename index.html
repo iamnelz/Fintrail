@@ -4256,6 +4256,7 @@
 <style>
 /* === FINAL SAVINGS GOALS CATEGORY REMOVAL === */
 #tab-goals .goal-category,#goals-list .goal-category,#goals-grid .goal-category,.goal-card .goal-category{display:none!important;}
+#tab-savings .goal-category{display:none!important;}
 #goal-cat,#goal-category{display:none!important;}
 </style>
 </head>
@@ -8556,8 +8557,11 @@ Guidelines:
       ? new Date(parts[0], parts[1] - 1, parts[2])
       : new Date(dateValue);
     if (!(date instanceof Date) || isNaN(date.getTime())) return isSavingsGoalsSpanish() ? 'Sin fecha límite' : 'No deadline';
-    const locale = isSavingsGoalsSpanish() ? 'es-US' : 'en-US';
-    return date.toLocaleDateString(locale, { month: 'short', year: 'numeric' });
+    if (isSavingsGoalsSpanish()) {
+      const monthsEs = ['ene.', 'feb.', 'mar.', 'abr.', 'may.', 'jun.', 'jul.', 'ago.', 'sept.', 'oct.', 'nov.', 'dic.'];
+      return `${monthsEs[date.getMonth()]} ${date.getFullYear()}`;
+    }
+    return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
   }
 
   function goalColor(pct) {
@@ -13043,6 +13047,15 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     safeSet('fintrail_lang', currentLang);
     window.__fintrailLanguageSwitching = true;
     applyLanguage();
+    if (document.getElementById('tab-savings')?.classList.contains('visible') && typeof renderGoals === 'function') {
+      renderGoals();
+      requestAnimationFrame(function(){
+        try {
+          renderGoals();
+          if (typeof window.fintrailSavingsGoalCardTrackingLanguage === 'function') window.fintrailSavingsGoalCardTrackingLanguage();
+        } catch(e) {}
+      });
+    }
     if (typeof refreshVisibleLocalizedUI === 'function') refreshVisibleLocalizedUI();
     if (typeof window.fintrailRefreshDesignIcons === 'function') requestAnimationFrame(window.fintrailRefreshDesignIcons);
     if (typeof updateProfileSubscriptionUI === 'function') updateProfileSubscriptionUI();
@@ -16279,7 +16292,7 @@ window.addEventListener('load', function(){
     if (applying) return;
     applying = true;
     try {
-      var root = document.getElementById('tab-goals');
+      var root = document.getElementById('tab-savings') || document.getElementById('tab-goals');
       if (!root) return;
 
       root.querySelectorAll('select').forEach(function(select){
@@ -16347,7 +16360,7 @@ window.addEventListener('load', function(){
 
   function startObserver(){
     if (observerStarted) return;
-    var root = document.getElementById('tab-goals');
+    var root = document.getElementById('tab-savings') || document.getElementById('tab-goals');
     if (!root) return;
     observerStarted = true;
 
@@ -16376,7 +16389,7 @@ window.addEventListener('load', function(){
     var t = e.target;
     if (!t) return;
 
-    if ((t.closest && t.closest('#tab-goals')) || /English|Español|Spanish|^EN|^ES|Savings Goals|Metas/.test(String(t.textContent || ''))) {
+    if ((t.closest && (t.closest('#tab-savings') || t.closest('#tab-goals'))) || /English|Español|Spanish|^EN|^ES|Savings Goals|Metas/.test(String(t.textContent || ''))) {
       schedule();
       setTimeout(apply, 250);
       setTimeout(apply, 700);
@@ -16384,14 +16397,14 @@ window.addEventListener('load', function(){
   });
 
   document.addEventListener('change', function(e){
-    if (e.target && e.target.closest && e.target.closest('#tab-goals')) {
+    if (e.target && e.target.closest && (e.target.closest('#tab-savings') || e.target.closest('#tab-goals'))) {
       schedule();
       setTimeout(apply, 250);
     }
   });
 
   document.addEventListener('input', function(e){
-    if (e.target && e.target.closest && e.target.closest('#tab-goals')) schedule();
+    if (e.target && e.target.closest && (e.target.closest('#tab-savings') || e.target.closest('#tab-goals'))) schedule();
   });
 })();
 </script>
@@ -17157,6 +17170,7 @@ window.addEventListener('load', function(){
     ).toLowerCase();
 
     var insideGoals = !!(select.closest && (
+      select.closest("#tab-savings") ||
       select.closest("#tab-goals") ||
       select.closest('[id*="goal"]') ||
       select.closest('[class*="goal"]')
@@ -17270,6 +17284,7 @@ window.addEventListener('load', function(){
 
     try {
       var root =
+        document.getElementById("tab-savings") ||
         document.getElementById("tab-goals") ||
         document.querySelector('[id*="goal"]') ||
         document.body;
@@ -17353,6 +17368,7 @@ window.addEventListener('load', function(){
     if (!target) return;
 
     if ((target.closest && (
+      target.closest("#tab-savings") ||
       target.closest("#tab-goals") ||
       target.closest('[id*="goal"]') ||
       target.closest('[class*="goal"]')
@@ -17365,6 +17381,7 @@ window.addEventListener('load', function(){
 
   document.addEventListener("change", function(e){
     if (e.target && e.target.closest && (
+      e.target.closest("#tab-savings") ||
       e.target.closest("#tab-goals") ||
       e.target.closest('[id*="goal"]') ||
       e.target.closest('[class*="goal"]')
@@ -18109,7 +18126,7 @@ window.addEventListener('load', function(){
   }
 
   function fixSavingsGoals(){
-    var root = document.getElementById('tab-goals');
+    var root = document.getElementById('tab-savings') || document.getElementById('tab-goals');
     if (!root) return;
     root.querySelectorAll('.goal-remaining').forEach(function(el){
       var amount = (el.textContent || '').match(/\$[0-9,.]+/);
