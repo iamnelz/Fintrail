@@ -518,6 +518,8 @@
 
   /* LOAN PAYMENT CALCULATOR */
   .loan-calc-layout { display:grid; grid-template-columns:minmax(0,1fr) minmax(300px,0.9fr); gap:1.25rem; align-items:start; }
+  .loan-calc-title { display:flex; align-items:center; gap:0.45rem; }
+  .loan-calc-title .ft-lucide-icon { width:22px; height:22px; color:var(--accent); stroke:var(--accent); }
   .loan-calc-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.85rem; }
   .loan-result-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:1.25rem; }
   .loan-result-card h2 { font-family:'Playfair Display',serif; font-size:1.15rem; margin-bottom:1rem; }
@@ -1731,11 +1733,12 @@
   .nav-group:hover .nav-arrow { transform: rotate(180deg); }
 
   .nav-dropdown {
-    position: absolute; top: 100%; left: 0; margin-top: 4px;
+    position: absolute; top: 100%; left: 0; margin-top: 0;
     background: #fff; border: 1px solid var(--border);
     border-radius: 12px; padding: 0.5rem;
     min-width: 220px; box-shadow: 0 8px 30px rgba(0,0,0,0.12);
     display: none; z-index: 200;
+    transform: translateZ(0);
   }
   @keyframes dropIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
   .nav-group:hover .nav-dropdown,
@@ -5655,8 +5658,8 @@
   <div class="tab-section" id="tab-loancalc">
     <div class="loan-calc-layout">
       <div class="card">
-        <h2 data-en="🧮 Loan Payment Calculator" data-es="🧮 Calculadora de Pagos de Préstamo">🧮 Loan Payment Calculator</h2>
-        <p style="font-size:0.82rem;color:var(--text-soft);margin-bottom:1.25rem;line-height:1.6;" data-en="Estimate monthly payments, total interest, payoff date, and how extra monthly payments can shorten your loan." data-es="Estima pagos mensuales, interés total, fecha de pago final y cómo los pagos adicionales pueden acortar tu préstamo.">Estimate monthly payments, total interest, payoff date, and how extra monthly payments can shorten your loan.</p>
+        <h2 class="loan-calc-title"><span class="ft-stable-inline-icon" data-ft-stable-icon="calculator"></span><span data-en="Loan Payment Calculator" data-es="Calculadora de Pagos de Préstamo">Loan Payment Calculator</span></h2>
+        <p class="loan-calc-description" style="font-size:0.82rem;color:var(--text-soft);margin-bottom:1.25rem;line-height:1.6;" data-en="Estimate monthly payments, total interest, payoff date, and how extra monthly payments can shorten your loan." data-es="Estima pagos mensuales, interés total, fecha de pago final y cómo los pagos adicionales pueden acortar tu préstamo.">Estimate monthly payments, total interest, payoff date, and how extra monthly payments can shorten your loan.</p>
         <div class="loan-error" id="loan-error"></div>
         <div class="loan-calc-grid">
           <div class="form-group">
@@ -6992,6 +6995,8 @@
   }
 
   function showApp(user) {
+    authSignInInProgress = false;
+    setAuthLoading('si-btn', false);
     hidePublicHome();
     document.getElementById('auth-screen').style.display = 'none';
     nwLoaded = false; // Reset so Supabase NW data loads fresh on login
@@ -7052,16 +7057,39 @@
     }
   }
 
+  let authSignInInProgress = false;
+
   // SIGN IN
   async function signIn() {
+    if (authSignInInProgress) return;
     const email = document.getElementById('si-email').value.trim();
     const password = document.getElementById('si-password').value;
-    if (!email || !password) { showAuthMsg('Please enter your email and password.', 'error'); return; }
+    const isEs = currentLang === 'es';
+    if (!email || !password) {
+      showAuthMsg(isEs ? 'Ingresa tu correo electrónico y contraseña.' : 'Please enter your email and password.', 'error');
+      return;
+    }
+    authSignInInProgress = true;
+    hideAuthMsg();
     setAuthLoading('si-btn', true);
-    if (!sbClient) { showAuthMsg('Configure Supabase credentials to enable real auth.', 'error'); setAuthLoading('si-btn', false); return; }
-    const { error } = await sbClient.auth.signInWithPassword({ email, password });
-    setAuthLoading('si-btn', false);
-    if (error) showAuthMsg(error.message, 'error');
+    if (!sbClient) {
+      showAuthMsg(isEs ? 'Configura las credenciales de Supabase para habilitar el inicio de sesión.' : 'Configure Supabase credentials to enable real auth.', 'error');
+      authSignInInProgress = false;
+      setAuthLoading('si-btn', false);
+      return;
+    }
+    try {
+      const { error } = await sbClient.auth.signInWithPassword({ email, password });
+      if (error) {
+        showAuthMsg(error.message, 'error');
+        authSignInInProgress = false;
+        setAuthLoading('si-btn', false);
+      }
+    } catch (err) {
+      showAuthMsg(err?.message || (isEs ? 'No se pudo iniciar sesión. Inténtalo de nuevo.' : 'Could not sign in. Please try again.'), 'error');
+      authSignInInProgress = false;
+      setAuthLoading('si-btn', false);
+    }
   }
 
   // SIGN UP
@@ -7116,6 +7144,10 @@
     document.getElementById('form-signup').style.display = tab === 'signup' ? 'flex' : 'none';
     document.getElementById('tab-signin').classList.toggle('active', tab === 'signin');
     document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+    if (tab !== 'signin') {
+      authSignInInProgress = false;
+      setAuthLoading('si-btn', false);
+    }
     hideAuthMsg();
   }
   function showAuthMsg(msg, type) {
@@ -7125,8 +7157,14 @@
   function hideAuthMsg() { document.getElementById('auth-msg').style.display = 'none'; }
   function setAuthLoading(btnId, loading) {
     const btn = document.getElementById(btnId);
+    if (!btn) return;
     btn.disabled = loading;
-    btn.textContent = loading ? 'Please wait...' : (btnId === 'si-btn' ? 'Sign In' : 'Create Free Account');
+    const isEs = currentLang === 'es';
+    if (btnId === 'si-btn') {
+      btn.textContent = loading ? (isEs ? 'Iniciando sesión...' : 'Logging in...') : (isEs ? 'Iniciar Sesión' : 'Sign In');
+    } else {
+      btn.textContent = loading ? (isEs ? 'Creando cuenta...' : 'Creating account...') : (isEs ? 'Crear Cuenta Gratis' : 'Create Free Account');
+    }
   }
 
   // DATA PERSISTENCE — save & load from Supabase
@@ -8074,6 +8112,14 @@
   }
 
   function refreshLoanPaymentCalculatorLanguage() {
+    const titleText = document.querySelector('#tab-loancalc .loan-calc-title span[data-en]');
+    if (titleText) titleText.textContent = titleText.getAttribute(`data-${currentLang}`) || titleText.getAttribute('data-en');
+    const descText = document.querySelector('#tab-loancalc .loan-calc-description');
+    if (descText) descText.textContent = descText.getAttribute(`data-${currentLang}`) || descText.getAttribute('data-en');
+    const titleIcon = document.querySelector('#tab-loancalc .loan-calc-title .ft-stable-inline-icon');
+    if (titleIcon && typeof replaceSingleIcon === 'function' && !titleIcon.querySelector('.ft-lucide-icon')) {
+      replaceSingleIcon(titleIcon, 'calculator');
+    }
     const amount = document.getElementById('loan-amount')?.value;
     const rate = document.getElementById('loan-rate')?.value;
     const term = document.getElementById('loan-term')?.value;
@@ -10119,7 +10165,11 @@ Guidelines:
 
     const badge = document.getElementById('profile-plan-badge');
     if (isPro) {
-      badge.innerHTML = `<span class="ft-reference-icon" data-fixed-icon="${level.badge || 'medal'}"></span><span>${level.name} · Pro</span>`;
+      if (level.tier === 'gold') {
+        badge.textContent = `${level.name} · Pro`;
+      } else {
+        badge.innerHTML = `<span class="ft-reference-icon" data-fixed-icon="${level.badge || 'medal'}"></span><span>${level.name} · Pro</span>`;
+      }
       badge.classList.add('pro');
       applyAccountBadgeTierClass(badge, level.tier);
     } else {
@@ -18145,6 +18195,8 @@ window.addEventListener('load', function(){
     border-radius:16px;
     box-shadow:0 20px 45px rgba(17,24,39,0.14);
     overflow:hidden;
+    margin-top:0;
+    animation:none !important;
   }
   .nav-dropdown-section {
     color:var(--muted);
@@ -19124,7 +19176,7 @@ window.addEventListener('load', function(){
     });
 
     var leadingSelectors = [
-      'button:not(.mobile-nav-tile):not(.nav-group-btn)',
+      'button:not(.mobile-nav-tile):not(.nav-group-btn):not(.nav-dropdown-item)',
       'h1', 'h2', 'h3', 'h4',
       '.filter-btn', '.method-btn', '.step-impact',
       '.fm-badge-large', '.fm-visible-badge', '#fm-modal-title',
@@ -19138,8 +19190,17 @@ window.addEventListener('load', function(){
     });
   }
 
+  function isTopNavDropdownOpen(){
+    try {
+      return !!document.querySelector('nav .nav-group:hover, nav .nav-group:focus-within');
+    } catch(e) {
+      return false;
+    }
+  }
+
   function refreshFintrailIcons(){
-    refreshNavIcons();
+    var navOpen = isTopNavDropdownOpen();
+    if (!navOpen) refreshNavIcons();
     refreshBudgetSubTabIcons();
     refreshHeroChips();
     refreshSavingsGoalIcons();
@@ -19180,6 +19241,7 @@ window.addEventListener('load', function(){
     if (refreshTimer) return;
     refreshTimer = setTimeout(function(){
       refreshTimer = null;
+      if (isTopNavDropdownOpen()) return;
       refreshFintrailIcons();
     }, 60);
   }
