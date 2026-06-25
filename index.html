@@ -734,6 +734,7 @@
   .goal-actions { display:flex; gap:0.4rem; }
   .goal-action-btn { background:none; border:none; cursor:pointer; font-size:0.85rem; color:var(--muted); padding:0.2rem; border-radius:4px; transition:color 0.15s; }
   .goal-action-btn:hover { color:var(--dark); }
+  .goal-action-btn.edit:hover { color:var(--accent); }
   .goal-action-btn.del:hover { color:var(--danger); }
 
   .goal-amounts { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.5rem; }
@@ -767,6 +768,20 @@
   }
 
   .new-goal-form .form-row { gap:0.65rem; }
+  .goal-form-actions { display:flex; gap:0.6rem; align-items:center; flex-wrap:wrap; }
+  .goal-cancel-btn {
+    background:#fff;
+    color:var(--muted);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:0.65rem 1rem;
+    font-family:'Sora',sans-serif;
+    font-size:0.85rem;
+    font-weight:700;
+    cursor:pointer;
+    transition:all 0.18s ease;
+  }
+  .goal-cancel-btn:hover { border-color:var(--accent); color:var(--accent); }
   .emoji-picker { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.3rem; }
   .emoji-opt {
     background:var(--bg); border:1.5px solid var(--border); border-radius:8px;
@@ -5356,7 +5371,10 @@
             <label data-en="Target Date (optional)" data-es="Fecha Objetivo (opcional)">Target Date (optional)</label>
             <input type="date" id="g-date">
           </div>
-<button class="add-btn" onclick="addGoal()">+ Add Goal</button>
+          <div class="goal-form-actions">
+            <button class="add-btn" id="goal-submit-btn" onclick="addGoal()">+ Add Goal</button>
+            <button class="goal-cancel-btn" id="goal-cancel-edit-btn" onclick="cancelGoalEdit()" style="display:none" data-en="Cancel" data-es="Cancelar">Cancel</button>
+          </div>
         </div>
       </div>
     </div>
@@ -8504,11 +8522,46 @@ Guidelines:
   // SAVINGS GOALS
   let goals = [];
   let selectedEmoji = '🎯';
+  let editingGoalId = null;
 
   function selectEmoji(el) {
     document.querySelectorAll('.emoji-opt').forEach(e => e.classList.remove('selected'));
     el.classList.add('selected');
     selectedEmoji = (el.querySelector('.ft-emoji-value')?.textContent || el.textContent || '').trim() || '🎯';
+  }
+
+  function setGoalFormMode(mode) {
+    const isEdit = mode === 'edit';
+    const isEs = isSavingsGoalsSpanish();
+    const btn = document.getElementById('goal-submit-btn');
+    const cancel = document.getElementById('goal-cancel-edit-btn');
+    const title = document.querySelector('.new-goal-form h2');
+    if (btn) btn.textContent = isEdit ? (isEs ? 'Guardar Cambios' : 'Save Changes') : (isEs ? '+ Agregar Meta' : '+ Add Goal');
+    if (cancel) cancel.style.display = isEdit ? 'inline-flex' : 'none';
+    if (title) title.textContent = isEdit ? (isEs ? 'Editar Meta' : 'Edit Goal') : (isEs ? 'Agregar Nueva Meta' : 'Add New Goal');
+  }
+
+  function resetGoalForm() {
+    document.getElementById('g-name').value = '';
+    document.getElementById('g-target').value = '';
+    document.getElementById('g-saved').value = '';
+    document.getElementById('g-date').value = '';
+    editingGoalId = null;
+    selectedEmoji = '🎯';
+    document.querySelectorAll('.emoji-opt').forEach((opt, idx) => opt.classList.toggle('selected', idx === 0));
+    setGoalFormMode('add');
+  }
+
+  function selectGoalIconValue(icon) {
+    selectedEmoji = icon || '🎯';
+    let matched = false;
+    document.querySelectorAll('.emoji-opt').forEach((opt) => {
+      const value = (opt.querySelector('.ft-emoji-value')?.textContent || opt.textContent || '').trim();
+      const isMatch = value === selectedEmoji;
+      opt.classList.toggle('selected', isMatch);
+      if (isMatch) matched = true;
+    });
+    if (!matched) document.querySelectorAll('.emoji-opt').forEach((opt, idx) => opt.classList.toggle('selected', idx === 0));
   }
 
   function addGoal() {
@@ -8518,18 +8571,47 @@ Guidelines:
     const date = document.getElementById('g-date').value;
     const category = document.getElementById('g-category').value;
     if (!name || isNaN(target) || target <= 0) { alert('Please enter a goal name and target amount.'); return; }
-    goals.push({ id: String(Date.now()), name, icon: selectedEmoji, target, saved: Math.min(saved, target), date, category });
-    document.getElementById('g-name').value = '';
-    document.getElementById('g-target').value = '';
-    document.getElementById('g-saved').value = '';
-    document.getElementById('g-date').value = '';
+    if (editingGoalId) {
+      const goal = goals.find(g => String(g.id) === String(editingGoalId));
+      if (goal) {
+        goal.name = name;
+        goal.icon = selectedEmoji;
+        goal.target = target;
+        goal.saved = Math.min(saved, target);
+        goal.date = date;
+        goal.category = category;
+      }
+    } else {
+      goals.push({ id: String(Date.now()), name, icon: selectedEmoji, target, saved: Math.min(saved, target), date, category });
+    }
     // Save to localStorage immediately (sync) before async Supabase write
     const _gUid = currentUser?.id || 'demo';
     safeSet('fintrail_goals_' + _gUid, JSON.stringify(goals));
     safeSet('fintrail_goals_ts_' + _gUid, String(Date.now()));
+    const wasEditing = !!editingGoalId;
+    resetGoalForm();
     renderGoals(); saveUserData();
     refreshHealthScoreAfterDataChange();
-    awardXPForAction('goal');
+    if (!wasEditing) awardXPForAction('goal');
+  }
+
+  function editGoal(id) {
+    const goal = goals.find(g => String(g.id) === String(id));
+    if (!goal) return;
+    editingGoalId = String(goal.id);
+    document.getElementById('g-name').value = goal.name || '';
+    document.getElementById('g-target').value = goal.target || '';
+    document.getElementById('g-saved').value = goal.saved || 0;
+    document.getElementById('g-date').value = goal.date || '';
+    const categoryInput = document.getElementById('g-category');
+    if (categoryInput) categoryInput.value = goal.category || categoryInput.value || '';
+    selectGoalIconValue(goal.icon || '🎯');
+    setGoalFormMode('edit');
+    document.querySelector('.new-goal-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function cancelGoalEdit() {
+    resetGoalForm();
   }
 
   function deleteGoal(id) {
@@ -8617,10 +8699,12 @@ Guidelines:
 
   function updateSavingsGoalsLanguage() {
     if (typeof renderGoals === 'function') renderGoals();
+    setGoalFormMode(editingGoalId ? 'edit' : 'add');
     if (typeof normalizeSavingsGoalDeadlineLabels === 'function') normalizeSavingsGoalDeadlineLabels();
     requestAnimationFrame(function(){
       try {
         if (typeof renderGoals === 'function') renderGoals();
+        setGoalFormMode(editingGoalId ? 'edit' : 'add');
         if (typeof window.fintrailSavingsGoalCardTrackingLanguage === 'function') window.fintrailSavingsGoalCardTrackingLanguage();
         if (typeof normalizeSavingsGoalDeadlineLabels === 'function') normalizeSavingsGoalDeadlineLabels();
       } catch(e) {}
@@ -8683,6 +8767,7 @@ Guidelines:
             </div>
           </div>
           <div class="goal-actions">
+            <button class="goal-action-btn edit" onclick="editGoal('${g.id}')" title="${isEs ? 'Editar' : 'Edit'}" aria-label="${isEs ? 'Editar meta' : 'Edit goal'}">✎</button>
             <button class="goal-action-btn del" onclick="deleteGoal('${g.id}')" title="Delete">✕</button>
           </div>
         </div>
