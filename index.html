@@ -782,6 +782,89 @@
     transition:all 0.18s ease;
   }
   .goal-cancel-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .goal-edit-overlay {
+    position:fixed;
+    inset:0;
+    z-index:2500;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:1rem;
+    background:rgba(15,17,21,0.62);
+    backdrop-filter:blur(6px);
+  }
+  .goal-edit-overlay.visible { display:flex; }
+  .goal-edit-modal {
+    width:100%;
+    max-width:520px;
+    max-height:92vh;
+    overflow:auto;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:20px;
+    box-shadow:0 28px 80px rgba(0,0,0,0.32);
+  }
+  .goal-edit-header {
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:1rem;
+    padding:1.2rem 1.3rem;
+    background:linear-gradient(135deg,#151515 0%,#1F2933 72%,#E53935 100%);
+    color:#fff;
+  }
+  .goal-edit-header h2 {
+    margin:0;
+    font-family:'Playfair Display',serif;
+    font-size:1.35rem;
+    color:#fff;
+  }
+  .goal-edit-header p {
+    margin:0.2rem 0 0;
+    color:rgba(255,255,255,0.78);
+    font-size:0.82rem;
+  }
+  .goal-edit-close {
+    border:none;
+    background:rgba(255,255,255,0.12);
+    color:#fff;
+    width:32px;
+    height:32px;
+    border-radius:999px;
+    cursor:pointer;
+    font-size:1rem;
+    font-weight:900;
+  }
+  .goal-edit-body { padding:1.25rem; display:flex; flex-direction:column; gap:0.9rem; }
+  .goal-edit-actions { display:flex; gap:0.75rem; justify-content:flex-end; padding:0 1.25rem 1.25rem; flex-wrap:wrap; }
+  .goal-edit-save {
+    background:var(--accent);
+    color:#fff;
+    border:none;
+    border-radius:12px;
+    padding:0.7rem 1rem;
+    font-family:'Sora',sans-serif;
+    font-weight:800;
+    cursor:pointer;
+    box-shadow:0 10px 20px rgba(229,57,53,0.22);
+  }
+  .goal-edit-cancel {
+    background:#fff;
+    color:var(--muted);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:0.7rem 1rem;
+    font-family:'Sora',sans-serif;
+    font-weight:800;
+    cursor:pointer;
+  }
+  .goal-edit-save:hover { background:#C92F2B; }
+  .goal-edit-cancel:hover { border-color:var(--accent); color:var(--accent); }
+  @media (max-width:560px) {
+    .goal-edit-modal { max-height:94vh; border-radius:16px; }
+    .goal-edit-actions { flex-direction:column-reverse; }
+    .goal-edit-save, .goal-edit-cancel { width:100%; }
+  }
   .emoji-picker { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.3rem; }
   .emoji-opt {
     background:var(--bg); border:1.5px solid var(--border); border-radius:8px;
@@ -4442,7 +4525,58 @@
 
     </div>
   </div>
-</div>
+  </div>
+
+  <div class="goal-edit-overlay" id="goal-edit-overlay" onclick="closeEditGoalModalOutside(event)" aria-modal="true" role="dialog" aria-labelledby="edit-goal-title">
+    <div class="goal-edit-modal">
+      <div class="goal-edit-header">
+        <div>
+          <h2 id="edit-goal-title" data-en="Edit Goal" data-es="Editar Meta">Edit Goal</h2>
+          <p data-en="Update this savings goal and save your changes." data-es="Actualiza esta meta de ahorro y guarda tus cambios.">Update this savings goal and save your changes.</p>
+        </div>
+        <button type="button" class="goal-edit-close" onclick="closeEditGoalModal()" aria-label="Close">×</button>
+      </div>
+      <div class="goal-edit-body">
+        <div class="form-group">
+          <label data-en="Goal Name" data-es="Nombre de la Meta">Goal Name</label>
+          <input type="text" id="eg-name" placeholder="e.g. Emergency Fund, Vacation">
+        </div>
+        <div class="form-group">
+          <label data-en="Icon" data-es="Icono">Icon</label>
+          <div class="emoji-picker" id="edit-goal-emoji-picker">
+            <div class="emoji-opt selected" onclick="selectEditGoalIcon(this)">🎯</div>
+            <div class="emoji-opt" onclick="selectEditGoalIcon(this)">🏠</div>
+            <div class="emoji-opt" onclick="selectEditGoalIcon(this)">🚗</div>
+            <div class="emoji-opt" onclick="selectEditGoalIcon(this)">✈️</div>
+            <div class="emoji-opt" onclick="selectEditGoalIcon(this)">🎓</div>
+            <div class="emoji-opt" onclick="selectEditGoalIcon(this)">💍</div>
+            <div class="emoji-opt" onclick="selectEditGoalIcon(this)">👶</div>
+            <div class="emoji-opt" onclick="selectEditGoalIcon(this)">💻</div>
+            <div class="emoji-opt" onclick="selectEditGoalIcon(this)">🏥</div>
+            <div class="emoji-opt" onclick="selectEditGoalIcon(this)">🐾</div>
+            <div class="emoji-opt" onclick="selectEditGoalIcon(this)">💰</div>
+            <div class="emoji-opt" onclick="selectEditGoalIcon(this)">🌟</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label data-en="Target Amount ($)" data-es="Monto Objetivo ($)">Target Amount ($)</label>
+          <input type="number" id="eg-target" placeholder="e.g. 5000" min="1">
+        </div>
+        <div class="form-group">
+          <label data-en="Already Saved ($)" data-es="Ya Ahorrado ($)">Already Saved ($)</label>
+          <input type="number" id="eg-saved" placeholder="0" min="0">
+        </div>
+        <div class="form-group">
+          <label data-en="Target Date (optional)" data-es="Fecha Objetivo (opcional)">Target Date (optional)</label>
+          <input type="date" id="eg-date">
+        </div>
+      </div>
+      <div class="goal-edit-actions">
+        <button type="button" class="goal-edit-cancel" onclick="closeEditGoalModal()" data-en="Cancel" data-es="Cancelar">Cancel</button>
+        <button type="button" class="goal-edit-save" onclick="saveEditedGoal()" data-en="Save Changes" data-es="Guardar Cambios">Save Changes</button>
+      </div>
+    </div>
+  </div>
 
 
 
@@ -8523,6 +8657,7 @@ Guidelines:
   let goals = [];
   let selectedEmoji = '🎯';
   let editingGoalId = null;
+  let selectedEditEmoji = '🎯';
 
   function selectEmoji(el) {
     document.querySelectorAll('.emoji-opt').forEach(e => e.classList.remove('selected'));
@@ -8546,22 +8681,21 @@ Guidelines:
     document.getElementById('g-target').value = '';
     document.getElementById('g-saved').value = '';
     document.getElementById('g-date').value = '';
-    editingGoalId = null;
     selectedEmoji = '🎯';
-    document.querySelectorAll('.emoji-opt').forEach((opt, idx) => opt.classList.toggle('selected', idx === 0));
+    document.querySelectorAll('#emoji-picker .emoji-opt').forEach((opt, idx) => opt.classList.toggle('selected', idx === 0));
     setGoalFormMode('add');
   }
 
   function selectGoalIconValue(icon) {
     selectedEmoji = icon || '🎯';
     let matched = false;
-    document.querySelectorAll('.emoji-opt').forEach((opt) => {
+    document.querySelectorAll('#emoji-picker .emoji-opt').forEach((opt) => {
       const value = (opt.querySelector('.ft-emoji-value')?.textContent || opt.textContent || '').trim();
       const isMatch = value === selectedEmoji;
       opt.classList.toggle('selected', isMatch);
       if (isMatch) matched = true;
     });
-    if (!matched) document.querySelectorAll('.emoji-opt').forEach((opt, idx) => opt.classList.toggle('selected', idx === 0));
+    if (!matched) document.querySelectorAll('#emoji-picker .emoji-opt').forEach((opt, idx) => opt.classList.toggle('selected', idx === 0));
   }
 
   function addGoal() {
@@ -8569,49 +8703,89 @@ Guidelines:
     const target = parseFloat(document.getElementById('g-target').value);
     const saved = parseFloat(document.getElementById('g-saved').value) || 0;
     const date = document.getElementById('g-date').value;
-    const category = document.getElementById('g-category').value;
+    const category = document.getElementById('g-category')?.value || '';
     if (!name || isNaN(target) || target <= 0) { alert('Please enter a goal name and target amount.'); return; }
-    if (editingGoalId) {
-      const goal = goals.find(g => String(g.id) === String(editingGoalId));
-      if (goal) {
-        goal.name = name;
-        goal.icon = selectedEmoji;
-        goal.target = target;
-        goal.saved = Math.min(saved, target);
-        goal.date = date;
-        goal.category = category;
-      }
-    } else {
-      goals.push({ id: String(Date.now()), name, icon: selectedEmoji, target, saved: Math.min(saved, target), date, category });
-    }
+    goals.push({ id: String(Date.now()), name, icon: selectedEmoji, target, saved: Math.min(saved, target), date, category });
     // Save to localStorage immediately (sync) before async Supabase write
     const _gUid = currentUser?.id || 'demo';
     safeSet('fintrail_goals_' + _gUid, JSON.stringify(goals));
     safeSet('fintrail_goals_ts_' + _gUid, String(Date.now()));
-    const wasEditing = !!editingGoalId;
     resetGoalForm();
     renderGoals(); saveUserData();
     refreshHealthScoreAfterDataChange();
-    if (!wasEditing) awardXPForAction('goal');
+    awardXPForAction('goal');
   }
 
   function editGoal(id) {
     const goal = goals.find(g => String(g.id) === String(id));
     if (!goal) return;
     editingGoalId = String(goal.id);
-    document.getElementById('g-name').value = goal.name || '';
-    document.getElementById('g-target').value = goal.target || '';
-    document.getElementById('g-saved').value = goal.saved || 0;
-    document.getElementById('g-date').value = goal.date || '';
-    const categoryInput = document.getElementById('g-category');
-    if (categoryInput) categoryInput.value = goal.category || categoryInput.value || '';
-    selectGoalIconValue(goal.icon || '🎯');
-    setGoalFormMode('edit');
-    document.querySelector('.new-goal-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('eg-name').value = goal.name || '';
+    document.getElementById('eg-target').value = goal.target || '';
+    document.getElementById('eg-saved').value = goal.saved || 0;
+    document.getElementById('eg-date').value = goal.date || '';
+    selectEditGoalIconValue(goal.icon || '🎯');
+    const overlay = document.getElementById('goal-edit-overlay');
+    if (overlay) overlay.classList.add('visible');
+    if (typeof applyLanguage === 'function') applyLanguage();
+    if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
   }
 
   function cancelGoalEdit() {
-    resetGoalForm();
+    closeEditGoalModal();
+  }
+
+  function selectEditGoalIcon(el) {
+    document.querySelectorAll('#edit-goal-emoji-picker .emoji-opt').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedEditEmoji = (el.querySelector('.ft-emoji-value')?.textContent || el.textContent || '').trim() || '🎯';
+  }
+
+  function selectEditGoalIconValue(icon) {
+    selectedEditEmoji = icon || '🎯';
+    let matched = false;
+    document.querySelectorAll('#edit-goal-emoji-picker .emoji-opt').forEach((opt) => {
+      const value = (opt.querySelector('.ft-emoji-value')?.textContent || opt.textContent || '').trim();
+      const isMatch = value === selectedEditEmoji;
+      opt.classList.toggle('selected', isMatch);
+      if (isMatch) matched = true;
+    });
+    if (!matched) document.querySelectorAll('#edit-goal-emoji-picker .emoji-opt').forEach((opt, idx) => opt.classList.toggle('selected', idx === 0));
+  }
+
+  function closeEditGoalModal() {
+    const overlay = document.getElementById('goal-edit-overlay');
+    if (overlay) overlay.classList.remove('visible');
+    editingGoalId = null;
+    selectedEditEmoji = '🎯';
+  }
+
+  function closeEditGoalModalOutside(e) {
+    if (e && e.target === document.getElementById('goal-edit-overlay')) closeEditGoalModal();
+  }
+
+  function saveEditedGoal() {
+    const goal = goals.find(g => String(g.id) === String(editingGoalId));
+    if (!goal) return;
+    const name = document.getElementById('eg-name').value.trim();
+    const target = parseFloat(document.getElementById('eg-target').value);
+    const saved = parseFloat(document.getElementById('eg-saved').value) || 0;
+    const date = document.getElementById('eg-date').value;
+    if (!name || isNaN(target) || target <= 0) { alert(isSavingsGoalsSpanish() ? 'Ingresa un nombre y monto objetivo válidos.' : 'Please enter a valid goal name and target amount.'); return; }
+
+    goal.name = name;
+    goal.icon = selectedEditEmoji;
+    goal.target = target;
+    goal.saved = Math.min(saved, target);
+    goal.date = date;
+
+    const _editUid = currentUser?.id || 'demo';
+    safeSet('fintrail_goals_' + _editUid, JSON.stringify(goals));
+    safeSet('fintrail_goals_ts_' + _editUid, String(Date.now()));
+    closeEditGoalModal();
+    renderGoals();
+    saveUserData();
+    refreshHealthScoreAfterDataChange();
   }
 
   function deleteGoal(id) {
@@ -8699,12 +8873,12 @@ Guidelines:
 
   function updateSavingsGoalsLanguage() {
     if (typeof renderGoals === 'function') renderGoals();
-    setGoalFormMode(editingGoalId ? 'edit' : 'add');
+    setGoalFormMode('add');
     if (typeof normalizeSavingsGoalDeadlineLabels === 'function') normalizeSavingsGoalDeadlineLabels();
     requestAnimationFrame(function(){
       try {
         if (typeof renderGoals === 'function') renderGoals();
-        setGoalFormMode(editingGoalId ? 'edit' : 'add');
+        setGoalFormMode('add');
         if (typeof window.fintrailSavingsGoalCardTrackingLanguage === 'function') window.fintrailSavingsGoalCardTrackingLanguage();
         if (typeof normalizeSavingsGoalDeadlineLabels === 'function') normalizeSavingsGoalDeadlineLabels();
       } catch(e) {}
