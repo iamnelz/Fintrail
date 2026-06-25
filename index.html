@@ -1085,6 +1085,25 @@
   .auth-logo span { color: #ffffff; }
   .auth-top p { color: var(--text-soft); font-size: 0.85rem; margin-top: 0.3rem; position: relative; }
   .auth-body { padding: 1.75rem 2rem 2rem; }
+  .auth-back-home {
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:0.35rem;
+    margin-bottom:1rem;
+    border:1px solid var(--border);
+    background:rgba(240,85,85,0.06);
+    color:var(--accent);
+    border-radius:12px;
+    padding:0.62rem 0.9rem;
+    font-family:'Sora',sans-serif;
+    font-size:0.82rem;
+    font-weight:800;
+    cursor:pointer;
+    transition:all 0.18s ease;
+  }
+  .auth-back-home:hover { border-color:var(--accent); background:rgba(240,85,85,0.11); transform:translateY(-1px); }
   .auth-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1.5rem; }
   .auth-tab {
     padding: 0.55rem; border-radius: 8px; border: 1px solid var(--border);
@@ -4348,6 +4367,7 @@
       <p data-en="Budget Smarter, Live Better." data-es="Presupuesta Mejor, Vive Mejor.">Budget Smarter, Live Better.</p>
     </div>
     <div class="auth-body">
+      <button type="button" class="auth-back-home" onclick="returnToPublicHome()" data-en="← Back to Home" data-es="← Volver al Inicio">← Back to Home</button>
       <div class="auth-tabs">
         <button class="auth-tab active" id="tab-signin" onclick="switchAuthTab('signin')" data-en="Sign In" data-es="Iniciar Sesión">Sign In</button>
         <button class="auth-tab" id="tab-signup" onclick="switchAuthTab('signup')" data-en="Create Account" data-es="Crear Cuenta">Create Account</button>
@@ -6929,6 +6949,18 @@
     if (auth) auth.style.display = 'flex';
     switchAuthTab(tab);
     if (typeof applyLanguage === 'function') setTimeout(applyLanguage, 0);
+  }
+
+  function returnToPublicHome() {
+    try {
+      authSignInInProgress = false;
+      if (typeof setAuthLoading === 'function') {
+        setAuthLoading('si-btn', false);
+        setAuthLoading('su-btn', false);
+      }
+      if (typeof hideAuthMsg === 'function') hideAuthMsg();
+    } catch(e) {}
+    showPublicHome();
   }
 
   // AUTH INIT — check if already logged in
@@ -18405,6 +18437,18 @@ window.addEventListener('load', function(){
   }
   #auth-screen .auth-body {
     background:#FFFFFF !important;
+  }
+  #auth-screen .auth-back-home {
+    background:#FFFFFF !important;
+    border:1.5px solid #E5E7EB !important;
+    color:#E53935 !important;
+    border-radius:14px !important;
+    box-shadow:0 1px 2px rgba(17,24,39,0.04);
+  }
+  #auth-screen .auth-back-home:hover {
+    background:rgba(229,57,53,0.06) !important;
+    border-color:rgba(229,57,53,0.38) !important;
+    color:#C92F2B !important;
   }
   #auth-screen .auth-tabs {
     background:#F8FAFC;
