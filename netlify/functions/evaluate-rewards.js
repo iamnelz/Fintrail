@@ -79,6 +79,47 @@ async function evaluateUser(supabase, account) {
   return output;
 }
 
+async function loadOrCreateRewardAccount(supabase, userId) {
+  const fields =
+    'user_id,verified_xp,verified_xp_updated_at,highest_tier,' +
+    'founding_status_verified,diamond_reward_variant';
+  const { data: existingAccount, error: readError } = await supabase
+    .from('reward_accounts')
+    .select(fields)
+    .eq('user_id', userId)
+    .maybeSingle();
+  if (readError) throw readError;
+  if (existingAccount) {
+    return { account: existingAccount, created: false };
+  }
+
+  const { error: createError } = await supabase
+    .from('reward_accounts')
+    .insert({
+      user_id: userId,
+      verified_xp: 0,
+      highest_tier: 'bronze'
+    });
+  if (createError && createError.code !== '23505') throw createError;
+
+  // Re-read after insert so concurrent evaluations resolve to the same
+  // unique user_id row without creating duplicate accounts.
+  const { data: initializedAccount, error: initializedReadError } = await supabase
+    .from('reward_accounts')
+    .select(fields)
+    .eq('user_id', userId)
+    .maybeSingle();
+  if (initializedReadError) throw initializedReadError;
+  if (!initializedAccount) {
+    throw new Error(`Unable to initialize reward account for ${userId}`);
+  }
+
+  return {
+    account: initializedAccount,
+    created: !createError
+  };
+}
+
 exports.handler = async function(event) {
   if (event.httpMethod !== 'POST') {
     return json(405, { error: 'Method not allowed' });
@@ -124,18 +165,15 @@ exports.handler = async function(event) {
 
   try {
     if (body.user_id) {
-      const { data: account, error } = await supabase
-        .from('reward_accounts')
-        .select(
-          'user_id,verified_xp,verified_xp_updated_at,highest_tier,' +
-          'founding_status_verified,diamond_reward_variant'
-        )
-        .eq('user_id', body.user_id)
-        .single();
-      if (error) throw error;
+      const rewardAccount = await loadOrCreateRewardAccount(
+        supabase,
+        body.user_id
+      );
       return json(200, {
         ok: true,
-        result: await evaluateUser(supabase, account)
+        reward_account_created: rewardAccount.created,
+        reward_account_status: rewardAccount.created ? 'created' : 'existing',
+        result: await evaluateUser(supabase, rewardAccount.account)
       });
     }
 
