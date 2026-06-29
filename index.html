@@ -2019,6 +2019,109 @@
 
   @media (max-width:860px) { .streaks-layout { grid-template-columns:1fr; } }
 
+  /* REWARDS CENTER */
+  .nav-rewards-btn {
+    display:inline-flex; align-items:center; gap:0.4rem; padding:0.55rem 0.7rem;
+    border:0; border-bottom:2px solid transparent; background:transparent;
+    color:var(--text-soft); font-family:'Sora',sans-serif; font-size:0.82rem;
+    font-weight:600; cursor:pointer; border-radius:8px 8px 0 0;
+  }
+  .nav-rewards-btn:hover { color:var(--dark); background:var(--surface2); }
+  .nav-rewards-btn.active { color:var(--accent); background:rgba(229,57,53,0.08); border-bottom-color:var(--accent); }
+  .rewards-center { max-width:1180px; margin:0 auto; }
+  .rewards-page-head { display:flex; justify-content:space-between; align-items:flex-end; gap:1rem; margin-bottom:1.25rem; }
+  .rewards-page-head h1 { font-family:'Playfair Display',serif; font-size:clamp(1.8rem,4vw,2.55rem); color:var(--text); margin:0; }
+  .rewards-page-head p { color:var(--muted); font-size:0.88rem; margin-top:0.35rem; max-width:650px; line-height:1.6; }
+  .rewards-sync-label { display:inline-flex; align-items:center; gap:0.4rem; color:var(--muted); font-size:0.72rem; font-weight:700; white-space:nowrap; }
+  .rewards-sync-dot { width:8px; height:8px; border-radius:50%; background:var(--success); box-shadow:0 0 0 4px rgba(16,185,129,0.12); }
+  .rewards-hero {
+    background:linear-gradient(135deg,#111 0%,#2a0f0f 48%,#c62828 100%);
+    color:#fff; border-radius:16px; padding:1.6rem; display:grid;
+    grid-template-columns:minmax(0,1.15fr) minmax(250px,0.85fr); gap:1.5rem;
+    box-shadow:0 12px 34px rgba(17,17,17,0.18); margin-bottom:1.25rem; overflow:hidden; position:relative;
+  }
+  .rewards-hero::after { content:''; position:absolute; width:220px; height:220px; right:-90px; top:-110px; border:1px solid rgba(255,255,255,0.12); border-radius:50%; }
+  .rewards-rank-line { display:flex; align-items:center; gap:0.8rem; position:relative; z-index:1; }
+  .rewards-rank-icon { width:54px; height:54px; border-radius:12px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.16); }
+  .rewards-rank-icon .ft-lucide-icon { width:30px; height:30px; }
+  .rewards-eyebrow { color:rgba(255,255,255,0.62); text-transform:uppercase; letter-spacing:0.08em; font-size:0.68rem; font-weight:800; }
+  .rewards-rank-name { font-family:'Playfair Display',serif; font-size:1.75rem; line-height:1.1; margin-top:0.2rem; }
+  .rewards-hero-copy { color:rgba(255,255,255,0.72); font-size:0.82rem; line-height:1.6; margin-top:0.75rem; max-width:520px; position:relative; z-index:1; }
+  .rewards-progress-panel { align-self:center; position:relative; z-index:1; }
+  .rewards-progress-top { display:flex; justify-content:space-between; gap:1rem; font-size:0.74rem; color:rgba(255,255,255,0.7); margin-bottom:0.5rem; }
+  .rewards-progress-track { height:12px; background:rgba(255,255,255,0.15); border-radius:999px; overflow:hidden; }
+  .rewards-progress-fill { height:100%; width:0; background:linear-gradient(90deg,#ef4444,#fff); border-radius:inherit; transition:width 0.45s ease; }
+  .rewards-progress-note { margin-top:0.55rem; font-size:0.72rem; color:rgba(255,255,255,0.58); text-align:right; }
+  .rewards-summary-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:0.75rem; margin-bottom:1.25rem; }
+  .rewards-summary-item { background:#fff; border:1px solid var(--border); border-radius:8px; padding:1rem; min-width:0; }
+  .rewards-summary-label { color:var(--muted); font-size:0.66rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; }
+  .rewards-summary-value { color:var(--text); font-family:'Playfair Display',serif; font-size:1.45rem; font-weight:700; margin-top:0.25rem; }
+  .rewards-section { margin-top:1.5rem; }
+  .rewards-section-head { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:0.75rem; }
+  .rewards-section-title { display:flex; align-items:center; gap:0.5rem; font-family:'Playfair Display',serif; color:var(--text); font-size:1.15rem; }
+  .rewards-section-title .ft-lucide-icon { width:21px; height:21px; color:var(--accent); stroke:var(--accent); }
+  .rewards-section-count { color:var(--muted); font-size:0.72rem; font-weight:700; }
+  .rewards-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0.85rem; }
+  .rewards-item { background:#fff; border:1px solid var(--border); border-radius:8px; padding:1rem; display:flex; gap:0.85rem; align-items:flex-start; min-width:0; }
+  .rewards-item.available { border-top:3px solid var(--accent); }
+  .rewards-item.locked { background:#f8fafc; }
+  .rewards-item-icon { width:42px; height:42px; border-radius:8px; display:flex; align-items:center; justify-content:center; background:rgba(229,57,53,0.08); color:var(--accent); flex-shrink:0; }
+  .rewards-item-icon .ft-lucide-icon { width:23px; height:23px; }
+  .rewards-item.locked .rewards-item-icon { background:#eef2f7; color:#64748b; }
+  .rewards-item-copy { flex:1; min-width:0; }
+  .rewards-item-kicker { color:var(--muted); font-size:0.65rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; }
+  .rewards-item h3 { color:var(--text); font-size:0.92rem; margin:0.2rem 0 0; }
+  .rewards-item p { color:var(--muted); font-size:0.74rem; line-height:1.5; margin-top:0.3rem; }
+  .reward-claim-btn { margin-top:0.7rem; display:inline-flex; align-items:center; justify-content:center; gap:0.4rem; min-height:38px; padding:0.5rem 0.85rem; border:0; border-radius:8px; background:var(--accent); color:#fff; font-family:'Sora',sans-serif; font-size:0.74rem; font-weight:800; cursor:pointer; }
+  .reward-claim-btn:hover { background:#c62828; }
+  .reward-claim-btn:disabled { opacity:0.62; cursor:not-allowed; }
+  .reward-status-pill { display:inline-flex; margin-top:0.55rem; border-radius:999px; padding:0.22rem 0.55rem; font-size:0.64rem; font-weight:800; text-transform:uppercase; letter-spacing:0.04em; background:#eef2f7; color:#475569; }
+  .reward-status-pill.active { background:rgba(16,185,129,0.12); color:#047857; }
+  .reward-status-pill.scheduled { background:rgba(245,158,11,0.14); color:#b45309; }
+  .reward-history-list { background:#fff; border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+  .reward-history-row { display:grid; grid-template-columns:44px minmax(0,1fr) auto; gap:0.75rem; align-items:center; padding:0.85rem 1rem; border-bottom:1px solid var(--border); }
+  .reward-history-row:last-child { border-bottom:0; }
+  .reward-history-icon { width:34px; height:34px; display:flex; align-items:center; justify-content:center; border-radius:8px; background:#f1f5f9; color:#475569; }
+  .reward-history-icon .ft-lucide-icon { width:19px; height:19px; }
+  .reward-history-main strong { display:block; color:var(--text); font-size:0.82rem; }
+  .reward-history-main span { color:var(--muted); font-size:0.69rem; }
+  .reward-history-date { color:var(--muted); font-size:0.68rem; text-align:right; }
+  .rewards-achievements { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:0.7rem; }
+  .rewards-achievement { background:#fff; border:1px solid var(--border); border-radius:8px; padding:0.85rem; text-align:center; }
+  .rewards-achievement.earned { border-color:rgba(245,158,11,0.5); background:#fffdf5; }
+  .rewards-achievement-icon { width:38px; height:38px; margin:0 auto 0.45rem; border-radius:50%; display:flex; align-items:center; justify-content:center; background:#f1f5f9; color:#64748b; }
+  .rewards-achievement.earned .rewards-achievement-icon { background:rgba(245,158,11,0.14); color:#b45309; }
+  .rewards-achievement-icon .ft-lucide-icon { width:20px; height:20px; }
+  .rewards-achievement strong { display:block; color:var(--text); font-size:0.73rem; }
+  .rewards-achievement span { display:block; color:var(--muted); font-size:0.64rem; margin-top:0.2rem; line-height:1.4; }
+  .rewards-empty { border:1px dashed var(--border); border-radius:8px; padding:1.2rem; color:var(--muted); text-align:center; font-size:0.8rem; background:#fff; grid-column:1/-1; }
+  .rewards-alert { display:none; border-radius:8px; padding:0.75rem 0.9rem; margin-bottom:1rem; font-size:0.78rem; line-height:1.5; }
+  .rewards-alert.visible { display:block; }
+  .rewards-alert.success { background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.25); color:#047857; }
+  .rewards-alert.error { background:rgba(220,38,38,0.08); border:1px solid rgba(220,38,38,0.2); color:#b91c1c; }
+  .reward-celebration-overlay { position:fixed; inset:0; z-index:10020; background:rgba(15,17,21,0.72); display:none; align-items:center; justify-content:center; padding:1rem; }
+  .reward-celebration-overlay.visible { display:flex; }
+  .reward-celebration-modal { width:min(440px,100%); background:#fff; border-radius:14px; padding:1.6rem; text-align:center; box-shadow:0 24px 70px rgba(0,0,0,0.3); }
+  .reward-celebration-icon { width:72px; height:72px; margin:0 auto 0.8rem; border-radius:50%; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,#111,#c62828); color:#fff; }
+  .reward-celebration-icon .ft-lucide-icon { width:38px; height:38px; }
+  .reward-celebration-modal h2 { font-family:'Playfair Display',serif; font-size:1.55rem; color:var(--text); }
+  .reward-celebration-modal p { color:var(--muted); font-size:0.82rem; line-height:1.6; margin-top:0.55rem; }
+  .reward-celebration-btn { margin-top:1rem; border:0; border-radius:8px; background:var(--accent); color:#fff; padding:0.65rem 1.2rem; font-family:'Sora',sans-serif; font-weight:800; cursor:pointer; }
+  @media (max-width:900px) {
+    .rewards-hero { grid-template-columns:1fr; }
+    .rewards-summary-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .rewards-achievements { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  }
+  @media (max-width:620px) {
+    .rewards-page-head { align-items:flex-start; flex-direction:column; }
+    .rewards-hero { padding:1.2rem; border-radius:12px; }
+    .rewards-grid { grid-template-columns:1fr; }
+    .rewards-summary-grid { gap:0.55rem; }
+    .rewards-summary-item { padding:0.8rem; }
+    .reward-history-row { grid-template-columns:36px minmax(0,1fr); }
+    .reward-history-date { grid-column:2; text-align:left; }
+  }
+
   /* DEBT NEGOTIATION SCRIPTS */
   .negotiate-layout { display:grid; grid-template-columns:320px 1fr; gap:1.5rem; align-items:start; }
   .debt-type-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; margin-bottom:1.25rem; }
@@ -4786,6 +4889,11 @@
       </div>
     </div>
 
+    <button class="nav-rewards-btn" id="nav-rewards" onclick="navTo('rewards', this)">
+      <span class="ft-stable-inline-icon" data-ft-stable-icon="gift"></span>
+      <span data-en="Rewards" data-es="Recompensas">Rewards</span>
+    </button>
+
     <button class="upgrade-btn-nav" onclick="showPaywall('nav')"><span class="ft-stable-inline-icon" data-ft-stable-icon="crown"></span><span class="upgrade-btn-label">Go Pro</span></button>
     <button onclick="navTo('profile', this)" style="background:none;border:none;font-size:1.1rem;cursor:pointer;padding:0.45rem 0.65rem;border-radius:8px;color:var(--text-soft)" title="Profile">👤</button>
     <button id="lang-toggle" onclick="toggleLanguage()" style="background:none;border:1.5px solid var(--border);color:var(--text-soft);font-family:'Sora',sans-serif;font-size:0.72rem;font-weight:700;padding:0.3rem 0.65rem;border-radius:20px;cursor:pointer;transition:all 0.2s;letter-spacing:0.05em">EN</button>
@@ -4843,6 +4951,7 @@
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('healthscore')">🏆<span data-en="Health Score" data-es="Salud">Health Score</span></button>
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('reports')">📈<span data-en="Reports" data-es="Reportes">Reports</span></button>
     <button class="mobile-nav-tile" onclick="mobileTab('streaks');closeMobileNav()">🔥🏅<span data-en="Streaks &amp; Milestones" data-es="Rachas y Logros">Streaks &amp; Milestones</span></button>
+    <button class="mobile-nav-tile" onclick="mobileTab('rewards')"><span class="ft-stable-inline-icon" data-ft-stable-icon="gift"></span><span data-en="Rewards" data-es="Recompensas">Rewards</span></button>
   </div>
 
   <!-- ACCOUNT SECTION — always visible at bottom -->
@@ -6368,6 +6477,85 @@
     </div>
   </div>
 
+  <!-- REWARDS CENTER TAB -->
+  <div class="tab-section" id="tab-rewards">
+    <div class="rewards-center">
+      <div class="rewards-page-head">
+        <div>
+          <h1 data-en="Rewards Center" data-es="Centro de Recompensas">Rewards Center</h1>
+          <p data-en="Your progress unlocks permanent ranks and exclusive Fintrail benefits." data-es="Tu progreso desbloquea rangos permanentes y beneficios exclusivos de Fintrail.">Your progress unlocks permanent ranks and exclusive Fintrail benefits.</p>
+        </div>
+        <div class="rewards-sync-label"><span class="rewards-sync-dot"></span><span data-en="Secure account rewards" data-es="Recompensas seguras de cuenta">Secure account rewards</span></div>
+      </div>
+
+      <div class="rewards-alert" id="rewards-alert" role="status"></div>
+
+      <div class="rewards-hero" id="rewards-tier-hero">
+        <div>
+          <div class="rewards-rank-line">
+            <div class="rewards-rank-icon" id="rewards-rank-icon"><span class="ft-reference-icon" data-fixed-icon="medal"></span></div>
+            <div>
+              <div class="rewards-eyebrow" data-en="Current Permanent Rank" data-es="Rango Permanente Actual">Current Permanent Rank</div>
+              <div class="rewards-rank-name" id="rewards-rank-name">Bronze</div>
+            </div>
+          </div>
+          <p class="rewards-hero-copy" id="rewards-rank-copy" data-en="Your financial journey is underway. Every verified milestone moves you closer to your next reward." data-es="Tu camino financiero está en marcha. Cada logro verificado te acerca a tu próxima recompensa.">Your financial journey is underway. Every verified milestone moves you closer to your next reward.</p>
+        </div>
+        <div class="rewards-progress-panel">
+          <div class="rewards-progress-top"><span id="rewards-progress-current">0 XP</span><span id="rewards-progress-next">4,000 XP</span></div>
+          <div class="rewards-progress-track"><div class="rewards-progress-fill" id="rewards-progress-fill"></div></div>
+          <div class="rewards-progress-note" id="rewards-progress-note">4,000 XP to Silver</div>
+        </div>
+      </div>
+
+      <div class="rewards-summary-grid" id="rewards-summary-grid">
+        <div class="rewards-summary-item"><div class="rewards-summary-label" data-en="Verified XP" data-es="XP Verificado">Verified XP</div><div class="rewards-summary-value" id="rewards-summary-xp">0</div></div>
+        <div class="rewards-summary-item"><div class="rewards-summary-label" data-en="Ranks Unlocked" data-es="Rangos Desbloqueados">Ranks Unlocked</div><div class="rewards-summary-value" id="rewards-summary-ranks">1</div></div>
+        <div class="rewards-summary-item"><div class="rewards-summary-label" data-en="Rewards Available" data-es="Recompensas Disponibles">Rewards Available</div><div class="rewards-summary-value" id="rewards-summary-ready">0</div></div>
+        <div class="rewards-summary-item"><div class="rewards-summary-label" data-en="Achievements" data-es="Logros">Achievements</div><div class="rewards-summary-value" id="rewards-summary-achievements">0</div></div>
+      </div>
+
+      <section class="rewards-section" aria-labelledby="rewards-available-title">
+        <div class="rewards-section-head">
+          <h2 class="rewards-section-title" id="rewards-available-title"><span class="ft-reference-icon" data-fixed-icon="gift"></span><span data-en="Available Rewards" data-es="Recompensas Disponibles">Available Rewards</span></h2>
+          <span class="rewards-section-count" id="rewards-available-count"></span>
+        </div>
+        <div class="rewards-grid" id="rewards-available-grid"><div class="rewards-empty" data-en="Loading your rewards..." data-es="Cargando tus recompensas...">Loading your rewards...</div></div>
+      </section>
+
+      <section class="rewards-section" aria-labelledby="rewards-upcoming-title">
+        <div class="rewards-section-head">
+          <h2 class="rewards-section-title" id="rewards-upcoming-title"><span class="ft-reference-icon" data-fixed-icon="lock"></span><span data-en="Upcoming Rewards" data-es="Próximas Recompensas">Upcoming Rewards</span></h2>
+        </div>
+        <div class="rewards-grid" id="rewards-upcoming-grid"></div>
+      </section>
+
+      <section class="rewards-section" aria-labelledby="rewards-history-title">
+        <div class="rewards-section-head">
+          <h2 class="rewards-section-title" id="rewards-history-title"><span class="ft-reference-icon" data-fixed-icon="clock"></span><span data-en="Reward History" data-es="Historial de Recompensas">Reward History</span></h2>
+        </div>
+        <div class="reward-history-list" id="rewards-history-list"></div>
+      </section>
+
+      <section class="rewards-section" aria-labelledby="rewards-achievements-title">
+        <div class="rewards-section-head">
+          <h2 class="rewards-section-title" id="rewards-achievements-title"><span class="ft-reference-icon" data-fixed-icon="trophy"></span><span data-en="Financial Journey Achievements" data-es="Logros de tu Camino Financiero">Financial Journey Achievements</span></h2>
+          <button class="reward-claim-btn" type="button" onclick="navTo('streaks', this)" data-en="View All Milestones" data-es="Ver Todos los Logros">View All Milestones</button>
+        </div>
+        <div class="rewards-achievements" id="rewards-achievements-grid"></div>
+      </section>
+    </div>
+  </div>
+
+  <div class="reward-celebration-overlay" id="reward-celebration-overlay" onclick="closeRewardCelebration(event)">
+    <div class="reward-celebration-modal" role="dialog" aria-modal="true" aria-labelledby="reward-celebration-title">
+      <div class="reward-celebration-icon" id="reward-celebration-icon"><span class="ft-reference-icon" data-fixed-icon="award"></span></div>
+      <h2 id="reward-celebration-title">New Rank Unlocked</h2>
+      <p id="reward-celebration-copy"></p>
+      <button class="reward-celebration-btn" type="button" onclick="closeRewardCelebration()" data-en="Continue" data-es="Continuar">Continue</button>
+    </div>
+  </div>
+
   <!-- STREAKS & MILESTONES TAB -->
   <div class="tab-section" id="tab-streaks">
     <div class="streaks-layout">
@@ -7790,7 +7978,7 @@
       closeMobileNav(); return;
     }
     document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('visible'));
-    document.querySelectorAll('.nav-group-btn, .nav-dropdown-item').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.nav-group-btn, .nav-dropdown-item, .nav-rewards-btn').forEach(b => b.classList.remove('active'));
     const _nEl = document.getElementById('tab-' + tab);
     if (!_nEl) { console.warn('navTo: tab not found:', tab); return; }
     _nEl.classList.add('visible');
@@ -7803,6 +7991,7 @@
     if (tab === 'invest') awardXPForAction('investCalc');
     if (tab === 'creditsim') { awardXPForAction('creditSim'); updateCreditSimTab(); }
     if (tab === 'streaks') renderStreaksTab();
+    if (tab === 'rewards') loadRewardsCenter({ force:true });
     if (tab === 'creditsim') { updateCreditSimTab(); }
     if (tab === 'loancalc') { try { refreshLoanPaymentCalculatorLanguage(); } catch(e) { console.error('Loan calculator render failed:', e); } }
     if (tab === 'calendar') { try { loadCalendarEvents(); renderCalendar(); } catch(e) { console.error('Calendar render failed:', e); } }
@@ -7871,6 +8060,7 @@
     closeMobileNav();
     if (tab === 'networth') setTimeout(initNetWorth, 50);
     if (tab === 'streaks') renderStreaksTab();
+    if (tab === 'rewards') loadRewardsCenter({ force:true });
     if (tab === 'creditsim') { updateCreditSimTab(); }
     if (tab === 'loancalc') { try { refreshLoanPaymentCalculatorLanguage(); } catch(e) { console.error('Loan calculator render failed:', e); } }
     if (tab === 'calendar') { loadCalendarEvents(); renderCalendar(); }
@@ -7902,6 +8092,7 @@
     document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
     document.getElementById('tab-' + tab).classList.add('visible');
     if (btn) btn.classList.add('active');
+    if (tab === 'rewards') loadRewardsCenter({ force:true });
     if (typeof refreshVisibleLocalizedUI === 'function') {
       requestAnimationFrame(refreshVisibleLocalizedUI);
     }
@@ -12904,6 +13095,399 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     renderActivityFeed();
   }
 
+  // REWARDS CENTER
+  const REWARDS_TIERS = [
+    { tier:'bronze', threshold:0, icon:'medal' },
+    { tier:'silver', threshold:4000, icon:'medal' },
+    { tier:'gold', threshold:9000, icon:'award' },
+    { tier:'platinum', threshold:18000, icon:'crown' },
+    { tier:'diamond', threshold:35000, icon:'gem' }
+  ];
+  const REWARD_ACHIEVEMENT_ICONS = {
+    first_login:'handshake', first_transaction:'wallet', ten_transactions:'clipboard-list',
+    first_goal:'target', goal_complete:'trophy', first_bill:'calendar-check',
+    five_bills:'notebook', budget_surplus:'piggy-bank', streak_7:'flame',
+    streak_30:'zap', pro_member:'crown', debt_planner:'credit-card',
+    invest_calc:'trending-up', credit_sim:'bar-chart-3', ai_chat:'bot',
+    three_goals:'target', savings_1000:'wallet', savings_10000:'banknote',
+    fifty_transactions:'notebook', profile_complete:'check-circle'
+  };
+  let rewardsCenterState = {
+    account:null,
+    grants:[],
+    history:[],
+    loading:false,
+    loaded:false
+  };
+
+  function rewardsIsSpanish() {
+    return (typeof getCurrentLanguage === 'function' ? getCurrentLanguage() : currentLang) === 'es';
+  }
+
+  function rewardTierName(tier) {
+    const names = rewardsIsSpanish()
+      ? { bronze:'Bronce', silver:'Plata', gold:'Oro', platinum:'Platino', diamond:'Diamante' }
+      : { bronze:'Bronze', silver:'Silver', gold:'Gold', platinum:'Platinum', diamond:'Diamond' };
+    return names[tier] || names.bronze;
+  }
+
+  function rewardTierIndex(tier) {
+    return Math.max(0, REWARDS_TIERS.findIndex(item => item.tier === tier));
+  }
+
+  function rewardDescription(tier, variant, locked = false) {
+    const es = rewardsIsSpanish();
+    if (tier === 'silver') return es ? '1 mes gratis de Fintrail Pro' : '1 free month of Fintrail Pro';
+    if (tier === 'gold') return es ? '2 meses gratis de Fintrail Pro' : '2 free months of Fintrail Pro';
+    if (tier === 'platinum') return es ? '10% de descuento durante 12 meses' : '10% off Fintrail Pro for 12 months';
+    if (tier === 'diamond') {
+      if (locked) return es ? 'Recompensa Secreta de por Vida' : 'Secret Lifetime Reward';
+      if (variant === 'diamond_founding_349') {
+        return es ? 'Membresía Diamante de por vida · $3.49/mes' : 'Diamond Lifetime Membership · $3.49/month';
+      }
+      if (variant === 'diamond_standard_599') {
+        return es ? 'Membresía Diamante de por vida · $5.99/mes' : 'Diamond Lifetime Membership · $5.99/month';
+      }
+      return es ? 'Beneficio Diamante exclusivo de por vida' : 'Exclusive Diamond lifetime benefit';
+    }
+    return es ? 'Nivel de bienvenida' : 'Welcome tier';
+  }
+
+  function rewardStatusLabel(status) {
+    const labels = rewardsIsSpanish()
+      ? { available:'Disponible', claimed:'Reclamada', scheduled:'Programada', active:'Activa', completed:'Completada', superseded:'Reemplazada', failed:'Reintentar', revoked:'Revocada' }
+      : { available:'Available', claimed:'Claimed', scheduled:'Scheduled', active:'Active', completed:'Completed', superseded:'Superseded', failed:'Retry', revoked:'Revoked' };
+    return labels[status] || status || '';
+  }
+
+  function rewardFormatDate(value) {
+    if (!value) return '';
+    const date = new Date(value);
+    if (isNaN(date.getTime())) return '';
+    return new Intl.DateTimeFormat(rewardsIsSpanish() ? 'es-US' : 'en-US', {
+      month:'short', day:'numeric', year:'numeric'
+    }).format(date);
+  }
+
+  function rewardEscapeHTML(value) {
+    return String(value ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function setRewardsAlert(message, type) {
+    const alert = document.getElementById('rewards-alert');
+    if (!alert) return;
+    alert.textContent = message || '';
+    alert.className = `rewards-alert${message ? ' visible ' + (type || '') : ''}`;
+  }
+
+  async function loadRewardsCenter(options = {}) {
+    if (rewardsCenterState.loading) return;
+    if (!sbClient || !currentUser) {
+      setRewardsAlert(
+        rewardsIsSpanish() ? 'Inicia sesión para ver tus recompensas.' : 'Sign in to view your rewards.',
+        'error'
+      );
+      return;
+    }
+    rewardsCenterState.loading = true;
+    if (!rewardsCenterState.loaded || options.force) {
+      const grid = document.getElementById('rewards-available-grid');
+      if (grid) grid.innerHTML = `<div class="rewards-empty">${rewardsIsSpanish() ? 'Cargando tus recompensas...' : 'Loading your rewards...'}</div>`;
+    }
+
+    try {
+      const [accountResult, grantsResult, historyResult] = await Promise.all([
+        sbClient.from('reward_accounts')
+          .select('user_id,verified_xp,highest_tier,diamond_reward_variant,diamond_eligibility_locked_at')
+          .eq('user_id', currentUser.id)
+          .maybeSingle(),
+        sbClient.from('reward_grants')
+          .select('id,tier,reward_variant,status,earned_at,claimed_at,scheduled_at,applied_at,completed_at,activation_not_before')
+          .eq('user_id', currentUser.id)
+          .order('earned_at', { ascending:true }),
+        sbClient.from('reward_tier_history')
+          .select('id,tier,xp_threshold,unlocked_at,reward_grant_id')
+          .eq('user_id', currentUser.id)
+          .order('unlocked_at', { ascending:true })
+      ]);
+      if (accountResult.error) throw accountResult.error;
+      if (grantsResult.error) throw grantsResult.error;
+      if (historyResult.error) throw historyResult.error;
+
+      rewardsCenterState.account = accountResult.data || {
+        user_id:currentUser.id,
+        verified_xp:0,
+        highest_tier:'bronze',
+        diamond_reward_variant:null
+      };
+      rewardsCenterState.grants = grantsResult.data || [];
+      rewardsCenterState.history = historyResult.data || [];
+      rewardsCenterState.loaded = true;
+      renderRewardsCenter();
+      setRewardsAlert('', '');
+      showPendingRewardCelebration();
+    } catch (error) {
+      console.log('Rewards Center load error:', error.message);
+      setRewardsAlert(
+        rewardsIsSpanish()
+          ? 'No pudimos cargar tus recompensas. Inténtalo de nuevo.'
+          : 'We could not load your rewards. Please try again.',
+        'error'
+      );
+    } finally {
+      rewardsCenterState.loading = false;
+    }
+  }
+
+  function renderRewardsCenter() {
+    const account = rewardsCenterState.account || { verified_xp:0, highest_tier:'bronze' };
+    const grants = rewardsCenterState.grants || [];
+    const history = rewardsCenterState.history || [];
+    const xp = Math.max(0, Number(account.verified_xp || 0));
+    const tier = REWARDS_TIERS.some(item => item.tier === account.highest_tier)
+      ? account.highest_tier : 'bronze';
+    const tierIndex = rewardTierIndex(tier);
+    const tierConfig = REWARDS_TIERS[tierIndex];
+    const nextTier = REWARDS_TIERS[tierIndex + 1] || null;
+    const progress = nextTier
+      ? Math.max(0, Math.min(100, ((xp - tierConfig.threshold) / (nextTier.threshold - tierConfig.threshold)) * 100))
+      : 100;
+    const available = grants.filter(grant => grant.status === 'available' || grant.status === 'failed');
+    const openRewards = grants.filter(grant => !['completed','superseded','revoked'].includes(grant.status));
+    const earnedIds = new Set(gameData?.earnedBadges || []);
+
+    const rankName = document.getElementById('rewards-rank-name');
+    if (rankName) rankName.textContent = rewardTierName(tier);
+    const rankIcon = document.getElementById('rewards-rank-icon');
+    if (rankIcon) rankIcon.innerHTML = `<span class="ft-reference-icon" data-fixed-icon="${tierConfig.icon}"></span>`;
+    const rankCopy = document.getElementById('rewards-rank-copy');
+    if (rankCopy) {
+      rankCopy.textContent = nextTier
+        ? (rewardsIsSpanish()
+          ? `Has asegurado el rango ${rewardTierName(tier)}. Continúa avanzando hacia ${rewardTierName(nextTier.tier)}.`
+          : `You have secured ${rewardTierName(tier)} rank. Keep moving toward ${rewardTierName(nextTier.tier)}.`)
+        : (rewardsIsSpanish()
+          ? 'Has alcanzado Diamante, el logro más alto de Fintrail.'
+          : 'You have reached Diamond, Fintrail’s highest achievement.');
+    }
+    const currentLabel = document.getElementById('rewards-progress-current');
+    if (currentLabel) currentLabel.textContent = `${xp.toLocaleString()} XP`;
+    const nextLabel = document.getElementById('rewards-progress-next');
+    if (nextLabel) nextLabel.textContent = nextTier ? `${nextTier.threshold.toLocaleString()} XP` : (rewardsIsSpanish() ? 'Nivel Máximo' : 'Highest Rank');
+    const fill = document.getElementById('rewards-progress-fill');
+    if (fill) fill.style.width = `${progress}%`;
+    const note = document.getElementById('rewards-progress-note');
+    if (note) note.textContent = nextTier
+      ? (rewardsIsSpanish()
+        ? `${Math.max(0, nextTier.threshold - xp).toLocaleString()} XP para ${rewardTierName(nextTier.tier)}`
+        : `${Math.max(0, nextTier.threshold - xp).toLocaleString()} XP to ${rewardTierName(nextTier.tier)}`)
+      : (rewardsIsSpanish() ? 'Rango máximo alcanzado' : 'Highest rank achieved');
+
+    const summaryValues = {
+      'rewards-summary-xp':xp.toLocaleString(),
+      'rewards-summary-ranks':String(Math.max(1, history.length)),
+      'rewards-summary-ready':String(available.length),
+      'rewards-summary-achievements':String(earnedIds.size)
+    };
+    Object.entries(summaryValues).forEach(([id, value]) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value;
+    });
+
+    renderAvailableRewards(openRewards);
+    renderUpcomingRewards(tierIndex);
+    renderRewardHistory(history, grants);
+    renderRewardsAchievements(earnedIds);
+    if (typeof window.fintrailRefreshDesignIcons === 'function') {
+      requestAnimationFrame(window.fintrailRefreshDesignIcons);
+    }
+  }
+
+  function renderAvailableRewards(grants) {
+    const grid = document.getElementById('rewards-available-grid');
+    const count = document.getElementById('rewards-available-count');
+    if (!grid) return;
+    const claimableCount = grants.filter(grant => ['available','failed'].includes(grant.status)).length;
+    if (count) count.textContent = rewardsIsSpanish()
+      ? `${claimableCount} para reclamar`
+      : `${claimableCount} ready to claim`;
+    if (!grants.length) {
+      grid.innerHTML = `<div class="rewards-empty">${rewardsIsSpanish() ? 'No tienes recompensas disponibles todavía. Sigue ganando XP.' : 'No rewards are available yet. Keep earning XP.'}</div>`;
+      return;
+    }
+    grid.innerHTML = grants.map(grant => {
+      const claimable = ['available','failed'].includes(grant.status);
+      const title = rewardDescription(grant.tier, grant.reward_variant, false);
+      const copy = claimable
+        ? (rewardsIsSpanish() ? 'Esta recompensa está segura en tu cuenta hasta que decidas reclamarla.' : 'This reward is safely stored in your account until you choose to claim it.')
+        : grant.status === 'scheduled'
+          ? (rewardsIsSpanish() ? 'Se aplicará en el próximo momento de facturación seguro.' : 'It will apply at the next safe billing point.')
+          : (rewardsIsSpanish() ? 'Tu solicitud está siendo confirmada de forma segura.' : 'Your claim is being securely confirmed.');
+      return `<article class="rewards-item available">
+        <div class="rewards-item-icon"><span class="ft-reference-icon" data-fixed-icon="${grant.tier === 'diamond' ? 'gem' : 'gift'}"></span></div>
+        <div class="rewards-item-copy">
+          <div class="rewards-item-kicker">${rewardEscapeHTML(rewardTierName(grant.tier))}</div>
+          <h3>${rewardEscapeHTML(title)}</h3>
+          <p>${rewardEscapeHTML(copy)}</p>
+          ${claimable
+            ? `<button class="reward-claim-btn" type="button" data-reward-grant-id="${rewardEscapeHTML(grant.id)}" onclick="claimFintrailReward('${rewardEscapeHTML(grant.id)}', this)">${rewardsIsSpanish() ? 'Reclamar Recompensa' : 'Claim Reward'}</button>`
+            : `<span class="reward-status-pill ${rewardEscapeHTML(grant.status)}">${rewardEscapeHTML(rewardStatusLabel(grant.status))}</span>`}
+        </div>
+      </article>`;
+    }).join('');
+  }
+
+  function renderUpcomingRewards(currentTierIndex) {
+    const grid = document.getElementById('rewards-upcoming-grid');
+    if (!grid) return;
+    const upcoming = REWARDS_TIERS.filter((item, index) => index > currentTierIndex);
+    if (!upcoming.length) {
+      grid.innerHTML = `<div class="rewards-empty">${rewardsIsSpanish() ? 'Has desbloqueado todos los rangos permanentes de Fintrail.' : 'You have unlocked every permanent Fintrail rank.'}</div>`;
+      return;
+    }
+    grid.innerHTML = upcoming.map(item => {
+      const isDiamond = item.tier === 'diamond';
+      const title = rewardDescription(item.tier, null, isDiamond);
+      const needed = Math.max(0, item.threshold - Number(rewardsCenterState.account?.verified_xp || 0));
+      return `<article class="rewards-item locked">
+        <div class="rewards-item-icon"><span class="ft-reference-icon" data-fixed-icon="${isDiamond ? 'lock' : item.icon}"></span></div>
+        <div class="rewards-item-copy">
+          <div class="rewards-item-kicker">${rewardEscapeHTML(rewardTierName(item.tier))} · ${item.threshold.toLocaleString()} XP</div>
+          <h3>${rewardEscapeHTML(title)}</h3>
+          <p>${isDiamond
+            ? rewardEscapeHTML(rewardsIsSpanish() ? 'Algunos logros valen la pena descubrir.' : 'Some achievements are worth discovering.')
+            : rewardEscapeHTML(rewardsIsSpanish() ? `Faltan ${needed.toLocaleString()} XP para desbloquearla.` : `${needed.toLocaleString()} XP remaining to unlock.`)}</p>
+        </div>
+      </article>`;
+    }).join('');
+  }
+
+  function renderRewardHistory(history, grants) {
+    const list = document.getElementById('rewards-history-list');
+    if (!list) return;
+    if (!history.length) {
+      list.innerHTML = `<div class="rewards-empty">${rewardsIsSpanish() ? 'Tu historial comenzará con el rango Bronce.' : 'Your history will begin with Bronze rank.'}</div>`;
+      return;
+    }
+    const grantByTier = new Map(grants.map(grant => [grant.tier, grant]));
+    list.innerHTML = history.slice().reverse().map(entry => {
+      const grant = grantByTier.get(entry.tier);
+      const rewardText = entry.tier === 'bronze'
+        ? rewardDescription('bronze')
+        : rewardDescription(entry.tier, grant?.reward_variant, false);
+      return `<div class="reward-history-row">
+        <div class="reward-history-icon"><span class="ft-reference-icon" data-fixed-icon="${entry.tier === 'diamond' ? 'gem' : 'award'}"></span></div>
+        <div class="reward-history-main">
+          <strong>${rewardEscapeHTML(rewardTierName(entry.tier))}</strong>
+          <span>${rewardEscapeHTML(rewardText)}${grant ? ` · ${rewardEscapeHTML(rewardStatusLabel(grant.status))}` : ''}</span>
+        </div>
+        <div class="reward-history-date">${rewardEscapeHTML(rewardFormatDate(entry.unlocked_at))}</div>
+      </div>`;
+    }).join('');
+  }
+
+  function renderRewardsAchievements(earnedIds) {
+    const grid = document.getElementById('rewards-achievements-grid');
+    if (!grid || typeof BADGES_DEF === 'undefined') return;
+    grid.innerHTML = BADGES_DEF.slice(0, 8).map(badge => {
+      const earned = earnedIds.has(badge.id);
+      const text = typeof getBadgeText === 'function' ? getBadgeText(badge) : { name:badge.name, desc:badge.desc };
+      return `<div class="rewards-achievement ${earned ? 'earned' : ''}">
+        <div class="rewards-achievement-icon"><span class="ft-reference-icon" data-fixed-icon="${REWARD_ACHIEVEMENT_ICONS[badge.id] || 'award'}"></span></div>
+        <strong>${rewardEscapeHTML(text.name)}</strong>
+        <span>${rewardEscapeHTML(text.desc)}</span>
+      </div>`;
+    }).join('');
+  }
+
+  async function claimFintrailReward(grantId, button) {
+    if (!grantId || !sbClient || !currentUser) return;
+    const originalText = button?.textContent || '';
+    if (button) {
+      button.disabled = true;
+      button.textContent = rewardsIsSpanish() ? 'Procesando...' : 'Processing...';
+    }
+    setRewardsAlert('', '');
+    try {
+      const { data } = await sbClient.auth.getSession();
+      const token = data?.session?.access_token;
+      if (!token) throw new Error('Authentication required');
+      const response = await fetch('/.netlify/functions/claim-reward', {
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'Authorization':`Bearer ${token}`
+        },
+        body:JSON.stringify({ reward_grant_id:grantId })
+      });
+      const result = await response.json();
+      if (!response.ok && !result?.status) throw new Error(result?.error || 'Claim failed');
+      if (result.url) {
+        window.location.href = result.url;
+        return;
+      }
+      const message = result.status === 'scheduled'
+        ? (rewardsIsSpanish() ? 'Tu recompensa fue programada para el próximo momento seguro.' : 'Your reward was scheduled for the next safe billing point.')
+        : (rewardsIsSpanish() ? 'Tu recompensa fue reclamada y está pendiente de confirmación.' : 'Your reward was claimed and is awaiting confirmation.');
+      setRewardsAlert(message, 'success');
+      await loadRewardsCenter({ force:true });
+    } catch (error) {
+      console.log('Reward claim error:', error.message);
+      setRewardsAlert(
+        rewardsIsSpanish() ? 'No pudimos reclamar la recompensa. Inténtalo de nuevo.' : 'We could not claim the reward. Please try again.',
+        'error'
+      );
+      if (button) {
+        button.disabled = false;
+        button.textContent = originalText;
+      }
+    }
+  }
+
+  function showPendingRewardCelebration() {
+    if (!currentUser || !rewardsCenterState.history?.length) return;
+    const unlocked = rewardsCenterState.history
+      .filter(entry => entry.tier !== 'bronze')
+      .sort((a, b) => rewardTierIndex(b.tier) - rewardTierIndex(a.tier));
+    const pending = unlocked.find(entry =>
+      safeGet(`fintrail_reward_celebrated_${currentUser.id}_${entry.tier}`) !== 'true'
+    );
+    if (!pending) return;
+    safeSet(`fintrail_reward_celebrated_${currentUser.id}_${pending.tier}`, 'true');
+    const grant = rewardsCenterState.grants.find(item => item.tier === pending.tier);
+    const overlay = document.getElementById('reward-celebration-overlay');
+    const title = document.getElementById('reward-celebration-title');
+    const copy = document.getElementById('reward-celebration-copy');
+    const icon = document.getElementById('reward-celebration-icon');
+    if (!overlay || !title || !copy || !icon) return;
+    title.textContent = rewardsIsSpanish()
+      ? `¡Rango ${rewardTierName(pending.tier)} Desbloqueado!`
+      : `${rewardTierName(pending.tier)} Rank Unlocked!`;
+    copy.textContent = rewardsIsSpanish()
+      ? `Tu progreso es permanente. Has desbloqueado: ${rewardDescription(pending.tier, grant?.reward_variant, false)}.`
+      : `Your progress is permanent. You unlocked: ${rewardDescription(pending.tier, grant?.reward_variant, false)}.`;
+    icon.innerHTML = `<span class="ft-reference-icon" data-fixed-icon="${pending.tier === 'diamond' ? 'gem' : 'award'}"></span>`;
+    overlay.classList.add('visible');
+    if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
+  }
+
+  function closeRewardCelebration(event) {
+    const overlay = document.getElementById('reward-celebration-overlay');
+    if (!overlay) return;
+    if (event && event.target !== overlay) return;
+    overlay.classList.remove('visible');
+  }
+
+  window.loadRewardsCenter = loadRewardsCenter;
+  window.renderRewardsCenter = renderRewardsCenter;
+  window.claimFintrailReward = claimFintrailReward;
+  window.closeRewardCelebration = closeRewardCelebration;
+
   // DEBT NEGOTIATION SCRIPTS
   let currentDebtType = 'credit';
   let negotiationScripts = {};
@@ -13620,6 +14204,9 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     document.querySelectorAll('[data-en-placeholder]').forEach(el => {
       el.placeholder = el.getAttribute(`data-${currentLang}-placeholder`) || el.getAttribute('data-en-placeholder');
     });
+    if (document.getElementById('tab-rewards')?.classList.contains('visible') && rewardsCenterState.loaded) {
+      renderRewardsCenter();
+    }
     // Save preference
     safeSet('fintrail_lang', currentLang);
   }
@@ -13671,6 +14258,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       call('calcLoan');
       call('renderStreaks');
       call('renderActivityFeed');
+      call('renderRewardsCenter');
       call('setUserUI', currentUser ? [currentUser] : []);
       call('setProUI');
       call('updateProfileSubscriptionUI');
@@ -13741,6 +14329,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     } else if (activeId === 'tab-streaks') {
       call('renderStreaks');
       call('renderActivityFeed');
+    } else if (activeId === 'tab-rewards') {
+      call('renderRewardsCenter');
     } else if (activeId === 'tab-loancalc') {
       call('refreshLoanPaymentCalculatorLanguage');
     }
