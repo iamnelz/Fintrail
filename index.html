@@ -7615,16 +7615,27 @@
     resetGoProModalButton();
   }
 
+  async function getBillingRequestHeaders() {
+    const { data } = await sbClient.auth.getSession();
+    const accessToken = data?.session?.access_token;
+    if (!accessToken) throw new Error('Authentication required');
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}`
+    };
+  }
+
   async function activatePro() {
     if (checkoutLoading) return;
     const btn = document.querySelector('.pw-cta.primary');
     checkoutLoading = true;
     if (btn) { btn.disabled = true; btn.textContent = getGoProCheckoutLoadingText(); }
     try {
+      const headers = await getBillingRequestHeaders();
       const response = await fetch('/.netlify/functions/create-checkout', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: currentUser?.email || '' })
+        headers,
+        body: JSON.stringify({})
       });
       const data = await response.json();
       if (data.url) {
@@ -7670,10 +7681,11 @@
 
   async function cancelSubscription() {
     try {
+      const headers = await getBillingRequestHeaders();
       const response = await fetch('/.netlify/functions/cancel-subscription', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: currentUser?.email || '' })
+        headers,
+        body: JSON.stringify({})
       });
       const data = await response.json();
       if (data.url) {
