@@ -2079,14 +2079,12 @@
   .rewards-next-rank-icon::after { content:''; position:absolute; inset:13px; border:1px solid rgba(255,255,255,0.55); border-radius:24px 24px 34px 34px; }
   .next-rank-emblem { position:absolute; inset:13px; z-index:2; display:flex; align-items:center; justify-content:center; overflow:hidden; border-radius:24px 24px 34px 34px; line-height:0; transform:none; }
   .rewards-next-rank-icon .next-rank-emblem .ft-lucide-icon { width:66px; height:66px; stroke-width:1.65; filter:drop-shadow(0 5px 9px rgba(0,0,0,0.3)); }
-  .next-rank-crown { display:none; }
-  .next-rank-crown .ft-lucide-icon { width:43px; height:43px; fill:rgba(255,255,255,0.2); }
   .next-rank-ribbon { position:absolute; left:50%; bottom:-17px; transform:translateX(-50%); min-width:112px; padding:0.25rem 0.55rem; border-radius:4px; color:#fff; background:linear-gradient(180deg,#2563eb,#1e3a8a); border:1px solid #60a5fa; box-shadow:0 6px 12px rgba(0,0,0,0.3); font-size:0.62rem; font-weight:900; text-transform:uppercase; letter-spacing:0.04em; }
   .rewards-hero[data-next-tier="silver"] .rewards-next-rank-icon { color:#e2e8f0; box-shadow:0 0 30px rgba(203,213,225,0.34); }
   .rewards-hero[data-next-tier="gold"] .rewards-next-rank-icon { color:#fbbf24; box-shadow:0 0 30px rgba(245,158,11,0.38); }
   .rewards-hero[data-next-tier="platinum"] .rewards-next-rank-icon { color:#bfdbfe; box-shadow:0 0 32px rgba(147,197,253,0.42); }
   .rewards-hero[data-next-tier="platinum"] .rewards-next-rank-icon { width:142px; height:142px; }
-  .rewards-hero[data-next-tier="platinum"] .rewards-next-rank-icon .next-rank-centered-crown { width:87px; height:87px; transform:translateY(-10px); filter:drop-shadow(0 4px 7px rgba(0,0,0,0.26)) drop-shadow(0 0 6px rgba(255,255,255,0.38)); }
+  .rewards-hero[data-next-tier="platinum"] .rewards-next-rank-icon .next-rank-centered-medal { width:87px; height:87px; transform:none; color:#eff6ff; filter:drop-shadow(0 4px 7px rgba(0,0,0,0.26)) drop-shadow(0 0 6px rgba(255,255,255,0.38)); }
   .rewards-hero[data-next-tier="diamond"] .rewards-next-rank-icon { color:#c4b5fd; box-shadow:0 0 34px rgba(139,92,246,0.44); }
   .rewards-hero[data-next-tier="platinum"]::after { background:radial-gradient(circle,rgba(59,130,246,0.42),rgba(229,57,53,0.18) 45%,transparent 70%); }
   .rewards-hero[data-next-tier="diamond"]::after { background:radial-gradient(circle,rgba(124,58,237,0.46),rgba(229,57,53,0.18) 45%,transparent 70%); }
@@ -6641,7 +6639,6 @@
         </div>
         <div class="rewards-next-rank" id="rewards-next-rank">
           <div class="rewards-next-rank-icon" id="rewards-next-rank-icon">
-            <span class="next-rank-crown"><span class="ft-reference-icon" data-fixed-icon="crown"></span></span>
             <span class="next-rank-emblem"><span class="ft-reference-icon" data-fixed-icon="medal"></span></span>
             <span class="next-rank-ribbon">Silver</span>
           </div>
@@ -13455,10 +13452,9 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     if (nextRank) nextRank.hidden = !nextTier;
     if (nextTier && nextRankIcon) {
       const nextTierIcon = nextTier.tier === 'platinum'
-        ? '<span class="ft-lucide-icon next-rank-centered-crown" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.55" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(0.5 1)"><path d="m3 7 4 4 5-7 5 7 4-4-2 11H5z"/><path d="M5 18h14"/></g></svg></span>'
+        ? '<span class="ft-lucide-icon next-rank-centered-medal" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5" fill="rgba(255,255,255,0.16)"/><circle cx="12" cy="8" r="2.4" opacity="0.72"/><path d="M8.5 12.5 7 22l5-3 5 3-1.5-9.5"/></svg></span>'
         : `<span class="ft-reference-icon" data-fixed-icon="${rewardEscapeHTML(nextTier.icon)}"></span>`;
       nextRankIcon.innerHTML = `
-        <span class="next-rank-crown"><span class="ft-reference-icon" data-fixed-icon="crown"></span></span>
         <span class="next-rank-emblem">${nextTierIcon}</span>
         <span class="next-rank-ribbon">${rewardEscapeHTML(rewardTierName(nextTier.tier))}</span>`;
     }
