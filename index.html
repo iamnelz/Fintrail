@@ -13451,9 +13451,12 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const nextRankName = document.getElementById('rewards-next-rank-name');
     if (nextRank) nextRank.hidden = !nextTier;
     if (nextTier && nextRankIcon) {
+      const nextTierIcon = nextTier.tier === 'platinum'
+        ? '<span class="ft-lucide-icon next-rank-centered-crown" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(0.5 1)"><path d="m3 7 4 4 5-7 5 7 4-4-2 11H5z"/><path d="M5 18h14"/></g></svg></span>'
+        : `<span class="ft-reference-icon" data-fixed-icon="${rewardEscapeHTML(nextTier.icon)}"></span>`;
       nextRankIcon.innerHTML = `
         <span class="next-rank-crown"><span class="ft-reference-icon" data-fixed-icon="crown"></span></span>
-        <span class="next-rank-emblem"><span class="ft-reference-icon" data-fixed-icon="${rewardEscapeHTML(nextTier.icon)}"></span></span>
+        <span class="next-rank-emblem">${nextTierIcon}</span>
         <span class="next-rank-ribbon">${rewardEscapeHTML(rewardTierName(nextTier.tier))}</span>`;
     }
     if (nextTier && nextRankName) nextRankName.textContent = rewardTierName(nextTier.tier);
