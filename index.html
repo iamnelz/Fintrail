@@ -2086,7 +2086,7 @@
   .rewards-hero[data-next-tier="gold"] .rewards-next-rank-icon { color:#fbbf24; box-shadow:0 0 30px rgba(245,158,11,0.38); }
   .rewards-hero[data-next-tier="platinum"] .rewards-next-rank-icon { color:#bfdbfe; box-shadow:0 0 32px rgba(147,197,253,0.42); }
   .rewards-hero[data-next-tier="platinum"] .rewards-next-rank-icon { width:142px; height:142px; }
-  .rewards-hero[data-next-tier="platinum"] .rewards-next-rank-icon .next-rank-centered-crown { width:74px; height:74px; }
+  .rewards-hero[data-next-tier="platinum"] .rewards-next-rank-icon .next-rank-centered-crown { width:87px; height:87px; transform:translateY(-10px); filter:drop-shadow(0 4px 7px rgba(0,0,0,0.26)) drop-shadow(0 0 6px rgba(255,255,255,0.38)); }
   .rewards-hero[data-next-tier="diamond"] .rewards-next-rank-icon { color:#c4b5fd; box-shadow:0 0 34px rgba(139,92,246,0.44); }
   .rewards-hero[data-next-tier="platinum"]::after { background:radial-gradient(circle,rgba(59,130,246,0.42),rgba(229,57,53,0.18) 45%,transparent 70%); }
   .rewards-hero[data-next-tier="diamond"]::after { background:radial-gradient(circle,rgba(124,58,237,0.46),rgba(229,57,53,0.18) 45%,transparent 70%); }
@@ -13455,7 +13455,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     if (nextRank) nextRank.hidden = !nextTier;
     if (nextTier && nextRankIcon) {
       const nextTierIcon = nextTier.tier === 'platinum'
-        ? '<span class="ft-lucide-icon next-rank-centered-crown" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(0.5 1)"><path d="m3 7 4 4 5-7 5 7 4-4-2 11H5z"/><path d="M5 18h14"/></g></svg></span>'
+        ? '<span class="ft-lucide-icon next-rank-centered-crown" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.55" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(0.5 1)"><path d="m3 7 4 4 5-7 5 7 4-4-2 11H5z"/><path d="M5 18h14"/></g></svg></span>'
         : `<span class="ft-reference-icon" data-fixed-icon="${rewardEscapeHTML(nextTier.icon)}"></span>`;
       nextRankIcon.innerHTML = `
         <span class="next-rank-crown"><span class="ft-reference-icon" data-fixed-icon="crown"></span></span>
