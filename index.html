@@ -2036,11 +2036,13 @@
   .rewards-sync-dot { width:8px; height:8px; border-radius:50%; background:var(--success); box-shadow:0 0 0 4px rgba(16,185,129,0.12); }
   .rewards-hero {
     background:linear-gradient(135deg,#111 0%,#2a0f0f 48%,#c62828 100%);
-    color:#fff; border-radius:18px; padding:2rem; display:grid;
-    grid-template-columns:minmax(0,1.15fr) minmax(250px,0.85fr); gap:1.5rem;
-    box-shadow:0 16px 42px rgba(17,17,17,0.22); margin-bottom:1.5rem; overflow:hidden; position:relative;
+    color:#fff; border-radius:16px; padding:1.8rem; display:grid;
+    grid-template-columns:minmax(0,1.12fr) minmax(260px,0.82fr) 150px; gap:1.5rem;
+    box-shadow:0 20px 48px rgba(17,17,17,0.26); margin-bottom:1rem; overflow:hidden; position:relative;
   }
-  .rewards-hero::after { content:''; position:absolute; width:220px; height:220px; right:-90px; top:-110px; border:1px solid rgba(255,255,255,0.12); border-radius:50%; }
+  .rewards-hero::before { content:''; position:absolute; inset:0; opacity:0.32; pointer-events:none; background-image:radial-gradient(circle at 8% 18%,#fbbf24 0 2px,transparent 3px),radial-gradient(circle at 16% 72%,#ef4444 0 2px,transparent 3px),radial-gradient(circle at 58% 14%,#fff 0 1px,transparent 2px),radial-gradient(circle at 82% 70%,#fbbf24 0 2px,transparent 3px); background-size:180px 140px,220px 190px,160px 130px,240px 210px; }
+  .rewards-hero::after { content:''; position:absolute; width:290px; height:290px; right:-100px; top:-105px; background:radial-gradient(circle,rgba(229,57,53,0.45),transparent 68%); border-radius:50%; }
+  .rewards-hero-rank { min-width:0; }
   .rewards-rank-line { display:flex; align-items:center; gap:1.45rem; position:relative; z-index:1; }
   .rewards-rank-icon { width:110px; height:110px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:radial-gradient(circle at 38% 30%,rgba(255,255,255,0.22),rgba(255,255,255,0.06) 52%,rgba(0,0,0,0.12)); border:2px solid rgba(255,255,255,0.3); box-shadow:inset 0 0 0 8px rgba(255,255,255,0.045),0 14px 32px rgba(0,0,0,0.28); flex-shrink:0; position:relative; }
   .rewards-rank-icon::after { content:''; position:absolute; inset:8px; border-radius:50%; border:1px solid rgba(255,255,255,0.18); pointer-events:none; }
@@ -2060,9 +2062,25 @@
   .rewards-progress-fill { height:100%; width:0; background:linear-gradient(90deg,#fbbf24 0%,#ef4444 68%,#e53935 100%); border-radius:inherit; transition:width 0.8s cubic-bezier(.2,.8,.2,1); position:relative; }
   .rewards-progress-fill::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.34),transparent); transform:translateX(-100%); animation:rewardsProgressSheen 1.25s ease 0.25s 1; }
   .rewards-progress-note { margin-top:0.65rem; padding:0.42rem 0.6rem; border-radius:7px; background:rgba(0,0,0,0.16); font-size:0.72rem; color:rgba(255,255,255,0.76); text-align:center; font-weight:700; }
+  .rewards-next-rank { align-self:center; text-align:center; position:relative; z-index:1; }
+  .rewards-next-rank-icon { width:92px; height:92px; margin:0 auto 0.55rem; display:flex; align-items:center; justify-content:center; border-radius:22px; color:#bfdbfe; background:linear-gradient(145deg,rgba(255,255,255,0.2),rgba(255,255,255,0.04)); border:1px solid rgba(255,255,255,0.24); box-shadow:0 0 28px rgba(147,197,253,0.22); }
+  .rewards-next-rank-icon .ft-lucide-icon { width:57px; height:57px; stroke-width:1.65; filter:drop-shadow(0 5px 9px rgba(0,0,0,0.3)); }
+  .rewards-hero[data-next-tier="silver"] .rewards-next-rank-icon { color:#e2e8f0; box-shadow:0 0 30px rgba(203,213,225,0.34); }
+  .rewards-hero[data-next-tier="gold"] .rewards-next-rank-icon { color:#fbbf24; box-shadow:0 0 30px rgba(245,158,11,0.38); }
+  .rewards-hero[data-next-tier="platinum"] .rewards-next-rank-icon { color:#bfdbfe; box-shadow:0 0 32px rgba(147,197,253,0.42); }
+  .rewards-hero[data-next-tier="diamond"] .rewards-next-rank-icon { color:#c4b5fd; box-shadow:0 0 34px rgba(139,92,246,0.44); }
+  .rewards-next-rank strong { display:block; color:#fff; font-family:'Playfair Display',serif; font-size:1.1rem; }
+  .rewards-next-rank span { display:block; color:rgba(255,255,255,0.64); font-size:0.67rem; font-weight:800; margin-top:0.18rem; text-transform:uppercase; letter-spacing:0.05em; }
+  .rewards-next-rank[hidden] { display:none; }
   @keyframes rewardsProgressSheen { to { transform:translateX(100%); } }
   .rewards-summary-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:0.75rem; margin-bottom:1.25rem; }
-  .rewards-summary-item { background:#fff; border:1px solid var(--border); border-radius:8px; padding:1rem; min-width:0; }
+  .rewards-summary-item { background:#fff; border:1px solid var(--border); border-radius:12px; padding:0.9rem; min-width:0; display:flex; align-items:center; gap:0.8rem; box-shadow:0 7px 18px rgba(15,23,42,0.055); }
+  .rewards-summary-icon { width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#fff; box-shadow:inset 0 0 0 3px rgba(255,255,255,0.25),0 5px 12px rgba(15,23,42,0.14); }
+  .rewards-summary-icon .ft-lucide-icon { width:25px; height:25px; stroke-width:2; }
+  .rewards-summary-icon.xp { background:linear-gradient(145deg,#ef4444,#991b1b); }
+  .rewards-summary-icon.ranks { background:linear-gradient(145deg,#fbbf24,#b45309); }
+  .rewards-summary-icon.ready { background:linear-gradient(145deg,#22c55e,#15803d); }
+  .rewards-summary-icon.achievements { background:linear-gradient(145deg,#a855f7,#6b21a8); }
   .rewards-summary-label { color:var(--muted); font-size:0.66rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; }
   .rewards-summary-value { color:var(--text); font-family:'Playfair Display',serif; font-size:1.45rem; font-weight:700; margin-top:0.25rem; }
   .rewards-section { margin-top:1.5rem; }
@@ -2070,6 +2088,10 @@
   .rewards-section-title { display:flex; align-items:center; gap:0.5rem; font-family:'Playfair Display',serif; color:var(--text); font-size:1.15rem; }
   .rewards-section-title .ft-lucide-icon { width:21px; height:21px; color:var(--accent); stroke:var(--accent); }
   .rewards-section-count { color:var(--muted); font-size:0.72rem; font-weight:700; }
+  .rewards-content-grid { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(340px,0.85fr); gap:1rem; align-items:start; }
+  .rewards-content-grid .rewards-section { margin-top:0; margin-bottom:1.25rem; }
+  .rewards-content-side > .rewards-section { background:#fff; border:1px solid var(--border); border-radius:14px; padding:1rem; box-shadow:0 8px 22px rgba(15,23,42,0.055); }
+  .rewards-view-all { border:0; background:transparent; color:var(--accent); font-family:'Sora',sans-serif; font-size:0.68rem; font-weight:800; cursor:pointer; padding:0.35rem; white-space:nowrap; }
   .rewards-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0.85rem; }
   .rewards-item { background:#fff; border:1px solid var(--border); border-radius:14px; padding:1.25rem; display:flex; gap:1rem; align-items:flex-start; min-width:0; box-shadow:0 7px 18px rgba(15,23,42,0.055); transition:transform 0.2s ease,box-shadow 0.2s ease,border-color 0.2s ease; }
   .rewards-item.available { border-top:3px solid var(--accent); }
@@ -2083,6 +2105,11 @@
   .rewards-item.upcoming { position:relative; overflow:hidden; }
   .rewards-item.upcoming .rewards-item-icon { width:68px; height:68px; opacity:0.58; }
   .rewards-item.upcoming .rewards-item-icon .ft-lucide-icon { width:36px; height:36px; }
+  .rewards-upcoming-progress { margin-top:0.65rem; display:flex; align-items:center; gap:0.55rem; }
+  .rewards-upcoming-track { height:7px; flex:1; min-width:80px; border-radius:999px; overflow:hidden; background:#e2e8f0; }
+  .rewards-upcoming-fill { display:block; height:100%; border-radius:inherit; background:linear-gradient(90deg,#ef4444,#e53935); }
+  .rewards-item[data-tier="diamond"] .rewards-upcoming-fill { background:linear-gradient(90deg,#7c3aed,#a855f7); }
+  .rewards-upcoming-progress > span:last-child { color:var(--muted); font-size:0.65rem; font-weight:800; }
   .rewards-item-icon { width:58px; height:58px; border-radius:12px; display:flex; align-items:center; justify-content:center; background:rgba(229,57,53,0.08); color:var(--accent); flex-shrink:0; box-shadow:inset 0 0 0 1px rgba(229,57,53,0.08); }
   .rewards-item-icon .ft-lucide-icon { width:31px; height:31px; }
   .rewards-item.locked .rewards-item-icon { background:#eef2f7; color:#64748b; }
@@ -2107,7 +2134,7 @@
   .reward-history-main .reward-status-pill.active { color:#047857; }
   .reward-history-main .reward-status-pill.scheduled { color:#b45309; }
   .reward-history-date { color:var(--muted); font-size:0.68rem; text-align:right; }
-  .rewards-achievements { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:0.7rem; }
+  .rewards-achievements { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0.55rem; }
   .rewards-achievement { background:#fff; border:1px solid var(--border); border-radius:14px; padding:1rem; text-align:center; position:relative; overflow:hidden; box-shadow:0 6px 16px rgba(15,23,42,0.045); transition:transform 0.2s ease,box-shadow 0.2s ease; }
   .rewards-achievement.earned { border-color:rgba(245,158,11,0.5); background:#fffdf5; }
   .rewards-achievement-icon { width:54px; height:54px; margin:0 auto 0.6rem; border-radius:50%; display:flex; align-items:center; justify-content:center; background:#f1f5f9; color:#64748b; }
@@ -2158,9 +2185,11 @@
     .rewards-progress-fill,.rewards-item,.reward-claim-btn,.rewards-achievement { transition:none!important; }
   }
   @media (max-width:900px) {
-    .rewards-hero { grid-template-columns:1fr; }
+    .rewards-hero { grid-template-columns:1fr minmax(220px,0.8fr); }
+    .rewards-next-rank { display:none; }
     .rewards-summary-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
-    .rewards-achievements { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .rewards-content-grid { grid-template-columns:1fr; }
+    .rewards-achievements { grid-template-columns:repeat(4,minmax(0,1fr)); }
   }
   @media (max-width:620px) {
     .rewards-page-head { align-items:flex-start; flex-direction:column; }
@@ -2168,6 +2197,7 @@
     .rewards-rank-icon { width:90px; height:90px; }
     .rewards-rank-icon .ft-lucide-icon { width:50px; height:50px; }
     .rewards-rank-name { font-size:1.9rem; }
+    .rewards-hero { grid-template-columns:1fr; }
     .rewards-grid { grid-template-columns:1fr; }
     .rewards-summary-grid { gap:0.55rem; }
     .rewards-summary-item { padding:0.8rem; }
@@ -2175,6 +2205,8 @@
     .reward-history-date { grid-column:2; text-align:left; }
     .reward-celebration-icon { width:116px; height:116px; }
     .reward-celebration-icon .ft-lucide-icon { width:66px; height:66px; }
+    .rewards-achievements { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .rewards-summary-icon { width:42px; height:42px; }
   }
 
   /* DEBT NEGOTIATION SCRIPTS */
@@ -6533,7 +6565,7 @@
   </div>
 
   <!-- REWARDS CENTER TAB -->
-  <div class="tab-section" id="tab-rewards" data-rewards-ui-version="phase-2d-polish-2026-06-29">
+  <div class="tab-section" id="tab-rewards" data-rewards-ui-version="phase-2d-gold-master-2026-06-29">
     <div class="rewards-center">
       <div class="rewards-page-head">
         <div>
@@ -6546,7 +6578,7 @@
       <div class="rewards-alert" id="rewards-alert" role="status"></div>
 
       <div class="rewards-hero" id="rewards-tier-hero">
-        <div>
+        <div class="rewards-hero-rank">
           <div class="rewards-rank-line">
             <div class="rewards-rank-icon" id="rewards-rank-icon"><span class="ft-reference-icon" data-fixed-icon="medal"></span></div>
             <div>
@@ -6562,44 +6594,55 @@
           <div class="rewards-progress-track"><div class="rewards-progress-fill" id="rewards-progress-fill"></div></div>
           <div class="rewards-progress-note" id="rewards-progress-note">4,000 XP until Silver</div>
         </div>
+        <div class="rewards-next-rank" id="rewards-next-rank">
+          <div class="rewards-next-rank-icon" id="rewards-next-rank-icon"><span class="ft-reference-icon" data-fixed-icon="medal"></span></div>
+          <strong id="rewards-next-rank-name">Silver</strong>
+          <span data-en="Next Rank" data-es="Próximo Rango">Next Rank</span>
+        </div>
       </div>
 
       <div class="rewards-summary-grid" id="rewards-summary-grid">
-        <div class="rewards-summary-item"><div class="rewards-summary-label" data-en="Verified XP" data-es="XP Verificado">Verified XP</div><div class="rewards-summary-value" id="rewards-summary-xp">0</div></div>
-        <div class="rewards-summary-item"><div class="rewards-summary-label" data-en="Ranks Unlocked" data-es="Rangos Desbloqueados">Ranks Unlocked</div><div class="rewards-summary-value" id="rewards-summary-ranks">1</div></div>
-        <div class="rewards-summary-item"><div class="rewards-summary-label" data-en="Rewards Available" data-es="Recompensas Disponibles">Rewards Available</div><div class="rewards-summary-value" id="rewards-summary-ready">0</div></div>
-        <div class="rewards-summary-item"><div class="rewards-summary-label" data-en="Achievements" data-es="Logros">Achievements</div><div class="rewards-summary-value" id="rewards-summary-achievements">0</div></div>
+        <div class="rewards-summary-item"><div class="rewards-summary-icon xp"><span class="ft-reference-icon" data-fixed-icon="trending-up"></span></div><div><div class="rewards-summary-label" data-en="Verified XP" data-es="XP Verificado">Verified XP</div><div class="rewards-summary-value" id="rewards-summary-xp">0</div></div></div>
+        <div class="rewards-summary-item"><div class="rewards-summary-icon ranks"><span class="ft-reference-icon" data-fixed-icon="crown"></span></div><div><div class="rewards-summary-label" data-en="Ranks Unlocked" data-es="Rangos Desbloqueados">Ranks Unlocked</div><div class="rewards-summary-value" id="rewards-summary-ranks">1</div></div></div>
+        <div class="rewards-summary-item"><div class="rewards-summary-icon ready"><span class="ft-reference-icon" data-fixed-icon="gift"></span></div><div><div class="rewards-summary-label" data-en="Rewards Available" data-es="Recompensas Disponibles">Rewards Available</div><div class="rewards-summary-value" id="rewards-summary-ready">0</div></div></div>
+        <div class="rewards-summary-item"><div class="rewards-summary-icon achievements"><span class="ft-reference-icon" data-fixed-icon="trophy"></span></div><div><div class="rewards-summary-label" data-en="Achievements" data-es="Logros">Achievements</div><div class="rewards-summary-value" id="rewards-summary-achievements">0</div></div></div>
       </div>
 
-      <section class="rewards-section" aria-labelledby="rewards-available-title">
-        <div class="rewards-section-head">
-          <h2 class="rewards-section-title" id="rewards-available-title"><span class="ft-reference-icon" data-fixed-icon="gift"></span><span data-en="Available Rewards" data-es="Recompensas Disponibles">Available Rewards</span></h2>
-          <span class="rewards-section-count" id="rewards-available-count"></span>
-        </div>
-        <div class="rewards-grid" id="rewards-available-grid"><div class="rewards-empty" data-en="Loading your rewards..." data-es="Cargando tus recompensas...">Loading your rewards...</div></div>
-      </section>
+      <div class="rewards-content-grid">
+        <div class="rewards-content-main">
+          <section class="rewards-section" aria-labelledby="rewards-available-title">
+            <div class="rewards-section-head">
+              <h2 class="rewards-section-title" id="rewards-available-title"><span class="ft-reference-icon" data-fixed-icon="gift"></span><span data-en="Available Rewards" data-es="Recompensas Disponibles">Available Rewards</span></h2>
+              <span class="rewards-section-count" id="rewards-available-count"></span>
+            </div>
+            <div class="rewards-grid" id="rewards-available-grid"><div class="rewards-empty" data-en="Loading your rewards..." data-es="Cargando tus recompensas...">Loading your rewards...</div></div>
+          </section>
 
-      <section class="rewards-section" aria-labelledby="rewards-upcoming-title">
-        <div class="rewards-section-head">
-          <h2 class="rewards-section-title" id="rewards-upcoming-title"><span class="ft-reference-icon" data-fixed-icon="lock"></span><span data-en="Upcoming Rewards" data-es="Próximas Recompensas">Upcoming Rewards</span></h2>
+          <section class="rewards-section" aria-labelledby="rewards-upcoming-title">
+            <div class="rewards-section-head">
+              <h2 class="rewards-section-title" id="rewards-upcoming-title"><span class="ft-reference-icon" data-fixed-icon="lock"></span><span data-en="Upcoming Rewards" data-es="Próximas Recompensas">Upcoming Rewards</span></h2>
+            </div>
+            <div class="rewards-grid" id="rewards-upcoming-grid"></div>
+          </section>
         </div>
-        <div class="rewards-grid" id="rewards-upcoming-grid"></div>
-      </section>
 
-      <section class="rewards-section" aria-labelledby="rewards-history-title">
-        <div class="rewards-section-head">
-          <h2 class="rewards-section-title" id="rewards-history-title"><span class="ft-reference-icon" data-fixed-icon="clock"></span><span data-en="Reward History" data-es="Historial de Recompensas">Reward History</span></h2>
-        </div>
-        <div class="reward-history-list" id="rewards-history-list"></div>
-      </section>
+        <div class="rewards-content-side">
+          <section class="rewards-section rewards-achievements-panel" aria-labelledby="rewards-achievements-title">
+            <div class="rewards-section-head">
+              <h2 class="rewards-section-title" id="rewards-achievements-title"><span class="ft-reference-icon" data-fixed-icon="trophy"></span><span data-en="Financial Journey Achievements" data-es="Logros de tu Camino Financiero">Financial Journey Achievements</span></h2>
+              <button class="rewards-view-all" type="button" onclick="navTo('streaks', this)" data-en="View All" data-es="Ver Todos">View All</button>
+            </div>
+            <div class="rewards-achievements" id="rewards-achievements-grid"></div>
+          </section>
 
-      <section class="rewards-section" aria-labelledby="rewards-achievements-title">
-        <div class="rewards-section-head">
-          <h2 class="rewards-section-title" id="rewards-achievements-title"><span class="ft-reference-icon" data-fixed-icon="trophy"></span><span data-en="Financial Journey Achievements" data-es="Logros de tu Camino Financiero">Financial Journey Achievements</span></h2>
-          <button class="reward-claim-btn" type="button" onclick="navTo('streaks', this)" data-en="View All Milestones" data-es="Ver Todos los Logros">View All Milestones</button>
+          <section class="rewards-section rewards-history-panel" aria-labelledby="rewards-history-title">
+            <div class="rewards-section-head">
+              <h2 class="rewards-section-title" id="rewards-history-title"><span class="ft-reference-icon" data-fixed-icon="clock"></span><span data-en="Reward History" data-es="Historial de Recompensas">Reward History</span></h2>
+            </div>
+            <div class="reward-history-list" id="rewards-history-list"></div>
+          </section>
         </div>
-        <div class="rewards-achievements" id="rewards-achievements-grid"></div>
-      </section>
+      </div>
     </div>
   </div>
 
@@ -13320,7 +13363,10 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const earnedIds = new Set(gameData?.earnedBadges || []);
 
     const hero = document.getElementById('rewards-tier-hero');
-    if (hero) hero.dataset.tier = tier;
+    if (hero) {
+      hero.dataset.tier = tier;
+      hero.dataset.nextTier = nextTier?.tier || '';
+    }
     const rankName = document.getElementById('rewards-rank-name');
     if (rankName) rankName.textContent = rewardTierName(tier);
     const heroXp = document.getElementById('rewards-hero-xp');
@@ -13351,6 +13397,14 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
         ? `${Math.max(0, nextTier.threshold - xp).toLocaleString()} XP para ${rewardTierName(nextTier.tier)}`
         : `${Math.max(0, nextTier.threshold - xp).toLocaleString()} XP until ${rewardTierName(nextTier.tier)}`)
       : (rewardsIsSpanish() ? 'Rango máximo alcanzado' : 'Highest rank achieved');
+    const nextRank = document.getElementById('rewards-next-rank');
+    const nextRankIcon = document.getElementById('rewards-next-rank-icon');
+    const nextRankName = document.getElementById('rewards-next-rank-name');
+    if (nextRank) nextRank.hidden = !nextTier;
+    if (nextTier && nextRankIcon) {
+      nextRankIcon.innerHTML = `<span class="ft-reference-icon" data-fixed-icon="${rewardEscapeHTML(nextTier.icon)}"></span>`;
+    }
+    if (nextTier && nextRankName) nextRankName.textContent = rewardTierName(nextTier.tier);
 
     const summaryValues = {
       'rewards-summary-xp':xp.toLocaleString(),
@@ -13418,8 +13472,10 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     grid.innerHTML = upcoming.map(item => {
       const isDiamond = item.tier === 'diamond';
       const title = rewardDescription(item.tier, null, isDiamond);
-      const needed = Math.max(0, item.threshold - Number(rewardsCenterState.account?.verified_xp || 0));
-      return `<article class="rewards-item locked upcoming">
+      const currentXp = Number(rewardsCenterState.account?.verified_xp || 0);
+      const needed = Math.max(0, item.threshold - currentXp);
+      const progress = Math.max(0, Math.min(100, (currentXp / item.threshold) * 100));
+      return `<article class="rewards-item locked upcoming" data-tier="${rewardEscapeHTML(item.tier)}">
         <div class="rewards-item-icon"><span class="ft-reference-icon" data-fixed-icon="${isDiamond ? 'lock' : item.icon}"></span></div>
         <div class="rewards-item-copy">
           <div class="rewards-item-kicker">${rewardEscapeHTML(rewardTierName(item.tier))} · ${item.threshold.toLocaleString()} XP</div>
@@ -13427,6 +13483,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
           <p>${isDiamond
             ? rewardEscapeHTML(rewardsIsSpanish() ? 'Algunos logros valen la pena descubrir.' : 'Some achievements are worth discovering.')
             : rewardEscapeHTML(rewardsIsSpanish() ? `Faltan ${needed.toLocaleString()} XP para desbloquearla.` : `${needed.toLocaleString()} XP remaining to unlock.`)}</p>
+          <div class="rewards-upcoming-progress" aria-hidden="true"><span class="rewards-upcoming-track"><span class="rewards-upcoming-fill" style="width:${progress}%"></span></span><span>${Math.round(progress)}%</span></div>
           <span class="reward-status-pill">${rewardsIsSpanish() ? 'Bloqueada' : 'Locked'}</span>
         </div>
       </article>`;
