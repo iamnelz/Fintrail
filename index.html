@@ -2034,6 +2034,12 @@
   .rewards-page-head p { color:var(--muted); font-size:0.88rem; margin-top:0.35rem; max-width:650px; line-height:1.6; }
   .rewards-sync-label { display:inline-flex; align-items:center; gap:0.4rem; color:var(--muted); font-size:0.72rem; font-weight:700; white-space:nowrap; }
   .rewards-sync-dot { width:8px; height:8px; border-radius:50%; background:var(--success); box-shadow:0 0 0 4px rgba(16,185,129,0.12); }
+  #tab-rewards .ft-reference-icon,
+  #reward-celebration-overlay .ft-reference-icon { display:inline-flex; align-items:center; justify-content:center; line-height:0; vertical-align:middle; }
+  #tab-rewards .ft-lucide-icon,
+  #reward-celebration-overlay .ft-lucide-icon { display:inline-flex; align-items:center; justify-content:center; line-height:0; }
+  #tab-rewards .ft-lucide-icon svg,
+  #reward-celebration-overlay .ft-lucide-icon svg { display:block; width:100%; height:100%; margin:0; flex:none; }
   .rewards-hero {
     background:linear-gradient(135deg,#111 0%,#2a0f0f 48%,#c62828 100%);
     color:#fff; border-radius:16px; padding:1.8rem; display:grid;
@@ -2047,8 +2053,9 @@
   .rewards-rank-icon { width:160px; height:160px; margin:0.7rem 0 1.15rem; border-radius:50%; display:flex; align-items:center; justify-content:center; background:radial-gradient(circle at 36% 28%,#fff7c2 0 6%,#fbbf24 28%,#d97706 65%,#7c2d12 100%); border:4px solid #fde68a; box-shadow:inset 0 0 0 8px #b45309,inset 0 0 0 12px rgba(255,255,255,0.4),0 0 38px rgba(245,158,11,0.62),0 18px 34px rgba(0,0,0,0.34); flex-shrink:0; position:relative; isolation:isolate; }
   .rewards-rank-icon::before { content:''; position:absolute; inset:-18px; z-index:-1; border:7px double currentColor; border-left-color:transparent; border-right-color:transparent; border-radius:50%; opacity:0.9; transform:rotate(-18deg); pointer-events:none; }
   .rewards-rank-icon::after { content:''; position:absolute; inset:12px; border-radius:50%; border:2px solid rgba(255,255,255,0.62); box-shadow:inset 0 0 18px rgba(255,255,255,0.34); pointer-events:none; }
+  .rank-badge-emblem { position:absolute; inset:0; z-index:2; display:flex; align-items:center; justify-content:center; line-height:0; transform:translateY(-1px); }
   .rewards-rank-icon .rank-badge-emblem .ft-lucide-icon { width:82px; height:82px; stroke-width:1.7; filter:drop-shadow(0 5px 8px rgba(0,0,0,0.34)); }
-  .rank-badge-crown { position:absolute; top:-37px; left:50%; transform:translateX(-50%); color:#fbbf24; z-index:3; }
+  .rank-badge-crown { position:absolute; top:-37px; left:50%; transform:translateX(-50%); color:#fbbf24; z-index:3; display:flex; align-items:center; justify-content:center; line-height:0; }
   .rank-badge-crown .ft-lucide-icon { width:52px; height:52px; fill:rgba(251,191,36,0.22); filter:drop-shadow(0 4px 5px rgba(0,0,0,0.38)); }
   .rank-badge-ribbon { position:absolute; left:50%; bottom:-22px; transform:translateX(-50%); min-width:138px; padding:0.36rem 0.8rem; border-radius:5px; color:#fff; background:linear-gradient(180deg,#ef4444,#b91c1c); border:1px solid #f87171; box-shadow:0 7px 14px rgba(0,0,0,0.35); font-size:0.7rem; font-weight:900; text-align:center; text-transform:uppercase; white-space:nowrap; letter-spacing:0.04em; }
   .rewards-hero[data-tier="bronze"] .rewards-rank-icon { color:#f59e0b; background:radial-gradient(circle at 36% 28%,#fed7aa,#d97706 58%,#7c2d12); border-color:#fdba74; box-shadow:inset 0 0 0 8px #9a3412,inset 0 0 0 12px rgba(255,255,255,0.28),0 0 36px rgba(205,127,50,0.48),0 18px 34px rgba(0,0,0,0.34); }
@@ -2069,8 +2076,9 @@
   .rewards-next-rank { align-self:center; text-align:center; position:relative; z-index:1; }
   .rewards-next-rank-icon { width:126px; height:126px; margin:0 auto 0.75rem; display:flex; align-items:center; justify-content:center; border-radius:34px 34px 48px 48px; color:#bfdbfe; background:radial-gradient(circle at 36% 26%,#eff6ff,#60a5fa 52%,#1e3a8a); border:3px solid #dbeafe; box-shadow:inset 0 0 0 7px #1d4ed8,inset 0 0 0 10px rgba(255,255,255,0.42),0 0 38px rgba(96,165,250,0.48); position:relative; }
   .rewards-next-rank-icon::after { content:''; position:absolute; inset:13px; border:1px solid rgba(255,255,255,0.55); border-radius:24px 24px 34px 34px; }
+  .next-rank-emblem { position:absolute; inset:0; z-index:2; display:flex; align-items:center; justify-content:center; line-height:0; transform:translateY(-1px); }
   .rewards-next-rank-icon .next-rank-emblem .ft-lucide-icon { width:66px; height:66px; stroke-width:1.65; filter:drop-shadow(0 5px 9px rgba(0,0,0,0.3)); }
-  .next-rank-crown { position:absolute; top:-29px; left:50%; transform:translateX(-50%); z-index:3; }
+  .next-rank-crown { position:absolute; top:-29px; left:50%; transform:translateX(-50%); z-index:3; display:flex; align-items:center; justify-content:center; line-height:0; }
   .next-rank-crown .ft-lucide-icon { width:43px; height:43px; fill:rgba(255,255,255,0.2); }
   .next-rank-ribbon { position:absolute; left:50%; bottom:-17px; transform:translateX(-50%); min-width:112px; padding:0.25rem 0.55rem; border-radius:4px; color:#fff; background:linear-gradient(180deg,#2563eb,#1e3a8a); border:1px solid #60a5fa; box-shadow:0 6px 12px rgba(0,0,0,0.3); font-size:0.62rem; font-weight:900; text-transform:uppercase; letter-spacing:0.04em; }
   .rewards-hero[data-next-tier="silver"] .rewards-next-rank-icon { color:#e2e8f0; box-shadow:0 0 30px rgba(203,213,225,0.34); }
@@ -2086,6 +2094,7 @@
   .rewards-summary-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:0.75rem; margin-bottom:1.25rem; }
   .rewards-summary-item { background:#fff; border:1px solid var(--border); border-radius:12px; padding:0.9rem; min-width:0; display:flex; align-items:center; gap:0.8rem; box-shadow:0 7px 18px rgba(15,23,42,0.055); }
   .rewards-summary-icon { width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#fff; box-shadow:inset 0 0 0 3px rgba(255,255,255,0.25),0 5px 12px rgba(15,23,42,0.14); }
+  .rewards-summary-icon > .ft-reference-icon { width:100%; height:100%; }
   .rewards-summary-icon .ft-lucide-icon { width:25px; height:25px; stroke-width:2; }
   .rewards-summary-icon.xp { background:linear-gradient(145deg,#ef4444,#991b1b); }
   .rewards-summary-icon.ranks { background:linear-gradient(145deg,#fbbf24,#b45309); }
@@ -2105,9 +2114,10 @@
   .rewards-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0.85rem; }
   .rewards-item { background:#fff; border:1px solid var(--border); border-radius:14px; padding:1.25rem; display:flex; gap:1rem; align-items:flex-start; min-width:0; box-shadow:0 7px 18px rgba(15,23,42,0.055); transition:transform 0.2s ease,box-shadow 0.2s ease,border-color 0.2s ease; }
   .rewards-item.available { border-top:3px solid var(--accent); }
-  .rewards-item.available .rewards-item-icon { width:98px; height:98px; margin-bottom:0.85rem; border-radius:50%; border:3px solid currentColor; box-shadow:inset 0 0 0 7px rgba(255,255,255,0.68),0 10px 22px rgba(15,23,42,0.16); position:relative; }
+  .rewards-item.available .rewards-item-icon { width:98px; height:98px; margin-bottom:0.85rem; border-radius:50%; border:3px solid currentColor; box-shadow:inset 0 0 0 7px rgba(255,255,255,0.68),0 10px 22px rgba(15,23,42,0.16); position:relative; isolation:isolate; }
   .rewards-item.available .rewards-item-icon::after { content:''; position:absolute; width:58px; height:44px; top:76px; left:50%; transform:translateX(-50%); z-index:-1; background:linear-gradient(135deg,currentColor 0 45%,transparent 46%),linear-gradient(225deg,currentColor 0 45%,transparent 46%); background-position:left,right; background-size:50% 100%; background-repeat:no-repeat; opacity:0.82; }
   .rewards-item.available .rewards-item-icon .ft-lucide-icon { width:55px; height:55px; stroke-width:1.7; }
+  .rewards-item-icon > .ft-reference-icon { width:100%; height:100%; position:relative; z-index:1; }
   .rewards-item.available[data-tier="silver"] .rewards-item-icon { color:#64748b; background:linear-gradient(145deg,#fff,#d1d5db); }
   .rewards-item.available[data-tier="gold"] .rewards-item-icon { color:#b45309; background:linear-gradient(145deg,#fff9db,#fbbf24); }
   .rewards-item.available[data-tier="platinum"] .rewards-item-icon { color:#2563eb; background:linear-gradient(145deg,#fff,#bfdbfe); }
@@ -2155,6 +2165,7 @@
   .rewards-achievement { background:#fff; border:1px solid var(--border); border-radius:14px; padding:1rem; text-align:center; position:relative; overflow:hidden; box-shadow:0 6px 16px rgba(15,23,42,0.045); transition:transform 0.2s ease,box-shadow 0.2s ease; }
   .rewards-achievement.earned { border-color:rgba(245,158,11,0.5); background:#fffdf5; }
   .rewards-achievement-icon { width:54px; height:54px; margin:0 auto 0.6rem; border-radius:50%; display:flex; align-items:center; justify-content:center; background:#f1f5f9; color:#64748b; }
+  .rewards-achievement-icon > .ft-reference-icon { width:100%; height:100%; }
   .rewards-achievement.earned .rewards-achievement-icon { background:rgba(245,158,11,0.14); color:#b45309; }
   .rewards-achievement.earned:nth-child(4n+1) .rewards-achievement-icon { color:#15803d; background:linear-gradient(145deg,#dcfce7,#86efac); }
   .rewards-achievement.earned:nth-child(4n+2) .rewards-achievement-icon { color:#1d4ed8; background:linear-gradient(145deg,#dbeafe,#93c5fd); }
@@ -2175,6 +2186,7 @@
   .reward-celebration-overlay.visible { display:flex; }
   .reward-celebration-modal { width:min(470px,100%); background:#fff; border-radius:18px; padding:2rem 1.8rem 1.7rem; text-align:center; box-shadow:0 26px 80px rgba(0,0,0,0.34); position:relative; overflow:hidden; animation:rewardModalFade 0.28s ease both; }
   .reward-celebration-icon { width:132px; height:132px; margin:0 auto 1rem; border-radius:50%; display:flex; align-items:center; justify-content:center; background:radial-gradient(circle at 36% 28%,#ef5350,#c62828 64%,#8e0000); color:#fff; border:3px solid rgba(255,255,255,0.88); box-shadow:inset 0 0 0 8px rgba(255,255,255,0.1),0 0 44px rgba(229,57,53,0.42); position:relative; z-index:2; animation:rewardBadgeScale 0.5s cubic-bezier(.2,.9,.3,1.25) both; }
+  .reward-celebration-icon > .ft-reference-icon { width:100%; height:100%; }
   .reward-celebration-icon .ft-lucide-icon { width:76px; height:76px; stroke-width:1.8; filter:drop-shadow(0 5px 8px rgba(0,0,0,0.25)); }
   .reward-celebration-overlay[data-tier="silver"] .reward-celebration-icon { color:#e2e8f0; box-shadow:inset 0 0 0 8px rgba(255,255,255,0.1),0 0 54px rgba(203,213,225,0.78); }
   .reward-celebration-overlay[data-tier="gold"] .reward-celebration-icon { color:#fbbf24; box-shadow:inset 0 0 0 8px rgba(255,255,255,0.1),0 0 58px rgba(245,158,11,0.68); }
