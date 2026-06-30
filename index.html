@@ -2041,16 +2041,17 @@
     box-shadow:0 16px 42px rgba(17,17,17,0.22); margin-bottom:1.5rem; overflow:hidden; position:relative;
   }
   .rewards-hero::after { content:''; position:absolute; width:220px; height:220px; right:-90px; top:-110px; border:1px solid rgba(255,255,255,0.12); border-radius:50%; }
-  .rewards-rank-line { display:flex; align-items:center; gap:1.15rem; position:relative; z-index:1; }
-  .rewards-rank-icon { width:78px; height:78px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.1); border:2px solid rgba(255,255,255,0.22); box-shadow:inset 0 0 0 6px rgba(255,255,255,0.04),0 10px 24px rgba(0,0,0,0.22); flex-shrink:0; }
-  .rewards-rank-icon .ft-lucide-icon { width:44px; height:44px; }
+  .rewards-rank-line { display:flex; align-items:center; gap:1.45rem; position:relative; z-index:1; }
+  .rewards-rank-icon { width:110px; height:110px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:radial-gradient(circle at 38% 30%,rgba(255,255,255,0.22),rgba(255,255,255,0.06) 52%,rgba(0,0,0,0.12)); border:2px solid rgba(255,255,255,0.3); box-shadow:inset 0 0 0 8px rgba(255,255,255,0.045),0 14px 32px rgba(0,0,0,0.28); flex-shrink:0; position:relative; }
+  .rewards-rank-icon::after { content:''; position:absolute; inset:8px; border-radius:50%; border:1px solid rgba(255,255,255,0.18); pointer-events:none; }
+  .rewards-rank-icon .ft-lucide-icon { width:62px; height:62px; stroke-width:1.75; filter:drop-shadow(0 4px 8px rgba(0,0,0,0.28)); }
   .rewards-hero[data-tier="bronze"] .rewards-rank-icon { color:#e19a55; box-shadow:inset 0 0 0 6px rgba(205,127,50,0.1),0 0 28px rgba(205,127,50,0.3); }
   .rewards-hero[data-tier="silver"] .rewards-rank-icon { color:#e2e8f0; box-shadow:inset 0 0 0 6px rgba(226,232,240,0.1),0 0 30px rgba(226,232,240,0.34); }
   .rewards-hero[data-tier="gold"] .rewards-rank-icon { color:#fbbf24; box-shadow:inset 0 0 0 6px rgba(251,191,36,0.12),0 0 34px rgba(245,158,11,0.44); }
   .rewards-hero[data-tier="platinum"] .rewards-rank-icon { color:#bfdbfe; box-shadow:inset 0 0 0 6px rgba(191,219,254,0.12),0 0 34px rgba(147,197,253,0.46); }
   .rewards-hero[data-tier="diamond"] .rewards-rank-icon { color:#c4b5fd; box-shadow:inset 0 0 0 6px rgba(196,181,253,0.12),0 0 36px rgba(139,92,246,0.5); }
   .rewards-eyebrow { color:rgba(255,255,255,0.62); text-transform:uppercase; letter-spacing:0.08em; font-size:0.68rem; font-weight:800; }
-  .rewards-rank-name { font-family:'Playfair Display',serif; font-size:2.15rem; line-height:1.05; margin-top:0.2rem; }
+  .rewards-rank-name { font-family:'Playfair Display',serif; font-size:2.55rem; line-height:1.05; margin-top:0.2rem; }
   .rewards-hero-xp { color:rgba(255,255,255,0.78); font-size:0.82rem; font-weight:800; margin-top:0.3rem; }
   .rewards-hero-copy { color:rgba(255,255,255,0.72); font-size:0.82rem; line-height:1.6; margin-top:0.75rem; max-width:520px; position:relative; z-index:1; }
   .rewards-progress-panel { align-self:center; position:relative; z-index:1; }
@@ -2072,6 +2073,12 @@
   .rewards-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0.85rem; }
   .rewards-item { background:#fff; border:1px solid var(--border); border-radius:14px; padding:1.25rem; display:flex; gap:1rem; align-items:flex-start; min-width:0; box-shadow:0 7px 18px rgba(15,23,42,0.055); transition:transform 0.2s ease,box-shadow 0.2s ease,border-color 0.2s ease; }
   .rewards-item.available { border-top:3px solid var(--accent); }
+  .rewards-item.available .rewards-item-icon { width:76px; height:76px; border-radius:50%; border:2px solid currentColor; box-shadow:inset 0 0 0 6px rgba(255,255,255,0.65),0 9px 20px rgba(15,23,42,0.12); }
+  .rewards-item.available .rewards-item-icon .ft-lucide-icon { width:42px; height:42px; stroke-width:1.8; }
+  .rewards-item.available[data-tier="silver"] .rewards-item-icon { color:#64748b; background:linear-gradient(145deg,#fff,#d1d5db); }
+  .rewards-item.available[data-tier="gold"] .rewards-item-icon { color:#b45309; background:linear-gradient(145deg,#fff9db,#fbbf24); }
+  .rewards-item.available[data-tier="platinum"] .rewards-item-icon { color:#2563eb; background:linear-gradient(145deg,#fff,#bfdbfe); }
+  .rewards-item.available[data-tier="diamond"] .rewards-item-icon { color:#6d28d9; background:linear-gradient(145deg,#fff,#c4b5fd); }
   .rewards-item.locked { background:#f8fafc; }
   .rewards-item.upcoming { position:relative; overflow:hidden; }
   .rewards-item.upcoming .rewards-item-icon { width:68px; height:68px; opacity:0.58; }
@@ -2119,12 +2126,12 @@
   .reward-celebration-overlay { position:fixed; inset:0; z-index:10020; background:rgba(15,17,21,0.72); display:none; align-items:center; justify-content:center; padding:1rem; }
   .reward-celebration-overlay.visible { display:flex; }
   .reward-celebration-modal { width:min(470px,100%); background:#fff; border-radius:18px; padding:2rem 1.8rem 1.7rem; text-align:center; box-shadow:0 26px 80px rgba(0,0,0,0.34); position:relative; overflow:hidden; animation:rewardModalFade 0.28s ease both; }
-  .reward-celebration-icon { width:104px; height:104px; margin:0 auto 1rem; border-radius:50%; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,#111,#c62828); color:#fff; position:relative; z-index:2; animation:rewardBadgeScale 0.5s cubic-bezier(.2,.9,.3,1.25) both; }
-  .reward-celebration-icon .ft-lucide-icon { width:55px; height:55px; }
-  .reward-celebration-overlay[data-tier="silver"] .reward-celebration-icon { color:#f8fafc; background:linear-gradient(135deg,#64748b,#d1d5db); box-shadow:0 0 42px rgba(203,213,225,0.7); }
-  .reward-celebration-overlay[data-tier="gold"] .reward-celebration-icon { color:#fff7cc; background:linear-gradient(135deg,#b45309,#fbbf24); box-shadow:0 0 46px rgba(245,158,11,0.65); }
-  .reward-celebration-overlay[data-tier="platinum"] .reward-celebration-icon { color:#fff; background:linear-gradient(135deg,#3b82f6,#dbeafe); box-shadow:0 0 48px rgba(147,197,253,0.72); }
-  .reward-celebration-overlay[data-tier="diamond"] .reward-celebration-icon { color:#fff; background:linear-gradient(135deg,#6d28d9,#c4b5fd); box-shadow:0 0 52px rgba(139,92,246,0.72); }
+  .reward-celebration-icon { width:132px; height:132px; margin:0 auto 1rem; border-radius:50%; display:flex; align-items:center; justify-content:center; background:radial-gradient(circle at 36% 28%,#ef5350,#c62828 64%,#8e0000); color:#fff; border:3px solid rgba(255,255,255,0.88); box-shadow:inset 0 0 0 8px rgba(255,255,255,0.1),0 0 44px rgba(229,57,53,0.42); position:relative; z-index:2; animation:rewardBadgeScale 0.5s cubic-bezier(.2,.9,.3,1.25) both; }
+  .reward-celebration-icon .ft-lucide-icon { width:76px; height:76px; stroke-width:1.8; filter:drop-shadow(0 5px 8px rgba(0,0,0,0.25)); }
+  .reward-celebration-overlay[data-tier="silver"] .reward-celebration-icon { color:#e2e8f0; box-shadow:inset 0 0 0 8px rgba(255,255,255,0.1),0 0 54px rgba(203,213,225,0.78); }
+  .reward-celebration-overlay[data-tier="gold"] .reward-celebration-icon { color:#fbbf24; box-shadow:inset 0 0 0 8px rgba(255,255,255,0.1),0 0 58px rgba(245,158,11,0.68); }
+  .reward-celebration-overlay[data-tier="platinum"] .reward-celebration-icon { color:#bfdbfe; box-shadow:inset 0 0 0 8px rgba(255,255,255,0.1),0 0 58px rgba(147,197,253,0.76); }
+  .reward-celebration-overlay[data-tier="diamond"] .reward-celebration-icon { color:#c4b5fd; box-shadow:inset 0 0 0 8px rgba(255,255,255,0.1),0 0 62px rgba(139,92,246,0.76); }
   .reward-celebration-modal h2 { font-family:'Playfair Display',serif; font-size:1.7rem; color:var(--text); }
   .reward-celebration-rank { font-family:'Playfair Display',serif; font-size:1.25rem; color:var(--accent); font-weight:700; margin-top:0.3rem; }
   .reward-celebration-modal p { color:var(--muted); font-size:0.82rem; line-height:1.6; margin-top:0.55rem; }
@@ -2158,14 +2165,16 @@
   @media (max-width:620px) {
     .rewards-page-head { align-items:flex-start; flex-direction:column; }
     .rewards-hero { padding:1.3rem; border-radius:14px; }
-    .rewards-rank-icon { width:70px; height:70px; }
-    .rewards-rank-icon .ft-lucide-icon { width:39px; height:39px; }
+    .rewards-rank-icon { width:90px; height:90px; }
+    .rewards-rank-icon .ft-lucide-icon { width:50px; height:50px; }
     .rewards-rank-name { font-size:1.9rem; }
     .rewards-grid { grid-template-columns:1fr; }
     .rewards-summary-grid { gap:0.55rem; }
     .rewards-summary-item { padding:0.8rem; }
     .reward-history-row { grid-template-columns:36px minmax(0,1fr); }
     .reward-history-date { grid-column:2; text-align:left; }
+    .reward-celebration-icon { width:116px; height:116px; }
+    .reward-celebration-icon .ft-lucide-icon { width:66px; height:66px; }
   }
 
   /* DEBT NEGOTIATION SCRIPTS */
@@ -6524,7 +6533,7 @@
   </div>
 
   <!-- REWARDS CENTER TAB -->
-  <div class="tab-section" id="tab-rewards">
+  <div class="tab-section" id="tab-rewards" data-rewards-ui-version="phase-2d-polish-2026-06-29">
     <div class="rewards-center">
       <div class="rewards-page-head">
         <div>
@@ -13377,14 +13386,15 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     }
     grid.innerHTML = grants.map(grant => {
       const claimable = ['available','failed'].includes(grant.status);
+      const tierConfig = REWARDS_TIERS.find(item => item.tier === grant.tier) || REWARDS_TIERS[0];
       const title = rewardDescription(grant.tier, grant.reward_variant, false);
       const copy = claimable
         ? (rewardsIsSpanish() ? 'Esta recompensa está segura en tu cuenta hasta que decidas reclamarla.' : 'This reward is safely stored in your account until you choose to claim it.')
         : grant.status === 'scheduled'
           ? (rewardsIsSpanish() ? 'Se aplicará en el próximo momento de facturación seguro.' : 'It will apply at the next safe billing point.')
           : (rewardsIsSpanish() ? 'Tu solicitud está siendo confirmada de forma segura.' : 'Your claim is being securely confirmed.');
-      return `<article class="rewards-item available">
-        <div class="rewards-item-icon"><span class="ft-reference-icon" data-fixed-icon="${grant.tier === 'diamond' ? 'gem' : 'gift'}"></span></div>
+      return `<article class="rewards-item available" data-tier="${rewardEscapeHTML(grant.tier)}">
+        <div class="rewards-item-icon"><span class="ft-reference-icon" data-fixed-icon="${rewardEscapeHTML(tierConfig.icon)}"></span></div>
         <div class="rewards-item-copy">
           <div class="rewards-item-kicker">${rewardEscapeHTML(rewardTierName(grant.tier))}</div>
           <h3>${rewardEscapeHTML(title)}</h3>
@@ -13436,8 +13446,9 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       const rewardText = entry.tier === 'bronze'
         ? rewardDescription('bronze')
         : rewardDescription(entry.tier, grant?.reward_variant, false);
-      return `<div class="reward-history-row">
-        <div class="reward-history-icon"><span class="ft-reference-icon" data-fixed-icon="${entry.tier === 'diamond' ? 'gem' : 'award'}"></span></div>
+      const tierConfig = REWARDS_TIERS.find(item => item.tier === entry.tier) || REWARDS_TIERS[0];
+      return `<div class="reward-history-row" data-tier="${rewardEscapeHTML(entry.tier)}">
+        <div class="reward-history-icon"><span class="ft-reference-icon" data-fixed-icon="${rewardEscapeHTML(tierConfig.icon)}"></span></div>
         <div class="reward-history-main">
           <strong>${rewardEscapeHTML(rewardTierName(entry.tier))}</strong>
           <span>${rewardEscapeHTML(rewardText)}</span>
