@@ -2071,7 +2071,7 @@
   .rewards-progress-panel { align-self:center; position:relative; z-index:1; }
   .rewards-progress-top { display:flex; justify-content:space-between; gap:1rem; font-size:0.74rem; color:rgba(255,255,255,0.7); margin-bottom:0.5rem; }
   .rewards-progress-track { height:17px; background:rgba(255,255,255,0.14); border:1px solid rgba(255,255,255,0.1); border-radius:999px; overflow:hidden; box-shadow:inset 0 2px 4px rgba(0,0,0,0.18); }
-  .rewards-progress-fill { height:100%; width:0; background:linear-gradient(90deg,#fbbf24 0%,#ef4444 68%,#e53935 100%); border-radius:inherit; transition:width 0.8s cubic-bezier(.2,.8,.2,1); position:relative; }
+  .rewards-progress-fill { height:100%; width:0; background:linear-gradient(90deg,#ffd84d 0%,#ff9f1c 54%,#ef3b36 100%); border-radius:inherit; box-shadow:0 0 12px rgba(255,159,28,0.38); transition:width 0.8s cubic-bezier(.2,.8,.2,1); position:relative; }
   .rewards-progress-fill::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.34),transparent); transform:translateX(-100%); animation:rewardsProgressSheen 1.25s ease 0.25s 1; }
   .rewards-progress-note { margin-top:0.65rem; padding:0.42rem 0.6rem; border-radius:7px; background:rgba(0,0,0,0.16); font-size:0.72rem; color:rgba(255,255,255,0.76); text-align:center; font-weight:700; }
   .rewards-next-rank { align-self:center; text-align:center; position:relative; z-index:1; }
@@ -2085,11 +2085,14 @@
   .rewards-hero[data-next-tier="silver"] .rewards-next-rank-icon { color:#e2e8f0; box-shadow:0 0 30px rgba(203,213,225,0.34); }
   .rewards-hero[data-next-tier="gold"] .rewards-next-rank-icon { color:#fbbf24; box-shadow:0 0 30px rgba(245,158,11,0.38); }
   .rewards-hero[data-next-tier="platinum"] .rewards-next-rank-icon { color:#bfdbfe; box-shadow:0 0 32px rgba(147,197,253,0.42); }
+  .rewards-hero[data-next-tier="platinum"] .rewards-next-rank-icon { width:142px; height:142px; }
+  .rewards-hero[data-next-tier="platinum"] .rewards-next-rank-icon .next-rank-centered-crown { width:74px; height:74px; }
   .rewards-hero[data-next-tier="diamond"] .rewards-next-rank-icon { color:#c4b5fd; box-shadow:0 0 34px rgba(139,92,246,0.44); }
   .rewards-hero[data-next-tier="platinum"]::after { background:radial-gradient(circle,rgba(59,130,246,0.42),rgba(229,57,53,0.18) 45%,transparent 70%); }
   .rewards-hero[data-next-tier="diamond"]::after { background:radial-gradient(circle,rgba(124,58,237,0.46),rgba(229,57,53,0.18) 45%,transparent 70%); }
   .rewards-next-rank strong { display:block; color:#fff; font-family:'Playfair Display',serif; font-size:1.1rem; }
   .rewards-next-rank span { display:block; color:rgba(255,255,255,0.64); font-size:0.67rem; font-weight:800; margin-top:0.18rem; text-transform:uppercase; letter-spacing:0.05em; }
+  .rewards-hero[data-tier="gold"] .rewards-rank-copy-block { transform:translateY(7px); }
   .rewards-next-rank[hidden] { display:none; }
   @keyframes rewardsProgressSheen { to { transform:translateX(100%); } }
   .rewards-summary-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:0.75rem; margin-bottom:1.25rem; }
@@ -6623,7 +6626,7 @@
               <span class="rank-badge-emblem"><span class="ft-reference-icon" data-fixed-icon="medal"></span></span>
               <span class="rank-badge-ribbon">Bronze</span>
             </div>
-            <div>
+            <div class="rewards-rank-copy-block">
               <div class="rewards-eyebrow" data-en="Current Permanent Rank" data-es="Rango Permanente Actual">Current Permanent Rank</div>
               <div class="rewards-rank-name" id="rewards-rank-name">Bronze</div>
               <div class="rewards-hero-xp" id="rewards-hero-xp">0 verified XP</div>
@@ -13452,7 +13455,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     if (nextRank) nextRank.hidden = !nextTier;
     if (nextTier && nextRankIcon) {
       const nextTierIcon = nextTier.tier === 'platinum'
-        ? '<span class="ft-lucide-icon next-rank-centered-crown" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(0.5 1)"><path d="m3 7 4 4 5-7 5 7 4-4-2 11H5z"/><path d="M5 18h14"/></g></svg></span>'
+        ? '<span class="ft-lucide-icon next-rank-centered-crown" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(0.5 1)"><path d="m3 7 4 4 5-7 5 7 4-4-2 11H5z"/><path d="M5 18h14"/></g></svg></span>'
         : `<span class="ft-reference-icon" data-fixed-icon="${rewardEscapeHTML(nextTier.icon)}"></span>`;
       nextRankIcon.innerHTML = `
         <span class="next-rank-crown"><span class="ft-reference-icon" data-fixed-icon="crown"></span></span>
