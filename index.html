@@ -2140,7 +2140,55 @@
   .achievement-unlock-toast-icon .ft-lucide-icon { width:27px; height:27px; }
   .achievement-unlock-toast strong { display:block; font-size:0.8rem; }
   .achievement-unlock-toast span { display:block; margin-top:0.12rem; color:rgba(255,255,255,0.7); font-size:0.7rem; }
+  .achievement-celebration-overlay { position:fixed; inset:0; z-index:10020; display:none; align-items:center; justify-content:center; padding:1rem; background:rgba(8,10,14,0.7); backdrop-filter:blur(5px); }
+  .achievement-celebration-overlay.visible { display:flex; animation:achievementCelebrationFade 0.28s ease both; }
+  .achievement-celebration-modal { position:relative; width:min(100%,550px); max-height:min(90vh,760px); overflow:auto; padding:1.6rem; border:1px solid rgba(251,191,36,0.38); border-radius:16px; color:#fff; background:linear-gradient(145deg,#101114 0%,#250d0d 58%,#7f1d1d 100%); box-shadow:0 28px 80px rgba(0,0,0,0.55),0 0 42px rgba(245,158,11,0.2); text-align:center; animation:achievementCelebrationScale 0.42s cubic-bezier(.2,.9,.3,1.12) both; }
+  .achievement-celebration-modal::before { content:''; position:absolute; inset:0; pointer-events:none; opacity:0.32; background-image:radial-gradient(circle at 12% 16%,#fbbf24 0 2px,transparent 3px),radial-gradient(circle at 85% 22%,#fff 0 1px,transparent 2px),radial-gradient(circle at 72% 82%,#ef4444 0 2px,transparent 3px); background-size:160px 130px,190px 150px,210px 180px; }
+  .achievement-celebration-modal[data-tier="silver"] { border-color:rgba(226,232,240,0.7); box-shadow:0 28px 80px rgba(0,0,0,0.55),0 0 42px rgba(203,213,225,0.28); }
+  .achievement-celebration-modal[data-tier="gold"] { border-color:rgba(251,191,36,0.72); box-shadow:0 28px 80px rgba(0,0,0,0.55),0 0 52px rgba(245,158,11,0.36); }
+  .achievement-celebration-modal[data-tier="platinum"] { border-color:rgba(147,197,253,0.72); box-shadow:0 28px 80px rgba(0,0,0,0.55),0 0 52px rgba(96,165,250,0.34); }
+  .achievement-celebration-modal[data-tier="diamond"] { border-color:rgba(196,181,253,0.78); background:linear-gradient(145deg,#050508 0%,#120d1d 58%,#2e1065 100%); box-shadow:0 28px 80px rgba(0,0,0,0.62),0 0 60px rgba(139,92,246,0.42); }
+  .achievement-celebration-content { position:relative; z-index:2; }
+  .achievement-celebration-kicker { display:flex; align-items:center; justify-content:center; gap:0.4rem; color:#fbbf24; font-size:0.68rem; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; }
+  .achievement-celebration-kicker .ft-lucide-icon { width:18px; height:18px; }
+  .achievement-celebration-badge { width:116px; height:116px; margin:1rem auto; display:flex; align-items:center; justify-content:center; border:3px solid #fde68a; border-radius:50%; color:#fff8dc; background:radial-gradient(circle at 35% 28%,#fff7cc,#f59e0b 54%,#92400e); box-shadow:inset 0 0 0 8px rgba(146,64,14,0.65),inset 0 0 0 11px rgba(255,255,255,0.28),0 0 34px rgba(245,158,11,0.46); }
+  .achievement-celebration-badge .ft-lucide-icon { width:60px; height:60px; filter:drop-shadow(0 4px 7px rgba(74,36,0,0.36)); }
+  .achievement-celebration-modal[data-tier="silver"] .achievement-celebration-badge { color:#fff; background:radial-gradient(circle at 35% 28%,#fff,#cbd5e1 55%,#64748b); border-color:#f8fafc; box-shadow:inset 0 0 0 8px #64748b,inset 0 0 0 11px rgba(255,255,255,0.5),0 0 34px rgba(226,232,240,0.4); }
+  .achievement-celebration-modal[data-tier="platinum"] .achievement-celebration-badge { color:#eff6ff; background:radial-gradient(circle at 35% 28%,#fff,#93c5fd 52%,#1d4ed8); border-color:#dbeafe; box-shadow:inset 0 0 0 8px #1e40af,inset 0 0 0 11px rgba(255,255,255,0.44),0 0 38px rgba(96,165,250,0.5); }
+  .achievement-celebration-modal[data-tier="diamond"] .achievement-celebration-badge { color:#fff; background:radial-gradient(circle at 35% 28%,#fff,#c4b5fd 48%,#7c3aed); border-color:#ede9fe; box-shadow:inset 0 0 0 8px #6d28d9,inset 0 0 0 11px rgba(255,255,255,0.46),0 0 44px rgba(139,92,246,0.58); animation:diamondCelebrationShimmer 2.2s ease-in-out infinite; }
+  .achievement-celebration-title { margin:0; font-family:'Playfair Display',serif; font-size:clamp(1.55rem,5vw,2.05rem); line-height:1.15; }
+  .achievement-celebration-message { margin:0.55rem auto 0; max-width:430px; color:rgba(255,255,255,0.76); font-size:0.84rem; line-height:1.65; }
+  .achievement-celebration-xp { display:inline-flex; align-items:center; justify-content:center; min-height:38px; margin-top:0.85rem; padding:0.45rem 0.8rem; border:1px solid rgba(251,191,36,0.35); border-radius:999px; color:#fbbf24; background:rgba(251,191,36,0.09); font-size:0.78rem; font-weight:900; }
+  .achievement-celebration-total { display:none; margin-top:0.65rem; color:rgba(255,255,255,0.72); font-size:0.72rem; }
+  .achievement-celebration-total.visible { display:block; }
+  .achievement-celebration-total strong { color:#fff; font-size:1rem; }
+  .achievement-celebration-journey { margin-top:1rem; padding-top:0.9rem; border-top:1px solid rgba(255,255,255,0.13); color:rgba(255,255,255,0.65); font-size:0.7rem; line-height:1.55; }
+  .achievement-celebration-journey strong { display:block; color:#fff; }
+  .achievement-celebration-rank-benefits { display:none; margin:1rem auto 0; max-width:390px; text-align:left; }
+  .achievement-celebration-rank-benefits.visible { display:grid; gap:0.45rem; }
+  .achievement-celebration-rank-benefits span { display:flex; align-items:center; gap:0.45rem; padding:0.45rem 0.55rem; border-radius:7px; color:rgba(255,255,255,0.82); background:rgba(255,255,255,0.055); font-size:0.7rem; font-weight:700; }
+  .achievement-celebration-rank-benefits .ft-lucide-icon { width:16px; height:16px; color:#fbbf24; stroke:#fbbf24; }
+  .achievement-celebration-stats { display:none; margin:1rem auto 0; max-width:410px; padding:0.8rem; border:1px solid rgba(255,255,255,0.12); border-radius:9px; background:rgba(0,0,0,0.16); text-align:left; }
+  .achievement-celebration-stats.visible { display:block; }
+  .achievement-celebration-stats > strong { display:block; margin-bottom:0.5rem; color:#fff; font-size:0.72rem; }
+  .achievement-celebration-stats > div { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0.4rem; }
+  .achievement-celebration-stat { display:flex; align-items:center; gap:0.4rem; min-width:0; color:rgba(255,255,255,0.74); font-size:0.65rem; line-height:1.4; }
+  .achievement-celebration-stat .ft-lucide-icon { width:15px; height:15px; flex:0 0 15px; color:#fbbf24; stroke:#fbbf24; }
+  .achievement-celebration-actions { display:flex; justify-content:center; gap:0.65rem; margin-top:1.15rem; }
+  .achievement-celebration-actions button { min-height:42px; padding:0.62rem 0.95rem; border-radius:9px; font:800 0.72rem 'Sora',sans-serif; cursor:pointer; }
+  .achievement-celebration-primary { border:0; color:#fff; background:linear-gradient(135deg,#e53935,#c62828); box-shadow:0 8px 18px rgba(229,57,53,0.28); }
+  .achievement-celebration-secondary { border:1px solid rgba(255,255,255,0.22); color:#fff; background:rgba(255,255,255,0.07); }
+  .achievement-celebration-confetti { position:absolute; inset:0; overflow:hidden; pointer-events:none; }
+  .achievement-celebration-confetti span { position:absolute; top:-12px; width:6px; height:11px; border-radius:2px; background:#fbbf24; opacity:0; animation:achievementConfetti 1.35s ease-out both; }
+  .achievement-celebration-confetti span:nth-child(1){left:12%;animation-delay:.04s}.achievement-celebration-confetti span:nth-child(2){left:26%;background:#ef4444;animation-delay:.12s}.achievement-celebration-confetti span:nth-child(3){left:42%;background:#fff;animation-delay:.2s}.achievement-celebration-confetti span:nth-child(4){left:58%;animation-delay:.08s}.achievement-celebration-confetti span:nth-child(5){left:72%;background:#ef4444;animation-delay:.18s}.achievement-celebration-confetti span:nth-child(6){left:88%;background:#fff;animation-delay:.25s}
   @keyframes achievementUnlockIn { from{opacity:0;transform:translateY(18px) scale(.94)} to{opacity:1;transform:translateY(0) scale(1)} }
+  @keyframes achievementCelebrationFade { from{opacity:0} to{opacity:1} }
+  @keyframes achievementCelebrationScale { from{opacity:0;transform:scale(.94) translateY(10px)} to{opacity:1;transform:scale(1) translateY(0)} }
+  @keyframes achievementConfetti { 0%{opacity:0;transform:translateY(0) rotate(0)} 14%{opacity:.9} 100%{opacity:0;transform:translateY(330px) rotate(220deg)} }
+  @keyframes diamondCelebrationShimmer { 0%,100%{filter:brightness(1)} 50%{filter:brightness(1.18) drop-shadow(0 0 12px rgba(255,255,255,0.32))} }
+  @media (prefers-reduced-motion:reduce) {
+    .achievement-celebration-overlay.visible,.achievement-celebration-modal,.achievement-celebration-confetti span,.achievement-celebration-modal[data-tier="diamond"] .achievement-celebration-badge { animation:none !important; }
+  }
   @media (hover:hover) and (pointer:fine) {
     .achievement-center .badge-item:hover { transform:translateY(-3px); box-shadow:0 12px 24px rgba(15,23,42,0.09); }
     .achievement-rewards-link:hover,.achievement-next-reward button:hover,.achievement-motivation button:hover { transform:translateY(-1px); }
@@ -2164,6 +2212,10 @@
     .financial-journey-timeline::before,.journey-event::before { display:none; }
     .journey-event { grid-template-columns:42px minmax(0,1fr); }
     .journey-event-date { grid-column:2; text-align:left; }
+    .achievement-celebration-modal { padding:1.25rem 1rem; }
+    .achievement-celebration-actions { flex-direction:column; }
+    .achievement-celebration-actions button { width:100%; }
+    .achievement-celebration-stats > div { grid-template-columns:1fr; }
   }
   @media (max-width:430px) {
     .achievement-progress-stats { grid-template-columns:1fr; }
@@ -6896,6 +6948,30 @@
       <div class="reward-celebration-rank" id="reward-celebration-rank"></div>
       <p id="reward-celebration-copy"></p>
       <button class="reward-celebration-btn" type="button" onclick="closeRewardCelebration()" data-en="Continue" data-es="Continuar">Continue</button>
+    </div>
+  </div>
+
+  <div class="achievement-celebration-overlay" id="achievement-celebration-overlay" role="presentation">
+    <div class="achievement-celebration-modal" id="achievement-celebration-modal" role="dialog" aria-modal="true" aria-labelledby="achievement-celebration-title" aria-describedby="achievement-celebration-message">
+      <div class="achievement-celebration-confetti" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="achievement-celebration-content">
+        <div class="achievement-celebration-kicker"><span class="ft-reference-icon" data-fixed-icon="award"></span><span id="achievement-celebration-kicker">Achievement Unlocked</span></div>
+        <div class="achievement-celebration-badge" id="achievement-celebration-badge"><span class="ft-reference-icon" data-fixed-icon="award"></span></div>
+        <h2 class="achievement-celebration-title" id="achievement-celebration-title">Achievement Unlocked</h2>
+        <p class="achievement-celebration-message" id="achievement-celebration-message"></p>
+        <div class="achievement-celebration-xp" id="achievement-celebration-xp"></div>
+        <div class="achievement-celebration-total" id="achievement-celebration-total"></div>
+        <div class="achievement-celebration-rank-benefits" id="achievement-celebration-rank-benefits"></div>
+        <div class="achievement-celebration-stats" id="achievement-celebration-stats">
+          <strong id="achievement-celebration-stats-title">Along the way, you have:</strong>
+          <div id="achievement-celebration-stats-list"></div>
+        </div>
+        <div class="achievement-celebration-journey" id="achievement-celebration-journey"><strong>Your Financial Journey</strong>This milestone has been added to your story.</div>
+        <div class="achievement-celebration-actions">
+          <button class="achievement-celebration-secondary" id="achievement-celebration-secondary" type="button" onclick="handleCelebrationSecondary()">View Your Financial Journey</button>
+          <button class="achievement-celebration-primary" id="achievement-celebration-primary" type="button" onclick="handleCelebrationPrimary()">Continue</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -12776,6 +12852,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     totalXP: 0,
     activityFeed: [],
     financialJourney: [],
+    achievementCelebrationsShown: {},
+    rankCelebrationsShown: {},
     usedInvestCalc: false,
     usedCreditSim: false,
     askedAI: false,
@@ -13258,19 +13336,510 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     });
   }
 
-  function checkLevelUp(prevXP, newXP) {
-    const prevLevel = getLEVELS().findIndex((l, i) => {
-      const next = getLEVELS()[i+1];
-      return prevXP >= l.minXP && (!next || prevXP < next.minXP);
-    });
-    const newLevel = getLEVELS().findIndex((l, i) => {
-      const next = getLEVELS()[i+1];
-      return newXP >= l.minXP && (!next || newXP < next.minXP);
-    });
-    if (newLevel > prevLevel && newLevel >= 0) {
-      const level = getLEVELS()[newLevel];
-      showLevelUpToast(level);
+  const ACHIEVEMENT_CELEBRATION_MESSAGES = {
+    first_login: {
+      en:'Every financial journey begins with a single step.',
+      es:'Cada trayectoria financiera comienza con un solo paso.'
+    },
+    first_transaction: {
+      en:"You're officially taking control of your finances.",
+      es:'Oficialmente estás tomando el control de tus finanzas.'
+    },
+    ten_transactions: {
+      en:'Consistency is becoming one of your greatest strengths.',
+      es:'La constancia se está convirtiendo en una de tus mayores fortalezas.'
+    },
+    first_goal: {
+      en:'Saving money today creates freedom tomorrow.',
+      es:'Ahorrar hoy crea libertad para mañana.'
+    },
+    goal_complete: {
+      en:'Your steady saving turned a goal into a real victory.',
+      es:'Tu ahorro constante convirtió una meta en una victoria real.'
+    },
+    first_bill: {
+      en:'Staying organized is how financial confidence grows.',
+      es:'Mantenerte organizado fortalece tu confianza financiera.'
+    },
+    five_bills: {
+      en:'You are building a system that keeps important payments visible.',
+      es:'Estás creando un sistema que mantiene visibles tus pagos importantes.'
+    },
+    budget_surplus: {
+      en:'Your plan is helping your income work harder for you.',
+      es:'Tu plan está ayudando a que tus ingresos trabajen mejor para ti.'
+    },
+    streak_7: {
+      en:'Small habits repeated every week build lasting success.',
+      es:'Los pequeños hábitos repetidos cada semana construyen un éxito duradero.'
+    },
+    streak_30: {
+      en:'A full month of consistency deserves recognition.',
+      es:'Un mes completo de constancia merece reconocimiento.'
+    },
+    pro_member: {
+      en:"You've invested in yourself and your financial future.",
+      es:'Has invertido en ti y en tu futuro financiero.'
+    },
+    debt_planner: {
+      en:'Every payment moves you closer to financial freedom.',
+      es:'Cada pago te acerca más a la libertad financiera.'
+    },
+    invest_calc: {
+      en:"You're planning for tomorrow instead of reacting to today.",
+      es:'Estás planificando para mañana en lugar de reaccionar al presente.'
+    },
+    credit_sim: {
+      en:'Understanding your credit gives you more control over what comes next.',
+      es:'Comprender tu crédito te da más control sobre lo que viene.'
+    },
+    ai_chat: {
+      en:'Asking thoughtful questions is part of building financial confidence.',
+      es:'Hacer preguntas importantes forma parte de construir confianza financiera.'
+    },
+    three_goals: {
+      en:'You are turning more of your dreams into clear financial targets.',
+      es:'Estás convirtiendo más de tus sueños en objetivos financieros claros.'
+    },
+    savings_1000: {
+      en:'Your savings have crossed a milestone worth celebrating.',
+      es:'Tus ahorros alcanzaron un logro que merece celebrarse.'
+    },
+    savings_10000: {
+      en:'Your long-term consistency is creating meaningful financial security.',
+      es:'Tu constancia a largo plazo está creando una seguridad financiera significativa.'
+    },
+    fifty_transactions: {
+      en:'You have built a powerful habit of knowing where your money goes.',
+      es:'Has creado el poderoso hábito de saber adónde va tu dinero.'
+    },
+    profile_complete: {
+      en:'Your Fintrail experience is now ready to work around your goals.',
+      es:'Tu experiencia en Fintrail está lista para adaptarse a tus metas.'
     }
+  };
+  const PERMANENT_RANK_CELEBRATIONS = [
+    { tier:'silver', threshold:4000 },
+    { tier:'gold', threshold:9000 },
+    { tier:'platinum', threshold:18000 },
+    { tier:'diamond', threshold:35000 }
+  ];
+  let achievementCelebrationQueue = [];
+  let activeAchievementCelebration = null;
+  let achievementCelebrationPreviousFocus = null;
+  let achievementCelebrationKeyHandlerBound = false;
+
+  function getRankCelebrationCopy(level) {
+    const tier = level?.tier || 'bronze';
+    const names = currentLang === 'es'
+      ? { silver:'MIEMBRO PLATA', gold:'MIEMBRO ORO', platinum:'MIEMBRO PLATINO', diamond:'MIEMBRO DIAMANTE' }
+      : { silver:'SILVER MEMBER', gold:'GOLD MEMBER', platinum:'PLATINUM MEMBER', diamond:'DIAMOND MEMBER' };
+    const journey = {
+      silver: {
+        title:'Reached Silver Rank', titleEs:'Alcanzaste el Rango Plata',
+        message:'Your steady progress became a permanent achievement.',
+        messageEs:'Tu progreso constante se convirtió en un logro permanente.'
+      },
+      gold: {
+        title:'Reached Gold Rank', titleEs:'Alcanzaste el Rango Oro',
+        message:'Months of consistency turned into a permanent achievement.',
+        messageEs:'Meses de constancia se convirtieron en un logro permanente.'
+      },
+      platinum: {
+        title:'Reached Platinum Rank', titleEs:'Alcanzaste el Rango Platino',
+        message:'Your financial habits reached an exceptional new level.',
+        messageEs:'Tus hábitos financieros alcanzaron un nuevo nivel excepcional.'
+      },
+      diamond: {
+        title:'Reached Diamond Rank', titleEs:'Alcanzaste el Rango Diamante',
+        message:'Your dedication carried you to Fintrail’s highest permanent rank.',
+        messageEs:'Tu dedicación te llevó al rango permanente más alto de Fintrail.'
+      }
+    };
+    const rewards = {
+      silver: currentLang === 'es' ? '1 mes GRATIS de Fintrail Pro' : '1 FREE month of Fintrail Pro',
+      gold: currentLang === 'es' ? '2 meses GRATIS de Fintrail Pro' : '2 FREE months of Fintrail Pro',
+      platinum: currentLang === 'es' ? '10% de descuento durante 12 meses' : '10% off Fintrail Pro for 12 months',
+      diamond: currentLang === 'es' ? 'Recompensa vitalicia Diamante' : 'Diamond lifetime reward'
+    };
+    const messages = {
+      silver: currentLang === 'es'
+        ? 'Tus hábitos financieros se están volviendo constantes.'
+        : 'Your financial habits are becoming consistent.',
+      gold: currentLang === 'es'
+        ? 'Meses de disciplina te han otorgado el rango Oro permanente.'
+        : 'Months of discipline have earned you permanent Gold status.',
+      platinum: currentLang === 'es'
+        ? 'Has alcanzado uno de los logros más dedicados de Fintrail.'
+        : "You've reached one of Fintrail’s most dedicated milestones.",
+      diamond: currentLang === 'es'
+        ? 'Muy pocos usuarios alcanzan Diamante. Gracias por hacer de Fintrail parte de tu trayectoria financiera.'
+        : 'Very few users reach Diamond. Thank you for making Fintrail part of your financial journey.'
+    };
+    const benefits = {
+      silver: currentLang === 'es'
+        ? ['1 mes GRATIS de Fintrail Pro','Insignia Plata permanente','Plata agregada a Tu Trayectoria Financiera']
+        : ['1 FREE Month of Fintrail Pro','Permanent Silver Badge','Silver added to Your Financial Journey'],
+      gold: currentLang === 'es'
+        ? ['2 meses GRATIS de Fintrail Pro','Insignia de Miembro Oro','Oro agregado a Tu Trayectoria Financiera','Nuevas recompensas disponibles']
+        : ['2 FREE Months of Fintrail Pro','Gold Member Badge','Gold added to Your Financial Journey','New rewards available'],
+      platinum: currentLang === 'es'
+        ? ['10% de descuento en Fintrail Pro por 12 meses','Insignia Platino permanente','Platino agregado a Tu Trayectoria Financiera','Recompensas futuras exclusivas']
+        : ['10% OFF Fintrail Pro for 12 months','Permanent Platinum Badge','Platinum added to Your Financial Journey','Exclusive future rewards'],
+      diamond: currentLang === 'es'
+        ? ['Insignia Diamante de por vida','Recompensa de por vida','Estatus de Miembro Legado','Diamante agregado a Tu Trayectoria Financiera']
+        : ['Lifetime Diamond Badge','Lifetime Reward','Legacy Member Status','Diamond added to Your Financial Journey']
+    };
+    return {
+      tier,
+      memberName:names[tier] || String(level?.name || '').toUpperCase(),
+      journey:journey[tier] || journey.silver,
+      reward:rewards[tier] || '',
+      message:messages[tier] || '',
+      benefits:benefits[tier] || []
+    };
+  }
+
+  function queueAchievementCelebration(badge) {
+    if (!currentUser || !badge?.id) return;
+    if (!gameData.achievementCelebrationsShown) gameData.achievementCelebrationsShown = {};
+    if (gameData.achievementCelebrationsShown[badge.id]) return;
+    gameData.achievementCelebrationsShown[badge.id] = new Date().toISOString();
+    saveGameData();
+    const newXP = Number(gameData.totalXP || 0);
+    achievementCelebrationQueue.push({
+      type:'achievement',
+      id:`achievement_${badge.id}`,
+      badge,
+      oldXP:Math.max(0, newXP - Number(badge.xp || 0)),
+      newXP
+    });
+    showNextAchievementCelebration();
+  }
+
+  function queueRankCelebration(level, oldXP, newXP) {
+    if (!currentUser || !level?.tier || level.tier === 'bronze') return;
+    const rankRule = PERMANENT_RANK_CELEBRATIONS.find(item => item.tier === level.tier);
+    if (!rankRule || Number(newXP || 0) < rankRule.threshold) return;
+    if (!gameData.rankCelebrationsShown) gameData.rankCelebrationsShown = {};
+    if (gameData.rankCelebrationsShown[level.tier]) return;
+    gameData.rankCelebrationsShown[level.tier] = new Date().toISOString();
+    const copy = getRankCelebrationCopy(level);
+    recordJourneyEvent({
+      id:`rank_${level.tier}_achieved`,
+      type:'rank',
+      icon:level.tier === 'diamond' ? 'gem' : 'medal',
+      source:'rewards',
+      ...copy.journey,
+      date:new Date().toISOString(),
+      verifiedXp:Number(newXP || 0),
+      related:level.tier
+    }, { save:false, render:false });
+    saveGameData();
+    achievementCelebrationQueue.push({
+      type:'rank',
+      id:`rank_${level.tier}_achieved`,
+      level,
+      oldXP:Number(oldXP || 0),
+      newXP:Number(newXP || 0)
+    });
+    showNextAchievementCelebration();
+  }
+
+  function getRankCelebrationStats(verifiedXP) {
+    const isEs = currentLang === 'es';
+    const earnedAchievements = Array.isArray(gameData.earnedBadges) ? gameData.earnedBadges.length : 0;
+    const currentStreak = Math.max(0, Number(gameData.loginStreak || 0));
+    const completedGoals = goals.filter(goal => Number(goal.saved || 0) >= Number(goal.target || 0) && Number(goal.target || 0) > 0).length;
+    const paidDebts = planDebts.filter(debt => debt.status === 'paid').length;
+    const stats = [
+      {
+        icon:'trending-up',
+        value:Number(verifiedXP || 0),
+        text:isEs
+          ? `${Number(verifiedXP || 0).toLocaleString()} XP verificado ganado`
+          : `Earned ${Number(verifiedXP || 0).toLocaleString()} Verified XP`,
+        show:Number.isFinite(Number(verifiedXP))
+      },
+      {
+        icon:'trophy',
+        value:earnedAchievements,
+        text:isEs
+          ? `Completaste ${earnedAchievements} ${earnedAchievements === 1 ? 'logro' : 'logros'}`
+          : `Completed ${earnedAchievements} ${earnedAchievements === 1 ? 'achievement' : 'achievements'}`,
+        show:earnedAchievements > 0
+      },
+      {
+        icon:'flame',
+        value:currentStreak,
+        text:isEs
+          ? `Mantuviste una racha de ${currentStreak} ${currentStreak === 1 ? 'día' : 'días'}`
+          : `Maintained a ${currentStreak}-day streak`,
+        show:currentStreak > 0
+      },
+      {
+        icon:'target',
+        value:goals.length,
+        text:isEs
+          ? `Creaste ${goals.length} ${goals.length === 1 ? 'meta de ahorro' : 'metas de ahorro'}`
+          : `Created ${goals.length} savings ${goals.length === 1 ? 'goal' : 'goals'}`,
+        show:goals.length > 0
+      },
+      {
+        icon:'check-circle',
+        value:completedGoals,
+        text:isEs
+          ? `Completaste ${completedGoals} ${completedGoals === 1 ? 'meta de ahorro' : 'metas de ahorro'}`
+          : `Completed ${completedGoals} savings ${completedGoals === 1 ? 'goal' : 'goals'}`,
+        show:completedGoals > 0
+      },
+      {
+        icon:'calendar-check',
+        value:bills.length,
+        text:isEs
+          ? `Registraste ${bills.length} ${bills.length === 1 ? 'factura' : 'facturas'}`
+          : `Tracked ${bills.length} ${bills.length === 1 ? 'bill' : 'bills'}`,
+        show:bills.length > 0
+      },
+      {
+        icon:'credit-card',
+        value:paidDebts,
+        text:isEs
+          ? `Pagaste ${paidDebts} ${paidDebts === 1 ? 'deuda' : 'deudas'}`
+          : `Paid off ${paidDebts} ${paidDebts === 1 ? 'debt' : 'debts'}`,
+        show:paidDebts > 0
+      },
+      {
+        icon:'receipt-text',
+        value:transactions.length,
+        text:isEs
+          ? `Registraste ${transactions.length} ${transactions.length === 1 ? 'transacción' : 'transacciones'}`
+          : `Logged ${transactions.length} ${transactions.length === 1 ? 'transaction' : 'transactions'}`,
+        show:transactions.length > 0
+      }
+    ];
+    return stats.filter(stat => stat.show);
+  }
+
+  function showNextAchievementCelebration() {
+    if (activeAchievementCelebration || achievementCelebrationQueue.length === 0) return;
+    activeAchievementCelebration = achievementCelebrationQueue.shift();
+    const item = activeAchievementCelebration;
+    const overlay = document.getElementById('achievement-celebration-overlay');
+    const modal = document.getElementById('achievement-celebration-modal');
+    const kicker = document.getElementById('achievement-celebration-kicker');
+    const badgeEl = document.getElementById('achievement-celebration-badge');
+    const title = document.getElementById('achievement-celebration-title');
+    const message = document.getElementById('achievement-celebration-message');
+    const xp = document.getElementById('achievement-celebration-xp');
+    const total = document.getElementById('achievement-celebration-total');
+    const benefits = document.getElementById('achievement-celebration-rank-benefits');
+    const stats = document.getElementById('achievement-celebration-stats');
+    const statsTitle = document.getElementById('achievement-celebration-stats-title');
+    const statsList = document.getElementById('achievement-celebration-stats-list');
+    const journey = document.getElementById('achievement-celebration-journey');
+    const primary = document.getElementById('achievement-celebration-primary');
+    const secondary = document.getElementById('achievement-celebration-secondary');
+    if (!overlay || !modal || !kicker || !badgeEl || !title || !message || !xp || !total || !benefits || !stats || !statsTitle || !statsList || !journey || !primary || !secondary) {
+      activeAchievementCelebration = null;
+      return;
+    }
+
+    achievementCelebrationPreviousFocus = document.activeElement;
+    total.classList.remove('visible');
+    benefits.classList.remove('visible');
+    stats.classList.remove('visible');
+    statsList.innerHTML = '';
+    primary.disabled = false;
+    secondary.disabled = false;
+    modal.dataset.tier = '';
+
+    if (item.type === 'rank') {
+      const copy = getRankCelebrationCopy(item.level);
+      modal.dataset.tier = copy.tier;
+      kicker.textContent = currentLang === 'es' ? '¡FELICIDADES!' : 'CONGRATULATIONS!';
+      badgeEl.innerHTML = `<span class="ft-reference-icon" data-fixed-icon="${copy.tier === 'diamond' ? 'gem' : 'medal'}"></span>`;
+      title.textContent = copy.memberName;
+      message.textContent = copy.message;
+      xp.textContent = `${Number(item.newXP || 0).toLocaleString()} ${currentLang === 'es' ? 'XP verificado' : 'Verified XP'}`;
+      benefits.innerHTML = copy.benefits.map(benefit =>
+        `<span><span class="ft-reference-icon" data-fixed-icon="check-circle"></span>${rewardEscapeHTML(benefit)}</span>`
+      ).join('');
+      benefits.classList.add('visible');
+      const rankStats = getRankCelebrationStats(item.newXP);
+      if (rankStats.length) {
+        statsTitle.textContent = currentLang === 'es' ? 'En tu camino:' : 'Along the way, you have:';
+        statsList.innerHTML = rankStats.map(stat =>
+          `<span class="achievement-celebration-stat"><span class="ft-reference-icon" data-fixed-icon="${stat.icon}"></span>${rewardEscapeHTML(stat.text)}</span>`
+        ).join('');
+        stats.classList.add('visible');
+      }
+      journey.innerHTML = `<strong>${currentLang === 'es' ? 'Tu Trayectoria Financiera' : 'Your Financial Journey'}</strong>${currentLang === 'es' ? 'Este rango permanente se agregó a tu historia.' : 'This permanent rank has been added to your story.'}`;
+      primary.textContent = currentLang === 'es' ? 'Ver Centro de Recompensas' : 'View Rewards Center';
+      secondary.textContent = currentLang === 'es' ? 'Continuar' : 'Continue';
+    } else {
+      const badge = item.badge;
+      const badgeText = getBadgeText(badge);
+      const personalized = ACHIEVEMENT_CELEBRATION_MESSAGES[badge.id] || {};
+      const icon = REWARD_ACHIEVEMENT_ICONS[badge.id] || 'award';
+      kicker.textContent = currentLang === 'es' ? 'Logro Desbloqueado' : 'Achievement Unlocked';
+      badgeEl.innerHTML = `<span class="ft-reference-icon" data-fixed-icon="${icon}"></span>`;
+      title.textContent = badgeText.name;
+      message.textContent = currentLang === 'es'
+        ? (personalized.es || badgeText.desc)
+        : (personalized.en || badgeText.desc);
+      xp.textContent = `+${Number(badge.xp || 0).toLocaleString()} ${currentLang === 'es' ? 'XP verificado' : 'Verified XP'}`;
+      benefits.innerHTML = '';
+      journey.innerHTML = `<strong>${currentLang === 'es' ? 'Tu Trayectoria Financiera' : 'Your Financial Journey'}</strong>${currentLang === 'es' ? 'Este logro se agregó a la historia de tu crecimiento financiero.' : 'This milestone has been added to the story of your financial growth.'}`;
+      primary.textContent = currentLang === 'es' ? 'Continuar' : 'Continue';
+      secondary.textContent = currentLang === 'es' ? 'Ver Tu Trayectoria Financiera' : 'View Your Financial Journey';
+    }
+    overlay.classList.add('visible');
+    if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons(overlay);
+    bindAchievementCelebrationKeyboard();
+    requestAnimationFrame(() => primary.focus());
+  }
+
+  function animateCelebrationXP(item) {
+    const total = document.getElementById('achievement-celebration-total');
+    const xpBar = document.getElementById('xp-bar');
+    if (!total) return Promise.resolve();
+    const oldXP = Math.max(0, Number(item.oldXP || 0));
+    const newXP = Math.max(oldXP, Number(item.newXP || oldXP));
+    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    total.classList.add('visible');
+    const label = currentLang === 'es' ? 'XP total' : 'Total XP';
+    if (reduced || oldXP === newXP) {
+      total.innerHTML = `${label}: <strong>${newXP.toLocaleString()}</strong>`;
+      renderLevelCard();
+      return Promise.resolve();
+    }
+
+    const level = getCurrentLevel();
+    const nextLevel = getLEVELS()[level.index + 1];
+    const oldProgress = nextLevel
+      ? Math.max(0, Math.min(100, ((oldXP - level.minXP) / (nextLevel.minXP - level.minXP)) * 100))
+      : 100;
+    const newProgress = nextLevel
+      ? Math.max(0, Math.min(100, ((newXP - level.minXP) / (nextLevel.minXP - level.minXP)) * 100))
+      : 100;
+    if (xpBar) {
+      xpBar.style.transition = 'none';
+      xpBar.style.width = `${oldProgress}%`;
+      requestAnimationFrame(() => {
+        xpBar.style.transition = 'width 0.8s cubic-bezier(.2,.8,.2,1)';
+        xpBar.style.width = `${newProgress}%`;
+      });
+    }
+    return new Promise(resolve => {
+      const start = performance.now();
+      const duration = 760;
+      const tick = now => {
+        const progress = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const value = Math.round(oldXP + (newXP - oldXP) * eased);
+        total.innerHTML = `${label}: <strong>${oldXP.toLocaleString()}</strong> → <strong>${value.toLocaleString()}</strong>`;
+        if (progress < 1) requestAnimationFrame(tick);
+        else {
+          renderLevelCard();
+          resolve();
+        }
+      };
+      requestAnimationFrame(tick);
+    });
+  }
+
+  function handleCelebrationPrimary() {
+    if (activeAchievementCelebration?.type === 'rank') {
+      openCelebrationDestination();
+    } else {
+      continueAchievementCelebration();
+    }
+  }
+
+  function handleCelebrationSecondary() {
+    if (activeAchievementCelebration?.type === 'rank') {
+      continueAchievementCelebration();
+    } else {
+      openCelebrationDestination();
+    }
+  }
+
+  async function continueAchievementCelebration() {
+    if (!activeAchievementCelebration) return;
+    const primary = document.getElementById('achievement-celebration-primary');
+    const secondary = document.getElementById('achievement-celebration-secondary');
+    if (primary?.disabled) return;
+    if (primary) primary.disabled = true;
+    if (secondary) secondary.disabled = true;
+    await animateCelebrationXP(activeAchievementCelebration);
+    if (typeof syncRewardsVerifiedXP === 'function') {
+      syncRewardsVerifiedXP().then(() => {
+        if (rewardsCenterState.loaded) loadRewardsCenter({ force:true });
+      }).catch(() => {});
+    }
+    finishAchievementCelebration();
+  }
+
+  function finishAchievementCelebration() {
+    const overlay = document.getElementById('achievement-celebration-overlay');
+    if (overlay) overlay.classList.remove('visible');
+    const previousFocus = achievementCelebrationPreviousFocus;
+    activeAchievementCelebration = null;
+    achievementCelebrationPreviousFocus = null;
+    if (previousFocus && typeof previousFocus.focus === 'function') previousFocus.focus();
+    setTimeout(showNextAchievementCelebration, 120);
+  }
+
+  function openCelebrationDestination() {
+    if (!activeAchievementCelebration) return;
+    const destination = activeAchievementCelebration.type === 'rank' ? 'rewards' : 'streaks';
+    finishAchievementCelebration();
+    if (destination === 'rewards') {
+      navTo('rewards', document.getElementById('nav-rewards'));
+    } else {
+      navTo('streaks');
+      setTimeout(() => document.getElementById('financial-journey-title')?.scrollIntoView({ behavior:'smooth', block:'start' }), 80);
+    }
+  }
+
+  function bindAchievementCelebrationKeyboard() {
+    if (achievementCelebrationKeyHandlerBound) return;
+    document.addEventListener('keydown', event => {
+      const overlay = document.getElementById('achievement-celebration-overlay');
+      if (!overlay?.classList.contains('visible')) return;
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        finishAchievementCelebration();
+        return;
+      }
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        document.getElementById('achievement-celebration-primary')?.click();
+        return;
+      }
+      if (event.key !== 'Tab') return;
+      const focusable = Array.from(overlay.querySelectorAll('button:not([disabled])'));
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+    achievementCelebrationKeyHandlerBound = true;
+  }
+
+  function checkLevelUp(prevXP, newXP) {
+    PERMANENT_RANK_CELEBRATIONS.forEach(rankRule => {
+      if (Number(prevXP || 0) >= rankRule.threshold || Number(newXP || 0) < rankRule.threshold) return;
+      const level = getLEVELS().find(item => item.tier === rankRule.tier);
+      if (level) queueRankCelebration(level, prevXP, newXP);
+    });
   }
 
   function showLevelUpToast(level) {
@@ -13402,13 +13971,25 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const journeyById = new Map();
     [...(base.financialJourney || []), ...(incoming.financialJourney || [])].forEach(event => {
       if (!event?.id) return;
-      const existing = journeyById.get(event.id);
+      const normalizedId = /^rank_(silver|gold|platinum|diamond)$/.test(event.id)
+        ? `${event.id}_achieved`
+        : event.id;
+      const normalizedEvent = normalizedId === event.id ? event : { ...event, id:normalizedId };
+      const existing = journeyById.get(normalizedId);
       if (!existing || Date.parse(event.date || 0) >= Date.parse(existing.date || 0)) {
-        journeyById.set(event.id, event);
+        journeyById.set(normalizedId, normalizedEvent);
       }
     });
     merged.financialJourney = Array.from(journeyById.values())
       .sort((a, b) => Date.parse(a.date || 0) - Date.parse(b.date || 0));
+    merged.achievementCelebrationsShown = {
+      ...(base.achievementCelebrationsShown || {}),
+      ...(incoming.achievementCelebrationsShown || {})
+    };
+    merged.rankCelebrationsShown = {
+      ...(base.rankCelebrationsShown || {}),
+      ...(incoming.rankCelebrationsShown || {})
+    };
     const baseCreditTs = getCreditScoreTimestampValue(base.creditScoreUpdatedAt || base.credit_score_updated_at);
     const incomingCreditTs = getCreditScoreTimestampValue(incoming.creditScoreUpdatedAt || incoming.credit_score_updated_at);
     const baseCurrentCredit = getCreditScoreNumber(base.currentCreditScore);
@@ -13539,15 +14120,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   }
 
   function showBadgeToast(badge) {
-    const toast = document.createElement('div');
-    toast.className = 'achievement-unlock-toast';
-    const bt = getBadgeText(badge);
-    const icon = (typeof REWARD_ACHIEVEMENT_ICONS !== 'undefined' && REWARD_ACHIEVEMENT_ICONS[badge.id]) || 'award';
-    toast.innerHTML = `<span class="achievement-unlock-toast-icon"><span class="ft-reference-icon" data-fixed-icon="${icon}"></span></span><div><strong>${currentLang==='es'?'¡Logro desbloqueado!':'Achievement Unlocked!'}</strong><span>${bt.name} · +${badge.xp} XP</span></div>`;
-    document.body.appendChild(toast);
-    if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons(toast);
-    setTimeout(() => toast.style.opacity = '0', 3000);
-    setTimeout(() => toast.remove(), 3500);
+    queueAchievementCelebration(badge);
   }
 
   function getCurrentLevel() {
@@ -13836,20 +14409,20 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
         message:'Your permanent Fintrail journey officially began.', messageEs:'Tu trayectoria permanente en Fintrail comenzó oficialmente.'
       },
       silver: {
-        title:'Reached Silver Rank', titleEs:'Alcanzaste el Rango Plata',
-        message:'Your steady progress became a permanent achievement.', messageEs:'Tu progreso constante se convirtió en un logro permanente.'
+        title:'Silver Member', titleEs:'Miembro Plata',
+        message:'Your financial habits are becoming consistent.', messageEs:'Tus hábitos financieros se están volviendo constantes.'
       },
       gold: {
-        title:'Reached Gold Rank', titleEs:'Alcanzaste el Rango Oro',
+        title:'Gold Member', titleEs:'Miembro Oro',
         message:'Months of consistency turned into a permanent achievement.', messageEs:'Meses de constancia se convirtieron en un logro permanente.'
       },
       platinum: {
-        title:'Reached Platinum Rank', titleEs:'Alcanzaste el Rango Platino',
-        message:'Your financial habits reached an exceptional new level.', messageEs:'Tus hábitos financieros alcanzaron un nuevo nivel excepcional.'
+        title:'Platinum Member', titleEs:'Miembro Platino',
+        message:"You reached one of Fintrail’s most dedicated milestones.", messageEs:'Alcanzaste uno de los logros más dedicados de Fintrail.'
       },
       diamond: {
-        title:'Reached Diamond Rank', titleEs:'Alcanzaste el Rango Diamante',
-        message:'Your dedication carried you to Fintrail’s highest permanent rank.', messageEs:'Tu dedicación te llevó al rango permanente más alto de Fintrail.'
+        title:'Diamond Member', titleEs:'Miembro Diamante',
+        message:'You reached Fintrail’s highest permanent rank.', messageEs:'Alcanzaste el rango permanente más alto de Fintrail.'
       }
     };
     const serverHistory = financialJourneyServerState.loaded
@@ -13862,7 +14435,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     serverHistory.forEach(entry => {
       const copy = tierCopy[entry.tier] || tierCopy.bronze;
       events.push({
-        id:`rank_${entry.tier}`,
+        id:entry.tier === 'bronze' ? 'rank_bronze' : `rank_${entry.tier}_achieved`,
         type:'rank',
         icon:entry.tier === 'diamond' ? 'gem' : 'medal',
         source:'rewards',
@@ -13913,10 +14486,13 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     events.forEach(event => {
       const date = normalizeJourneyDate(event.date);
       if (!event?.id || !date) return;
-      const normalized = { ...event, date };
-      const existing = byId.get(event.id);
+      const normalizedId = /^rank_(silver|gold|platinum|diamond)$/.test(event.id)
+        ? `${event.id}_achieved`
+        : event.id;
+      const normalized = { ...event, id:normalizedId, date };
+      const existing = byId.get(normalizedId);
       if (!existing || Date.parse(normalized.date) >= Date.parse(existing.date)) {
-        byId.set(event.id, normalized);
+        byId.set(normalizedId, normalized);
       }
     });
     return Array.from(byId.values()).sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
@@ -13933,6 +14509,29 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const badgePresentation = Object.values(JOURNEY_BADGE_EVENTS)
       .find(definition => definition.id === event.id);
     if (badgePresentation) return badgePresentation;
+    const rankPresentation = {
+      rank_silver_achieved: {
+        title:'Silver Member', titleEs:'Miembro Plata',
+        message:'Your financial habits are becoming consistent.',
+        messageEs:'Tus hábitos financieros se están volviendo constantes.'
+      },
+      rank_gold_achieved: {
+        title:'Gold Member', titleEs:'Miembro Oro',
+        message:'Months of consistency turned into a permanent achievement.',
+        messageEs:'Meses de constancia se convirtieron en un logro permanente.'
+      },
+      rank_platinum_achieved: {
+        title:'Platinum Member', titleEs:'Miembro Platino',
+        message:"You reached one of Fintrail’s most dedicated milestones.",
+        messageEs:'Alcanzaste uno de los logros más dedicados de Fintrail.'
+      },
+      rank_diamond_achieved: {
+        title:'Diamond Member', titleEs:'Miembro Diamante',
+        message:'You reached Fintrail’s highest permanent rank.',
+        messageEs:'Alcanzaste el rango permanente más alto de Fintrail.'
+      }
+    };
+    if (rankPresentation[event.id]) return rankPresentation[event.id];
     if (String(event.id || '').startsWith('debt_paid_') && event.title === 'First Debt Paid Off') {
       return {
         title:'Paid Off Your First Debt', titleEs:'Pagaste Tu Primera Deuda',
