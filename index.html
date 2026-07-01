@@ -2103,6 +2103,8 @@
   .achievement-center .streak-card { padding:0.68rem 0.75rem; }
   .achievement-center .streak-cards { gap:0.5rem; }
   .achievement-center .activity-item { background:#f8fafc; }
+  .achievement-center .activity-icon { width:34px; height:34px; display:flex; align-items:center; justify-content:center; flex:0 0 34px; border-radius:50%; color:var(--accent); background:rgba(229,57,53,0.08); }
+  .achievement-center .activity-icon .ft-lucide-icon { width:18px; height:18px; }
   .achievement-motivation { display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:1rem; align-items:center; margin-top:1rem; padding:1.25rem; border-radius:14px; color:#fff; background:linear-gradient(135deg,#111,#2a0f0f 58%,#b91c1c); box-shadow:0 16px 34px rgba(17,17,17,0.2); overflow:hidden; position:relative; }
   .achievement-motivation::after { content:''; position:absolute; width:240px; height:240px; right:-90px; top:-100px; border-radius:50%; background:radial-gradient(circle,rgba(229,57,53,0.5),transparent 70%); }
   .achievement-motivation > * { position:relative; z-index:1; }
@@ -2191,7 +2193,25 @@
     box-shadow:inset 0 0 0 8px rgba(146,64,14,0.72),inset 0 0 0 12px rgba(255,255,255,0.3),0 0 38px rgba(245,158,11,0.56),0 18px 34px rgba(0,0,0,0.34);
   }
   .rewards-hero[data-tier="gold"] .rank-badge-emblem { color:#fff; }
-  .rewards-hero[data-tier="gold"] .rank-badge-emblem .ft-lucide-icon { stroke-width:2; }
+  .rewards-hero[data-tier="gold"] .rank-badge-emblem .ft-lucide-icon { width:86px; height:86px; stroke-width:2; }
+  .rewards-hero[data-tier="gold"] .rank-badge-ribbon {
+    overflow:visible;
+    background:linear-gradient(180deg,#ef4444 0%,#b91c1c 100%);
+    border-color:#f87171;
+    box-shadow:0 7px 14px rgba(0,0,0,0.35),inset 0 1px 0 rgba(255,255,255,0.22);
+  }
+  .rewards-hero[data-tier="gold"] .rank-badge-ribbon::before,
+  .rewards-hero[data-tier="gold"] .rank-badge-ribbon::after {
+    content:'';
+    position:absolute;
+    top:7px;
+    z-index:-1;
+    width:22px;
+    height:24px;
+    background:#991b1b;
+  }
+  .rewards-hero[data-tier="gold"] .rank-badge-ribbon::before { left:-15px; clip-path:polygon(0 0,100% 18%,100% 82%,0 100%,30% 50%); }
+  .rewards-hero[data-tier="gold"] .rank-badge-ribbon::after { right:-15px; clip-path:polygon(0 18%,100% 0,70% 50%,100% 100%,0 82%); }
   .rewards-hero[data-tier="platinum"] .rewards-rank-icon { color:#eff6ff; background:radial-gradient(circle at 36% 28%,#fff,#93c5fd 48%,#1d4ed8 82%); border-color:#dbeafe; box-shadow:inset 0 0 0 8px #1e40af,inset 0 0 0 12px rgba(255,255,255,0.5),0 0 44px rgba(96,165,250,0.62),0 18px 34px rgba(0,0,0,0.34); }
   .rewards-hero[data-tier="diamond"] .rewards-rank-icon { color:#f5f3ff; background:radial-gradient(circle at 36% 28%,#fff,#c4b5fd 46%,#7c3aed 82%); border-color:#ede9fe; box-shadow:inset 0 0 0 8px #6d28d9,inset 0 0 0 12px rgba(255,255,255,0.48),0 0 48px rgba(139,92,246,0.68),0 18px 34px rgba(0,0,0,0.34); }
   .rewards-eyebrow { color:rgba(255,255,255,0.62); text-transform:uppercase; letter-spacing:0.08em; font-size:0.68rem; font-weight:800; }
@@ -13469,6 +13489,36 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       return;
     }
     container.innerHTML = feed.slice(0, 10).map(a => {
+      const activityValue = `${a.icon || ''} ${a.text || ''}`.toLowerCase();
+      const activityIcon = activityValue.includes('pending') || activityValue.includes('receipt submitted') || activityValue.includes('⏳')
+        ? 'clock'
+        : activityValue.includes('transaction') || activityValue.includes('💸')
+          ? 'wallet'
+          : activityValue.includes('bill') || activityValue.includes('calendar') || activityValue.includes('📅')
+            ? 'calendar-check'
+            : activityValue.includes('saving') || activityValue.includes('deposit') || activityValue.includes('💰') || activityValue.includes('💵') || activityValue.includes('🤑')
+              ? 'piggy-bank'
+              : activityValue.includes('debt') || activityValue.includes('credit card') || activityValue.includes('💳')
+                ? 'credit-card'
+                : activityValue.includes('credit score') || activityValue.includes('📊')
+                  ? 'bar-chart-3'
+                  : activityValue.includes('investment') || activityValue.includes('📈')
+                    ? 'trending-up'
+                    : activityValue.includes('streak') || activityValue.includes('🔥')
+                      ? 'flame'
+                      : activityValue.includes('goal') || activityValue.includes('🎯') || activityValue.includes('🏹')
+                        ? 'target'
+                        : activityValue.includes('advisor') || activityValue.includes('🤖')
+                          ? 'bot'
+                          : activityValue.includes('script') || activityValue.includes('📞')
+                            ? 'message-circle'
+                            : activityValue.includes('badge unlocked') || activityValue.includes('🎉') || activityValue.includes('🏆')
+                              ? 'trophy'
+                              : activityValue.includes('welcome') || activityValue.includes('👋')
+                                ? 'handshake'
+                                : activityValue.includes('complete') || activityValue.includes('✅')
+                                  ? 'check-circle'
+                                  : 'zap';
       const txtMap = {
         'Used investment calculator': 'Usaste la calculadora de inversión',
         'Used credit score simulator': 'Usaste el simulador de crédito',
@@ -13477,14 +13527,17 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       };
       let text = (currentLang==='es' && txtMap[a.text]) ? txtMap[a.text] : a.text;
       if (currentLang==='es') text = text.replace(/Day (\d+) login streak!/, '¡Racha de inicio de $1 días!');
+      ['⏳','⚡','📊','📈','🔥','🏹','🎯','🎉','🏆','👋','💸','📝','📅','💰','⭐','💳','🤖','✅','💵','🤑','📒','📞','📄']
+        .forEach(emoji => { text = String(text || '').replace(emoji, '').trim(); });
       return `
       <div class="activity-item">
-        <span class="activity-icon">${a.icon}</span>
+        <span class="activity-icon"><span class="ft-reference-icon" data-fixed-icon="${activityIcon}"></span></span>
         <span class="activity-text">${text}</span>
         <span class="activity-xp">${a.xp}</span>
       </div>`;
     }).join('');
     container.dataset.renderKey = renderKey;
+    if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons(container);
   }
 
   function renderStreaksTab() {
