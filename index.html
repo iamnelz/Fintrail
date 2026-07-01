@@ -2105,6 +2105,26 @@
   .achievement-center .activity-item { background:#f8fafc; }
   .achievement-center .activity-icon { width:34px; height:34px; display:flex; align-items:center; justify-content:center; flex:0 0 34px; border-radius:50%; color:var(--accent); background:rgba(229,57,53,0.08); }
   .achievement-center .activity-icon .ft-lucide-icon { width:18px; height:18px; }
+  .financial-journey-card { margin-top:1rem; padding:1.15rem; border:1px solid var(--border); border-radius:14px; background:linear-gradient(145deg,#fff,#f8fafc); box-shadow:0 12px 28px rgba(15,23,42,0.07); }
+  .financial-journey-head { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
+  .financial-journey-title { display:flex; align-items:center; gap:0.55rem; }
+  .financial-journey-title > .ft-lucide-icon { width:24px; height:24px; color:var(--accent); stroke:var(--accent); }
+  .financial-journey-title h2 { margin:0; color:var(--text); font-family:'Playfair Display',serif; font-size:1.18rem; }
+  .financial-journey-head p { margin:0.25rem 0 0 2rem; color:var(--muted); font-size:0.72rem; line-height:1.5; }
+  .financial-journey-toggle { min-height:38px; padding:0.5rem 0.75rem; border:1px solid rgba(229,57,53,0.28); border-radius:8px; color:var(--accent); background:#fff; font:700 0.68rem 'Sora',sans-serif; cursor:pointer; white-space:nowrap; }
+  .financial-journey-timeline { position:relative; display:grid; gap:0.75rem; padding-left:30px; }
+  .financial-journey-timeline::before { content:''; position:absolute; left:12px; top:12px; bottom:12px; width:2px; background:linear-gradient(180deg,#e53935,#f59e0b,#d1d5db); border-radius:999px; }
+  .journey-event { position:relative; display:grid; grid-template-columns:46px minmax(0,1fr) auto; gap:0.8rem; align-items:center; min-height:82px; padding:0.85rem 0.95rem; border:1px solid var(--border); border-radius:10px; background:#fff; box-shadow:0 5px 14px rgba(15,23,42,0.045); }
+  .journey-event::before { content:''; position:absolute; left:-23px; top:50%; width:10px; height:10px; border:3px solid #fff; border-radius:50%; background:var(--accent); box-shadow:0 0 0 2px rgba(229,57,53,0.22); transform:translateY(-50%); }
+  .journey-event-icon { width:44px; height:44px; display:flex; align-items:center; justify-content:center; border-radius:50%; color:#b45309; background:linear-gradient(145deg,#fef3c7,#fbbf24); box-shadow:0 6px 14px rgba(245,158,11,0.16); }
+  .journey-event-icon .ft-lucide-icon { width:23px; height:23px; }
+  .journey-event-copy { min-width:0; }
+  .journey-event-copy strong { display:block; color:var(--text); font-size:0.78rem; }
+  .journey-event-copy p { margin:0.18rem 0 0; color:var(--text-soft); font-size:0.7rem; line-height:1.45; }
+  .journey-event-meta { margin-top:0.3rem; display:flex; flex-wrap:wrap; gap:0.35rem; }
+  .journey-event-meta span { padding:0.16rem 0.4rem; border-radius:999px; color:#9a3412; background:#fff7ed; font-size:0.58rem; font-weight:800; }
+  .journey-event-date { color:var(--muted); font-size:0.64rem; font-weight:700; white-space:nowrap; text-align:right; }
+  .financial-journey-empty { padding:1.5rem; border:1px dashed var(--border); border-radius:10px; color:var(--muted); background:#fff; text-align:center; font-size:0.76rem; line-height:1.55; }
   .achievement-motivation { display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:1rem; align-items:center; margin-top:1rem; padding:1.25rem; border-radius:14px; color:#fff; background:linear-gradient(135deg,#111,#2a0f0f 58%,#b91c1c); box-shadow:0 16px 34px rgba(17,17,17,0.2); overflow:hidden; position:relative; }
   .achievement-motivation::after { content:''; position:absolute; width:240px; height:240px; right:-90px; top:-100px; border-radius:50%; background:radial-gradient(circle,rgba(229,57,53,0.5),transparent 70%); }
   .achievement-motivation > * { position:relative; z-index:1; }
@@ -2138,6 +2158,12 @@
     .achievement-category-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
     .achievement-motivation { grid-template-columns:auto minmax(0,1fr); }
     .achievement-motivation button { grid-column:1/-1; width:100%; }
+    .financial-journey-head { align-items:stretch; flex-direction:column; }
+    .financial-journey-toggle { width:100%; }
+    .financial-journey-timeline { padding-left:0; }
+    .financial-journey-timeline::before,.journey-event::before { display:none; }
+    .journey-event { grid-template-columns:42px minmax(0,1fr); }
+    .journey-event-date { grid-column:2; text-align:left; }
   }
   @media (max-width:430px) {
     .achievement-progress-stats { grid-template-columns:1fr; }
@@ -6947,6 +6973,22 @@
         </aside>
       </div>
 
+      <section class="financial-journey-card" aria-labelledby="financial-journey-title">
+        <div class="financial-journey-head">
+          <div>
+            <div class="financial-journey-title">
+              <span class="ft-reference-icon" data-fixed-icon="book-open"></span>
+              <h2 id="financial-journey-title" data-en="My Financial Journey" data-es="Mi Trayectoria Financiera">My Financial Journey</h2>
+            </div>
+            <p data-en="Meaningful moments from the financial habits you are building." data-es="Momentos importantes de los hábitos financieros que estás construyendo.">Meaningful moments from the financial habits you are building.</p>
+          </div>
+          <button class="financial-journey-toggle" id="financial-journey-toggle" type="button" onclick="toggleFinancialJourney()" data-en="View Full Journey" data-es="Ver Trayectoria Completa">View Full Journey</button>
+        </div>
+        <div class="financial-journey-timeline" id="financial-journey-timeline">
+          <div class="financial-journey-empty" data-en="Your journey is just getting started. Complete your first milestone to begin your timeline." data-es="Tu trayectoria apenas comienza. Completa tu primer logro para iniciar tu línea de tiempo.">Your journey is just getting started. Complete your first milestone to begin your timeline.</div>
+        </div>
+      </section>
+
       <section class="achievement-motivation">
         <div class="achievement-motivation-icon"><span class="ft-reference-icon" data-fixed-icon="rocket"></span></div>
         <div>
@@ -7825,6 +7867,10 @@
     if (sbClient) await sbClient.auth.signOut();
     currentUser = null;
     transactions = []; bills = []; goals = [];
+    if (typeof financialJourneyServerState !== 'undefined') {
+      financialJourneyServerState = { userId:null, loading:false, loaded:false, history:[], grants:[] };
+      financialJourneyExpanded = false;
+    }
     showPublicHome();
   }
 
@@ -8068,6 +8114,7 @@
     if (planDebts.length) { renderDebtList(); runPayoffPlan(); }
     // Mark NW as pre-loaded from Supabase so initNetWorth uses this data directly
     if (nwAssets.length || nwLiabilities.length) nwLoaded = true;
+    if (typeof initializeFinancialJourneyFromKnownData === 'function') initializeFinancialJourneyFromKnownData();
     loadProfileUI();
     if (typeof scheduleRewardsXpSync === 'function') scheduleRewardsXpSync(0);
   }
@@ -10716,6 +10763,7 @@ Guidelines:
     const estimate = estimates[id];
     const paidEarly = !!estimate && today < estimate;
     const alreadyAwarded = !!debt.xpAwardedForPayoff;
+    const isFirstDebtPayoff = !planDebts.some(item => item.id !== id && item.status === 'paid');
     const xp = paidEarly ? 100 : 50;
     normalizeDebtRecord(debt);
     const originalBalance = parseFloat(debt.originalBalance) || getDebtEliminatedAmount(debt);
@@ -10737,6 +10785,19 @@ Guidelines:
     } else if (!debt.payoffXpAmount && debt.payoffXpEarned) {
       debt.payoffXpAmount = debt.payoffXpEarned;
     }
+    recordJourneyEvent({
+      id:`debt_paid_${debt.id}`,
+      type:'debt',
+      icon:'check-circle',
+      source:'debt',
+      title:isFirstDebtPayoff ? 'First Debt Paid Off' : 'Debt Paid Off',
+      titleEs:isFirstDebtPayoff ? 'Primera Deuda Pagada' : 'Deuda Pagada',
+      message:'You turned a payoff plan into a financial victory.',
+      messageEs:'Convertiste un plan de pago en una victoria financiera.',
+      xp:Number(debt.payoffXpAmount || debt.payoffXpEarned || 0),
+      date:today,
+      related:debt.name || ''
+    });
 
     closeDebtPaidConfirm();
     renderDebtList();
@@ -12510,6 +12571,200 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     return { name: b.name, desc: b.desc };
   }
 
+  const JOURNEY_BADGE_EVENTS = {
+    first_login: {
+      id:'first_login', icon:'log-in', source:'account',
+      title:'First Login', titleEs:'Primer Inicio de Sesión',
+      message:'You took the first step in your Fintrail journey.',
+      messageEs:'Diste el primer paso en tu trayectoria con Fintrail.'
+    },
+    first_transaction: {
+      id:'first_transaction_logged', icon:'receipt-text', source:'budget',
+      title:'First Transaction Logged', titleEs:'Primera Transacción Registrada',
+      message:'You started giving every dollar a clear place.',
+      messageEs:'Comenzaste a darle un lugar claro a cada dólar.'
+    },
+    first_bill: {
+      id:'first_bill_added', icon:'calendar-check', source:'bills',
+      title:'First Bill Added', titleEs:'Primera Factura Agregada',
+      message:'You brought an upcoming payment into focus.',
+      messageEs:'Pusiste un próximo pago bajo control.'
+    },
+    first_goal: {
+      id:'first_savings_goal_created', icon:'target', source:'savings',
+      title:'First Savings Goal Created', titleEs:'Primera Meta de Ahorro Creada',
+      message:'You gave your money a purpose.',
+      messageEs:'Le diste un propósito a tu dinero.'
+    },
+    goal_complete: {
+      id:'first_savings_goal_completed', icon:'trophy', source:'savings',
+      title:'Savings Goal Completed', titleEs:'Meta de Ahorro Completada',
+      message:'Your consistent saving turned a goal into progress.',
+      messageEs:'Tu ahorro constante convirtió una meta en progreso.'
+    },
+    debt_planner: {
+      id:'first_debt_payoff_plan_created', icon:'clipboard-list', source:'debt',
+      title:'First Debt Payoff Plan Created', titleEs:'Primer Plan de Pago de Deudas Creado',
+      message:'You created a clear path toward debt freedom.',
+      messageEs:'Creaste un camino claro hacia la libertad de deudas.'
+    }
+  };
+  let financialJourneyExpanded = false;
+  let financialJourneyServerState = { userId:null, loading:false, loaded:false, history:[], grants:[] };
+
+  function normalizeJourneyDate(value) {
+    if (!value) return null;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(String(value))) {
+      return `${value}T12:00:00.000Z`;
+    }
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? null : date.toISOString();
+  }
+
+  function journeyDateFromRecord(record) {
+    if (!record) return null;
+    const explicit = normalizeJourneyDate(record.createdAt || record.created_at || record.date);
+    if (explicit) return explicit;
+    const numericId = Number(record.id);
+    if (!Number.isFinite(numericId) || numericId < 1577836800000 || numericId > Date.now() + 86400000) return null;
+    return new Date(numericId).toISOString();
+  }
+
+  function firstKnownJourneyRecord(records) {
+    return (records || [])
+      .map(record => ({ record, date:journeyDateFromRecord(record) }))
+      .filter(item => item.date)
+      .sort((a, b) => Date.parse(a.date) - Date.parse(b.date))[0] || null;
+  }
+
+  function recordJourneyEvent(event, options = {}) {
+    if (!currentUser || !event?.id) return false;
+    const date = normalizeJourneyDate(event.date);
+    if (!date) return false;
+    if (!Array.isArray(gameData.financialJourney)) gameData.financialJourney = [];
+    if (gameData.financialJourney.some(item => item.id === event.id)) return false;
+    gameData.financialJourney.push({ ...event, date });
+    gameData.financialJourney.sort((a, b) => Date.parse(a.date || 0) - Date.parse(b.date || 0));
+    if (options.save !== false) saveGameData();
+    if (options.render !== false && document.getElementById('tab-streaks')?.classList.contains('visible')) {
+      renderFinancialJourney();
+    }
+    return true;
+  }
+
+  function recordJourneyBadgeEvent(badge) {
+    const definition = JOURNEY_BADGE_EVENTS[badge?.id];
+    if (!definition) return false;
+    return recordJourneyEvent({
+      ...definition,
+      type:'achievement',
+      xp:Number(badge.xp || 0),
+      date:new Date().toISOString()
+    });
+  }
+
+  function initializeFinancialJourneyFromKnownData() {
+    if (!currentUser) return;
+    let changed = false;
+    const addKnown = event => {
+      if (recordJourneyEvent(event, { save:false, render:false })) changed = true;
+    };
+
+    const joinedDate = normalizeJourneyDate(currentUser.created_at);
+    if (joinedDate) {
+      addKnown({
+        id:'joined_fintrail', type:'account', icon:'sprout', source:'account',
+        title:'Joined Fintrail', titleEs:'Te Uniste a Fintrail',
+        message:'Every journey starts with one step.',
+        messageEs:'Toda trayectoria comienza con un paso.',
+        date:joinedDate
+      });
+      if ((gameData.earnedBadges || []).includes('first_login')) {
+        addKnown({
+          ...JOURNEY_BADGE_EVENTS.first_login,
+          type:'achievement',
+          xp:25,
+          date:joinedDate
+        });
+      }
+    }
+
+    const firstTransaction = firstKnownJourneyRecord(transactions);
+    if (firstTransaction) addKnown({
+      ...JOURNEY_BADGE_EVENTS.first_transaction,
+      type:'achievement', xp:25, date:firstTransaction.date
+    });
+
+    const firstBill = firstKnownJourneyRecord(bills);
+    if (firstBill) addKnown({
+      ...JOURNEY_BADGE_EVENTS.first_bill,
+      type:'achievement', xp:25, date:firstBill.date
+    });
+
+    const firstGoal = firstKnownJourneyRecord(goals);
+    if (firstGoal) addKnown({
+      ...JOURNEY_BADGE_EVENTS.first_goal,
+      type:'achievement', xp:50, date:firstGoal.date
+    });
+
+    const firstDebt = firstKnownJourneyRecord(planDebts);
+    if (firstDebt) addKnown({
+      ...JOURNEY_BADGE_EVENTS.debt_planner,
+      type:'achievement', xp:250, date:firstDebt.date
+    });
+
+    const paidDebt = planDebts
+      .filter(debt => debt.status === 'paid' && debt.paidOffDate)
+      .sort((a, b) => String(a.paidOffDate).localeCompare(String(b.paidOffDate)))[0];
+    if (paidDebt) addKnown({
+      id:`debt_paid_${paidDebt.id}`,
+      type:'debt',
+      icon:'check-circle',
+      source:'debt',
+      title:'First Debt Paid Off',
+      titleEs:'Primera Deuda Pagada',
+      message:'You turned a payoff plan into a financial victory.',
+      messageEs:'Convertiste un plan de pago en una victoria financiera.',
+      xp:Number(paidDebt.payoffXpAmount || paidDebt.payoffXpEarned || 0),
+      date:paidDebt.paidOffDate,
+      related:paidDebt.name || ''
+    });
+
+    if (changed) saveGameData();
+  }
+
+  async function loadFinancialJourneyServerEvents() {
+    if (!sbClient || !currentUser) return;
+    if (financialJourneyServerState.userId !== currentUser.id) {
+      financialJourneyServerState = { userId:currentUser.id, loading:false, loaded:false, history:[], grants:[] };
+    }
+    if (financialJourneyServerState.loading || financialJourneyServerState.loaded) return;
+    financialJourneyServerState.loading = true;
+    try {
+      const [historyResult, grantsResult] = await Promise.all([
+        sbClient.from('reward_tier_history')
+          .select('id,tier,xp_threshold,unlocked_at,reward_grant_id')
+          .eq('user_id', currentUser.id)
+          .order('unlocked_at', { ascending:true }),
+        sbClient.from('reward_grants')
+          .select('id,tier,reward_variant,status,earned_at,claimed_at,scheduled_at,applied_at,completed_at')
+          .eq('user_id', currentUser.id)
+          .order('earned_at', { ascending:true })
+      ]);
+      if (historyResult.error) throw historyResult.error;
+      if (grantsResult.error) throw grantsResult.error;
+      financialJourneyServerState.history = historyResult.data || [];
+      financialJourneyServerState.grants = grantsResult.data || [];
+      financialJourneyServerState.userId = currentUser.id;
+      financialJourneyServerState.loaded = true;
+      renderFinancialJourney();
+    } catch (error) {
+      console.log('Financial journey reward history load deferred:', error.message);
+    } finally {
+      financialJourneyServerState.loading = false;
+    }
+  }
+
   let gameData = {
     loginStreak: 0,
     lastLogin: null,
@@ -12520,6 +12775,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     earnedBadges: [],
     totalXP: 0,
     activityFeed: [],
+    financialJourney: [],
     usedInvestCalc: false,
     usedCreditSim: false,
     askedAI: false,
@@ -13143,6 +13399,16 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
 
     merged.totalXP = Math.max(Number(base.totalXP || 0), Number(incoming.totalXP || 0));
     merged.earnedBadges = Array.from(new Set([...(base.earnedBadges || []), ...(incoming.earnedBadges || [])]));
+    const journeyById = new Map();
+    [...(base.financialJourney || []), ...(incoming.financialJourney || [])].forEach(event => {
+      if (!event?.id) return;
+      const existing = journeyById.get(event.id);
+      if (!existing || Date.parse(event.date || 0) >= Date.parse(existing.date || 0)) {
+        journeyById.set(event.id, event);
+      }
+    });
+    merged.financialJourney = Array.from(journeyById.values())
+      .sort((a, b) => Date.parse(a.date || 0) - Date.parse(b.date || 0));
     const baseCreditTs = getCreditScoreTimestampValue(base.creditScoreUpdatedAt || base.credit_score_updated_at);
     const incomingCreditTs = getCreditScoreTimestampValue(incoming.creditScoreUpdatedAt || incoming.credit_score_updated_at);
     const baseCurrentCredit = getCreditScoreNumber(base.currentCreditScore);
@@ -13261,6 +13527,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       if (!gameData.earnedBadges.includes(badge.id) && badge.condition()) {
         gameData.earnedBadges.push(badge.id);
         addXP(badge.xp, `${badge.emoji} Badge unlocked: ${badge.name}!`);
+        recordJourneyBadgeEvent(badge);
         newBadges = true;
         // Show toast notification
         showBadgeToast(badge);
@@ -13560,11 +13827,169 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons(container);
   }
 
+  function getFinancialJourneyEvents() {
+    if (!currentUser) return [];
+    const events = [...(gameData.financialJourney || [])];
+    const tierCopy = {
+      bronze: {
+        title:'Bronze Rank Achieved', titleEs:'Rango Bronce Alcanzado',
+        message:'Your permanent Fintrail journey officially began.', messageEs:'Tu trayectoria permanente en Fintrail comenzó oficialmente.'
+      },
+      silver: {
+        title:'Silver Rank Achieved', titleEs:'Rango Plata Alcanzado',
+        message:'You secured Silver status permanently.', messageEs:'Aseguraste el rango Plata permanentemente.'
+      },
+      gold: {
+        title:'Gold Rank Achieved', titleEs:'Rango Oro Alcanzado',
+        message:'You secured Gold status permanently.', messageEs:'Aseguraste el rango Oro permanentemente.'
+      },
+      platinum: {
+        title:'Platinum Rank Achieved', titleEs:'Rango Platino Alcanzado',
+        message:'Your progress reached an exceptional new level.', messageEs:'Tu progreso alcanzó un nuevo nivel excepcional.'
+      },
+      diamond: {
+        title:'Diamond Rank Achieved', titleEs:'Rango Diamante Alcanzado',
+        message:'You reached Fintrail’s highest permanent rank.', messageEs:'Alcanzaste el rango permanente más alto de Fintrail.'
+      }
+    };
+    const serverHistory = financialJourneyServerState.loaded
+      ? financialJourneyServerState.history
+      : (rewardsCenterState.loaded ? rewardsCenterState.history : []);
+    const serverGrants = financialJourneyServerState.loaded
+      ? financialJourneyServerState.grants
+      : (rewardsCenterState.loaded ? rewardsCenterState.grants : []);
+
+    serverHistory.forEach(entry => {
+      const copy = tierCopy[entry.tier] || tierCopy.bronze;
+      events.push({
+        id:`rank_${entry.tier}`,
+        type:'rank',
+        icon:entry.tier === 'diamond' ? 'gem' : 'medal',
+        source:'rewards',
+        ...copy,
+        date:entry.unlocked_at,
+        verifiedXp:Number(entry.xp_threshold || 0),
+        related:entry.tier
+      });
+    });
+
+    serverGrants.forEach(grant => {
+      if (grant.earned_at) {
+        events.push({
+          id:`reward_unlocked_${grant.id}`,
+          type:'reward',
+          icon:'gift',
+          source:'rewards',
+          title:'Reward Unlocked',
+          titleEs:'Recompensa Desbloqueada',
+          message:'Your progress unlocked a new Fintrail benefit.',
+          messageEs:'Tu progreso desbloqueó un nuevo beneficio de Fintrail.',
+          date:grant.earned_at,
+          related:typeof rewardDescription === 'function'
+            ? rewardDescription(grant.tier, grant.reward_variant, false)
+            : grant.tier
+        });
+      }
+      const claimedDate = grant.claimed_at || grant.applied_at || grant.completed_at;
+      if (claimedDate) {
+        events.push({
+          id:`reward_claimed_${grant.id}`,
+          type:'reward',
+          icon:'award',
+          source:'rewards',
+          title:'Reward Claimed',
+          titleEs:'Recompensa Reclamada',
+          message:'You put an earned Fintrail benefit into action.',
+          messageEs:'Pusiste en acción un beneficio ganado en Fintrail.',
+          date:claimedDate,
+          related:typeof rewardDescription === 'function'
+            ? rewardDescription(grant.tier, grant.reward_variant, false)
+            : grant.tier
+        });
+      }
+    });
+
+    const byId = new Map();
+    events.forEach(event => {
+      const date = normalizeJourneyDate(event.date);
+      if (!event?.id || !date) return;
+      const normalized = { ...event, date };
+      const existing = byId.get(event.id);
+      if (!existing || Date.parse(normalized.date) >= Date.parse(existing.date)) {
+        byId.set(event.id, normalized);
+      }
+    });
+    return Array.from(byId.values()).sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
+  }
+
+  function renderFinancialJourney() {
+    const container = document.getElementById('financial-journey-timeline');
+    const toggle = document.getElementById('financial-journey-toggle');
+    if (!container) return;
+    const events = getFinancialJourneyEvents();
+    const renderKey = `${currentLang}|${financialJourneyExpanded}|${events.map(event => `${event.id}:${event.date}`).join('|')}`;
+    if (container.dataset.renderKey === renderKey && container.children.length) return;
+
+    if (!currentUser || events.length === 0) {
+      container.innerHTML = `<div class="financial-journey-empty">${currentLang === 'es'
+        ? 'Tu trayectoria apenas comienza. Completa tu primer logro para iniciar tu línea de tiempo.'
+        : 'Your journey is just getting started. Complete your first milestone to begin your timeline.'}</div>`;
+      if (toggle) toggle.style.display = 'none';
+      container.dataset.renderKey = renderKey;
+      return;
+    }
+
+    const visibleEvents = financialJourneyExpanded ? events : events.slice(0, 6);
+    container.innerHTML = visibleEvents.map(event => {
+      const title = currentLang === 'es' ? (event.titleEs || event.title) : event.title;
+      const message = currentLang === 'es' ? (event.messageEs || event.message) : event.message;
+      const date = new Intl.DateTimeFormat(currentLang === 'es' ? 'es-US' : 'en-US', {
+        year:'numeric', month:'short', day:'numeric'
+      }).format(new Date(event.date));
+      const xpLabel = Number(event.xp || 0) > 0 ? `+${Number(event.xp).toLocaleString()} XP` : '';
+      const verifiedLabel = Number.isFinite(Number(event.verifiedXp))
+        ? `${Number(event.verifiedXp).toLocaleString()} ${currentLang === 'es' ? 'XP verificado' : 'Verified XP'}`
+        : '';
+      return `<article class="journey-event" data-journey-type="${escHtml(event.type || 'milestone')}">
+        <div class="journey-event-icon"><span class="ft-reference-icon" data-fixed-icon="${escHtml(event.icon || 'star')}"></span></div>
+        <div class="journey-event-copy">
+          <strong>${escHtml(title || '')}</strong>
+          <p>${escHtml(message || '')}</p>
+          <div class="journey-event-meta">
+            ${xpLabel ? `<span>${xpLabel}</span>` : ''}
+            ${verifiedLabel ? `<span>${verifiedLabel}</span>` : ''}
+            ${event.related ? `<span>${escHtml(event.related)}</span>` : ''}
+          </div>
+        </div>
+        <time class="journey-event-date" datetime="${escHtml(event.date)}">${escHtml(date)}</time>
+      </article>`;
+    }).join('');
+    container.dataset.renderKey = renderKey;
+
+    if (toggle) {
+      toggle.style.display = events.length > 6 ? 'inline-flex' : 'none';
+      toggle.textContent = financialJourneyExpanded
+        ? (currentLang === 'es' ? 'Mostrar Menos' : 'Show Less')
+        : (currentLang === 'es' ? 'Ver Trayectoria Completa' : 'View Full Journey');
+    }
+    if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons(container);
+  }
+
+  function toggleFinancialJourney() {
+    financialJourneyExpanded = !financialJourneyExpanded;
+    const container = document.getElementById('financial-journey-timeline');
+    if (container) container.dataset.renderKey = '';
+    renderFinancialJourney();
+  }
+
   function renderStreaksTab() {
+    initializeFinancialJourneyFromKnownData();
     renderLevelCard();
     renderStreaks();
     renderBadges();
     renderActivityFeed();
+    renderFinancialJourney();
+    loadFinancialJourneyServerEvents();
   }
 
   // REWARDS CENTER
@@ -13760,6 +14185,13 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       rewardsCenterState.grants = grantsResult.data || [];
       rewardsCenterState.history = historyResult.data || [];
       rewardsCenterState.loaded = true;
+      financialJourneyServerState = {
+        userId:currentUser.id,
+        loading:false,
+        loaded:true,
+        history:rewardsCenterState.history,
+        grants:rewardsCenterState.grants
+      };
       renderRewardsCenter();
       setRewardsAlert('', '');
       showPendingRewardCelebration();
@@ -14903,6 +15335,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     } else if (activeId === 'tab-streaks') {
       call('renderStreaks');
       call('renderActivityFeed');
+      call('renderFinancialJourney');
     } else if (activeId === 'tab-rewards') {
       call('renderRewardsCenter');
     } else if (activeId === 'tab-loancalc') {
