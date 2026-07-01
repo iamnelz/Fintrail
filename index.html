@@ -2019,6 +2019,130 @@
 
   @media (max-width:860px) { .streaks-layout { grid-template-columns:1fr; } }
 
+  /* ACHIEVEMENT CENTER */
+  .achievement-center { max-width:1180px; margin:0 auto; }
+  .achievement-page-head { display:flex; align-items:flex-end; justify-content:space-between; gap:1rem; margin-bottom:1.25rem; }
+  .achievement-page-head h1 { margin:0; color:var(--text); font-family:'Playfair Display',serif; font-size:clamp(1.9rem,4vw,2.6rem); }
+  .achievement-page-head p { max-width:720px; margin-top:0.35rem; color:var(--muted); font-size:0.84rem; line-height:1.6; }
+  .achievement-rewards-link { display:inline-flex; align-items:center; justify-content:center; gap:0.45rem; min-height:42px; padding:0.6rem 0.9rem; border:1px solid rgba(229,57,53,0.25); border-radius:8px; background:#fff; color:var(--accent); font-family:'Sora',sans-serif; font-size:0.72rem; font-weight:800; cursor:pointer; box-shadow:0 5px 14px rgba(15,23,42,0.06); white-space:nowrap; }
+  .achievement-rewards-link .ft-lucide-icon { width:18px; height:18px; }
+  .achievement-hero-grid { display:grid; grid-template-columns:minmax(0,1.55fr) minmax(280px,0.65fr); gap:1rem; margin-bottom:1rem; }
+  .achievement-progress-card { display:grid; grid-template-columns:minmax(230px,0.82fr) minmax(0,1.18fr); gap:1.5rem; align-items:center; margin:0; padding:1.55rem; text-align:left; border:1px solid rgba(255,255,255,0.12); box-shadow:0 18px 42px rgba(17,17,17,0.24); }
+  .achievement-progress-card::after { content:''; position:absolute; inset:0; pointer-events:none; opacity:0.3; background-image:radial-gradient(circle at 8% 18%,#fbbf24 0 2px,transparent 3px),radial-gradient(circle at 72% 22%,#fff 0 1px,transparent 2px),radial-gradient(circle at 88% 72%,#ef4444 0 2px,transparent 3px); background-size:190px 150px,170px 130px,230px 190px; }
+  .achievement-rank-summary,.achievement-xp-panel { position:relative; z-index:1; }
+  .achievement-rank-summary { display:flex; align-items:center; gap:1rem; min-width:0; }
+  .achievement-progress-card .level-badge { width:106px; height:106px; margin:0; display:flex; align-items:center; justify-content:center; flex-shrink:0; border-radius:50%; color:#fbbf24; background:radial-gradient(circle at 35% 28%,#fff7cc,#f59e0b 54%,#92400e); border:3px solid #fde68a; box-shadow:inset 0 0 0 7px rgba(146,64,14,0.65),inset 0 0 0 10px rgba(255,255,255,0.28),0 0 28px rgba(245,158,11,0.42); }
+  .achievement-progress-card .level-badge .ft-lucide-icon { width:57px; height:57px; color:inherit; stroke:currentColor; filter:drop-shadow(0 4px 7px rgba(0,0,0,0.28)); }
+  .achievement-progress-card[data-tier="bronze"] .level-badge { color:#fed7aa; background:radial-gradient(circle at 35% 28%,#ffedd5,#d97706 55%,#7c2d12); border-color:#fdba74; }
+  .achievement-progress-card[data-tier="silver"] .level-badge { color:#fff; background:radial-gradient(circle at 35% 28%,#fff,#cbd5e1 55%,#64748b); border-color:#f8fafc; }
+  .achievement-progress-card[data-tier="platinum"] .level-badge { color:#eff6ff; background:radial-gradient(circle at 35% 28%,#fff,#93c5fd 52%,#1d4ed8); border-color:#dbeafe; }
+  .achievement-progress-card[data-tier="diamond"] .level-badge { color:#f5f3ff; background:radial-gradient(circle at 35% 28%,#fff,#c4b5fd 50%,#7c3aed); border-color:#ede9fe; }
+  .achievement-eyebrow { color:rgba(255,255,255,0.62); font-size:0.62rem; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; }
+  .achievement-progress-card .level-name { margin-top:0.15rem; font-size:2rem; line-height:1; }
+  .achievement-progress-card .level-subtitle { margin-top:0.4rem; max-width:190px; line-height:1.45; }
+  .achievement-xp-heading { display:flex; align-items:flex-end; justify-content:space-between; gap:1rem; color:rgba(255,255,255,0.72); font-size:0.68rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; }
+  .achievement-xp-heading > div { display:flex; flex-direction:column; gap:0.1rem; }
+  .achievement-xp-heading .total-xp { margin:0; color:#fff; font-size:2.15rem; line-height:1; letter-spacing:0; }
+  .achievement-xp-heading > span { color:rgba(255,255,255,0.6); text-align:right; text-transform:none; letter-spacing:0; }
+  .achievement-progress-card .xp-bar-track { height:14px; margin:0.75rem 0 0.42rem; border:1px solid rgba(255,255,255,0.1); border-radius:999px; }
+  .achievement-progress-card .xp-bar-fill { border-radius:999px; background:linear-gradient(90deg,#fbbf24,#f97316,#e53935); box-shadow:0 0 12px rgba(249,115,22,0.3); }
+  .achievement-progress-card .xp-label { color:rgba(255,255,255,0.6); }
+  .achievement-progress-stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0.5rem; margin-top:1rem; }
+  .achievement-progress-stats > div { min-width:0; padding:0.6rem; text-align:center; border:1px solid rgba(255,255,255,0.13); border-radius:8px; background:rgba(0,0,0,0.16); }
+  .achievement-progress-stats .ft-lucide-icon { width:18px; height:18px; color:#fbbf24; stroke:#fbbf24; }
+  .achievement-progress-stats strong { display:block; margin-top:0.2rem; color:#fff; font-size:0.9rem; }
+  .achievement-progress-stats small { display:block; margin-top:0.08rem; color:rgba(255,255,255,0.52); font-size:0.58rem; line-height:1.25; }
+  .achievement-next-reward { position:relative; overflow:hidden; padding:1.35rem; text-align:center; color:#fff; border-radius:16px; background:linear-gradient(145deg,#111,#2a0f0f 58%,#b91c1c); border:1px solid rgba(229,57,53,0.38); box-shadow:0 16px 34px rgba(17,17,17,0.2); }
+  .achievement-next-reward::after { content:''; position:absolute; width:180px; height:180px; right:-75px; top:-65px; border-radius:50%; background:radial-gradient(circle,rgba(229,57,53,0.48),transparent 70%); }
+  .achievement-next-reward > * { position:relative; z-index:1; }
+  .achievement-next-label { display:flex; justify-content:center; align-items:center; gap:0.35rem; color:#fbbf24; font-size:0.66rem; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; }
+  .achievement-next-label .ft-lucide-icon { width:17px; height:17px; }
+  .achievement-next-icon { width:82px; height:82px; margin:0.85rem auto 0.7rem; display:flex; align-items:center; justify-content:center; border-radius:50%; color:#bfdbfe; background:radial-gradient(circle at 35% 28%,#fff,#93c5fd 52%,#1d4ed8); border:2px solid #dbeafe; box-shadow:inset 0 0 0 6px #1e40af,inset 0 0 0 8px rgba(255,255,255,0.42),0 0 26px rgba(96,165,250,0.42); }
+  .achievement-next-icon .ft-lucide-icon { width:44px; height:44px; }
+  .achievement-next-reward h2 { margin:0; font-family:'Playfair Display',serif; font-size:1.35rem; }
+  .achievement-next-reward > strong { display:block; margin-top:0.35rem; color:#fbbf24; font-size:0.82rem; line-height:1.4; }
+  .achievement-next-reward > p { margin-top:0.4rem; color:rgba(255,255,255,0.62); font-size:0.7rem; }
+  .achievement-next-reward button,.achievement-motivation button { display:inline-flex; align-items:center; justify-content:center; gap:0.4rem; min-height:40px; margin-top:0.9rem; padding:0.55rem 0.85rem; border:0; border-radius:8px; background:linear-gradient(135deg,#e53935,#c62828); color:#fff; font-family:'Sora',sans-serif; font-size:0.68rem; font-weight:800; cursor:pointer; box-shadow:0 7px 16px rgba(229,57,53,0.24); }
+  .achievement-next-reward button .ft-lucide-icon,.achievement-motivation button .ft-lucide-icon { width:16px; height:16px; }
+  .achievement-roadmap-card,.achievement-library-card,.achievement-support-card { padding:1rem; border:1px solid var(--border); border-radius:14px; background:#fff; box-shadow:0 8px 22px rgba(15,23,42,0.055); }
+  .achievement-roadmap-card { margin-bottom:1rem; }
+  .achievement-section-head { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:0.85rem; }
+  .achievement-section-head > div { display:flex; align-items:center; gap:0.45rem; min-width:0; }
+  .achievement-section-head h2 { margin:0; color:var(--text); font-family:'Playfair Display',serif; font-size:1.05rem; }
+  .achievement-section-head .ft-lucide-icon { width:20px; height:20px; color:var(--accent); stroke:var(--accent); }
+  .achievement-section-head > span { color:var(--muted); font-size:0.66rem; font-weight:700; }
+  .achievement-roadmap { display:grid; gap:0.5rem; }
+  .achievement-roadmap-row { display:grid; grid-template-columns:42px minmax(0,1fr) auto; gap:0.7rem; align-items:center; padding:0.65rem 0.8rem; border:1px solid var(--border); border-radius:8px; background:#f8fafc; }
+  .achievement-roadmap-icon { width:36px; height:36px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:#fff; border:1px solid currentColor; }
+  .achievement-roadmap-icon .ft-lucide-icon { width:21px; height:21px; }
+  .achievement-roadmap-main strong { display:block; color:var(--text); font-size:0.76rem; }
+  .achievement-roadmap-main span { display:block; margin-top:0.08rem; color:var(--muted); font-size:0.62rem; }
+  .achievement-roadmap-status { color:var(--muted); font-size:0.62rem; font-weight:800; }
+  .achievement-roadmap-row.unlocked .achievement-roadmap-status { color:#047857; }
+  .achievement-roadmap-row.current { border-color:rgba(229,57,53,0.36); background:rgba(229,57,53,0.035); }
+  .achievement-roadmap-row[data-tier="bronze"] { color:#b45309; }
+  .achievement-roadmap-row[data-tier="silver"] { color:#64748b; }
+  .achievement-roadmap-row[data-tier="gold"] { color:#d97706; }
+  .achievement-roadmap-row[data-tier="platinum"] { color:#2563eb; }
+  .achievement-roadmap-row[data-tier="diamond"] { color:#7c3aed; }
+  .achievement-main-grid { display:grid; grid-template-columns:minmax(0,1.45fr) minmax(290px,0.55fr); gap:1rem; align-items:start; }
+  .achievement-side-stack { display:grid; gap:1rem; }
+  .achievement-center .badges-grid { display:grid; grid-template-columns:1fr; gap:1rem; }
+  .achievement-category { min-width:0; }
+  .achievement-category-head { display:flex; align-items:center; gap:0.4rem; margin-bottom:0.55rem; padding-bottom:0.45rem; border-bottom:1px solid var(--border); }
+  .achievement-category-head .ft-lucide-icon { width:18px; height:18px; color:var(--accent); stroke:var(--accent); }
+  .achievement-category-head h3 { margin:0; color:var(--text); font-size:0.8rem; }
+  .achievement-category-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0.55rem; }
+  .achievement-center .badge-item { min-height:150px; padding:0.85rem; border-radius:10px; box-shadow:0 5px 14px rgba(15,23,42,0.04); }
+  .achievement-center .badge-item.earned { border-color:rgba(245,158,11,0.46); background:linear-gradient(145deg,#fff,#fffbeb); }
+  .achievement-center .badge-item.locked { opacity:0.52; }
+  .achievement-center .badge-emoji { width:52px; height:52px; margin:0 auto 0.55rem; display:flex; align-items:center; justify-content:center; border-radius:50%; background:#f1f5f9; color:#64748b; }
+  .achievement-center .badge-emoji .ft-lucide-icon { width:28px; height:28px; }
+  .achievement-center .badge-item.earned .badge-emoji { color:#b45309; background:linear-gradient(145deg,#fef3c7,#fbbf24); box-shadow:0 6px 14px rgba(245,158,11,0.18); }
+  .achievement-center .badge-earned-stamp { color:#fff; background:#10b981; }
+  .achievement-center .streak-card { padding:0.68rem 0.75rem; }
+  .achievement-center .streak-cards { gap:0.5rem; }
+  .achievement-center .activity-item { background:#f8fafc; }
+  .achievement-motivation { display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:1rem; align-items:center; margin-top:1rem; padding:1.25rem; border-radius:14px; color:#fff; background:linear-gradient(135deg,#111,#2a0f0f 58%,#b91c1c); box-shadow:0 16px 34px rgba(17,17,17,0.2); overflow:hidden; position:relative; }
+  .achievement-motivation::after { content:''; position:absolute; width:240px; height:240px; right:-90px; top:-100px; border-radius:50%; background:radial-gradient(circle,rgba(229,57,53,0.5),transparent 70%); }
+  .achievement-motivation > * { position:relative; z-index:1; }
+  .achievement-motivation-icon { width:58px; height:58px; display:flex; align-items:center; justify-content:center; border-radius:50%; color:#fbbf24; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.18); }
+  .achievement-motivation-icon .ft-lucide-icon { width:31px; height:31px; }
+  .achievement-motivation h2 { margin:0; font-family:'Playfair Display',serif; font-size:1.35rem; }
+  .achievement-motivation p { margin-top:0.2rem; color:rgba(255,255,255,0.78); font-size:0.82rem; }
+  .achievement-motivation p strong { color:#fbbf24; }
+  .achievement-motivation > div > span { display:block; margin-top:0.2rem; color:rgba(255,255,255,0.56); font-size:0.68rem; }
+  .achievement-motivation button { margin:0; white-space:nowrap; }
+  .achievement-unlock-toast { position:fixed; right:1.25rem; bottom:1.25rem; z-index:9999; display:flex; align-items:center; gap:0.75rem; max-width:310px; padding:0.9rem 1rem; border:1px solid rgba(251,191,36,0.42); border-radius:12px; color:#fff; background:linear-gradient(135deg,#111,#2a0f0f 55%,#b91c1c); box-shadow:0 18px 45px rgba(0,0,0,0.32); animation:achievementUnlockIn 0.42s cubic-bezier(.2,.9,.3,1.2) both; }
+  .achievement-unlock-toast-icon { width:48px; height:48px; display:flex; align-items:center; justify-content:center; border-radius:50%; color:#fbbf24; background:rgba(251,191,36,0.12); box-shadow:0 0 22px rgba(251,191,36,0.26); }
+  .achievement-unlock-toast-icon .ft-lucide-icon { width:27px; height:27px; }
+  .achievement-unlock-toast strong { display:block; font-size:0.8rem; }
+  .achievement-unlock-toast span { display:block; margin-top:0.12rem; color:rgba(255,255,255,0.7); font-size:0.7rem; }
+  @keyframes achievementUnlockIn { from{opacity:0;transform:translateY(18px) scale(.94)} to{opacity:1;transform:translateY(0) scale(1)} }
+  @media (hover:hover) and (pointer:fine) {
+    .achievement-center .badge-item:hover { transform:translateY(-3px); box-shadow:0 12px 24px rgba(15,23,42,0.09); }
+    .achievement-rewards-link:hover,.achievement-next-reward button:hover,.achievement-motivation button:hover { transform:translateY(-1px); }
+  }
+  @media (max-width:960px) {
+    .achievement-hero-grid,.achievement-main-grid { grid-template-columns:1fr; }
+    .achievement-progress-card { grid-template-columns:minmax(220px,0.8fr) minmax(0,1.2fr); }
+    .achievement-category-grid { grid-template-columns:repeat(4,minmax(0,1fr)); }
+  }
+  @media (max-width:700px) {
+    .achievement-page-head { align-items:flex-start; flex-direction:column; }
+    .achievement-progress-card { grid-template-columns:1fr; }
+    .achievement-rank-summary { justify-content:center; text-align:center; }
+    .achievement-progress-card .level-subtitle { margin-left:auto; margin-right:auto; }
+    .achievement-category-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .achievement-motivation { grid-template-columns:auto minmax(0,1fr); }
+    .achievement-motivation button { grid-column:1/-1; width:100%; }
+  }
+  @media (max-width:430px) {
+    .achievement-progress-stats { grid-template-columns:1fr; }
+    .achievement-category-grid { grid-template-columns:1fr; }
+    .achievement-rank-summary { flex-direction:column; }
+  }
+
   /* REWARDS CENTER */
   .nav-rewards-btn {
     display:inline-flex; align-items:center; gap:0.4rem; padding:0.55rem 0.7rem;
@@ -5006,7 +5130,7 @@
         </button>
         <button class="nav-dropdown-item" onclick="navTo('streaks', this)">
           <span class="ndi-icon">🔥</span>
-          <div class="ndi-info"><span class="ndi-label" data-en="Streaks & Milestones" data-es="Rachas y Logros">Streaks & Milestones</span><span class="ndi-desc" data-en="XP, levels & achievements" data-es="XP, niveles y logros">XP, levels & achievements</span></div>
+          <div class="ndi-info"><span class="ndi-label" data-en="Achievements" data-es="Logros">Achievements</span><span class="ndi-desc" data-en="XP, streaks & achievements" data-es="XP, rachas y logros">XP, streaks & achievements</span></div>
         </button>
         <button class="nav-dropdown-item" onclick="guardedNavTo('negotiate', this)">
           <span class="ndi-icon">💬</span>
@@ -5076,7 +5200,7 @@
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('ai')">💬<span data-en="AI Advisor" data-es="Asesor IA">AI Advisor</span></button>
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('healthscore')">🏆<span data-en="Health Score" data-es="Salud">Health Score</span></button>
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('reports')">📈<span data-en="Reports" data-es="Reportes">Reports</span></button>
-    <button class="mobile-nav-tile" onclick="mobileTab('streaks');closeMobileNav()">🔥🏅<span data-en="Streaks &amp; Milestones" data-es="Rachas y Logros">Streaks &amp; Milestones</span></button>
+    <button class="mobile-nav-tile" onclick="mobileTab('streaks');closeMobileNav()"><span class="ft-reference-icon" data-fixed-icon="trophy"></span><span data-en="Achievements" data-es="Logros">Achievements</span></button>
     <button class="mobile-nav-tile" onclick="mobileTab('rewards')"><span class="ft-stable-inline-icon" data-ft-stable-icon="gift"></span><span data-en="Rewards" data-es="Recompensas">Rewards</span></button>
   </div>
 
@@ -6703,59 +6827,89 @@
     </div>
   </div>
 
-  <!-- STREAKS & MILESTONES TAB -->
+  <!-- ACHIEVEMENTS TAB -->
   <div class="tab-section" id="tab-streaks">
-    <div class="streaks-layout">
-
-      <!-- LEFT: LEVEL + STREAKS -->
-      <div>
-        <!-- LEVEL CARD -->
-        <div class="level-card">
-          <div class="level-badge" id="level-badge"><span class="ft-reference-icon" data-fixed-icon="medal"></span></div>
-          <div class="level-name" id="level-name">Bronze</div>
-          <div class="level-subtitle" id="level-subtitle">Level 1 · Just Getting Started</div>
-          <div class="total-xp" id="total-xp">0</div>
-          <div class="total-xp-label">Total XP Earned</div>
-          <div class="xp-bar-track" style="margin-top:0.75rem">
-            <div class="xp-bar-fill" id="xp-bar" style="width:0%"></div>
-          </div>
-          <div class="xp-label">
-            <span id="xp-current">0 XP</span>
-            <span id="xp-next">4,000 XP to Silver</span>
-          </div>
-          <div id="level-reward" style="margin-top:0.75rem"></div>
-          <div id="rewards-roadmap" style="margin-top:1rem"></div>
+    <div class="achievement-center">
+      <div class="achievement-page-head">
+        <div>
+          <h1 data-en="Achievements" data-es="Logros">Achievements</h1>
+          <p data-en="Every achievement earns Verified XP. Every XP brings you closer to permanent Fintrail rewards." data-es="Cada logro obtiene XP verificado. Cada XP te acerca a recompensas permanentes de Fintrail.">Every achievement earns Verified XP. Every XP brings you closer to permanent Fintrail rewards.</p>
         </div>
-
-        <!-- STREAKS -->
-        <div class="card">
-          <h2 style="margin-bottom:1rem;display:flex;align-items:center;gap:0.45rem"><span class="ft-stable-inline-icon" data-ft-stable-icon="flame"></span><span data-en="Active Streaks" data-es="Rachas Activas">Active Streaks</span></h2>
-          <div class="streak-cards" id="streak-cards"></div>
-          <div class="tip-bar" style="margin-top:1rem">
-            <div class="tip-icon">💡</div>
-            <p data-en="Keep it:" data-es="Sigue:" data-en-html="<strong>Keep it going!</strong> Streaks reset if you miss a day. Log in daily to maintain your streak and earn bonus XP!" data-es-html="<strong>¡Sigue así!</strong> Las rachas se reinician si fallas un día. ¡Inicia sesión diariamente para mantener tu racha y ganar XP extra!"><strong>Keep it going!</strong> Streaks reset if you miss a day. Log in and update your budget daily to maintain your streak and earn bonus XP.</p>
-          </div>
-        </div>
+        <button class="achievement-rewards-link" type="button" onclick="navTo('rewards', document.getElementById('nav-rewards'))"><span class="ft-reference-icon" data-fixed-icon="gift"></span><span data-en="Rewards Center" data-es="Centro de Recompensas">Rewards Center</span></button>
       </div>
 
-      <!-- RIGHT: BADGES + ACTIVITY -->
-      <div>
-        <div class="card" style="margin-bottom:1.5rem">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
-            <h2 style="margin-bottom:0;display:flex;align-items:center;gap:0.45rem"><span class="ft-stable-inline-icon" data-ft-stable-icon="trophy"></span><span data-en="Achievements" data-es="Logros">Achievements</span></h2>
-            <span id="badges-count" style="font-size:0.78rem;color:var(--muted)">0 earned</span>
+      <div class="achievement-hero-grid">
+        <section class="level-card achievement-progress-card">
+          <div class="achievement-rank-summary">
+            <div class="level-badge" id="level-badge"><span class="ft-reference-icon" data-fixed-icon="medal"></span></div>
+            <div>
+              <div class="achievement-eyebrow" data-en="Current Permanent Rank" data-es="Rango Permanente Actual">Current Permanent Rank</div>
+              <div class="level-name" id="level-name">Bronze</div>
+              <div class="level-subtitle" id="level-subtitle">Just Getting Started</div>
+            </div>
+          </div>
+          <div class="achievement-xp-panel">
+            <div class="achievement-xp-heading">
+              <div><span data-en="Verified XP" data-es="XP Verificado">Verified XP</span><strong class="total-xp" id="total-xp">0</strong></div>
+              <span id="xp-next">4,000 XP to Silver</span>
+            </div>
+            <div class="xp-bar-track"><div class="xp-bar-fill" id="xp-bar" style="width:0%"></div></div>
+            <div class="xp-label"><span id="xp-current">0 XP</span><span data-en="Permanent progress" data-es="Progreso permanente">Permanent progress</span></div>
+            <div class="achievement-progress-stats">
+              <div><span class="ft-reference-icon" data-fixed-icon="flame"></span><strong id="achievement-streak-value">0</strong><small data-en="Day Streak" data-es="Días de Racha">Day Streak</small></div>
+              <div><span class="ft-reference-icon" data-fixed-icon="award"></span><strong id="badges-count">0/20</strong><small data-en="Achievements" data-es="Logros">Achievements</small></div>
+              <div><span class="ft-reference-icon" data-fixed-icon="gift"></span><strong id="achievement-rewards-ready">—</strong><small data-en="Rewards Ready" data-es="Recompensas Listas">Rewards Ready</small></div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="achievement-next-reward">
+          <div class="achievement-next-label"><span class="ft-reference-icon" data-fixed-icon="star"></span><span data-en="Next Reward" data-es="Próxima Recompensa">Next Reward</span></div>
+          <div class="achievement-next-icon" id="achievement-next-icon"><span class="ft-reference-icon" data-fixed-icon="medal"></span></div>
+          <h2 id="achievement-next-rank">Silver</h2>
+          <strong id="achievement-next-reward-copy">1 free month of Fintrail Pro</strong>
+          <p id="achievement-next-remaining">4,000 XP remaining</p>
+          <button type="button" onclick="navTo('rewards', document.getElementById('nav-rewards'))"><span class="ft-reference-icon" data-fixed-icon="trending-up"></span><span data-en="View Rewards Center" data-es="Ver Centro de Recompensas">View Rewards Center</span></button>
+        </aside>
+      </div>
+
+      <section class="achievement-roadmap-card">
+        <div class="achievement-section-head">
+          <div><span class="ft-reference-icon" data-fixed-icon="target"></span><h2 data-en="Permanent Rank Roadmap" data-es="Ruta de Rangos Permanentes">Permanent Rank Roadmap</h2></div>
+          <span data-en="Ranks never expire" data-es="Los rangos nunca vencen">Ranks never expire</span>
+        </div>
+        <div class="achievement-roadmap" id="achievement-roadmap"></div>
+      </section>
+
+      <div class="achievement-main-grid">
+        <section class="achievement-library-card">
+          <div class="achievement-section-head">
+            <div><span class="ft-reference-icon" data-fixed-icon="trophy"></span><h2 data-en="Achievement Collection" data-es="Colección de Logros">Achievement Collection</h2></div>
           </div>
           <div class="badges-grid" id="badges-grid"></div>
-        </div>
+        </section>
 
-        <div class="card">
-          <h2 style="margin-bottom:1rem;display:flex;align-items:center;gap:0.45rem"><span class="ft-stable-inline-icon" data-ft-stable-icon="zap"></span><span data-en="Recent Activity" data-es="Actividad Reciente">Recent Activity</span></h2>
-          <div class="activity-feed" id="activity-feed">
-            <div class="empty-state" data-en="No activity yet — start using Fintrail to earn XP!" data-es="Aún no hay actividad — ¡comienza a usar Fintrail para ganar XP!">No activity yet — start using Fintrail to earn XP!</div>
-          </div>
-        </div>
+        <aside class="achievement-side-stack">
+          <section class="achievement-support-card">
+            <div class="achievement-section-head"><div><span class="ft-reference-icon" data-fixed-icon="flame"></span><h2 data-en="Active Streaks" data-es="Rachas Activas">Active Streaks</h2></div></div>
+            <div class="streak-cards" id="streak-cards"></div>
+          </section>
+          <section class="achievement-support-card">
+            <div class="achievement-section-head"><div><span class="ft-reference-icon" data-fixed-icon="zap"></span><h2 data-en="Recent Activity" data-es="Actividad Reciente">Recent Activity</h2></div></div>
+            <div class="activity-feed" id="activity-feed"><div class="empty-state" data-en="No activity yet — start using Fintrail to earn XP!" data-es="Aún no hay actividad — ¡comienza a usar Fintrail para ganar XP!">No activity yet — start using Fintrail to earn XP!</div></div>
+          </section>
+        </aside>
       </div>
 
+      <section class="achievement-motivation">
+        <div class="achievement-motivation-icon"><span class="ft-reference-icon" data-fixed-icon="rocket"></span></div>
+        <div>
+          <h2 data-en="Keep Going!" data-es="¡Sigue Adelante!">Keep Going!</h2>
+          <p><span data-en="You're only" data-es="Te faltan solo">You're only</span> <strong id="achievement-motivation-xp">4,000 XP</strong> <span id="achievement-motivation-rank" data-en="away from Silver." data-es="para alcanzar Plata.">away from Silver.</span></p>
+          <span data-en="Every achievement permanently improves your financial journey." data-es="Cada logro mejora permanentemente tu camino financiero.">Every achievement permanently improves your financial journey.</span>
+        </div>
+        <button type="button" onclick="navTo('rewards', document.getElementById('nav-rewards'))"><span data-en="Visit Rewards Center" data-es="Visitar Centro de Recompensas">Visit Rewards Center</span><span class="ft-reference-icon" data-fixed-icon="trending-up"></span></button>
+      </section>
     </div>
   </div>
 
@@ -13070,10 +13224,12 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
 
   function showBadgeToast(badge) {
     const toast = document.createElement('div');
-    toast.style.cssText = `position:fixed;bottom:2rem;right:2rem;background:linear-gradient(135deg,#111111 0%,#2A0F0F 45%,#E53935 100%);color:#fff;padding:1rem 1.25rem;border-radius:12px;border:1px solid rgba(255,209,102,0.3);box-shadow:0 8px 30px rgba(0,0,0,0.3);z-index:9999;animation:slideIn 0.3s ease;display:flex;align-items:center;gap:0.75rem;max-width:280px`;
+    toast.className = 'achievement-unlock-toast';
     const bt = getBadgeText(badge);
-    toast.innerHTML = `<span style="font-size:1.75rem">${badge.emoji}</span><div><div style="font-weight:700;font-size:0.875rem;color:#fff">${currentLang==='es'?'¡Logro desbloqueado!':'Badge Unlocked!'}</div><div style="font-size:0.78rem;color:rgba(255,255,255,0.7);margin-top:0.1rem">${bt.name} · +${badge.xp} XP</div></div>`;
+    const icon = (typeof REWARD_ACHIEVEMENT_ICONS !== 'undefined' && REWARD_ACHIEVEMENT_ICONS[badge.id]) || 'award';
+    toast.innerHTML = `<span class="achievement-unlock-toast-icon"><span class="ft-reference-icon" data-fixed-icon="${icon}"></span></span><div><strong>${currentLang==='es'?'¡Logro desbloqueado!':'Achievement Unlocked!'}</strong><span>${bt.name} · +${badge.xp} XP</span></div>`;
     document.body.appendChild(toast);
+    if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons(toast);
     setTimeout(() => toast.style.opacity = '0', 3000);
     setTimeout(() => toast.remove(), 3500);
   }
@@ -13145,6 +13301,69 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
         }).join('')}
       `;
     }
+
+    const streakValue = document.getElementById('achievement-streak-value');
+    if (streakValue) streakValue.textContent = Number(gameData.loginStreak || 0).toLocaleString();
+
+    const rewardsReady = document.getElementById('achievement-rewards-ready');
+    if (rewardsReady) {
+      const grants = (typeof rewardsCenterState !== 'undefined' && rewardsCenterState.loaded)
+        ? (rewardsCenterState.grants || [])
+        : null;
+      rewardsReady.textContent = grants
+        ? grants.filter(grant => grant.status === 'available' || grant.status === 'failed').length.toLocaleString()
+        : '—';
+    }
+
+    const nextIcon = document.getElementById('achievement-next-icon');
+    const nextRank = document.getElementById('achievement-next-rank');
+    const nextReward = document.getElementById('achievement-next-reward-copy');
+    const nextRemaining = document.getElementById('achievement-next-remaining');
+    const motivationXP = document.getElementById('achievement-motivation-xp');
+    const motivationRank = document.getElementById('achievement-motivation-rank');
+    if (nextLevel) {
+      const rewardCopy = {
+        silver: currentLang === 'es' ? '1 mes gratis de Fintrail Pro' : '1 free month of Fintrail Pro',
+        gold: currentLang === 'es' ? '2 meses gratis de Fintrail Pro' : '2 free months of Fintrail Pro',
+        platinum: currentLang === 'es' ? '10% de descuento por 12 meses' : '10% off Fintrail Pro for 12 months',
+        diamond: currentLang === 'es' ? 'Recompensa vitalicia secreta' : 'Secret Lifetime Reward'
+      };
+      const remaining = Math.max(0, nextLevel.minXP - xp);
+      if (nextIcon) nextIcon.innerHTML = `<span class="ft-reference-icon" data-fixed-icon="${nextLevel.tier === 'diamond' ? 'gem' : 'medal'}"></span>`;
+      if (nextRank) nextRank.textContent = nextLevel.name;
+      if (nextReward) nextReward.textContent = rewardCopy[nextLevel.tier] || '';
+      if (nextRemaining) nextRemaining.textContent = `${remaining.toLocaleString()} XP ${currentLang === 'es' ? 'restantes' : 'remaining'}`;
+      if (motivationXP) motivationXP.textContent = remaining.toLocaleString();
+      if (motivationRank) motivationRank.textContent = currentLang === 'es' ? `XP para ${nextLevel.name}` : `XP away from ${nextLevel.name}`;
+    } else {
+      if (nextIcon) nextIcon.innerHTML = '<span class="ft-reference-icon" data-fixed-icon="gem"></span>';
+      if (nextRank) nextRank.textContent = currentLang === 'es' ? 'Rango máximo' : 'Highest Rank';
+      if (nextReward) nextReward.textContent = currentLang === 'es' ? 'Tu rango permanente está asegurado.' : 'Your permanent rank is secured.';
+      if (nextRemaining) nextRemaining.textContent = currentLang === 'es' ? 'Diamond alcanzado' : 'Diamond achieved';
+      if (motivationXP) motivationXP.textContent = xp.toLocaleString();
+      if (motivationRank) motivationRank.textContent = currentLang === 'es' ? 'XP verificado y creciendo' : 'verified XP and growing';
+    }
+
+    const achievementRoadmap = document.getElementById('achievement-roadmap');
+    if (achievementRoadmap) {
+      achievementRoadmap.innerHTML = getLEVELS().map((roadmapLevel, index) => {
+        const isCurrent = index === level.index;
+        const state = index < level.index ? 'unlocked' : isCurrent ? 'current' : 'locked';
+        const stateLabel = state === 'unlocked'
+          ? (currentLang === 'es' ? 'Completado' : 'Completed')
+          : state === 'current'
+            ? (currentLang === 'es' ? 'Rango actual' : 'Current rank')
+            : (currentLang === 'es' ? 'Bloqueado' : 'Locked');
+        return `<div class="achievement-roadmap-row ${state}" data-tier="${roadmapLevel.tier || ''}">
+          <div class="achievement-roadmap-icon"><span class="ft-reference-icon" data-fixed-icon="${roadmapLevel.tier === 'diamond' ? 'gem' : 'medal'}"></span></div>
+          <div class="achievement-roadmap-main">
+            <strong>${roadmapLevel.name}</strong>
+            <span>${roadmapLevel.minXP.toLocaleString()} XP</span>
+          </div>
+          <span class="achievement-roadmap-status">${stateLabel}</span>
+        </div>`;
+      }).join('');
+    }
     if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
   }
 
@@ -13153,10 +13372,10 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     if (!streakCardsEl) return;
     const budgetStreakCount = Number(gameData.budgetStreak || 0) || (transactions.length > 0 ? 1 : 0);
     const streaks = [
-      { icon: '🔥', label: currentLang==='es'?'Racha de Inicio':'Login Streak', desc: currentLang==='es'?'Inicia sesión diario':'Log in daily', count: gameData.loginStreak || 0, unit: currentLang==='es'?'días':'days' },
-      { icon: '📝', label: currentLang==='es'?'Racha de Presupuesto':'Budget Streak', desc: currentLang==='es'?'Registra transacciones':'Log transactions regularly', count: budgetStreakCount, unit: currentLang==='es'?'días':'days' },
-      { icon: '📅', label: currentLang==='es'?'Facturas Seguidas':'Bills Tracked', desc: currentLang==='es'?'Facturas en el horario':'Bills added to schedule', count: bills.length, unit: currentLang==='es'?'facturas':'bills' },
-      { icon: '🎯', label: currentLang==='es'?'Metas Activas':'Goals Active', desc: currentLang==='es'?'Metas de ahorro en progreso':'Savings goals in progress', count: goals.filter(g => g.saved < g.target).length, unit: currentLang==='es'?'metas':'goals' },
+      { icon: 'flame', label: currentLang==='es'?'Racha de Inicio':'Login Streak', desc: currentLang==='es'?'Inicia sesión diario':'Log in daily', count: gameData.loginStreak || 0, unit: currentLang==='es'?'días':'days' },
+      { icon: 'clipboard-list', label: currentLang==='es'?'Racha de Presupuesto':'Budget Streak', desc: currentLang==='es'?'Registra transacciones':'Log transactions regularly', count: budgetStreakCount, unit: currentLang==='es'?'días':'days' },
+      { icon: 'calendar-check', label: currentLang==='es'?'Facturas Seguidas':'Bills Tracked', desc: currentLang==='es'?'Facturas en el horario':'Bills added to schedule', count: bills.length, unit: currentLang==='es'?'facturas':'bills' },
+      { icon: 'target', label: currentLang==='es'?'Metas Activas':'Goals Active', desc: currentLang==='es'?'Metas de ahorro en progreso':'Savings goals in progress', count: goals.filter(g => g.saved < g.target).length, unit: currentLang==='es'?'metas':'goals' },
     ];
 
     const renderKey = `${currentLang}|${streaks.map(s => `${s.label}:${s.count}:${s.unit}`).join('|')}`;
@@ -13165,7 +13384,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     streakCardsEl.innerHTML = streaks.map(s => `
       <div class="streak-card ${s.count > 0 ? 'active' : ''}">
         <div class="sc-left">
-          <span class="sc-icon">${s.icon}</span>
+          <span class="sc-icon"><span class="ft-reference-icon" data-fixed-icon="${s.icon}"></span></span>
           <div class="sc-info">
             <h4>${s.label}</h4>
             <p>${s.desc}</p>
@@ -13177,6 +13396,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
         </div>
       </div>`).join('');
     streakCardsEl.dataset.renderKey = renderKey;
+    if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons(streakCardsEl);
   }
 
   function renderBadges() {
@@ -13191,18 +13411,41 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const renderKey = `${currentLang}|${earned.slice().sort().join(',')}|${BADGES_DEF.length}`;
     if (badgesGrid.dataset.renderKey === renderKey && badgesGrid.children.length) return;
 
-    badgesGrid.innerHTML = BADGES_DEF.map(b => {
-      const isEarned = earned.includes(b.id);
-      const bt = getBadgeText(b);
-      return `<div class="badge-item ${isEarned ? 'earned' : 'locked'}" title="${bt.desc}">
-        ${isEarned ? `<div class="badge-earned-stamp">✓ ${currentLang==='es'?'Logrado':'Earned'}</div>` : ''}
-        <div class="badge-emoji">${b.emoji}</div>
-        <div class="badge-name">${bt.name}</div>
-        <div class="badge-desc">${bt.desc}</div>
-        <div class="badge-xp">+${b.xp} XP</div>
-      </div>`;
+    const categories = [
+      { icon:'flame', en:'Daily Habits', es:'Hábitos Diarios', ids:['first_login','streak_7','streak_30'] },
+      { icon:'wallet', en:'Budgeting', es:'Presupuesto', ids:['first_transaction','ten_transactions','fifty_transactions','budget_surplus','first_bill','five_bills'] },
+      { icon:'target', en:'Savings', es:'Ahorros', ids:['first_goal','goal_complete','three_goals','savings_1000','savings_10000'] },
+      { icon:'credit-card', en:'Debt', es:'Deudas', ids:['debt_planner'] },
+      { icon:'trending-up', en:'Credit & Investing', es:'Crédito e Inversión', ids:['credit_sim','invest_calc'] },
+      { icon:'bot', en:'AI & Profile', es:'IA y Perfil', ids:['ai_chat','pro_member','profile_complete'] }
+    ];
+    badgesGrid.innerHTML = categories.map(category => {
+      const badges = category.ids.map(id => BADGES_DEF.find(badge => badge.id === id)).filter(Boolean);
+      if (!badges.length) return '';
+      return `<section class="achievement-category">
+        <div class="achievement-category-head">
+          <span class="ft-reference-icon" data-fixed-icon="${category.icon}"></span>
+          <h3>${currentLang === 'es' ? category.es : category.en}</h3>
+          <span>${badges.filter(badge => earned.includes(badge.id)).length}/${badges.length}</span>
+        </div>
+        <div class="achievement-category-grid">
+          ${badges.map(badge => {
+            const isEarned = earned.includes(badge.id);
+            const bt = getBadgeText(badge);
+            const icon = (typeof REWARD_ACHIEVEMENT_ICONS !== 'undefined' && REWARD_ACHIEVEMENT_ICONS[badge.id]) || 'award';
+            return `<div class="badge-item ${isEarned ? 'earned' : 'locked'}" title="${bt.desc}">
+              ${isEarned ? `<div class="badge-earned-stamp">✓ ${currentLang==='es'?'Logrado':'Earned'}</div>` : ''}
+              <div class="badge-emoji"><span class="ft-reference-icon" data-fixed-icon="${icon}"></span></div>
+              <div class="badge-name">${bt.name}</div>
+              <div class="badge-desc">${bt.desc}</div>
+              <div class="badge-xp">+${badge.xp} XP</div>
+            </div>`;
+          }).join('')}
+        </div>
+      </section>`;
     }).join('');
     badgesGrid.dataset.renderKey = renderKey;
+    if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons(badgesGrid);
   }
 
   function renderActivityFeed() {
