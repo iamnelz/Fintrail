@@ -6978,9 +6978,9 @@
           <div>
             <div class="financial-journey-title">
               <span class="ft-reference-icon" data-fixed-icon="book-open"></span>
-              <h2 id="financial-journey-title" data-en="My Financial Journey" data-es="Mi Trayectoria Financiera">My Financial Journey</h2>
+              <h2 id="financial-journey-title" data-en="Your Financial Journey" data-es="Tu Trayectoria Financiera">Your Financial Journey</h2>
             </div>
-            <p data-en="Meaningful moments from the financial habits you are building." data-es="Momentos importantes de los hábitos financieros que estás construyendo.">Meaningful moments from the financial habits you are building.</p>
+            <p data-en="Every milestone tells the story of your financial growth." data-es="Cada logro cuenta la historia de tu crecimiento financiero.">Every milestone tells the story of your financial growth.</p>
           </div>
           <button class="financial-journey-toggle" id="financial-journey-toggle" type="button" onclick="toggleFinancialJourney()" data-en="View Full Journey" data-es="Ver Trayectoria Completa">View Full Journey</button>
         </div>
@@ -10790,8 +10790,8 @@ Guidelines:
       type:'debt',
       icon:'check-circle',
       source:'debt',
-      title:isFirstDebtPayoff ? 'First Debt Paid Off' : 'Debt Paid Off',
-      titleEs:isFirstDebtPayoff ? 'Primera Deuda Pagada' : 'Deuda Pagada',
+      title:isFirstDebtPayoff ? 'Paid Off Your First Debt' : 'Paid Off a Debt',
+      titleEs:isFirstDebtPayoff ? 'Pagaste Tu Primera Deuda' : 'Pagaste una Deuda',
       message:'You turned a payoff plan into a financial victory.',
       messageEs:'Convertiste un plan de pago en una victoria financiera.',
       xp:Number(debt.payoffXpAmount || debt.payoffXpEarned || 0),
@@ -12580,33 +12580,33 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     },
     first_transaction: {
       id:'first_transaction_logged', icon:'receipt-text', source:'budget',
-      title:'First Transaction Logged', titleEs:'Primera Transacción Registrada',
-      message:'You started giving every dollar a clear place.',
-      messageEs:'Comenzaste a darle un lugar claro a cada dólar.'
+      title:'Created Your First Budget', titleEs:'Creaste Tu Primer Presupuesto',
+      message:'You gave every dollar a purpose.',
+      messageEs:'Le diste un propósito a cada dólar.'
     },
     first_bill: {
       id:'first_bill_added', icon:'calendar-check', source:'bills',
-      title:'First Bill Added', titleEs:'Primera Factura Agregada',
-      message:'You brought an upcoming payment into focus.',
-      messageEs:'Pusiste un próximo pago bajo control.'
+      title:'Added Your First Bill', titleEs:'Agregaste Tu Primera Factura',
+      message:'You took control of what comes next.',
+      messageEs:'Tomaste el control de lo que viene.'
     },
     first_goal: {
       id:'first_savings_goal_created', icon:'target', source:'savings',
-      title:'First Savings Goal Created', titleEs:'Primera Meta de Ahorro Creada',
-      message:'You gave your money a purpose.',
-      messageEs:'Le diste un propósito a tu dinero.'
+      title:'Created a Savings Goal', titleEs:'Creaste una Meta de Ahorro',
+      message:'You started paying your future self first.',
+      messageEs:'Comenzaste a pagarte primero a tu yo del futuro.'
     },
     goal_complete: {
       id:'first_savings_goal_completed', icon:'trophy', source:'savings',
-      title:'Savings Goal Completed', titleEs:'Meta de Ahorro Completada',
-      message:'Your consistent saving turned a goal into progress.',
-      messageEs:'Tu ahorro constante convirtió una meta en progreso.'
+      title:'Completed a Savings Goal', titleEs:'Completaste una Meta de Ahorro',
+      message:'Your consistency turned a goal into a victory.',
+      messageEs:'Tu constancia convirtió una meta en una victoria.'
     },
     debt_planner: {
       id:'first_debt_payoff_plan_created', icon:'clipboard-list', source:'debt',
-      title:'First Debt Payoff Plan Created', titleEs:'Primer Plan de Pago de Deudas Creado',
-      message:'You created a clear path toward debt freedom.',
-      messageEs:'Creaste un camino claro hacia la libertad de deudas.'
+      title:'Created Your Debt Freedom Plan', titleEs:'Creaste Tu Plan de Libertad de Deudas',
+      message:'You turned debt freedom into a plan you can follow.',
+      messageEs:'Convertiste la libertad de deudas en un plan que puedes seguir.'
     }
   };
   let financialJourneyExpanded = false;
@@ -12674,7 +12674,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     if (joinedDate) {
       addKnown({
         id:'joined_fintrail', type:'account', icon:'sprout', source:'account',
-        title:'Joined Fintrail', titleEs:'Te Uniste a Fintrail',
+        title:'Started Fintrail', titleEs:'Comenzaste en Fintrail',
         message:'Every journey starts with one step.',
         messageEs:'Toda trayectoria comienza con un paso.',
         date:joinedDate
@@ -12721,8 +12721,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       type:'debt',
       icon:'check-circle',
       source:'debt',
-      title:'First Debt Paid Off',
-      titleEs:'Primera Deuda Pagada',
+      title:'Paid Off Your First Debt',
+      titleEs:'Pagaste Tu Primera Deuda',
       message:'You turned a payoff plan into a financial victory.',
       messageEs:'Convertiste un plan de pago en una victoria financiera.',
       xp:Number(paidDebt.payoffXpAmount || paidDebt.payoffXpEarned || 0),
@@ -13832,24 +13832,24 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const events = [...(gameData.financialJourney || [])];
     const tierCopy = {
       bronze: {
-        title:'Bronze Rank Achieved', titleEs:'Rango Bronce Alcanzado',
+        title:'Reached Bronze Rank', titleEs:'Alcanzaste el Rango Bronce',
         message:'Your permanent Fintrail journey officially began.', messageEs:'Tu trayectoria permanente en Fintrail comenzó oficialmente.'
       },
       silver: {
-        title:'Silver Rank Achieved', titleEs:'Rango Plata Alcanzado',
-        message:'You secured Silver status permanently.', messageEs:'Aseguraste el rango Plata permanentemente.'
+        title:'Reached Silver Rank', titleEs:'Alcanzaste el Rango Plata',
+        message:'Your steady progress became a permanent achievement.', messageEs:'Tu progreso constante se convirtió en un logro permanente.'
       },
       gold: {
-        title:'Gold Rank Achieved', titleEs:'Rango Oro Alcanzado',
-        message:'You secured Gold status permanently.', messageEs:'Aseguraste el rango Oro permanentemente.'
+        title:'Reached Gold Rank', titleEs:'Alcanzaste el Rango Oro',
+        message:'Months of consistency turned into a permanent achievement.', messageEs:'Meses de constancia se convirtieron en un logro permanente.'
       },
       platinum: {
-        title:'Platinum Rank Achieved', titleEs:'Rango Platino Alcanzado',
-        message:'Your progress reached an exceptional new level.', messageEs:'Tu progreso alcanzó un nuevo nivel excepcional.'
+        title:'Reached Platinum Rank', titleEs:'Alcanzaste el Rango Platino',
+        message:'Your financial habits reached an exceptional new level.', messageEs:'Tus hábitos financieros alcanzaron un nuevo nivel excepcional.'
       },
       diamond: {
-        title:'Diamond Rank Achieved', titleEs:'Rango Diamante Alcanzado',
-        message:'You reached Fintrail’s highest permanent rank.', messageEs:'Alcanzaste el rango permanente más alto de Fintrail.'
+        title:'Reached Diamond Rank', titleEs:'Alcanzaste el Rango Diamante',
+        message:'Your dedication carried you to Fintrail’s highest permanent rank.', messageEs:'Tu dedicación te llevó al rango permanente más alto de Fintrail.'
       }
     };
     const serverHistory = financialJourneyServerState.loaded
@@ -13880,10 +13880,10 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
           type:'reward',
           icon:'gift',
           source:'rewards',
-          title:'Reward Unlocked',
-          titleEs:'Recompensa Desbloqueada',
-          message:'Your progress unlocked a new Fintrail benefit.',
-          messageEs:'Tu progreso desbloqueó un nuevo beneficio de Fintrail.',
+          title:'Unlocked Reward',
+          titleEs:'Desbloqueaste una Recompensa',
+          message:'Your dedication earned a new Fintrail reward.',
+          messageEs:'Tu dedicación te hizo ganar una nueva recompensa de Fintrail.',
           date:grant.earned_at,
           related:typeof rewardDescription === 'function'
             ? rewardDescription(grant.tier, grant.reward_variant, false)
@@ -13897,8 +13897,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
           type:'reward',
           icon:'award',
           source:'rewards',
-          title:'Reward Claimed',
-          titleEs:'Recompensa Reclamada',
+          title:'Claimed Your Reward',
+          titleEs:'Reclamaste Tu Recompensa',
           message:'You put an earned Fintrail benefit into action.',
           messageEs:'Pusiste en acción un beneficio ganado en Fintrail.',
           date:claimedDate,
@@ -13922,6 +13922,27 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     return Array.from(byId.values()).sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
   }
 
+  function getJourneyPresentation(event) {
+    if (event.id === 'joined_fintrail') {
+      return {
+        title:'Started Fintrail', titleEs:'Comenzaste en Fintrail',
+        message:'Every journey starts with one step.',
+        messageEs:'Toda trayectoria comienza con un paso.'
+      };
+    }
+    const badgePresentation = Object.values(JOURNEY_BADGE_EVENTS)
+      .find(definition => definition.id === event.id);
+    if (badgePresentation) return badgePresentation;
+    if (String(event.id || '').startsWith('debt_paid_') && event.title === 'First Debt Paid Off') {
+      return {
+        title:'Paid Off Your First Debt', titleEs:'Pagaste Tu Primera Deuda',
+        message:'You turned a payoff plan into a financial victory.',
+        messageEs:'Convertiste un plan de pago en una victoria financiera.'
+      };
+    }
+    return event;
+  }
+
   function renderFinancialJourney() {
     const container = document.getElementById('financial-journey-timeline');
     const toggle = document.getElementById('financial-journey-toggle');
@@ -13941,8 +13962,9 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
 
     const visibleEvents = financialJourneyExpanded ? events : events.slice(0, 6);
     container.innerHTML = visibleEvents.map(event => {
-      const title = currentLang === 'es' ? (event.titleEs || event.title) : event.title;
-      const message = currentLang === 'es' ? (event.messageEs || event.message) : event.message;
+      const presentation = getJourneyPresentation(event);
+      const title = currentLang === 'es' ? (presentation.titleEs || presentation.title) : presentation.title;
+      const message = currentLang === 'es' ? (presentation.messageEs || presentation.message) : presentation.message;
       const date = new Intl.DateTimeFormat(currentLang === 'es' ? 'es-US' : 'en-US', {
         year:'numeric', month:'short', day:'numeric'
       }).format(new Date(event.date));
