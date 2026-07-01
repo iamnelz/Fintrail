@@ -2184,8 +2184,14 @@
   .rank-badge-ribbon { position:absolute; left:50%; bottom:-22px; transform:translateX(-50%); min-width:138px; padding:0.36rem 0.8rem; border-radius:5px; color:#fff; background:linear-gradient(180deg,#ef4444,#b91c1c); border:1px solid #f87171; box-shadow:0 7px 14px rgba(0,0,0,0.35); font-size:0.7rem; font-weight:900; text-align:center; text-transform:uppercase; white-space:nowrap; letter-spacing:0.04em; }
   .rewards-hero[data-tier="bronze"] .rewards-rank-icon { color:#f59e0b; background:radial-gradient(circle at 36% 28%,#fed7aa,#d97706 58%,#7c2d12); border-color:#fdba74; box-shadow:inset 0 0 0 8px #9a3412,inset 0 0 0 12px rgba(255,255,255,0.28),0 0 36px rgba(205,127,50,0.48),0 18px 34px rgba(0,0,0,0.34); }
   .rewards-hero[data-tier="silver"] .rewards-rank-icon { color:#f8fafc; background:radial-gradient(circle at 36% 28%,#fff,#cbd5e1 54%,#64748b); border-color:#f8fafc; box-shadow:inset 0 0 0 8px #64748b,inset 0 0 0 12px rgba(255,255,255,0.55),0 0 40px rgba(226,232,240,0.54),0 18px 34px rgba(0,0,0,0.34); }
-  .rewards-hero[data-tier="gold"] .rewards-rank-icon { color:#fff7cc; }
+  .rewards-hero[data-tier="gold"] .rewards-rank-icon {
+    color:#fff;
+    background:radial-gradient(circle at 35% 28%,#fff7cc,#f59e0b 54%,#92400e);
+    border-color:#fde68a;
+    box-shadow:inset 0 0 0 8px rgba(146,64,14,0.72),inset 0 0 0 12px rgba(255,255,255,0.3),0 0 38px rgba(245,158,11,0.56),0 18px 34px rgba(0,0,0,0.34);
+  }
   .rewards-hero[data-tier="gold"] .rank-badge-emblem { color:#fff; }
+  .rewards-hero[data-tier="gold"] .rank-badge-emblem .ft-lucide-icon { stroke-width:2; }
   .rewards-hero[data-tier="platinum"] .rewards-rank-icon { color:#eff6ff; background:radial-gradient(circle at 36% 28%,#fff,#93c5fd 48%,#1d4ed8 82%); border-color:#dbeafe; box-shadow:inset 0 0 0 8px #1e40af,inset 0 0 0 12px rgba(255,255,255,0.5),0 0 44px rgba(96,165,250,0.62),0 18px 34px rgba(0,0,0,0.34); }
   .rewards-hero[data-tier="diamond"] .rewards-rank-icon { color:#f5f3ff; background:radial-gradient(circle at 36% 28%,#fff,#c4b5fd 46%,#7c3aed 82%); border-color:#ede9fe; box-shadow:inset 0 0 0 8px #6d28d9,inset 0 0 0 12px rgba(255,255,255,0.48),0 0 48px rgba(139,92,246,0.68),0 18px 34px rgba(0,0,0,0.34); }
   .rewards-eyebrow { color:rgba(255,255,255,0.62); text-transform:uppercase; letter-spacing:0.08em; font-size:0.68rem; font-weight:800; }
@@ -8023,6 +8029,7 @@
     // Mark NW as pre-loaded from Supabase so initNetWorth uses this data directly
     if (nwAssets.length || nwLiabilities.length) nwLoaded = true;
     loadProfileUI();
+    if (typeof scheduleRewardsXpSync === 'function') scheduleRewardsXpSync(0);
   }
 
   // PREMIUM STATE
@@ -12934,10 +12941,12 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     if (sbClient && currentUser) {
       (async () => {
         try {
-          await sbClient.from('user_data').upsert(
+          const { error } = await sbClient.from('user_data').upsert(
             { user_id: currentUser.id, game_data: gameData, updated_at: new Date().toISOString() },
             { onConflict: 'user_id' }
           );
+          if (error) throw error;
+          if (typeof scheduleRewardsXpSync === 'function') scheduleRewardsXpSync();
         } catch (e) {
           console.log('gameData sync err:', e.message);
         }
@@ -13509,6 +13518,61 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     loading:false,
     loaded:false
   };
+  let rewardsXpSyncTimer = null;
+  let rewardsXpSyncInFlight = null;
+
+  function scheduleRewardsXpSync(delay = 900) {
+    if (!sbClient || !currentUser) return;
+    if (rewardsXpSyncTimer) clearTimeout(rewardsXpSyncTimer);
+    rewardsXpSyncTimer = setTimeout(() => {
+      rewardsXpSyncTimer = null;
+      syncRewardsVerifiedXP().catch(error => {
+        console.log('Rewards XP sync error:', error.message);
+      });
+    }, Math.max(0, Number(delay) || 0));
+  }
+
+  async function syncRewardsVerifiedXP() {
+    if (!sbClient || !currentUser) return null;
+    if (rewardsXpSyncInFlight) return rewardsXpSyncInFlight;
+
+    rewardsXpSyncInFlight = (async () => {
+      const { data, error: sessionError } = await sbClient.auth.getSession();
+      if (sessionError) throw sessionError;
+      const token = data?.session?.access_token;
+      if (!token) throw new Error('Authentication required');
+
+      const response = await fetch('/.netlify/functions/sync-reward-xp', {
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'Authorization':`Bearer ${token}`
+        },
+        body:'{}'
+      });
+      const result = await response.json();
+      if (!response.ok || !result?.ok) {
+        throw new Error(result?.error || 'Verified XP sync failed');
+      }
+
+      const verifiedXp = Math.max(0, Number(result.verified_xp || 0));
+      if (verifiedXp > Number(gameData.totalXP || 0)) {
+        gameData.totalXP = verifiedXp;
+        safeSet('fintrail_game_' + currentUser.id, JSON.stringify(gameData));
+      }
+      if (rewardsCenterState.account) {
+        rewardsCenterState.account.verified_xp = verifiedXp;
+        if (result.highest_tier) rewardsCenterState.account.highest_tier = result.highest_tier;
+      }
+      return result;
+    })();
+
+    try {
+      return await rewardsXpSyncInFlight;
+    } finally {
+      rewardsXpSyncInFlight = null;
+    }
+  }
 
   function rewardsIsSpanish() {
     return (typeof getCurrentLanguage === 'function' ? getCurrentLanguage() : currentLang) === 'es';
@@ -13591,6 +13655,11 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     }
 
     try {
+      try {
+        await syncRewardsVerifiedXP();
+      } catch (syncError) {
+        console.log('Rewards XP sync deferred:', syncError.message);
+      }
       const [accountResult, grantsResult, historyResult] = await Promise.all([
         sbClient.from('reward_accounts')
           .select('user_id,verified_xp,highest_tier,diamond_reward_variant,diamond_eligibility_locked_at')
@@ -13665,7 +13734,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const rankIcon = document.getElementById('rewards-rank-icon');
     if (rankIcon) rankIcon.innerHTML = `
       <span class="rank-badge-crown"><span class="ft-reference-icon" data-fixed-icon="crown"></span></span>
-      <span class="rank-badge-emblem"><span class="ft-reference-icon" data-fixed-icon="${rewardEscapeHTML(tierConfig.icon)}"></span></span>
+      <span class="rank-badge-emblem"><span class="ft-reference-icon" data-fixed-icon="${rewardEscapeHTML(tier === 'gold' ? 'medal' : tierConfig.icon)}"></span></span>
       <span class="rank-badge-ribbon">${rewardEscapeHTML(rewardTierName(tier))}</span>`;
     const rankCopy = document.getElementById('rewards-rank-copy');
     if (rankCopy) {
@@ -13916,6 +13985,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
 
   window.loadRewardsCenter = loadRewardsCenter;
   window.renderRewardsCenter = renderRewardsCenter;
+  window.syncRewardsVerifiedXP = syncRewardsVerifiedXP;
   window.claimFintrailReward = claimFintrailReward;
   window.closeRewardCelebration = closeRewardCelebration;
 
