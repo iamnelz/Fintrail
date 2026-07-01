@@ -2151,11 +2151,12 @@
   .achievement-celebration-content { position:relative; z-index:2; }
   .achievement-celebration-kicker { display:flex; align-items:center; justify-content:center; gap:0.4rem; color:#fbbf24; font-size:0.68rem; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; }
   .achievement-celebration-kicker .ft-lucide-icon { width:18px; height:18px; }
-  .achievement-celebration-badge { width:116px; height:116px; margin:1rem auto; display:flex; align-items:center; justify-content:center; border:3px solid #fde68a; border-radius:50%; color:#fff8dc; background:radial-gradient(circle at 35% 28%,#fff7cc,#f59e0b 54%,#92400e); box-shadow:inset 0 0 0 8px rgba(146,64,14,0.65),inset 0 0 0 11px rgba(255,255,255,0.28),0 0 34px rgba(245,158,11,0.46); }
-  .achievement-celebration-badge .ft-lucide-icon { width:60px; height:60px; filter:drop-shadow(0 4px 7px rgba(74,36,0,0.36)); }
-  .achievement-celebration-modal[data-tier="silver"] .achievement-celebration-badge { color:#fff; background:radial-gradient(circle at 35% 28%,#fff,#cbd5e1 55%,#64748b); border-color:#f8fafc; box-shadow:inset 0 0 0 8px #64748b,inset 0 0 0 11px rgba(255,255,255,0.5),0 0 34px rgba(226,232,240,0.4); }
-  .achievement-celebration-modal[data-tier="platinum"] .achievement-celebration-badge { color:#eff6ff; background:radial-gradient(circle at 35% 28%,#fff,#93c5fd 52%,#1d4ed8); border-color:#dbeafe; box-shadow:inset 0 0 0 8px #1e40af,inset 0 0 0 11px rgba(255,255,255,0.44),0 0 38px rgba(96,165,250,0.5); }
-  .achievement-celebration-modal[data-tier="diamond"] .achievement-celebration-badge { color:#fff; background:radial-gradient(circle at 35% 28%,#fff,#c4b5fd 48%,#7c3aed); border-color:#ede9fe; box-shadow:inset 0 0 0 8px #6d28d9,inset 0 0 0 11px rgba(255,255,255,0.46),0 0 44px rgba(139,92,246,0.58); animation:diamondCelebrationShimmer 2.2s ease-in-out infinite; }
+  .achievement-celebration-badge { width:116px; height:116px; margin:1rem auto; display:flex; align-items:center; justify-content:center; border:3px solid #fde68a; border-radius:50%; color:#fff8dc; background:radial-gradient(circle at 35% 28%,#fff7cc,#f59e0b 54%,#92400e); box-shadow:inset 0 0 0 8px rgba(146,64,14,0.65),inset 0 0 0 11px rgba(255,255,255,0.28),0 0 40px rgba(245,158,11,0.54); animation:rankBadgeEntrance 280ms cubic-bezier(.2,.8,.25,1.12) both; }
+  .achievement-celebration-badge .ft-lucide-icon { width:74px; height:74px; display:flex; align-items:center; justify-content:center; margin:0; transform:none; filter:drop-shadow(0 4px 7px rgba(74,36,0,0.36)); }
+  .achievement-celebration-modal[data-tier="silver"] .achievement-celebration-badge { color:#fff; background:radial-gradient(circle at 35% 28%,#fff,#cbd5e1 55%,#64748b); border-color:#f8fafc; box-shadow:inset 0 0 0 8px #64748b,inset 0 0 0 11px rgba(255,255,255,0.5),0 0 42px rgba(226,232,240,0.5); }
+  .achievement-celebration-modal[data-tier="gold"] .achievement-celebration-badge { box-shadow:inset 0 0 0 8px rgba(146,64,14,0.65),inset 0 0 0 11px rgba(255,255,255,0.28),0 0 44px rgba(245,158,11,0.62); }
+  .achievement-celebration-modal[data-tier="platinum"] .achievement-celebration-badge { color:#eff6ff; background:radial-gradient(circle at 35% 28%,#fff,#93c5fd 52%,#1d4ed8); border-color:#dbeafe; box-shadow:inset 0 0 0 8px #1e40af,inset 0 0 0 11px rgba(255,255,255,0.44),0 0 46px rgba(96,165,250,0.62); }
+  .achievement-celebration-modal[data-tier="diamond"] .achievement-celebration-badge { color:#fff; background:radial-gradient(circle at 35% 28%,#ecfeff,#67e8f9 42%,#0e7490 76%,#164e63); border-color:#cffafe; box-shadow:inset 0 0 0 8px #155e75,inset 0 0 0 11px rgba(255,255,255,0.46),0 0 50px rgba(34,211,238,0.66); animation:rankBadgeEntrance 280ms cubic-bezier(.2,.8,.25,1.12) both,diamondCelebrationShimmer 2.2s ease-in-out 280ms infinite; }
   .achievement-celebration-title { margin:0; font-family:'Playfair Display',serif; font-size:clamp(1.55rem,5vw,2.05rem); line-height:1.15; }
   .achievement-celebration-message { margin:0.55rem auto 0; max-width:430px; color:rgba(255,255,255,0.76); font-size:0.84rem; line-height:1.65; }
   .achievement-celebration-xp { display:inline-flex; align-items:center; justify-content:center; min-height:38px; margin-top:0.85rem; padding:0.45rem 0.8rem; border:1px solid rgba(251,191,36,0.35); border-radius:999px; color:#fbbf24; background:rgba(251,191,36,0.09); font-size:0.78rem; font-weight:900; }
@@ -2166,7 +2167,11 @@
   .achievement-celebration-journey strong { display:block; color:#fff; }
   .achievement-celebration-rank-benefits { display:none; margin:1rem auto 0; max-width:390px; text-align:left; }
   .achievement-celebration-rank-benefits.visible { display:grid; gap:0.45rem; }
-  .achievement-celebration-rank-benefits span { display:flex; align-items:center; gap:0.45rem; padding:0.45rem 0.55rem; border-radius:7px; color:rgba(255,255,255,0.82); background:rgba(255,255,255,0.055); font-size:0.7rem; font-weight:700; }
+  .achievement-celebration-rank-benefits > span { display:flex; align-items:center; gap:0.45rem; padding:0.45rem 0.55rem; border-radius:7px; color:rgba(255,255,255,0.82); background:rgba(255,255,255,0.055); font-size:0.7rem; font-weight:700; opacity:0; animation:rankBenefitEntrance 280ms ease both; }
+  .achievement-celebration-rank-benefits > span:nth-child(1) { animation-delay:120ms; }
+  .achievement-celebration-rank-benefits > span:nth-child(2) { animation-delay:250ms; }
+  .achievement-celebration-rank-benefits > span:nth-child(3) { animation-delay:380ms; }
+  .achievement-celebration-rank-benefits > span:nth-child(4) { animation-delay:510ms; }
   .achievement-celebration-rank-benefits .ft-lucide-icon { width:16px; height:16px; color:#fbbf24; stroke:#fbbf24; }
   .achievement-celebration-stats { display:none; margin:1rem auto 0; max-width:410px; padding:0.8rem; border:1px solid rgba(255,255,255,0.12); border-radius:9px; background:rgba(0,0,0,0.16); text-align:left; }
   .achievement-celebration-stats.visible { display:block; }
@@ -2191,10 +2196,12 @@
   @keyframes achievementUnlockIn { from{opacity:0;transform:translateY(18px) scale(.94)} to{opacity:1;transform:translateY(0) scale(1)} }
   @keyframes achievementCelebrationFade { from{opacity:0} to{opacity:1} }
   @keyframes achievementCelebrationScale { from{opacity:0;transform:scale(.94) translateY(10px)} to{opacity:1;transform:scale(1) translateY(0)} }
+  @keyframes rankBadgeEntrance { from{opacity:0;transform:scale(.82)} to{opacity:1;transform:scale(1)} }
+  @keyframes rankBenefitEntrance { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
   @keyframes achievementConfetti { 0%{opacity:0;transform:translateY(0) rotate(0)} 14%{opacity:.9} 100%{opacity:0;transform:translateY(330px) rotate(220deg)} }
   @keyframes diamondCelebrationShimmer { 0%,100%{filter:brightness(1)} 50%{filter:brightness(1.18) drop-shadow(0 0 12px rgba(255,255,255,0.32))} }
   @media (prefers-reduced-motion:reduce) {
-    .achievement-celebration-overlay.visible,.achievement-celebration-modal,.achievement-celebration-confetti span,.achievement-celebration-modal[data-tier="diamond"] .achievement-celebration-badge { animation:none !important; }
+    .achievement-celebration-overlay.visible,.achievement-celebration-modal,.achievement-celebration-badge,.achievement-celebration-rank-benefits > span,.achievement-celebration-confetti span,.achievement-celebration-modal[data-tier="diamond"] .achievement-celebration-badge { animation:none !important; opacity:1 !important; transform:none !important; }
   }
   @media (hover:hover) and (pointer:fine) {
     .achievement-center .badge-item:hover { transform:translateY(-3px); box-shadow:0 12px 24px rgba(15,23,42,0.09); }
