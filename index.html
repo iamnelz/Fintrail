@@ -2152,14 +2152,14 @@
   .achievement-celebration-content { position:relative; z-index:2; }
   .achievement-celebration-kicker { display:flex; align-items:center; justify-content:center; gap:0.4rem; color:#fbbf24; font-size:0.68rem; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; }
   .achievement-celebration-kicker .ft-lucide-icon { width:18px; height:18px; }
-  .achievement-celebration-badge { width:116px; height:116px; margin:1rem auto; display:flex; align-items:center; justify-content:center; border:3px solid #fde68a; border-radius:50%; color:#fff8dc; background:radial-gradient(circle at 35% 28%,#fff7cc,#f59e0b 54%,#92400e); box-shadow:inset 0 0 0 8px rgba(146,64,14,0.65),inset 0 0 0 11px rgba(255,255,255,0.28),0 0 40px rgba(245,158,11,0.54); animation:rankBadgeEntrance 280ms cubic-bezier(.2,.8,.25,1.12) both; }
+  .achievement-celebration-badge { width:116px; height:116px; margin:1rem auto; display:flex; align-items:center; justify-content:center; border:3px solid #fde68a; border-radius:50%; color:#fff8dc; background:radial-gradient(circle at 35% 28%,#fff7cc,#f59e0b 54%,#92400e); box-shadow:inset 0 0 0 8px rgba(146,64,14,0.65),inset 0 0 0 11px rgba(255,255,255,0.28),0 0 40px rgba(245,158,11,0.54); animation:rankBadgeEntrance 300ms ease-out both; }
   .achievement-celebration-badge > .ft-reference-icon { width:100%; height:100%; display:flex; align-items:center; justify-content:center; overflow:visible; line-height:0; }
   .achievement-celebration-badge > .ft-reference-icon > .ft-lucide-icon { width:80px; height:80px; display:flex; align-items:center; justify-content:center; margin:0; transform:none; stroke-width:2.2; filter:drop-shadow(0 4px 7px rgba(74,36,0,0.36)); }
   .achievement-celebration-badge .ft-lucide-icon svg { display:block; width:100%; height:100%; overflow:visible; position:relative; top:auto; left:auto; margin:0; transform:none; }
   .achievement-celebration-modal[data-tier="silver"] .achievement-celebration-badge { color:#fff; background:radial-gradient(circle at 35% 28%,#fff,#cbd5e1 55%,#64748b); border-color:#f8fafc; box-shadow:inset 0 0 0 8px #64748b,inset 0 0 0 11px rgba(255,255,255,0.5),0 0 42px rgba(226,232,240,0.5); }
   .achievement-celebration-modal[data-tier="gold"] .achievement-celebration-badge { box-shadow:inset 0 0 0 8px rgba(146,64,14,0.65),inset 0 0 0 11px rgba(255,255,255,0.28),0 0 44px rgba(245,158,11,0.62); }
   .achievement-celebration-modal[data-tier="platinum"] .achievement-celebration-badge { color:#eff6ff; background:radial-gradient(circle at 35% 28%,#fff,#93c5fd 52%,#1d4ed8); border-color:#dbeafe; box-shadow:inset 0 0 0 8px #1e40af,inset 0 0 0 11px rgba(255,255,255,0.44),0 0 46px rgba(96,165,250,0.62); }
-  .achievement-celebration-modal[data-tier="diamond"] .achievement-celebration-badge { color:#fff; background:radial-gradient(circle at 35% 28%,#ecfeff,#67e8f9 42%,#0e7490 76%,#164e63); border-color:#cffafe; box-shadow:inset 0 0 0 8px #155e75,inset 0 0 0 11px rgba(255,255,255,0.46),0 0 50px rgba(34,211,238,0.66); animation:rankBadgeEntrance 280ms cubic-bezier(.2,.8,.25,1.12) both,diamondCelebrationShimmer 2.2s ease-in-out 280ms infinite; }
+  .achievement-celebration-modal[data-tier="diamond"] .achievement-celebration-badge { color:#fff; background:radial-gradient(circle at 35% 28%,#ecfeff,#67e8f9 42%,#0e7490 76%,#164e63); border-color:#cffafe; box-shadow:inset 0 0 0 8px #155e75,inset 0 0 0 11px rgba(255,255,255,0.46),0 0 50px rgba(34,211,238,0.66); animation:rankBadgeEntrance 300ms ease-out both,diamondCelebrationShimmer 2s ease-in-out 300ms 1; }
   .achievement-celebration-modal[data-tier="diamond"] .achievement-celebration-badge .ft-lucide-icon { width:76px; height:76px; stroke-width:2; filter:drop-shadow(0 5px 9px rgba(8,47,73,0.44)) drop-shadow(0 0 8px rgba(207,250,254,0.4)); }
   .achievement-celebration-title { margin:0; font-family:'Playfair Display',serif; font-size:clamp(1.55rem,5vw,2.05rem); line-height:1.15; }
   .achievement-celebration-message { margin:0.55rem auto 0; max-width:430px; color:rgba(255,255,255,0.76); font-size:0.84rem; line-height:1.65; }
@@ -2172,10 +2172,10 @@
   .achievement-celebration-rank-benefits { display:none; margin:1rem auto 0; max-width:390px; text-align:left; }
   .achievement-celebration-rank-benefits.visible { display:grid; gap:0.45rem; }
   .achievement-celebration-rank-benefits > span { display:flex; align-items:center; gap:0.45rem; padding:0.45rem 0.55rem; border-radius:7px; color:rgba(255,255,255,0.82); background:rgba(255,255,255,0.055); font-size:0.7rem; font-weight:700; opacity:0; animation:rankBenefitEntrance 280ms ease both; }
-  .achievement-celebration-rank-benefits > span:nth-child(1) { animation-delay:120ms; }
-  .achievement-celebration-rank-benefits > span:nth-child(2) { animation-delay:250ms; }
-  .achievement-celebration-rank-benefits > span:nth-child(3) { animation-delay:380ms; }
-  .achievement-celebration-rank-benefits > span:nth-child(4) { animation-delay:510ms; }
+  .achievement-celebration-rank-benefits > span:nth-child(1) { animation-delay:0ms; }
+  .achievement-celebration-rank-benefits > span:nth-child(2) { animation-delay:150ms; }
+  .achievement-celebration-rank-benefits > span:nth-child(3) { animation-delay:300ms; }
+  .achievement-celebration-rank-benefits > span:nth-child(4) { animation-delay:450ms; }
   .achievement-celebration-rank-benefits .ft-lucide-icon { width:16px; height:16px; color:#fbbf24; stroke:#fbbf24; }
   .achievement-celebration-stats { display:none; margin:1rem auto 0; max-width:410px; padding:0.8rem; border:1px solid rgba(255,255,255,0.12); border-radius:9px; background:rgba(0,0,0,0.16); text-align:left; }
   .achievement-celebration-stats.visible { display:block; }
@@ -2190,6 +2190,11 @@
   .achievement-celebration-confetti { position:absolute; inset:0; overflow:hidden; pointer-events:none; }
   .achievement-celebration-confetti span { position:absolute; top:-12px; width:6px; height:11px; border-radius:2px; background:#fbbf24; opacity:0; animation:achievementConfetti 1.35s ease-out both; }
   .achievement-celebration-confetti span:nth-child(1){left:12%;animation-delay:.04s}.achievement-celebration-confetti span:nth-child(2){left:26%;background:#ef4444;animation-delay:.12s}.achievement-celebration-confetti span:nth-child(3){left:42%;background:#fff;animation-delay:.2s}.achievement-celebration-confetti span:nth-child(4){left:58%;animation-delay:.08s}.achievement-celebration-confetti span:nth-child(5){left:72%;background:#ef4444;animation-delay:.18s}.achievement-celebration-confetti span:nth-child(6){left:88%;background:#fff;animation-delay:.25s}
+  .achievement-celebration-modal[data-tier] .achievement-celebration-confetti span { width:5px; height:5px; border-radius:50%; animation-duration:2s; box-shadow:0 0 8px currentColor; }
+  .achievement-celebration-modal[data-tier="silver"] .achievement-celebration-confetti span { color:#e2e8f0; background:#e2e8f0; }
+  .achievement-celebration-modal[data-tier="gold"] .achievement-celebration-confetti span { color:#fbbf24; background:#fbbf24; }
+  .achievement-celebration-modal[data-tier="platinum"] .achievement-celebration-confetti span { color:#93c5fd; background:#bfdbfe; }
+  .achievement-celebration-modal[data-tier="diamond"] .achievement-celebration-confetti span { color:#67e8f9; background:#cffafe; }
   .rank-celebration-preview-panel { position:fixed; left:14px; bottom:14px; z-index:10010; width:min(330px,calc(100vw - 28px)); padding:0.75rem; border:1px solid rgba(229,57,53,0.3); border-radius:10px; background:rgba(255,255,255,0.97); box-shadow:0 14px 36px rgba(15,23,42,0.18); }
   .rank-celebration-preview-panel[hidden] { display:none !important; }
   .rank-celebration-preview-panel strong { display:block; color:var(--text); font-size:0.72rem; }
@@ -2200,10 +2205,10 @@
   @keyframes achievementUnlockIn { from{opacity:0;transform:translateY(18px) scale(.94)} to{opacity:1;transform:translateY(0) scale(1)} }
   @keyframes achievementCelebrationFade { from{opacity:0} to{opacity:1} }
   @keyframes achievementCelebrationScale { from{opacity:0;transform:scale(.94) translateY(10px)} to{opacity:1;transform:scale(1) translateY(0)} }
-  @keyframes rankBadgeEntrance { from{opacity:0;transform:scale(.82)} to{opacity:1;transform:scale(1)} }
+  @keyframes rankBadgeEntrance { 0%{opacity:0;transform:scale(.92);filter:brightness(.92)} 72%{opacity:1;transform:scale(1);filter:brightness(1.12)} 100%{opacity:1;transform:scale(1);filter:brightness(1)} }
   @keyframes rankBenefitEntrance { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
   @keyframes achievementConfetti { 0%{opacity:0;transform:translateY(0) rotate(0)} 14%{opacity:.9} 100%{opacity:0;transform:translateY(330px) rotate(220deg)} }
-  @keyframes diamondCelebrationShimmer { 0%,100%{filter:brightness(1)} 50%{filter:brightness(1.18) drop-shadow(0 0 12px rgba(255,255,255,0.32))} }
+  @keyframes diamondCelebrationShimmer { 0%,100%{filter:brightness(1)} 50%{filter:brightness(1.16) drop-shadow(0 0 12px rgba(255,255,255,0.3))} }
   @keyframes diamondModalParticleShimmer { 0%{opacity:0;background-position:0 8px,12px 0,0 14px,8px 0,0 10px} 18%{opacity:0.55} 62%{opacity:0.32} 100%{opacity:0;background-position:18px -18px,-14px -24px,12px -20px,-18px -16px,16px -22px} }
   @media (prefers-reduced-motion:reduce) {
     .achievement-celebration-overlay.visible,.achievement-celebration-modal,.achievement-celebration-badge,.achievement-celebration-rank-benefits > span,.achievement-celebration-confetti span,.achievement-celebration-modal[data-tier="diamond"] .achievement-celebration-badge { animation:none !important; opacity:1 !important; transform:none !important; }
@@ -2418,6 +2423,12 @@
   .reward-claim-btn { margin-top:0.8rem; display:inline-flex; align-items:center; justify-content:center; gap:0.4rem; min-height:40px; padding:0.55rem 1rem; border:0; border-radius:9px; background:linear-gradient(135deg,#e53935,#c62828); color:#fff; font-family:'Sora',sans-serif; font-size:0.74rem; font-weight:800; cursor:pointer; box-shadow:0 7px 16px rgba(229,57,53,0.24); transition:transform 0.2s ease,box-shadow 0.2s ease; }
   .reward-claim-btn:hover { background:#c62828; }
   .reward-claim-btn:disabled { opacity:0.62; cursor:not-allowed; }
+  .rewards-item.claim-success { pointer-events:none; animation:rewardCardClaimed 760ms ease-out both; }
+  .rewards-item.claim-success::after { content:''; position:absolute; inset:0; z-index:3; border-radius:inherit; background:linear-gradient(135deg,rgba(236,253,245,0.98),rgba(255,255,255,0.98)); }
+  .reward-claimed-message { position:absolute; inset:0; z-index:4; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.25rem; padding:1rem; color:#047857; text-align:center; animation:rewardClaimMessage 420ms ease-out 220ms both; }
+  .reward-claimed-message .ft-lucide-icon { width:28px; height:28px; }
+  .reward-claimed-message strong { font-size:0.84rem; }
+  .reward-claimed-message span { color:#64748b; font-size:0.68rem; }
   .reward-status-pill { display:inline-flex; margin-top:0.55rem; border-radius:999px; padding:0.22rem 0.55rem; font-size:0.64rem; font-weight:800; text-transform:uppercase; letter-spacing:0.04em; background:#eef2f7; color:#475569; }
   .reward-status-pill.active { background:rgba(16,185,129,0.12); color:#047857; }
   .reward-status-pill.scheduled { background:rgba(245,158,11,0.14); color:#b45309; }
@@ -2448,7 +2459,8 @@
   .rewards-achievement-lock { position:absolute; inset:auto 0 0; padding:0.25rem; background:rgba(100,116,139,0.08); color:#64748b; font-size:0.6rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; }
   .rewards-achievement strong { display:block; color:var(--text); font-size:0.73rem; }
   .rewards-achievement span { display:block; color:var(--muted); font-size:0.64rem; margin-top:0.2rem; line-height:1.4; }
-  .rewards-empty { border:1px dashed var(--border); border-radius:8px; padding:1.2rem; color:var(--muted); text-align:center; font-size:0.8rem; background:#fff; grid-column:1/-1; }
+  .rewards-empty { border:1px dashed var(--border); border-radius:12px; padding:1.35rem; color:var(--muted); text-align:center; font-size:0.78rem; line-height:1.65; background:linear-gradient(145deg,#fff,#f8fafc); grid-column:1/-1; }
+  .rewards-empty strong { display:block; margin-bottom:0.25rem; color:var(--text); font-family:'Playfair Display',serif; font-size:1rem; }
   .rewards-alert { display:none; border-radius:8px; padding:0.75rem 0.9rem; margin-bottom:1rem; font-size:0.78rem; line-height:1.5; }
   .rewards-alert.visible { display:block; }
   .rewards-alert.success { background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.25); color:#047857; }
@@ -2456,7 +2468,7 @@
   .reward-celebration-overlay { position:fixed; inset:0; z-index:10020; background:rgba(15,17,21,0.72); display:none; align-items:center; justify-content:center; padding:1rem; }
   .reward-celebration-overlay.visible { display:flex; }
   .reward-celebration-modal { width:min(470px,100%); background:#fff; border-radius:18px; padding:2rem 1.8rem 1.7rem; text-align:center; box-shadow:0 26px 80px rgba(0,0,0,0.34); position:relative; overflow:hidden; animation:rewardModalFade 0.28s ease both; }
-  .reward-celebration-icon { width:132px; height:132px; margin:0 auto 1rem; border-radius:50%; display:flex; align-items:center; justify-content:center; overflow:hidden; background:radial-gradient(circle at 36% 28%,#ef5350,#c62828 64%,#8e0000); color:#fff; border:3px solid rgba(255,255,255,0.88); box-shadow:inset 0 0 0 8px rgba(255,255,255,0.1),0 0 44px rgba(229,57,53,0.42); position:relative; z-index:2; animation:rewardBadgeScale 0.5s cubic-bezier(.2,.9,.3,1.25) both; }
+  .reward-celebration-icon { width:132px; height:132px; margin:0 auto 1rem; border-radius:50%; display:flex; align-items:center; justify-content:center; overflow:hidden; background:radial-gradient(circle at 36% 28%,#ef5350,#c62828 64%,#8e0000); color:#fff; border:3px solid rgba(255,255,255,0.88); box-shadow:inset 0 0 0 8px rgba(255,255,255,0.1),0 0 44px rgba(229,57,53,0.42); position:relative; z-index:2; animation:rewardBadgeScale 300ms ease-out both; }
   .reward-celebration-icon > .ft-reference-icon { width:100%; height:100%; }
   .reward-celebration-icon .ft-lucide-icon { width:76px; height:76px; stroke-width:1.8; filter:drop-shadow(0 5px 8px rgba(0,0,0,0.25)); }
   .reward-celebration-overlay[data-tier="silver"] .reward-celebration-icon { color:#e2e8f0; box-shadow:inset 0 0 0 8px rgba(255,255,255,0.1),0 0 54px rgba(203,213,225,0.78); }
@@ -2466,7 +2478,7 @@
   .reward-celebration-modal h2 { font-family:'Playfair Display',serif; font-size:1.7rem; color:var(--text); }
   .reward-celebration-rank { font-family:'Playfair Display',serif; font-size:1.25rem; color:var(--accent); font-weight:700; margin-top:0.3rem; }
   .reward-celebration-modal p { color:var(--muted); font-size:0.82rem; line-height:1.6; margin-top:0.55rem; }
-  .reward-celebration-btn { margin-top:1rem; border:0; border-radius:8px; background:var(--accent); color:#fff; padding:0.65rem 1.2rem; font-family:'Sora',sans-serif; font-weight:800; cursor:pointer; }
+  .reward-celebration-btn { margin-top:1rem; border:0; border-radius:8px; background:var(--accent); color:#fff; padding:0.65rem 1.2rem; font-family:'Sora',sans-serif; font-weight:800; cursor:pointer; transition:transform 0.2s ease,box-shadow 0.2s ease; }
   .reward-confetti { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
   .reward-confetti span { position:absolute; top:-12px; width:6px; height:12px; border-radius:2px; opacity:0; animation:rewardConfettiFall 1.35s ease-out forwards; }
   .reward-confetti span:nth-child(1){left:12%;background:#f59e0b;animation-delay:.05s;transform:rotate(14deg)}
@@ -2476,17 +2488,38 @@
   .reward-confetti span:nth-child(5){left:68%;background:#8b5cf6;animation-delay:.12s;transform:rotate(24deg)}
   .reward-confetti span:nth-child(6){left:82%;background:#ef4444;animation-delay:.2s}
   .reward-confetti span:nth-child(7){left:91%;background:#10b981;animation-delay:.04s;transform:rotate(42deg)}
+  .reward-celebration-overlay[data-tier="silver"] .reward-confetti span { color:#e2e8f0; background:#e2e8f0; }
+  .reward-celebration-overlay[data-tier="gold"] .reward-confetti span { color:#fbbf24; background:#fbbf24; }
+  .reward-celebration-overlay[data-tier="platinum"] .reward-confetti span { color:#93c5fd; background:#93c5fd; }
+  .reward-celebration-overlay[data-tier="diamond"] .reward-confetti span { color:#67e8f9; background:#67e8f9; }
+  .reward-celebration-overlay[data-tier] .reward-confetti span { width:5px; height:5px; border-radius:50%; animation-duration:2s; box-shadow:0 0 8px currentColor; }
+  .rewards-tour-overlay { position:fixed; inset:0; z-index:10015; display:none; align-items:center; justify-content:center; padding:1rem; background:rgba(8,10,14,0.68); backdrop-filter:blur(4px); }
+  .rewards-tour-overlay.visible { display:flex; animation:achievementCelebrationFade 220ms ease both; }
+  .rewards-tour-card { width:min(100%,440px); padding:1.45rem; border:1px solid rgba(229,57,53,0.24); border-radius:16px; background:#fff; box-shadow:0 24px 70px rgba(15,23,42,0.28); }
+  .rewards-tour-card h2 { margin:0; color:var(--text); font-family:'Playfair Display',serif; font-size:1.45rem; }
+  .rewards-tour-card > p { margin-top:0.35rem; color:var(--muted); font-size:0.76rem; line-height:1.55; }
+  .rewards-tour-steps { display:grid; gap:0.55rem; margin-top:1rem; }
+  .rewards-tour-step { display:grid; grid-template-columns:36px minmax(0,1fr); gap:0.65rem; align-items:center; padding:0.65rem; border:1px solid var(--border); border-radius:10px; background:#f8fafc; position:relative; }
+  .rewards-tour-step:not(:last-child)::after { content:'↓'; position:absolute; left:50%; bottom:-0.65rem; z-index:2; width:20px; height:20px; display:flex; align-items:center; justify-content:center; border-radius:50%; color:var(--accent); background:#fff; font-size:0.7rem; font-weight:900; transform:translateX(-50%); }
+  .rewards-tour-step-icon { width:36px; height:36px; display:flex; align-items:center; justify-content:center; border-radius:50%; color:#fff; background:linear-gradient(145deg,#ef4444,#991b1b); }
+  .rewards-tour-step-icon .ft-lucide-icon { width:19px; height:19px; }
+  .rewards-tour-step strong { display:block; color:var(--text); font-size:0.75rem; }
+  .rewards-tour-step span { display:block; margin-top:0.1rem; color:var(--muted); font-size:0.64rem; line-height:1.4; }
+  .rewards-tour-done { width:100%; min-height:42px; margin-top:1rem; border:0; border-radius:9px; color:#fff; background:linear-gradient(135deg,#e53935,#c62828); font:800 0.74rem 'Sora',sans-serif; cursor:pointer; box-shadow:0 8px 18px rgba(229,57,53,0.24); transition:transform 0.2s ease,box-shadow 0.2s ease; }
   @keyframes rewardModalFade { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-  @keyframes rewardBadgeScale { from{opacity:0;transform:scale(.65)} to{opacity:1;transform:scale(1)} }
+  @keyframes rewardBadgeScale { 0%{opacity:0;transform:scale(.92);filter:brightness(.92)} 72%{opacity:1;transform:scale(1);filter:brightness(1.12)} 100%{opacity:1;transform:scale(1);filter:brightness(1)} }
   @keyframes rewardConfettiFall { 0%{opacity:0;transform:translateY(-10px) rotate(0)} 18%{opacity:.8} 100%{opacity:0;transform:translateY(220px) rotate(170deg)} }
+  @keyframes rewardCardClaimed { 0%{transform:scale(1);box-shadow:0 7px 18px rgba(15,23,42,0.055)} 28%{transform:scale(1.015);box-shadow:0 0 0 4px rgba(16,185,129,0.14),0 14px 32px rgba(16,185,129,0.2)} 100%{transform:scale(.985);box-shadow:0 7px 18px rgba(15,23,42,0.04)} }
+  @keyframes rewardClaimMessage { from{opacity:0;transform:translateY(7px)} to{opacity:1;transform:translateY(0)} }
   @media (hover:hover) and (pointer:fine) {
     .rewards-item:hover { transform:translateY(-3px); border-color:rgba(229,57,53,0.28); box-shadow:0 14px 30px rgba(15,23,42,0.1); }
-    .reward-claim-btn:hover { transform:translateY(-1px); box-shadow:0 10px 22px rgba(229,57,53,0.34); }
+    .reward-claim-btn:hover,.reward-celebration-btn:hover,.rewards-tour-done:hover { transform:translateY(-1px) scale(1.015); box-shadow:0 10px 22px rgba(229,57,53,0.34); }
     .rewards-achievement:hover { transform:translateY(-3px); box-shadow:0 12px 24px rgba(15,23,42,0.09); }
   }
+  .reward-claim-btn:focus-visible,.reward-celebration-btn:focus-visible,.rewards-tour-done:focus-visible,.rewards-view-all:focus-visible { outline:3px solid rgba(229,57,53,0.3); outline-offset:3px; }
   @media (prefers-reduced-motion:reduce) {
-    .reward-celebration-modal,.reward-celebration-icon,.reward-confetti span,.rewards-progress-fill::after { animation:none!important; }
-    .rewards-progress-fill,.rewards-item,.reward-claim-btn,.rewards-achievement { transition:none!important; }
+    .reward-celebration-modal,.reward-celebration-icon,.reward-confetti span,.rewards-progress-fill::after,.rewards-item.claim-success,.reward-claimed-message,.rewards-tour-overlay { animation:none!important; }
+    .rewards-progress-fill,.rewards-item,.reward-claim-btn,.rewards-achievement,.rewards-tour-done { transition:none!important; }
   }
   @media (max-width:900px) {
     .rewards-hero { grid-template-columns:1fr minmax(220px,0.8fr); }
@@ -6958,6 +6991,20 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="rewards-tour-overlay" id="rewards-tour-overlay" role="presentation">
+    <section class="rewards-tour-card" role="dialog" aria-modal="true" aria-labelledby="rewards-tour-title">
+      <h2 id="rewards-tour-title">Your Rewards, Explained</h2>
+      <p id="rewards-tour-copy">A quick look at how your progress becomes permanent Fintrail Pro benefits.</p>
+      <div class="rewards-tour-steps">
+        <div class="rewards-tour-step"><div class="rewards-tour-step-icon"><span class="ft-reference-icon" data-fixed-icon="trending-up"></span></div><div><strong id="rewards-tour-xp-title">Verified XP</strong><span id="rewards-tour-xp-copy">Earned through real financial milestones.</span></div></div>
+        <div class="rewards-tour-step"><div class="rewards-tour-step-icon"><span class="ft-reference-icon" data-fixed-icon="medal"></span></div><div><strong id="rewards-tour-rank-title">Permanent Rank</strong><span id="rewards-tour-rank-copy">Your highest unlocked rank never expires.</span></div></div>
+        <div class="rewards-tour-step"><div class="rewards-tour-step-icon"><span class="ft-reference-icon" data-fixed-icon="gift"></span></div><div><strong id="rewards-tour-reward-title">Rewards</strong><span id="rewards-tour-reward-copy">Claim earned benefits when you are ready.</span></div></div>
+        <div class="rewards-tour-step"><div class="rewards-tour-step-icon"><span class="ft-reference-icon" data-fixed-icon="book-open"></span></div><div><strong id="rewards-tour-journey-title">Financial Journey</strong><span id="rewards-tour-journey-copy">Every meaningful milestone becomes part of your story.</span></div></div>
+      </div>
+      <button class="rewards-tour-done" id="rewards-tour-done" type="button" onclick="completeRewardsTour()">Explore Rewards</button>
+    </section>
   </div>
 
   <div class="reward-celebration-overlay" id="reward-celebration-overlay" onclick="closeRewardCelebration(event)">
@@ -13731,7 +13778,9 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       badgeEl.innerHTML = `<span class="ft-reference-icon" data-fixed-icon="${copy.tier === 'diamond' ? 'gem' : 'medal'}"></span>`;
       title.textContent = copy.memberName;
       message.textContent = copy.message;
-      xp.textContent = `${Number(item.newXP || 0).toLocaleString()} ${currentLang === 'es' ? 'XP verificado' : 'Verified XP'}`;
+      animateCelebrationXPLabel(xp, item.oldXP, item.newXP, value =>
+        `${value.toLocaleString()} ${currentLang === 'es' ? 'XP verificado' : 'Verified XP'}`
+      );
       benefits.innerHTML = copy.benefits.map(benefit =>
         `<span><span class="ft-reference-icon" data-fixed-icon="check-circle"></span>${rewardEscapeHTML(benefit)}</span>`
       ).join('');
@@ -13758,7 +13807,9 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       message.textContent = currentLang === 'es'
         ? (personalized.es || badgeText.desc)
         : (personalized.en || badgeText.desc);
-      xp.textContent = `+${Number(badge.xp || 0).toLocaleString()} ${currentLang === 'es' ? 'XP verificado' : 'Verified XP'}`;
+      animateCelebrationXPLabel(xp, 0, badge.xp, value =>
+        `+${value.toLocaleString()} ${currentLang === 'es' ? 'XP verificado' : 'Verified XP'}`
+      );
       benefits.innerHTML = '';
       journey.innerHTML = `<strong>${currentLang === 'es' ? 'Tu Trayectoria Financiera' : 'Your Financial Journey'}</strong>${currentLang === 'es' ? 'Este logro se agregó a la historia de tu crecimiento financiero.' : 'This milestone has been added to the story of your financial growth.'}`;
       primary.textContent = currentLang === 'es' ? 'Continuar' : 'Continue';
@@ -13863,6 +13914,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     achievementCelebrationPreviousFocus = null;
     if (previousFocus && typeof previousFocus.focus === 'function') previousFocus.focus();
     setTimeout(showNextAchievementCelebration, 120);
+    setTimeout(maybeShowRewardsTour, 280);
   }
 
   function openCelebrationDestination() {
@@ -14626,8 +14678,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
 
     if (!currentUser || events.length === 0) {
       container.innerHTML = `<div class="financial-journey-empty">${currentLang === 'es'
-        ? 'Tu trayectoria apenas comienza. Completa tu primer logro para iniciar tu línea de tiempo.'
-        : 'Your journey is just getting started. Complete your first milestone to begin your timeline.'}</div>`;
+        ? 'Toda trayectoria financiera comienza con un solo paso. Completa tu primer logro para comenzar tu historia.'
+        : 'Every financial journey begins with a single step. Complete your first milestone to start your story.'}</div>`;
       if (toggle) toggle.style.display = 'none';
       container.dataset.renderKey = renderKey;
       return;
@@ -14832,6 +14884,145 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     alert.className = `rewards-alert${message ? ' visible ' + (type || '') : ''}`;
   }
 
+  function rewardsReducedMotion() {
+    return Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
+  }
+
+  function animateRewardsNumber(element, value, formatter, duration = 720) {
+    if (!element) return;
+    const target = Math.max(0, Number(value || 0));
+    const previous = Number(element.dataset.displayedValue);
+    const startValue = Number.isFinite(previous) ? previous : 0;
+    element.dataset.displayedValue = String(target);
+    const token = String(Date.now() + Math.random());
+    element.dataset.countToken = token;
+    if (rewardsReducedMotion() || startValue === target) {
+      element.textContent = formatter(target);
+      return;
+    }
+    const startedAt = performance.now();
+    const tick = now => {
+      if (element.dataset.countToken !== token) return;
+      const progress = Math.min(1, (now - startedAt) / duration);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      element.textContent = formatter(Math.round(startValue + (target - startValue) * eased));
+      if (progress < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+
+  function animateRewardsProgress(fill, value) {
+    if (!fill) return;
+    const target = Math.max(0, Math.min(100, Number(value || 0)));
+    const previous = Number(fill.dataset.progressValue);
+    const startValue = Number.isFinite(previous) ? previous : 0;
+    fill.dataset.progressValue = String(target);
+    if (rewardsReducedMotion() || startValue === target) {
+      fill.style.width = `${target}%`;
+      return;
+    }
+    fill.style.transition = 'none';
+    fill.style.width = `${startValue}%`;
+    requestAnimationFrame(() => {
+      fill.style.transition = 'width 0.8s cubic-bezier(.2,.8,.2,1)';
+      fill.style.width = `${target}%`;
+    });
+  }
+
+  function animateCelebrationXPLabel(element, startValue, endValue, formatter) {
+    if (!element) return;
+    const start = Math.max(0, Number(startValue || 0));
+    const end = Math.max(0, Number(endValue || 0));
+    const token = String(Date.now() + Math.random());
+    element.dataset.celebrationCountToken = token;
+    if (rewardsReducedMotion() || start === end) {
+      element.textContent = formatter(end);
+      return;
+    }
+    const startedAt = performance.now();
+    const tick = now => {
+      if (element.dataset.celebrationCountToken !== token) return;
+      const progress = Math.min(1, (now - startedAt) / 720);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      element.textContent = formatter(Math.round(start + (end - start) * eased));
+      if (progress < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+
+  function rewardsTourStorageKey() {
+    return `fintrail_rewards_tour_v1_${currentUser?.id || 'guest'}`;
+  }
+
+  function updateRewardsTourLanguage() {
+    const es = rewardsIsSpanish();
+    const copy = {
+      'rewards-tour-title':es ? 'Tus Recompensas, Explicadas' : 'Your Rewards, Explained',
+      'rewards-tour-copy':es ? 'Un vistazo rápido a cómo tu progreso se convierte en beneficios permanentes de Fintrail Pro.' : 'A quick look at how your progress becomes permanent Fintrail Pro benefits.',
+      'rewards-tour-xp-title':es ? 'XP Verificado' : 'Verified XP',
+      'rewards-tour-xp-copy':es ? 'Se obtiene mediante logros financieros reales.' : 'Earned through real financial milestones.',
+      'rewards-tour-rank-title':es ? 'Rango Permanente' : 'Permanent Rank',
+      'rewards-tour-rank-copy':es ? 'Tu rango más alto desbloqueado nunca vence.' : 'Your highest unlocked rank never expires.',
+      'rewards-tour-reward-title':es ? 'Recompensas' : 'Rewards',
+      'rewards-tour-reward-copy':es ? 'Reclama tus beneficios cuando estés listo.' : 'Claim earned benefits when you are ready.',
+      'rewards-tour-journey-title':es ? 'Trayectoria Financiera' : 'Financial Journey',
+      'rewards-tour-journey-copy':es ? 'Cada logro importante se convierte en parte de tu historia.' : 'Every meaningful milestone becomes part of your story.',
+      'rewards-tour-done':es ? 'Explorar Recompensas' : 'Explore Rewards'
+    };
+    Object.entries(copy).forEach(([id, value]) => {
+      const element = document.getElementById(id);
+      if (element) element.textContent = value;
+    });
+  }
+
+  function maybeShowRewardsTour() {
+    const overlay = document.getElementById('rewards-tour-overlay');
+    if (!overlay || !currentUser || safeGet(rewardsTourStorageKey()) === 'true') return;
+    if (!document.getElementById('tab-rewards')?.classList.contains('visible')) return;
+    if (document.getElementById('reward-celebration-overlay')?.classList.contains('visible') ||
+        document.getElementById('achievement-celebration-overlay')?.classList.contains('visible')) return;
+    updateRewardsTourLanguage();
+    overlay.classList.add('visible');
+    if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons(overlay);
+    requestAnimationFrame(() => document.getElementById('rewards-tour-done')?.focus({ preventScroll:true }));
+  }
+
+  function completeRewardsTour() {
+    const overlay = document.getElementById('rewards-tour-overlay');
+    safeSet(rewardsTourStorageKey(), 'true');
+    overlay?.classList.remove('visible');
+    document.getElementById('nav-rewards')?.focus({ preventScroll:true });
+  }
+
+  function bindRewardsTourKeyboard() {
+    if (window.__fintrailRewardsTourKeyboardBound) return;
+    window.__fintrailRewardsTourKeyboardBound = true;
+    document.addEventListener('keydown', event => {
+      const overlay = document.getElementById('rewards-tour-overlay');
+      if (!overlay?.classList.contains('visible')) return;
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        completeRewardsTour();
+        return;
+      }
+      if (event.key !== 'Tab') return;
+      const button = document.getElementById('rewards-tour-done');
+      if (!button) return;
+      event.preventDefault();
+      button.focus({ preventScroll:true });
+    });
+  }
+
+  function showRewardClaimedState(button) {
+    const card = button?.closest('.rewards-item');
+    if (!card) return Promise.resolve();
+    card.classList.add('claim-success');
+    card.insertAdjacentHTML('beforeend', `<div class="reward-claimed-message" role="status"><span class="ft-reference-icon" data-fixed-icon="check-circle"></span><strong>${rewardsIsSpanish() ? 'Recompensa Reclamada' : 'Reward Claimed'}</strong><span>${rewardsIsSpanish() ? 'Guardada en tu cuenta' : 'Saved to your account'}</span></div>`);
+    if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons(card);
+    if (rewardsReducedMotion()) return Promise.resolve();
+    return new Promise(resolve => setTimeout(resolve, 900));
+  }
+
   async function loadRewardsCenter(options = {}) {
     if (rewardsCenterState.loading) return;
     if (!sbClient || !currentUser) {
@@ -14889,7 +15080,9 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       };
       renderRewardsCenter();
       setRewardsAlert('', '');
+      bindRewardsTourKeyboard();
       showPendingRewardCelebration();
+      setTimeout(maybeShowRewardsTour, 420);
     } catch (error) {
       console.log('Rewards Center load error:', error.message);
       setRewardsAlert(
@@ -14928,9 +15121,9 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const rankName = document.getElementById('rewards-rank-name');
     if (rankName) rankName.textContent = rewardTierName(tier);
     const heroXp = document.getElementById('rewards-hero-xp');
-    if (heroXp) heroXp.textContent = rewardsIsSpanish()
-      ? `${xp.toLocaleString()} XP verificado`
-      : `${xp.toLocaleString()} verified XP`;
+    animateRewardsNumber(heroXp, xp, value => rewardsIsSpanish()
+      ? `${value.toLocaleString()} XP verificado`
+      : `${value.toLocaleString()} verified XP`);
     const rankIcon = document.getElementById('rewards-rank-icon');
     if (rankIcon) rankIcon.innerHTML = `
       <span class="rank-badge-crown"><span class="ft-reference-icon" data-fixed-icon="crown"></span></span>
@@ -14947,11 +15140,11 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
           : 'You have reached Diamond, Fintrail’s highest achievement.');
     }
     const currentLabel = document.getElementById('rewards-progress-current');
-    if (currentLabel) currentLabel.textContent = `${xp.toLocaleString()} XP`;
+    animateRewardsNumber(currentLabel, xp, value => `${value.toLocaleString()} XP`);
     const nextLabel = document.getElementById('rewards-progress-next');
     if (nextLabel) nextLabel.textContent = nextTier ? `${nextTier.threshold.toLocaleString()} XP` : (rewardsIsSpanish() ? 'Nivel Máximo' : 'Highest Rank');
     const fill = document.getElementById('rewards-progress-fill');
-    if (fill) fill.style.width = `${progress}%`;
+    animateRewardsProgress(fill, progress);
     const note = document.getElementById('rewards-progress-note');
     if (note) note.textContent = nextTier
       ? (rewardsIsSpanish()
@@ -14973,11 +15166,11 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     if (nextTier && nextRankName) nextRankName.textContent = rewardTierName(nextTier.tier);
 
     const summaryValues = {
-      'rewards-summary-xp':xp.toLocaleString(),
       'rewards-summary-ranks':String(Math.max(1, history.length)),
       'rewards-summary-ready':String(available.length),
       'rewards-summary-achievements':String(earnedIds.size)
     };
+    animateRewardsNumber(document.getElementById('rewards-summary-xp'), xp, value => value.toLocaleString());
     Object.entries(summaryValues).forEach(([id, value]) => {
       const el = document.getElementById(id);
       if (el) el.textContent = value;
@@ -14987,6 +15180,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     renderUpcomingRewards(tierIndex);
     renderRewardHistory(history, grants);
     renderRewardsAchievements(earnedIds);
+    updateRewardsTourLanguage();
     if (typeof window.fintrailRefreshDesignIcons === 'function') {
       requestAnimationFrame(window.fintrailRefreshDesignIcons);
     }
@@ -15001,7 +15195,9 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       ? `${claimableCount} para reclamar`
       : `${claimableCount} ready to claim`;
     if (!grants.length) {
-      grid.innerHTML = `<div class="rewards-empty">${rewardsIsSpanish() ? 'No tienes recompensas disponibles todavía. Sigue ganando XP.' : 'No rewards are available yet. Keep earning XP.'}</div>`;
+      grid.innerHTML = `<div class="rewards-empty">${rewardsIsSpanish()
+        ? '<strong>Tus recompensas te esperan.</strong>Completa logros y gana XP Verificado para desbloquear recompensas permanentes de Fintrail Pro.'
+        : '<strong>Your rewards are waiting.</strong>Complete achievements and earn Verified XP to unlock permanent Fintrail Pro rewards.'}</div>`;
       return;
     }
     grid.innerHTML = grants.map(grant => {
@@ -15085,6 +15281,12 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   function renderRewardsAchievements(earnedIds) {
     const grid = document.getElementById('rewards-achievements-grid');
     if (!grid || typeof BADGES_DEF === 'undefined') return;
+    if (!earnedIds.size) {
+      grid.innerHTML = `<div class="rewards-empty">${rewardsIsSpanish()
+        ? '<strong>Tus logros aparecerán aquí.</strong>Desarrolla hábitos financieros más sólidos para comenzar tu colección.'
+        : '<strong>Your achievements will appear here.</strong>Build stronger financial habits to begin your collection.'}</div>`;
+      return;
+    }
     grid.innerHTML = BADGES_DEF.slice(0, 8).map(badge => {
       const earned = earnedIds.has(badge.id);
       const text = typeof getBadgeText === 'function' ? getBadgeText(badge) : { name:badge.name, desc:badge.desc };
@@ -15129,6 +15331,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
         ? (rewardsIsSpanish() ? 'Tu recompensa fue programada para el próximo momento seguro.' : 'Your reward was scheduled for the next safe billing point.')
         : (rewardsIsSpanish() ? 'Tu recompensa fue reclamada y está pendiente de confirmación.' : 'Your reward was claimed and is awaiting confirmation.');
       setRewardsAlert(message, 'success');
+      await showRewardClaimedState(button);
       await loadRewardsCenter({ force:true });
     } catch (error) {
       console.log('Reward claim error:', error.message);
@@ -15181,6 +15384,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     if (!overlay) return;
     if (event && event.target !== overlay) return;
     overlay.classList.remove('visible');
+    setTimeout(maybeShowRewardsTour, 260);
   }
 
   window.loadRewardsCenter = loadRewardsCenter;
@@ -15188,6 +15392,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   window.syncRewardsVerifiedXP = syncRewardsVerifiedXP;
   window.claimFintrailReward = claimFintrailReward;
   window.closeRewardCelebration = closeRewardCelebration;
+  window.completeRewardsTour = completeRewardsTour;
 
   // DEBT NEGOTIATION SCRIPTS
   let currentDebtType = 'credit';
