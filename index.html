@@ -5656,7 +5656,7 @@
             <div style="display:flex;flex-wrap:wrap;gap:0.75rem;align-items:center;">
               <div class="payday-row">
                 <label data-en="Pay Frequency" data-es="Frecuencia de Pago">Pay Frequency</label>
-                <select class="payday-select" id="pay-frequency" onchange="safeSet('fintrail_pay_freq', this.value); renderSchedule()">
+                <select class="payday-select" id="pay-frequency" onchange="saveBillSchedulePreference('payFrequency', this.value); renderSchedule()">
                   <option value="biweekly" data-en="Bi-weekly" data-es="Quincenal">Bi-weekly</option>
                   <option value="semimonthly">Semi-monthly (1st & 15th)</option>
                   <option value="monthly" data-en="Monthly" data-es="Mensual">Monthly</option>
@@ -5665,7 +5665,7 @@
               </div>
               <div class="payday-row">
                 <label data-en="Next Payday" data-es="Próximo Día de Pago">Next Payday</label>
-                <input type="date" class="payday-select" id="next-payday" onchange="safeSet('fintrail_payday_date', this.value); renderSchedule()" style="font-size:0.85rem;">
+                <input type="date" class="payday-select" id="next-payday" onchange="saveBillSchedulePreference('nextPayday', this.value); renderSchedule()" style="font-size:0.85rem;">
               </div>
               <button onclick="downloadBillSchedulePDF()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.45rem 0.85rem;font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:0.35rem">
                 📄 <span data-en="Save PDF" data-es="Guardar PDF">Save PDF</span>
@@ -7885,6 +7885,7 @@
     setAuthLoading('si-btn', false);
     hidePublicHome();
     document.getElementById('auth-screen').style.display = 'none';
+    resetAppStateForUserSession();
     nwLoaded = false; // Reset so Supabase NW data loads fresh on login
     setUserUI(user);
     loadUserData();
@@ -8020,7 +8021,7 @@
     nwLoaded = false; // Reset so next login reloads NW data
     if (sbClient) await sbClient.auth.signOut();
     currentUser = null;
-    transactions = []; bills = []; goals = [];
+    resetAppStateForUserSession();
     if (typeof financialJourneyServerState !== 'undefined') {
       financialJourneyServerState = { userId:null, loading:false, loaded:false, history:[], grants:[] };
       financialJourneyExpanded = false;
@@ -8060,6 +8061,7 @@
   // DATA PERSISTENCE — save & load from Supabase
   async function saveUserData() {
     if (typeof normalizePlanDebts === 'function') normalizePlanDebts();
+    if (typeof syncBillScheduleStateToGameData === 'function') syncBillScheduleStateToGameData();
     if (typeof syncCreditScoreStorageFromGameData === 'function') syncCreditScoreStorageFromGameData();
     // Always save to localStorage as reliable fallback with timestamp
     const _uid2 = currentUser?.id || 'demo';
@@ -8069,6 +8071,7 @@
     safeSet('fintrail_goals_ts_' + _uid2,    String(_ts));
     safeSet('fintrail_bills_' + _uid2,       JSON.stringify(bills));
     safeSet('fintrail_txns_' + _uid2,        JSON.stringify(transactions));
+    if (typeof persistBillPaidChecks === 'function') persistBillPaidChecks();
 
     if (!sbClient || !currentUser) return { ok: false, skipped: true, reason: 'no Supabase session' };
     try {
@@ -8225,6 +8228,7 @@
           try { parsedLocalGame = localGame ? JSON.parse(localGame) : {}; } catch(e) {}
           gameData = mergeGameDataProgress(mergeGameDataProgress(gameData, parsedLocalGame), data.game_data);
           safeSet('fintrail_game_' + currentUser.id, JSON.stringify(gameData));
+          if (typeof loadBillScheduleStateFromGameData === 'function') loadBillScheduleStateFromGameData();
           if (typeof loadAlertPrefs === 'function') loadAlertPrefs();
           if (typeof syncCreditScoreStorageFromGameData === 'function') syncCreditScoreStorageFromGameData();
         }
@@ -8251,7 +8255,9 @@
       try { const loc = safeGet('fintrail_debts_' + _fuid); if (loc) planDebts = JSON.parse(loc); } catch(e) {}
     }
     if (typeof normalizePlanDebts === 'function') normalizePlanDebts();
+    if (typeof loadBillScheduleStateFromGameData === 'function') loadBillScheduleStateFromGameData();
     if (typeof syncCreditScoreStorageFromGameData === 'function') syncCreditScoreStorageFromGameData();
+    if (typeof hydrateCelebrationSeenStateFromProgress === 'function') hydrateCelebrationSeenStateFromProgress();
     console.log('LOADED CREDIT SCORE DATA', {
       currentCreditScore: gameData?.currentCreditScore,
       creditScoreBaseline: gameData?.creditScoreBaseline,
@@ -9724,6 +9730,66 @@ Guidelines:
   let bills = [];
   let paidChecks = {}; // key: billId-paydate, val: bool
 
+  function getUserScopedStorageKey(base) {
+    const uid = currentUser?.id || 'demo';
+    return `${base}_${uid}`;
+  }
+
+  function syncBillScheduleStateToGameData() {
+    if (!gameData || typeof gameData !== 'object') return;
+    const freqEl = document.getElementById('pay-frequency');
+    const paydayEl = document.getElementById('next-payday');
+    gameData.billScheduleSettings = {
+      ...(gameData.billScheduleSettings || {}),
+      payFrequency: freqEl?.value || gameData.billScheduleSettings?.payFrequency || 'biweekly',
+      nextPayday: paydayEl?.value || gameData.billScheduleSettings?.nextPayday || ''
+    };
+    gameData.billPaidChecks = { ...(paidChecks || {}) };
+  }
+
+  function loadBillScheduleStateFromGameData() {
+    const uid = currentUser?.id || 'demo';
+    const paidFromGame = gameData?.billPaidChecks && typeof gameData.billPaidChecks === 'object' ? gameData.billPaidChecks : null;
+    if (paidFromGame) {
+      paidChecks = { ...paidFromGame };
+    } else {
+      try {
+        const rawPaid = safeGet(getUserScopedStorageKey('fintrail_paid_checks'));
+        paidChecks = rawPaid ? JSON.parse(rawPaid) || {} : {};
+      } catch(e) {
+        paidChecks = {};
+      }
+    }
+    safeSet(getUserScopedStorageKey('fintrail_paid_checks'), JSON.stringify(paidChecks || {}));
+
+    const freqEl = document.getElementById('pay-frequency');
+    const paydayEl = document.getElementById('next-payday');
+    const settings = gameData?.billScheduleSettings || {};
+    const todayStr = new Date().toISOString().split('T')[0];
+    const savedFreq = settings.payFrequency || safeGet(getUserScopedStorageKey('fintrail_pay_freq')) || (!currentUser ? safeGet('fintrail_pay_freq') : '');
+    const savedPayday = settings.nextPayday || safeGet(getUserScopedStorageKey('fintrail_payday_date')) || (!currentUser ? safeGet('fintrail_payday_date') : '');
+    if (freqEl && savedFreq) freqEl.value = savedFreq;
+    if (paydayEl) paydayEl.value = savedPayday || todayStr;
+    syncBillScheduleStateToGameData();
+  }
+
+  function persistBillPaidChecks() {
+    if (!gameData || typeof gameData !== 'object') return;
+    gameData.billPaidChecks = { ...(paidChecks || {}) };
+    safeSet(getUserScopedStorageKey('fintrail_paid_checks'), JSON.stringify(gameData.billPaidChecks));
+  }
+
+  function saveBillSchedulePreference(name, value) {
+    if (!gameData || typeof gameData !== 'object') return;
+    gameData.billScheduleSettings = {
+      ...(gameData.billScheduleSettings || {}),
+      [name]: value
+    };
+    if (name === 'payFrequency') safeSet(getUserScopedStorageKey('fintrail_pay_freq'), value);
+    if (name === 'nextPayday') safeSet(getUserScopedStorageKey('fintrail_payday_date'), value);
+    saveUserData();
+  }
+
   function showBudgetSub(sub, btn) {
     document.querySelectorAll('.budget-sub').forEach(s => s.classList.remove('visible'));
     document.querySelectorAll('.sched-tab-btn').forEach(b => b.classList.remove('active'));
@@ -9772,11 +9838,13 @@ Guidelines:
     } else {
       // Unmarking as paid
       paidChecks[key] = false;
+      persistBillPaidChecks();
       el.classList.remove('checked');
       el.textContent = '';
       const row = el.closest('.payday-bill-row');
       row.classList.remove('paid-row');
       renderSchedule();
+      saveUserData();
     }
   }
 
@@ -10829,9 +10897,17 @@ Guidelines:
     const paidInput = document.getElementById('edit-debt-paid');
     if (!originalInput || !currentInput || !paidInput) return;
     const original = Math.max(0, parseFloat(originalInput.value) || 0);
-    let current = Math.max(0, parseFloat(currentInput.value) || 0);
-    current = Math.min(original, current);
-    currentInput.value = current.toFixed(2);
+    if (currentInput.value === '' || currentInput.value === '.') {
+      paidInput.value = '';
+      return;
+    }
+    let current = parseFloat(currentInput.value);
+    if (isNaN(current)) return;
+    current = Math.max(0, current);
+    if (current > original) {
+      current = original;
+      currentInput.value = String(current);
+    }
     paidInput.value = Math.max(0, original - current).toFixed(2);
   }
 
@@ -10861,7 +10937,8 @@ Guidelines:
     const id = parseInt(document.getElementById('edit-debt-id').value);
     const name = document.getElementById('edit-debt-name').value.trim();
     const originalBalance = Math.max(0, parseFloat(document.getElementById('edit-debt-original').value) || 0);
-    const currentBalance = Math.min(originalBalance, Math.max(0, parseFloat(document.getElementById('edit-debt-balance').value) || 0));
+    const rawCurrentBalance = parseFloat(document.getElementById('edit-debt-balance').value);
+    const currentBalance = Math.min(originalBalance, Math.max(0, isNaN(rawCurrentBalance) ? 0 : rawCurrentBalance));
     const amountPaid = Math.max(0, originalBalance - currentBalance);
     const apr = parseFloat(document.getElementById('edit-debt-apr').value);
     const minPayment = parseFloat(document.getElementById('edit-debt-min').value) || Math.max(25, currentBalance * 0.02);
@@ -12076,10 +12153,11 @@ Guidelines:
   function getCurrentCreditScore() {
     if (hasNoCreditScoreStatus()) return null;
     const uid = getCreditScoreUid();
+    const allowGenericFallback = !currentUser || uid === 'demo';
     const currentCandidates = [
       gameData?.currentCreditScore,
       safeGet('fintrail_current_credit_score_' + uid),
-      safeGet('fintrail_current_credit_score_local')
+      allowGenericFallback ? safeGet('fintrail_current_credit_score_local') : null
     ];
     for (const candidate of currentCandidates) {
       const value = getCreditScoreNumber(candidate);
@@ -12089,7 +12167,7 @@ Guidelines:
       gameData?.creditScore,
       gameData?.credit_score,
       safeGet('fintrail_credit_score_' + uid),
-      safeGet('fintrail_credit_score_local')
+      allowGenericFallback ? safeGet('fintrail_credit_score_local') : null
     ];
     for (const candidate of legacyCandidates) {
       const value = getCreditScoreNumber(candidate);
@@ -12105,11 +12183,12 @@ Guidelines:
 
   function getCreditScoreBaseline() {
     const uid = getCreditScoreUid();
+    const allowGenericFallback = !currentUser || uid === 'demo';
     const candidates = [
       gameData?.creditScoreBaseline,
       gameData?.credit_score_baseline,
       safeGet('fintrail_credit_score_baseline_' + uid),
-      safeGet('fintrail_credit_score_baseline_local')
+      allowGenericFallback ? safeGet('fintrail_credit_score_baseline_local') : null
     ];
     for (const candidate of candidates) {
       const value = getCreditScoreNumber(candidate);
@@ -12126,7 +12205,6 @@ Guidelines:
     const uid = getCreditScoreUid();
     gameData.creditScoreBaseline = value;
     safeSet('fintrail_credit_score_baseline_' + uid, String(value));
-    safeSet('fintrail_credit_score_baseline_local', String(value));
     return value;
   }
 
@@ -12137,16 +12215,12 @@ Guidelines:
     if (current !== null) {
       safeSet('fintrail_credit_score_' + uid, String(current));
       safeSet('fintrail_current_credit_score_' + uid, String(current));
-      safeSet('fintrail_credit_score_local', String(current));
-      safeSet('fintrail_current_credit_score_local', String(current));
     }
     if (baseline !== null) {
       safeSet('fintrail_credit_score_baseline_' + uid, String(baseline));
-      safeSet('fintrail_credit_score_baseline_local', String(baseline));
     }
     if (gameData?.creditScoreUpdatedAt) {
       safeSet('fintrail_credit_score_updated_at_' + uid, gameData.creditScoreUpdatedAt);
-      safeSet('fintrail_credit_score_updated_at_local', gameData.creditScoreUpdatedAt);
     }
     if (gameData?.creditScoreUserSet === true) safeSet('fintrail_credit_score_user_set_' + uid, 'true');
     safeSet('fintrail_game_' + uid, JSON.stringify(gameData || {}));
@@ -12172,7 +12246,7 @@ Guidelines:
     const current = getCurrentCreditScore();
     if (current !== null) return current;
     const uid = currentUser?.id || 'demo';
-    const saved = getCreditScoreNumber(safeGet('fintrail_credit_score_' + uid) || safeGet('fintrail_credit_score_local'));
+    const saved = getCreditScoreNumber(safeGet('fintrail_credit_score_' + uid) || ((!currentUser || uid === 'demo') ? safeGet('fintrail_credit_score_local') : null));
     if (saved !== null) return saved;
     return 680;
   }
@@ -12254,8 +12328,6 @@ Guidelines:
     gameData.creditScoreUpdatedAt = new Date().toISOString();
     safeSet('fintrail_credit_score_' + uid, String(val));
     safeSet('fintrail_current_credit_score_' + uid, String(val));
-    safeSet('fintrail_credit_score_local', String(val));
-    safeSet('fintrail_current_credit_score_local', String(val));
     if (options.setBaseline) safeSet('fintrail_credit_score_user_set_' + uid, 'true');
     syncCreditScoreStorageFromGameData();
     console.log('SAVING CREDIT SCORE', {
@@ -12563,6 +12635,33 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   // RECEIPT VERIFICATION SYSTEM
   let receiptContext = null;
 
+  function getReceiptVerificationId(type, key) {
+    return `${type || 'receipt'}_${String(key || '').replace(/[^a-zA-Z0-9_-]/g, '_')}`;
+  }
+
+  function markBillOccurrencePaid(key) {
+    if (!key) return;
+    paidChecks[key] = true;
+    persistBillPaidChecks();
+  }
+
+  function upsertReceiptActivity(verificationId, type, xpAmount) {
+    const pendingText = `${type === 'bill' ? 'Bill payment' : 'Savings deposit'} receipt submitted — pending verification`;
+    const nextItem = {
+      id: verificationId,
+      icon: 'clock',
+      text: pendingText,
+      xp: `+${xpAmount} XP (48hr)`,
+      time: 'Just now',
+      status: 'pending'
+    };
+    const feed = Array.isArray(gameData.activityFeed) ? gameData.activityFeed : [];
+    gameData.activityFeed = [
+      nextItem,
+      ...feed.filter(item => item?.id !== verificationId && item?.key !== verificationId)
+    ].slice(0, 20);
+  }
+
   function showReceiptModal(type, key, el, amount, name) {
     receiptContext = { type, key, el, amount, name };
     const modal = document.getElementById('receipt-modal');
@@ -12604,8 +12703,9 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   function submitReceipt() {
     if (!receiptContext) return;
     const { type, key, el } = receiptContext;
+    const verificationId = getReceiptVerificationId(type, key);
     if (type === 'bill' && key && el) {
-      paidChecks[key] = true;
+      markBillOccurrencePaid(key);
       el.classList.add('checked');
       el.textContent = '✓';
       const row = el.closest('.payday-bill-row');
@@ -12615,16 +12715,19 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const xpAmount = type === 'bill' ? 20 : 25;
     const releaseTime = Date.now() + (48 * 60 * 60 * 1000);
     if (!gameData.pendingXP) gameData.pendingXP = [];
-    gameData.pendingXP.push({
-      key: `pending_${type}_${Date.now()}`,
-      xp: xpAmount,
-      msg: type === 'bill' ? '📄 Bill payment verified!' : '💰 Savings deposit verified!',
-      releaseTime
-    });
-    gameData.activityFeed = [
-      { icon: '⏳', text: `${type === 'bill' ? 'Bill payment' : 'Savings deposit'} receipt submitted — pending verification`, xp: `+${xpAmount} XP (48hr)`, time: 'Just now' },
-      ...(gameData.activityFeed || []).slice(0, 19)
-    ];
+    gameData.verifiedReceipts = gameData.verifiedReceipts || {};
+    const alreadyQueued = gameData.pendingXP.some(item => item?.key === verificationId);
+    const alreadyVerified = !!gameData.verifiedReceipts[verificationId];
+    if (!alreadyQueued && !alreadyVerified) {
+      gameData.pendingXP.push({
+        key: verificationId,
+        xp: xpAmount,
+        msg: type === 'bill' ? 'Bill payment verified!' : 'Savings deposit verified!',
+        releaseTime
+      });
+      upsertReceiptActivity(verificationId, type, xpAmount);
+    }
+    saveUserData();
     saveGameData();
     renderActivityFeed();
     document.getElementById('receipt-modal').style.display = 'none';
@@ -12635,12 +12738,13 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
 
   function skipReceipt() {
     if (receiptContext?.type === 'bill' && receiptContext.key && receiptContext.el) {
-      paidChecks[receiptContext.key] = true;
+      markBillOccurrencePaid(receiptContext.key);
       receiptContext.el.classList.add('checked');
       receiptContext.el.textContent = '✓';
       const row = receiptContext.el.closest('.payday-bill-row');
       if (row) row.classList.add('paid-row');
       renderSchedule();
+      saveUserData();
     }
     document.getElementById('receipt-modal').style.display = 'none';
     receiptContext = null;
@@ -12651,7 +12755,17 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const now = Date.now();
     const ready = gameData.pendingXP.filter(p => now >= p.releaseTime);
     const stillPending = gameData.pendingXP.filter(p => now < p.releaseTime);
-    ready.forEach(p => { addXP(p.xp, p.msg); checkAndAwardBadges(); });
+    gameData.verifiedReceipts = gameData.verifiedReceipts || {};
+    ready.forEach(p => {
+      if (gameData.verifiedReceipts[p.key]) return;
+      gameData.verifiedReceipts[p.key] = { verifiedAt: new Date().toISOString(), xp: p.xp };
+      gameData.activityFeed = [
+        { id: p.key, icon: 'check-circle', text: p.msg, xp: `+${p.xp} XP`, time: 'Just now', status: 'verified' },
+        ...(gameData.activityFeed || []).filter(item => item?.id !== p.key && item?.key !== p.key).slice(0, 19)
+      ];
+      addXP(p.xp, p.msg);
+      checkAndAwardBadges();
+    });
     if (ready.length > 0) { gameData.pendingXP = stillPending; saveGameData(); }
   }
 
@@ -12937,6 +13051,47 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     askedAI: false,
   };
 
+  function createDefaultGameData() {
+    return {
+      loginStreak: 0,
+      lastLogin: null,
+      lastLoginDate: null,
+      budgetStreak: 0,
+      lastBudgetUpdate: null,
+      billStreak: 0,
+      earnedBadges: [],
+      totalXP: 0,
+      activityFeed: [],
+      financialJourney: [],
+      achievementCelebrationsShown: {},
+      rankCelebrationsShown: {},
+      billPaidChecks: {},
+      verifiedReceipts: {},
+      pendingXP: [],
+      usedInvestCalc: false,
+      usedCreditSim: false,
+      askedAI: false,
+    };
+  }
+
+  function resetAppStateForUserSession() {
+    transactions = [];
+    bills = [];
+    goals = [];
+    planDebts = [];
+    paidChecks = {};
+    nwAssets = [];
+    nwLiabilities = [];
+    nwHistory = [];
+    nwLoaded = false;
+    isPro = false;
+    gameData = createDefaultGameData();
+    if (typeof calCustomEvents !== 'undefined') calCustomEvents = [];
+    if (typeof receiptContext !== 'undefined') receiptContext = null;
+    if (typeof achievementCelebrationQueue !== 'undefined') achievementCelebrationQueue = [];
+    if (typeof activeAchievementCelebration !== 'undefined') activeAchievementCelebration = null;
+  }
+
   // Safe storage helper — works in private browsing mode
 
   // ─── NET WORTH TRACKER ────────────────────────────────────────────────────────
@@ -12948,9 +13103,10 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   function loadNWData() {
     try {
       const uid = currentUser?.id || 'demo';
-      const a = safeGet('fintrail_nw_assets_' + uid)      || safeGet('fintrail_nw_assets_local');
-      const l = safeGet('fintrail_nw_liabilities_' + uid) || safeGet('fintrail_nw_liabilities_local');
-      const h = safeGet('fintrail_nw_history_' + uid)     || safeGet('fintrail_nw_history_local');
+      const allowGenericFallback = !currentUser || uid === 'demo';
+      const a = safeGet('fintrail_nw_assets_' + uid)      || (allowGenericFallback ? safeGet('fintrail_nw_assets_local') : null);
+      const l = safeGet('fintrail_nw_liabilities_' + uid) || (allowGenericFallback ? safeGet('fintrail_nw_liabilities_local') : null);
+      const h = safeGet('fintrail_nw_history_' + uid)     || (allowGenericFallback ? safeGet('fintrail_nw_history_local') : null);
       if (a) nwAssets      = JSON.parse(a);
       if (l) nwLiabilities = JSON.parse(l);
       if (h) nwHistory     = JSON.parse(h);
@@ -12958,7 +13114,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     // Auto-pull ONLY for brand new users who have never set up NW tracker
     // Check localStorage to see if they've ever saved NW data before
     const uid = currentUser?.id || 'demo';
-    const hasEverSaved = safeGet('fintrail_nw_ts_' + uid) || safeGet('fintrail_nw_assets_local');
+    const allowGenericFallback = !currentUser || uid === 'demo';
+    const hasEverSaved = safeGet('fintrail_nw_ts_' + uid) || (allowGenericFallback ? safeGet('fintrail_nw_assets_local') : null);
     const isFirstVisit = nwAssets.length === 0 && nwLiabilities.length === 0 && !hasEverSaved;
     if (isFirstVisit) {
       if (planDebts && planDebts.length) {
@@ -12981,9 +13138,11 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     safeSet('fintrail_nw_assets_' + uid,      JSON.stringify(nwAssets));
     safeSet('fintrail_nw_liabilities_' + uid, JSON.stringify(nwLiabilities));
     safeSet('fintrail_nw_history_' + uid,     JSON.stringify(nwHistory));
-    safeSet('fintrail_nw_assets_local',        JSON.stringify(nwAssets));
-    safeSet('fintrail_nw_liabilities_local',   JSON.stringify(nwLiabilities));
-    safeSet('fintrail_nw_history_local',       JSON.stringify(nwHistory));
+    if (!currentUser || uid === 'demo') {
+      safeSet('fintrail_nw_assets_local',        JSON.stringify(nwAssets));
+      safeSet('fintrail_nw_liabilities_local',   JSON.stringify(nwLiabilities));
+      safeSet('fintrail_nw_history_local',       JSON.stringify(nwHistory));
+    }
     safeSet('fintrail_nw_ts_' + uid,           String(Date.now()));
     // Supabase sync — async/await avoids PostgREST .catch() crashes in Supabase v2
     if (sbClient && currentUser) {
@@ -13270,8 +13429,10 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const _uid = currentUser?.id || 'demo';
     safeSet('fintrail_nw_assets_' + _uid,      JSON.stringify(nwAssets));
     safeSet('fintrail_nw_liabilities_' + _uid, JSON.stringify(nwLiabilities));
-    safeSet('fintrail_nw_assets_local',         JSON.stringify(nwAssets));
-    safeSet('fintrail_nw_liabilities_local',    JSON.stringify(nwLiabilities));
+    if (!currentUser || _uid === 'demo') {
+      safeSet('fintrail_nw_assets_local',         JSON.stringify(nwAssets));
+      safeSet('fintrail_nw_liabilities_local',    JSON.stringify(nwLiabilities));
+    }
     saveNWData(); calcNW();
   }
 
@@ -13333,8 +13494,10 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const _duid = currentUser?.id || 'demo';
     safeSet('fintrail_nw_assets_'      + _duid, JSON.stringify(nwAssets));
     safeSet('fintrail_nw_liabilities_' + _duid, JSON.stringify(nwLiabilities));
-    safeSet('fintrail_nw_assets_local',          JSON.stringify(nwAssets));
-    safeSet('fintrail_nw_liabilities_local',     JSON.stringify(nwLiabilities));
+    if (!currentUser || _duid === 'demo') {
+      safeSet('fintrail_nw_assets_local',          JSON.stringify(nwAssets));
+      safeSet('fintrail_nw_liabilities_local',     JSON.stringify(nwLiabilities));
+    }
     safeSet('fintrail_nw_ts_' + _duid,           String(Date.now()));
 
     // Repaint synchronously so the deleted row disappears immediately.
@@ -13382,12 +13545,14 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     checkLoginStreak();
     checkPendingXP(); // release any XP that's been waiting 48hrs
     renderStreaks();
+    hydrateCelebrationSeenStateFromProgress();
     checkAndAwardBadges();
   }
 
   function saveGameData() {
     const uid = currentUser?.id || 'demo';
     if (typeof normalizeAlertPrefs === 'function') gameData.alertPrefs = normalizeAlertPrefs(gameData.alertPrefs || alertPrefs);
+    if (typeof syncBillScheduleStateToGameData === 'function') syncBillScheduleStateToGameData();
     safeSet('fintrail_game_' + uid, JSON.stringify(gameData));
     // Sync to Supabase so XP/level is consistent across all devices
     if (sbClient && currentUser) {
@@ -13404,6 +13569,28 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
         }
       })();
     }
+  }
+
+  function hydrateCelebrationSeenStateFromProgress() {
+    if (!gameData || typeof gameData !== 'object') return;
+    let changed = false;
+    gameData.achievementCelebrationsShown = gameData.achievementCelebrationsShown || {};
+    gameData.rankCelebrationsShown = gameData.rankCelebrationsShown || {};
+    const earned = Array.isArray(gameData.earnedBadges) ? gameData.earnedBadges : [];
+    earned.forEach(id => {
+      if (id && !gameData.achievementCelebrationsShown[id]) {
+        gameData.achievementCelebrationsShown[id] = 'synced-earned';
+        changed = true;
+      }
+    });
+    const xp = Number(gameData.totalXP || 0);
+    PERMANENT_RANK_CELEBRATIONS.forEach(rankRule => {
+      if (xp >= rankRule.threshold && !gameData.rankCelebrationsShown[rankRule.tier]) {
+        gameData.rankCelebrationsShown[rankRule.tier] = 'synced-earned';
+        changed = true;
+      }
+    });
+    if (changed) saveGameData();
   }
 
   function copyRewardCode(code) {
@@ -16402,17 +16589,18 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     } catch(e) {}
 
     const uid = currentUser?.id || 'demo';
+    const allowGenericFallback = !currentUser || uid === 'demo';
     const candidates = [
       gameData?.currentCreditScore,
       safeGet('fintrail_current_credit_score_' + uid),
-      safeGet('fintrail_current_credit_score_local'),
+      allowGenericFallback ? safeGet('fintrail_current_credit_score_local') : null,
       document.getElementById('base-score-num')?.value,
       document.getElementById('base-score')?.value,
       document.getElementById('base-score-display')?.textContent,
       gameData?.creditScore,
       gameData?.credit_score,
       safeGet('fintrail_credit_score_' + uid),
-      safeGet('fintrail_credit_score_local')
+      allowGenericFallback ? safeGet('fintrail_credit_score_local') : null
     ];
     for (const c of candidates) {
       const n = getCreditScoreNumber(c);
@@ -16984,11 +17172,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
   handleUpgradeReturn();
   calcInvestment();
   // Restore saved payday date and frequency, or default to today
-  const savedPayday = safeGet('fintrail_payday_date');
-  const savedFreq   = safeGet('fintrail_pay_freq');
-  const todayStr = new Date().toISOString().split('T')[0];
-  document.getElementById('next-payday').value = savedPayday || todayStr;
-  if (savedFreq) document.getElementById('pay-frequency').value = savedFreq;
+  if (typeof loadBillScheduleStateFromGameData === 'function') loadBillScheduleStateFromGameData();
 
 
 // ======================================================
