@@ -8019,6 +8019,9 @@
   // SIGN OUT
   async function signOut() {
     nwLoaded = false; // Reset so next login reloads NW data
+    if (currentUser && typeof saveUserData === 'function') {
+      try { await saveUserData(); } catch(e) {}
+    }
     if (sbClient) await sbClient.auth.signOut();
     currentUser = null;
     resetAppStateForUserSession();
@@ -9745,21 +9748,23 @@ Guidelines:
       nextPayday: paydayEl?.value || gameData.billScheduleSettings?.nextPayday || ''
     };
     gameData.billPaidChecks = { ...(paidChecks || {}) };
+    gameData.billPaymentOccurrences = { ...(gameData.billPaymentOccurrences || {}) };
   }
 
   function loadBillScheduleStateFromGameData() {
     const uid = currentUser?.id || 'demo';
-    const paidFromGame = gameData?.billPaidChecks && typeof gameData.billPaidChecks === 'object' ? gameData.billPaidChecks : null;
-    if (paidFromGame) {
-      paidChecks = { ...paidFromGame };
-    } else {
-      try {
-        const rawPaid = safeGet(getUserScopedStorageKey('fintrail_paid_checks'));
-        paidChecks = rawPaid ? JSON.parse(rawPaid) || {} : {};
-      } catch(e) {
-        paidChecks = {};
-      }
+    let localPaid = {};
+    try {
+      const rawPaid = safeGet(getUserScopedStorageKey('fintrail_paid_checks'));
+      localPaid = rawPaid ? JSON.parse(rawPaid) || {} : {};
+    } catch(e) {
+      localPaid = {};
     }
+    const paidFromGame = gameData?.billPaidChecks && typeof gameData.billPaidChecks === 'object' ? gameData.billPaidChecks : {};
+    paidChecks = { ...localPaid, ...paidFromGame };
+    gameData.billPaymentOccurrences = {
+      ...(gameData.billPaymentOccurrences || {})
+    };
     safeSet(getUserScopedStorageKey('fintrail_paid_checks'), JSON.stringify(paidChecks || {}));
 
     const freqEl = document.getElementById('pay-frequency');
@@ -9776,7 +9781,46 @@ Guidelines:
   function persistBillPaidChecks() {
     if (!gameData || typeof gameData !== 'object') return;
     gameData.billPaidChecks = { ...(paidChecks || {}) };
+    gameData.billPaymentOccurrences = { ...(gameData.billPaymentOccurrences || {}) };
     safeSet(getUserScopedStorageKey('fintrail_paid_checks'), JSON.stringify(gameData.billPaidChecks));
+  }
+
+  function getBillPayDateKey(date) {
+    if (date instanceof Date && !isNaN(date.getTime())) return getLocalDateKey(date);
+    return getLocalDateKey(new Date(date));
+  }
+
+  function getBillOccurrenceKey(bill, paydate) {
+    const uid = currentUser?.id || 'demo';
+    return `billpay_${uid}_${bill?.id}_${getBillPayDateKey(paydate)}`;
+  }
+
+  function getLegacyBillOccurrenceKey(bill, paydate) {
+    return `${bill?.id}-${paydate instanceof Date ? paydate.toISOString().slice(0,10) : String(paydate || '')}`;
+  }
+
+  function getBillOccurrenceRecord(key) {
+    const record = gameData?.billPaymentOccurrences?.[key];
+    return record && typeof record === 'object' ? record : null;
+  }
+
+  function isBillOccurrencePaid(key, legacyKey) {
+    const record = getBillOccurrenceRecord(key);
+    if (record) return record.paid === true;
+    return !!paidChecks[key] || !!(legacyKey && paidChecks[legacyKey]);
+  }
+
+  function setBillOccurrenceStatus(key, status = {}) {
+    if (!key || !gameData || typeof gameData !== 'object') return;
+    gameData.billPaymentOccurrences = gameData.billPaymentOccurrences || {};
+    const existing = getBillOccurrenceRecord(key) || {};
+    gameData.billPaymentOccurrences[key] = {
+      ...existing,
+      ...status,
+      updatedAt: new Date().toISOString()
+    };
+    paidChecks[key] = gameData.billPaymentOccurrences[key].paid === true;
+    persistBillPaidChecks();
   }
 
   function saveBillSchedulePreference(name, value) {
@@ -9838,6 +9882,7 @@ Guidelines:
     } else {
       // Unmarking as paid
       paidChecks[key] = false;
+      setBillOccurrenceStatus(key, { paid:false, verificationStatus:'unpaid' });
       persistBillPaidChecks();
       el.classList.remove('checked');
       el.textContent = '';
@@ -9978,7 +10023,7 @@ Guidelines:
 
       entries.forEach(({ pd, next, idx }) => {
         const dueBills = billsDueThisPeriod(pd, next, frequency);
-        const paidCount = dueBills.filter(b => paidChecks[b.id + '-' + pd.toISOString().slice(0,10)]).length;
+        const paidCount = dueBills.filter(b => isBillOccurrencePaid(getBillOccurrenceKey(b, pd), getLegacyBillOccurrenceKey(b, pd))).length;
         const isOpen = idx === 0;
         const pdStr = pd.toLocaleDateString(currentLang === 'es' ? 'es-ES' : 'en-US', {weekday:'short', month:'short', day:'numeric'});
         const pdKey = 'pd-' + pd.toISOString().slice(0,10);
@@ -9998,8 +10043,9 @@ Guidelines:
           html += `<div style="font-size:0.82rem;color:var(--muted);padding:0.25rem 0;display:flex;align-items:center;gap:0.4rem"><span class="bill-schedule-empty-icon"></span><span>No bills due this pay period — enjoy!</span></div>`;
         } else {
           dueBills.forEach(b => {
-            const checkKey = b.id + '-' + pd.toISOString().slice(0,10);
-            const isPaid = !!paidChecks[checkKey];
+            const checkKey = getBillOccurrenceKey(b, pd);
+            const legacyCheckKey = getLegacyBillOccurrenceKey(b, pd);
+            const isPaid = isBillOccurrencePaid(checkKey, legacyCheckKey);
             const dueDateStr = b.dueDate ? b.dueDate.toLocaleDateString(currentLang === 'es' ? 'es-ES' : 'en-US',{month:'short',day:'numeric'}).replace(/^\w/, c => c.toUpperCase()) : '';
             const daysUntil = b.dueDate ? Math.ceil((b.dueDate - pd) / (1000*60*60*24)) : 0;
             const urgency = daysUntil >= 0 && daysUntil <= 3 ? 'color:var(--expense-color);font-weight:700' : 'color:var(--muted)';
@@ -12639,10 +12685,13 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     return `${type || 'receipt'}_${String(key || '').replace(/[^a-zA-Z0-9_-]/g, '_')}`;
   }
 
-  function markBillOccurrencePaid(key) {
+  function markBillOccurrencePaid(key, verificationStatus = 'paid') {
     if (!key) return;
-    paidChecks[key] = true;
-    persistBillPaidChecks();
+    setBillOccurrenceStatus(key, {
+      paid:true,
+      verificationStatus,
+      paidAt:getBillOccurrenceRecord(key)?.paidAt || new Date().toISOString()
+    });
   }
 
   function upsertReceiptActivity(verificationId, type, xpAmount) {
@@ -12705,7 +12754,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const { type, key, el } = receiptContext;
     const verificationId = getReceiptVerificationId(type, key);
     if (type === 'bill' && key && el) {
-      markBillOccurrencePaid(key);
+      markBillOccurrencePaid(key, 'pending_verification');
       el.classList.add('checked');
       el.textContent = '✓';
       const row = el.closest('.payday-bill-row');
@@ -12721,6 +12770,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     if (!alreadyQueued && !alreadyVerified) {
       gameData.pendingXP.push({
         key: verificationId,
+        occurrenceKey: type === 'bill' ? key : null,
         xp: xpAmount,
         msg: type === 'bill' ? 'Bill payment verified!' : 'Savings deposit verified!',
         releaseTime
@@ -12738,7 +12788,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
 
   function skipReceipt() {
     if (receiptContext?.type === 'bill' && receiptContext.key && receiptContext.el) {
-      markBillOccurrencePaid(receiptContext.key);
+      markBillOccurrencePaid(receiptContext.key, 'paid_without_xp');
       receiptContext.el.classList.add('checked');
       receiptContext.el.textContent = '✓';
       const row = receiptContext.el.closest('.payday-bill-row');
@@ -12759,6 +12809,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     ready.forEach(p => {
       if (gameData.verifiedReceipts[p.key]) return;
       gameData.verifiedReceipts[p.key] = { verifiedAt: new Date().toISOString(), xp: p.xp };
+      if (p.occurrenceKey) setBillOccurrenceStatus(p.occurrenceKey, { paid:true, verificationStatus:'verified', verifiedAt:new Date().toISOString() });
       gameData.activityFeed = [
         { id: p.key, icon: 'check-circle', text: p.msg, xp: `+${p.xp} XP`, time: 'Just now', status: 'verified' },
         ...(gameData.activityFeed || []).filter(item => item?.id !== p.key && item?.key !== p.key).slice(0, 19)
@@ -14303,6 +14354,30 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
       ...(base.rankCelebrationsShown || {}),
       ...(incoming.rankCelebrationsShown || {})
     };
+    merged.billPaidChecks = {
+      ...(base.billPaidChecks || {}),
+      ...(incoming.billPaidChecks || {})
+    };
+    const occurrenceById = new Map();
+    [...Object.entries(base.billPaymentOccurrences || {}), ...Object.entries(incoming.billPaymentOccurrences || {})].forEach(([key, value]) => {
+      if (!key || !value || typeof value !== 'object') return;
+      const existing = occurrenceById.get(key);
+      const nextTime = Date.parse(value.updatedAt || value.verifiedAt || value.paidAt || 0);
+      const existingTime = Date.parse(existing?.updatedAt || existing?.verifiedAt || existing?.paidAt || 0);
+      if (!existing || nextTime >= existingTime) occurrenceById.set(key, value);
+    });
+    merged.billPaymentOccurrences = Object.fromEntries(occurrenceById.entries());
+    merged.verifiedReceipts = {
+      ...(base.verifiedReceipts || {}),
+      ...(incoming.verifiedReceipts || {})
+    };
+    const pendingByKey = new Map();
+    [...(base.pendingXP || []), ...(incoming.pendingXP || [])].forEach(item => {
+      if (!item?.key || merged.verifiedReceipts?.[item.key]) return;
+      const existing = pendingByKey.get(item.key);
+      if (!existing || Number(item.releaseTime || 0) >= Number(existing.releaseTime || 0)) pendingByKey.set(item.key, item);
+    });
+    merged.pendingXP = Array.from(pendingByKey.values());
     const baseCreditTs = getCreditScoreTimestampValue(base.creditScoreUpdatedAt || base.credit_score_updated_at);
     const incomingCreditTs = getCreditScoreTimestampValue(incoming.creditScoreUpdatedAt || incoming.credit_score_updated_at);
     const baseCurrentCredit = getCreditScoreNumber(base.currentCreditScore);
