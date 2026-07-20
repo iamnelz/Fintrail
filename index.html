@@ -8384,6 +8384,14 @@
         body: JSON.stringify({})
       });
       const data = await response.json();
+      if (data.ownerIncluded) {
+        isPro = true;
+        applyProState();
+        setProUI();
+        alert(data.message || 'Owner account — Pro access is included.');
+        resetGoProCheckoutState();
+        return;
+      }
       if (data.url) {
         window.location.href = data.url;
       } else {
@@ -8434,6 +8442,10 @@
         body: JSON.stringify({})
       });
       const data = await response.json();
+      if (data.ownerIncluded) {
+        alert(data.message || 'Owner account — Pro access is included.');
+        return;
+      }
       if (data.url) {
         window.location.href = data.url;
       } else {
