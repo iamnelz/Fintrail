@@ -3875,8 +3875,159 @@
     color: var(--accent);
     border: 1.5px solid var(--accent);
   }
+  .admin-tools-card {
+    display: none;
+    background: #0f1115;
+    border: 1px solid rgba(229,57,53,0.24);
+    border-radius: 14px;
+    padding: 1rem;
+    margin-top: 1rem;
+    color: #fff;
+  }
+  .admin-tools-card.visible { display: block; }
+  .admin-tools-card h3 {
+    display:flex;
+    align-items:center;
+    gap:0.45rem;
+    font-size:0.95rem;
+    font-weight:800;
+    margin-bottom:0.25rem;
+  }
+  .admin-tools-card p {
+    color:rgba(255,255,255,0.72);
+    font-size:0.8rem;
+    line-height:1.55;
+    margin-bottom:0.8rem;
+  }
+  .admin-diag-actions {
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    gap:0.6rem;
+    align-items:end;
+  }
+  .admin-diag-actions label {
+    display:block;
+    color:rgba(255,255,255,0.7);
+    font-size:0.68rem;
+    font-weight:800;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    margin-bottom:0.3rem;
+  }
+  .admin-diag-input {
+    width:100%;
+    border:1px solid rgba(255,255,255,0.14);
+    background:rgba(255,255,255,0.08);
+    color:#fff;
+    border-radius:10px;
+    padding:0.7rem 0.8rem;
+    font-family:'Sora',sans-serif;
+    font-size:0.82rem;
+  }
+  .admin-diag-input:focus {
+    outline:none;
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(229,57,53,0.18);
+  }
+  .admin-diag-btn {
+    border:0;
+    background:linear-gradient(135deg, var(--accent), #b91c1c);
+    color:#fff;
+    border-radius:10px;
+    padding:0.72rem 1rem;
+    font-family:'Sora',sans-serif;
+    font-weight:800;
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .admin-diag-btn:disabled { opacity:0.65; cursor:not-allowed; }
+  .admin-diag-report { margin-top:1rem; display:grid; gap:0.75rem; }
+  .admin-diag-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0.65rem; }
+  .admin-diag-box {
+    background:#fff;
+    color:var(--text);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:0.85rem;
+  }
+  .admin-diag-box h4 {
+    font-size:0.78rem;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--muted);
+    margin-bottom:0.55rem;
+  }
+  .admin-diag-kv {
+    display:grid;
+    grid-template-columns:minmax(110px,0.55fr) minmax(0,1fr);
+    gap:0.35rem 0.7rem;
+    font-size:0.76rem;
+    line-height:1.45;
+  }
+  .admin-diag-kv span:nth-child(odd) { color:var(--muted); font-weight:700; }
+  .admin-diag-kv span:nth-child(even) { word-break:break-word; }
+  .admin-diag-table {
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0;
+    font-size:0.72rem;
+  }
+  .admin-diag-table th,
+  .admin-diag-table td {
+    text-align:left;
+    padding:0.5rem;
+    border-bottom:1px solid var(--border);
+    vertical-align:top;
+    word-break:break-word;
+  }
+  .admin-diag-table th { color:var(--muted); font-size:0.66rem; text-transform:uppercase; letter-spacing:0.06em; }
+  .admin-diag-status {
+    border-radius:999px;
+    padding:0.18rem 0.45rem;
+    font-size:0.62rem;
+    font-weight:900;
+    display:inline-block;
+  }
+  .admin-diag-status.current { background:rgba(16,185,129,0.12); color:#047857; }
+  .admin-diag-status.legacy { background:rgba(245,158,11,0.14); color:#92400e; }
+  .admin-diag-status.unmapped { background:rgba(100,116,139,0.14); color:#475569; }
+  .admin-diag-trace-list {
+    list-style:none;
+    display:grid;
+    gap:0.35rem;
+    margin:0.5rem 0 0;
+    padding:0;
+    font-size:0.76rem;
+  }
+  .admin-diag-trace-list li {
+    display:flex;
+    justify-content:space-between;
+    gap:0.75rem;
+    border:1px solid var(--border);
+    border-radius:9px;
+    padding:0.45rem 0.55rem;
+    background:#f8fafc;
+  }
+  .admin-diag-trace-list li.used {
+    border-color:rgba(16,185,129,0.35);
+    background:rgba(16,185,129,0.08);
+    color:#047857;
+    font-weight:800;
+  }
+  .admin-diag-alert {
+    border-radius:12px;
+    padding:0.8rem;
+    font-size:0.78rem;
+    font-weight:700;
+  }
+  .admin-diag-alert.red { background:rgba(220,38,38,0.12); color:#991b1b; border:1px solid rgba(220,38,38,0.24); }
+  .admin-diag-alert.yellow { background:rgba(245,158,11,0.14); color:#92400e; border:1px solid rgba(245,158,11,0.25); }
+  .admin-diag-alert.green { background:rgba(16,185,129,0.12); color:#047857; border:1px solid rgba(16,185,129,0.24); }
   @media (max-width:700px) {
     .profile-subscription-card { margin-top: 0.75rem; }
+    .admin-diag-actions { grid-template-columns:1fr; }
+    .admin-diag-grid { grid-template-columns:1fr; }
+    .admin-diag-box { overflow-x:auto; }
   }
 
 
@@ -6643,6 +6794,7 @@
           <button class="profile-menu-btn" onclick="switchProfilePanel('security', this)"><span class="pmb-icon">🛡️</span> Security & 2FA</button>
           <button class="profile-menu-btn" onclick="switchProfilePanel('notifications', this)"><span class="pmb-icon">🔔</span> Notifications</button>
           <button class="profile-menu-btn" onclick="switchProfilePanel('danger', this)"><span class="pmb-icon">⚠️</span> Danger Zone</button>
+          <button class="profile-menu-btn" id="admin-tools-menu-btn" onclick="switchProfilePanel('admin-tools', this)" style="display:none"><span class="pmb-icon"><span class="ft-reference-icon" data-fixed-icon="shield-check"></span></span><span data-en="Admin Tools" data-es="Herramientas de Admin">Admin Tools</span></button>
           <div style="border-top:1px solid var(--border);margin:0.5rem 0;padding-top:0.5rem">
             <button class="profile-menu-btn" onclick="signOut()" style="color:var(--danger)"><span class="pmb-icon">🚪</span> Sign Out</button>
           </div>
@@ -6684,6 +6836,24 @@
             <h3 id="account-subscription-title"><span class="ft-reference-icon" data-fixed-icon="star"></span><span>Subscription</span></h3>
             <p id="account-subscription-desc">Manage your Fintrail Pro subscription, billing, or upgrade status.</p>
             <button class="profile-subscription-btn" id="account-subscription-btn" onclick="handleProfileSubscriptionAction()">Manage Subscription</button>
+          </div>
+        </div>
+
+        <!-- ADMIN TOOLS -->
+        <div class="profile-panel card" id="panel-admin-tools">
+          <div class="profile-section-title" data-en="Admin Tools" data-es="Herramientas de Admin">Admin Tools</div>
+          <div class="profile-section-desc" data-en="Owner-only diagnostics for production billing safety." data-es="Diagnósticos exclusivos del owner para seguridad de facturación.">Owner-only diagnostics for production billing safety.</div>
+          <div class="admin-tools-card" id="admin-billing-diagnostic-card" aria-live="polite">
+            <h3><span class="ft-reference-icon" data-fixed-icon="shield-check"></span><span data-en="Stripe Diagnostic" data-es="Diagnóstico de Stripe">Stripe Diagnostic</span></h3>
+            <p data-en="Read-only Stripe customer and subscription mapping report. No billing changes can be made from this page." data-es="Reporte de solo lectura sobre clientes y suscripciones de Stripe. No se pueden hacer cambios de facturación desde esta página.">Read-only Stripe customer and subscription mapping report. No billing changes can be made from this page.</p>
+            <div class="admin-diag-actions">
+              <div>
+                <label for="admin-diag-email" data-en="Account Email" data-es="Email de Cuenta">Account Email</label>
+                <input class="admin-diag-input" id="admin-diag-email" type="email" placeholder="owner@email.com">
+              </div>
+              <button class="admin-diag-btn" id="admin-diag-run-btn" type="button" onclick="runStripeDiagnostic()" data-en="Run Diagnostic" data-es="Ejecutar Diagnóstico">Run Diagnostic</button>
+            </div>
+            <div class="admin-diag-report" id="admin-diag-report"></div>
           </div>
         </div>
 
@@ -8122,6 +8292,7 @@
       el.classList.toggle('secondary', !isPro);
     });
     if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
+    refreshAdminBillingDiagnosticAccess();
   }
 
   function getMembershipTierStyles(tier) {
@@ -8454,6 +8625,294 @@
     } catch (err) {
       alert('Something went wrong. Please try again.');
     }
+  }
+
+  function adminDiagEscape(value) {
+    return String(value ?? '—').replace(/[&<>"']/g, ch => ({
+      '&':'&amp;',
+      '<':'&lt;',
+      '>':'&gt;',
+      '"':'&quot;',
+      "'":'&#39;'
+    }[ch]));
+  }
+
+  function formatAdminDiagDate(value) {
+    if (!value) return '—';
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return String(value);
+    return date.toLocaleDateString(currentLang === 'es' ? 'es-US' : 'en-US', {
+      year:'numeric',
+      month:'short',
+      day:'numeric'
+    });
+  }
+
+  function formatAdminDiagMoney(amount, currency) {
+    if (typeof amount !== 'number') return '—';
+    try {
+      return new Intl.NumberFormat(currentLang === 'es' ? 'es-US' : 'en-US', {
+        style:'currency',
+        currency:(currency || 'usd').toUpperCase()
+      }).format(amount / 100);
+    } catch (e) {
+      return `$${(amount / 100).toFixed(2)}`;
+    }
+  }
+
+  async function refreshAdminBillingDiagnosticAccess(force = false) {
+    const card = document.getElementById('admin-billing-diagnostic-card');
+    const menuBtn = document.getElementById('admin-tools-menu-btn');
+    if (!card || !sbClient || !currentUser) return;
+    const cacheKey = currentUser.id;
+    if (!force && refreshAdminBillingDiagnosticAccess._checkedUser === cacheKey) return;
+    refreshAdminBillingDiagnosticAccess._checkedUser = cacheKey;
+    card.classList.remove('visible');
+    if (menuBtn) menuBtn.style.display = 'none';
+    try {
+      const headers = await getBillingRequestHeaders();
+      const response = await fetch('/.netlify/functions/diagnose-stripe-customers', {
+        method:'POST',
+        headers,
+        body:JSON.stringify({ mode:'access_check' })
+      });
+      if (!response.ok) return;
+      const data = await response.json();
+      if (!data.owner_admin) return;
+      card.classList.add('visible');
+      if (menuBtn) menuBtn.style.display = 'flex';
+      const input = document.getElementById('admin-diag-email');
+      if (input && !input.value) input.value = currentUser.email || '';
+      if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
+    } catch (e) {
+      card.classList.remove('visible');
+    }
+  }
+
+  async function runStripeDiagnostic() {
+    const report = document.getElementById('admin-diag-report');
+    const btn = document.getElementById('admin-diag-run-btn');
+    const input = document.getElementById('admin-diag-email');
+    if (!report || !btn || !currentUser) return;
+    const isEs = currentLang === 'es';
+    btn.disabled = true;
+    btn.textContent = isEs ? 'Revisando...' : 'Checking...';
+    report.innerHTML = `<div class="admin-diag-alert yellow">${isEs ? 'Cargando diagnóstico de solo lectura...' : 'Loading read-only diagnostic...'}</div>`;
+    try {
+      const headers = await getBillingRequestHeaders();
+      const response = await fetch('/.netlify/functions/diagnose-stripe-customers', {
+        method:'POST',
+        headers,
+        body:JSON.stringify({
+          email:(input?.value || currentUser.email || '').trim(),
+          user_id:currentUser.id
+        })
+      });
+      const data = await response.json();
+      if (response.status === 403) throw new Error(isEs ? 'Acceso denegado.' : 'Forbidden.');
+      if (!response.ok) throw new Error(data.error || (isEs ? 'No se pudo cargar el diagnóstico.' : 'Unable to load diagnostic.'));
+      renderStripeDiagnosticReport(data);
+    } catch (e) {
+      report.innerHTML = `<div class="admin-diag-alert red">${adminDiagEscape(e.message || (isEs ? 'Error de diagnóstico.' : 'Diagnostic error.'))}</div>`;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = isEs ? 'Ejecutar Diagnóstico' : 'Run Diagnostic';
+    }
+  }
+
+  function renderStripeDiagnosticReport(data) {
+    const report = document.getElementById('admin-diag-report');
+    if (!report) return;
+    const isEs = currentLang === 'es';
+    const customers = Array.isArray(data.customers) ? data.customers : [];
+    const profile = data.current_supabase_mapping || {};
+    const activeLike = Array.isArray(data.active_like_subscriptions) ? data.active_like_subscriptions : [];
+    const trace = data.subscription_resolution_trace || {};
+    const duplicateBreakdown = Array.isArray(data.duplicate_customer_breakdown) ? data.duplicate_customer_breakdown : [];
+    const currentCustomerId = profile.stripe_customer_id || null;
+    const legacyCount = customers.filter(customer => customer.id !== currentCustomerId).length;
+    const activeLegacy = activeLike.some(item => item.customer_id !== currentCustomerId);
+    const warning = activeLegacy
+      ? { cls:'red', text:isEs ? 'Suscripción activa encontrada en un cliente Stripe heredado.' : 'Active subscription found on a legacy Stripe customer.' }
+      : activeLike.length
+        ? { cls:'red', text:isEs ? 'Suscripción activa encontrada para la cuenta owner.' : 'Active subscription found for the owner account.' }
+      : customers.length > 1
+        ? { cls:'yellow', text:isEs ? 'Existen múltiples registros de cliente Stripe para esta cuenta de Fintrail.' : 'Multiple Stripe customer records exist for this Fintrail account.' }
+        : { cls:'green', text:isEs ? 'No se encontró una suscripción pagada activa heredada.' : 'No active paid subscription found.' };
+    const ownerBillingMessage = activeLike.length
+      ? (isEs ? 'La cuenta owner tiene una suscripción Stripe que puede generar actividad de facturación.' : 'Owner account has a Stripe subscription that may still generate billing activity.')
+      : (isEs ? 'El estado de facturación del owner está limpio — no se encontró una suscripción Stripe pagada activa.' : 'Owner billing state is clean — no active paid Stripe subscription found.');
+    const ownerBillingClass = activeLike.length ? 'red' : 'green';
+    const selectedReasonLabel = trace.selected_because_label || 'No customer mapping found';
+    const metadataLookupText = trace.metadata_lookup === 'not_needed'
+      ? (isEs ? 'No necesario' : 'Not needed')
+      : trace.metadata_lookup === 'matched'
+        ? (isEs ? 'Coincidió' : 'Matched')
+        : (isEs ? 'Sin coincidencia' : 'No match');
+    const legacyFallbackText = trace.legacy_email_fallback === 'used'
+      ? (isEs ? 'Usado' : 'Used')
+      : (isEs ? 'No usado' : 'Not used');
+    const traceOrderRows = (trace.selection_order || []).map((step, index) => `
+      <li class="${step.used ? 'used' : ''}">
+        <span>${index + 1}. ${adminDiagEscape(step.label || step.key)}</span>
+        <span>${step.used ? '✓' : '—'}</span>
+      </li>
+    `).join('');
+
+    const customerRows = customers.map(customer => `
+      <tr>
+        <td>${adminDiagEscape(customer.id)}</td>
+        <td>${formatAdminDiagDate(customer.created)}</td>
+        <td>${adminDiagEscape(customer.email)}</td>
+        <td>${adminDiagEscape(customer.metadata?.supabase_user_id || customer.metadata?.fintrail_user_id || '—')}</td>
+        <td><span class="admin-diag-status ${customer.is_current_supabase_mapping ? 'current' : 'legacy'}">${customer.is_current_supabase_mapping ? 'CURRENT' : 'LEGACY DUPLICATE'}</span></td>
+      </tr>
+    `).join('') || `<tr><td colspan="5">${isEs ? 'No se encontraron clientes Stripe.' : 'No Stripe customers found.'}</td></tr>`;
+
+    const duplicateRows = duplicateBreakdown.map(customer => {
+      const labelClass = customer.label === 'CURRENT' ? 'current' : customer.label === 'UNMAPPED' ? 'unmapped' : 'legacy';
+      return `
+        <tr>
+          <td>${adminDiagEscape(customer.customer_id)}</td>
+          <td>${formatAdminDiagDate(customer.created)}</td>
+          <td>${adminDiagEscape(customer.email)}</td>
+          <td>${adminDiagEscape(customer.metadata_supabase_user_id || '—')}</td>
+          <td>${customer.current_mapping ? (isEs ? 'Sí' : 'Yes') : 'No'}</td>
+          <td>${adminDiagEscape(customer.subscription_count || 0)}</td>
+          <td>${adminDiagEscape(customer.active_like_subscription_count || 0)}</td>
+          <td>${formatAdminDiagDate(customer.latest_invoice_date)}</td>
+          <td>${formatAdminDiagMoney(customer.latest_invoice_amount, customer.latest_invoice_currency)}</td>
+          <td><span class="admin-diag-status ${labelClass}">${adminDiagEscape(customer.label)}</span></td>
+        </tr>
+      `;
+    }).join('') || `<tr><td colspan="10">${isEs ? 'No hay desglose de duplicados.' : 'No duplicate breakdown available.'}</td></tr>`;
+
+    const activeWarningRows = activeLike.map(item => `
+      <tr>
+        <td>${adminDiagEscape(item.customer_id)}</td>
+        <td>${adminDiagEscape(item.subscription_id)}</td>
+        <td>${adminDiagEscape(item.status)}</td>
+        <td>${item.cancel_at_period_end ? (isEs ? 'Sí' : 'Yes') : 'No'}</td>
+        <td>${formatAdminDiagDate(item.current_period_end)}</td>
+        <td>${adminDiagEscape(item.most_recent_invoice?.id || '—')}</td>
+        <td>${formatAdminDiagMoney(item.most_recent_invoice?.amount_paid ?? item.most_recent_invoice?.total, item.most_recent_invoice?.currency)}</td>
+      </tr>
+    `).join('') || `<tr><td colspan="7">${isEs ? 'No hay suscripciones activas.' : 'No active-like subscriptions.'}</td></tr>`;
+
+    const subscriptionRows = customers.flatMap(customer =>
+      (customer.subscriptions || []).map(subscription => `
+        <tr>
+          <td>${adminDiagEscape(customer.id)}</td>
+          <td>${adminDiagEscape(subscription.id)}</td>
+          <td>${adminDiagEscape(subscription.status)}</td>
+          <td>${subscription.cancel_at_period_end ? (isEs ? 'Sí' : 'Yes') : 'No'}</td>
+          <td>${formatAdminDiagDate(subscription.current_period_end)}</td>
+          <td>${adminDiagEscape((subscription.item_price_ids || []).join(', ') || '—')}</td>
+        </tr>
+      `)
+    ).join('') || `<tr><td colspan="6">${isEs ? 'No se encontraron suscripciones.' : 'No subscriptions found.'}</td></tr>`;
+
+    const invoiceRows = customers.flatMap(customer =>
+      (customer.invoices || []).map(invoice => `
+        <tr>
+          <td>${adminDiagEscape(invoice.id)}</td>
+          <td>${adminDiagEscape(invoice.customer || customer.id)}</td>
+          <td>${adminDiagEscape(invoice.subscription || '—')}</td>
+          <td>${formatAdminDiagDate(invoice.created)}</td>
+          <td>${formatAdminDiagMoney(invoice.amount_paid ?? invoice.total, invoice.currency)}</td>
+          <td>${adminDiagEscape(invoice.status)}</td>
+        </tr>
+      `)
+    ).slice(0, 30).join('') || `<tr><td colspan="6">${isEs ? 'No se encontraron facturas recientes.' : 'No recent invoices found.'}</td></tr>`;
+
+    report.innerHTML = `
+      <div class="admin-diag-alert ${warning.cls}">${adminDiagEscape(warning.text)}</div>
+      <div class="admin-diag-alert ${ownerBillingClass}">${adminDiagEscape(ownerBillingMessage)}</div>
+      <div class="admin-diag-grid">
+        <div class="admin-diag-box">
+          <h4>${isEs ? 'Resumen' : 'Summary'}</h4>
+          <div class="admin-diag-kv">
+            <span>${isEs ? 'Clientes Stripe' : 'Stripe customers'}</span><span>${adminDiagEscape(data.customer_count || 0)}</span>
+            <span>${isEs ? 'Suscripciones activas' : 'Active-like subscriptions'}</span><span>${adminDiagEscape(data.active_like_subscription_count || 0)}</span>
+            <span>${isEs ? 'Cliente canónico' : 'Canonical customer'}</span><span>${adminDiagEscape(currentCustomerId || '—')}</span>
+            <span>${isEs ? 'Duplicados heredados' : 'Legacy duplicate customers'}</span><span>${adminDiagEscape(legacyCount)}</span>
+          </div>
+        </div>
+        <div class="admin-diag-box">
+          <h4>${isEs ? 'Mapeo de Cuenta' : 'Account Mapping'}</h4>
+          <div class="admin-diag-kv">
+            <span>${isEs ? 'Supabase user ID' : 'Supabase user ID'}</span><span>${adminDiagEscape(data.user_id || currentUser?.id)}</span>
+            <span>${isEs ? 'Email' : 'Email'}</span><span>${adminDiagEscape(data.email || currentUser?.email)}</span>
+            <span>${isEs ? 'Stripe customer actual' : 'Mapped Stripe customer'}</span><span>${adminDiagEscape(profile.stripe_customer_id)}</span>
+            <span>${isEs ? 'Suscripción actual' : 'Mapped subscription'}</span><span>${adminDiagEscape(profile.stripe_subscription_id)}</span>
+            <span>${isEs ? 'Estado' : 'Status'}</span><span>${adminDiagEscape(profile.subscription_status)}</span>
+            <span>${isEs ? 'Pro/admin' : 'Pro/admin entitlement'}</span><span>${profile.subscription_status === 'owner_included' || profile.is_pro ? (isEs ? 'Incluido' : 'Included') : '—'}</span>
+          </div>
+        </div>
+      </div>
+      <div class="admin-diag-box">
+        <h4>${isEs ? 'Rastro de Resolución de Suscripción' : 'Subscription Resolution Trace'}</h4>
+        <div class="admin-diag-grid">
+          <div class="admin-diag-kv">
+            <span>Supabase User ID</span><span>${adminDiagEscape(trace.supabase_user_id || data.user_id || currentUser?.id)}</span>
+            <span>${isEs ? 'Email de cuenta' : 'Account email'}</span><span>${adminDiagEscape(trace.account_email || data.email || currentUser?.email)}</span>
+            <span>Owner/Admin</span><span>${trace.owner_admin ? (isEs ? 'Sí' : 'Yes') : 'No'}</span>
+            <span>${isEs ? 'Cliente mapeado' : 'Current mapped Stripe Customer ID'}</span><span>${adminDiagEscape(trace.current_mapped_stripe_customer_id || profile.stripe_customer_id)}</span>
+            <span>${isEs ? 'Suscripción mapeada' : 'Current mapped Subscription ID'}</span><span>${adminDiagEscape(trace.current_mapped_subscription_id || profile.stripe_subscription_id)}</span>
+            <span>${isEs ? 'Estado' : 'Subscription status'}</span><span>${adminDiagEscape(trace.subscription_status || profile.subscription_status)}</span>
+            <span>${isEs ? 'Fin del periodo' : 'Current period end'}</span><span>${formatAdminDiagDate(trace.current_period_end || profile.current_period_end)}</span>
+            <span>${isEs ? 'Fuente Pro' : 'Pro access source'}</span><span>${adminDiagEscape(trace.pro_access_source || 'Other')}</span>
+          </div>
+          <div>
+            <div class="admin-diag-kv">
+              <span>${isEs ? 'Cliente actual' : 'Current mapped customer'}</span><span>${adminDiagEscape(trace.selected_customer_id || currentCustomerId || '—')}</span>
+              <span>${isEs ? 'Seleccionado porque' : 'Customer selected because'}</span><span>✓ ${adminDiagEscape(selectedReasonLabel)}</span>
+              <span>${isEs ? 'Búsqueda metadata' : 'Metadata lookup'}</span><span>${adminDiagEscape(metadataLookupText)}</span>
+              <span>${isEs ? 'Fallback por email' : 'Legacy email fallback'}</span><span>${adminDiagEscape(legacyFallbackText)}</span>
+            </div>
+            <ul class="admin-diag-trace-list">${traceOrderRows}</ul>
+          </div>
+        </div>
+      </div>
+      ${customers.length > 1 ? `
+      <div class="admin-diag-alert yellow">${isEs ? 'Clientes Stripe duplicados encontrados.' : 'Duplicate Stripe Customers Found'}</div>
+      ` : ''}
+      <div class="admin-diag-box">
+        <h4>${isEs ? 'Desglose de Clientes Duplicados' : 'Duplicate Customer Breakdown'}</h4>
+        <table class="admin-diag-table">
+          <thead><tr><th>Customer</th><th>${isEs ? 'Creado' : 'Created'}</th><th>Email</th><th>Metadata User ID</th><th>${isEs ? 'Mapeo actual' : 'Current mapping'}</th><th>${isEs ? 'Subs' : 'Subs'}</th><th>${isEs ? 'Activas' : 'Active-like'}</th><th>${isEs ? 'Última factura' : 'Latest invoice'}</th><th>${isEs ? 'Monto' : 'Amount'}</th><th>Label</th></tr></thead>
+          <tbody>${duplicateRows}</tbody>
+        </table>
+      </div>
+      <div class="admin-diag-box">
+        <h4>${isEs ? 'Advertencia de Suscripción Activa' : 'Active Subscription Warning'}</h4>
+        <table class="admin-diag-table">
+          <thead><tr><th>Customer</th><th>Subscription</th><th>Status</th><th>${isEs ? 'Cancela al final' : 'Cancel at period end'}</th><th>${isEs ? 'Fin del periodo' : 'Current period end'}</th><th>${isEs ? 'Factura reciente' : 'Most recent invoice'}</th><th>${isEs ? 'Monto' : 'Amount'}</th></tr></thead>
+          <tbody>${activeWarningRows}</tbody>
+        </table>
+      </div>
+      <div class="admin-diag-box">
+        <h4>${isEs ? 'Clientes Stripe' : 'Stripe Customers'}</h4>
+        <table class="admin-diag-table">
+          <thead><tr><th>Customer</th><th>${isEs ? 'Creado' : 'Created'}</th><th>Email</th><th>Supabase Metadata</th><th>Label</th></tr></thead>
+          <tbody>${customerRows}</tbody>
+        </table>
+      </div>
+      <div class="admin-diag-box">
+        <h4>${isEs ? 'Suscripciones' : 'Subscriptions'}</h4>
+        <table class="admin-diag-table">
+          <thead><tr><th>Customer</th><th>Subscription</th><th>Status</th><th>${isEs ? 'Cancela al final' : 'Cancel at period end'}</th><th>${isEs ? 'Fin del periodo' : 'Current period end'}</th><th>Price ID</th></tr></thead>
+          <tbody>${subscriptionRows}</tbody>
+        </table>
+      </div>
+      <div class="admin-diag-box">
+        <h4>${isEs ? 'Facturas Recientes' : 'Recent Invoices'}</h4>
+        <table class="admin-diag-table">
+          <thead><tr><th>Invoice</th><th>Customer</th><th>Subscription</th><th>${isEs ? 'Fecha' : 'Date'}</th><th>${isEs ? 'Monto' : 'Amount'}</th><th>Status</th></tr></thead>
+          <tbody>${invoiceRows}</tbody>
+        </table>
+      </div>
+    `;
   }
 
   function applyProState() {
