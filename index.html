@@ -5472,6 +5472,11 @@
       <span data-en="Rewards" data-es="Recompensas">Rewards</span>
     </button>
 
+    <button class="nav-rewards-btn" id="nav-admin-tools" onclick="openAdminTools()" style="display:none">
+      <span class="ft-stable-inline-icon" data-ft-stable-icon="shield-check"></span>
+      <span data-en="Admin Tools" data-es="Herramientas Admin">Admin Tools</span>
+    </button>
+
     <button class="upgrade-btn-nav" onclick="showPaywall('nav')"><span class="ft-stable-inline-icon" data-ft-stable-icon="crown"></span><span class="upgrade-btn-label">Go Pro</span></button>
     <button onclick="navTo('profile', this)" style="background:none;border:none;font-size:1.1rem;cursor:pointer;padding:0.45rem 0.65rem;border-radius:8px;color:var(--text-soft)" title="Profile">👤</button>
     <button id="lang-toggle" onclick="toggleLanguage()" style="background:none;border:1.5px solid var(--border);color:var(--text-soft);font-family:'Sora',sans-serif;font-size:0.72rem;font-weight:700;padding:0.3rem 0.65rem;border-radius:20px;cursor:pointer;transition:all 0.2s;letter-spacing:0.05em">EN</button>
@@ -5530,6 +5535,7 @@
     <button class="mobile-nav-tile pro" onclick="mobileGuardedTab('reports')">📈<span data-en="Reports" data-es="Reportes">Reports</span></button>
     <button class="mobile-nav-tile" onclick="mobileTab('streaks');closeMobileNav()"><span class="ft-reference-icon" data-fixed-icon="trophy"></span><span data-en="Achievements" data-es="Logros">Achievements</span></button>
     <button class="mobile-nav-tile" onclick="mobileTab('rewards')"><span class="ft-stable-inline-icon" data-ft-stable-icon="gift"></span><span data-en="Rewards" data-es="Recompensas">Rewards</span></button>
+    <button class="mobile-nav-tile" id="mobile-admin-tools-tile" onclick="openAdminTools()" style="display:none"><span class="ft-stable-inline-icon" data-ft-stable-icon="shield-check"></span><span data-en="Admin Tools" data-es="Herramientas Admin">Admin Tools</span></button>
   </div>
 
   <!-- ACCOUNT SECTION — always visible at bottom -->
@@ -8084,6 +8090,7 @@
     if (mobileUserPlan) mobileUserPlan.textContent = user.email;
     if (mobilePlanBadge) mobilePlanBadge.textContent = isPro ? 'PRO' : 'FREE';
     if (typeof updateFoundingMemberUI === 'function') updateFoundingMemberUI();
+    if (typeof refreshAdminBillingDiagnosticAccess === 'function') refreshAdminBillingDiagnosticAccess(true);
   }
 
   function setAccountBannerStatus(text, title, iconName) {
@@ -8663,12 +8670,23 @@
   async function refreshAdminBillingDiagnosticAccess(force = false) {
     const card = document.getElementById('admin-billing-diagnostic-card');
     const menuBtn = document.getElementById('admin-tools-menu-btn');
-    if (!card || !sbClient || !currentUser) return;
+    const desktopBtn = document.getElementById('nav-admin-tools');
+    const mobileTile = document.getElementById('mobile-admin-tools-tile');
+    const setVisible = (visible) => {
+      if (card) card.classList.toggle('visible', visible);
+      if (menuBtn) menuBtn.style.display = visible ? 'flex' : 'none';
+      if (desktopBtn) desktopBtn.style.display = visible ? 'inline-flex' : 'none';
+      if (mobileTile) mobileTile.style.display = visible ? 'flex' : 'none';
+    };
+    if (!card || !sbClient || !currentUser) {
+      setVisible(false);
+      if (!currentUser) console.info('ADMIN AUTH FAILED: session unavailable');
+      return;
+    }
     const cacheKey = currentUser.id;
     if (!force && refreshAdminBillingDiagnosticAccess._checkedUser === cacheKey) return;
     refreshAdminBillingDiagnosticAccess._checkedUser = cacheKey;
-    card.classList.remove('visible');
-    if (menuBtn) menuBtn.style.display = 'none';
+    setVisible(false);
     try {
       const headers = await getBillingRequestHeaders();
       const response = await fetch('/.netlify/functions/diagnose-stripe-customers', {
@@ -8676,17 +8694,40 @@
         headers,
         body:JSON.stringify({ mode:'access_check' })
       });
-      if (!response.ok) return;
+      if (!response.ok) {
+        console.info(`ADMIN AUTH FAILED: ${response.status}`);
+        return;
+      }
       const data = await response.json();
-      if (!data.owner_admin) return;
-      card.classList.add('visible');
-      if (menuBtn) menuBtn.style.display = 'flex';
+      if (!data.owner_admin) {
+        console.info('ADMIN AUTH FAILED: UID mismatch');
+        return;
+      }
+      console.info('ADMIN AUTH: authorized');
+      setVisible(true);
       const input = document.getElementById('admin-diag-email');
       if (input && !input.value) input.value = currentUser.email || '';
       if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
     } catch (e) {
-      card.classList.remove('visible');
+      console.info(`ADMIN AUTH FAILED: ${e?.message || 'request failed'}`);
+      setVisible(false);
     }
+  }
+
+  async function openAdminTools() {
+    closeAllDropdowns();
+    navTo('profile', document.getElementById('nav-admin-tools'));
+    await refreshAdminBillingDiagnosticAccess(true);
+    const adminBtn = document.getElementById('admin-tools-menu-btn');
+    if (adminBtn && adminBtn.style.display !== 'none') {
+      switchProfilePanel('admin-tools', adminBtn);
+      const input = document.getElementById('admin-diag-email');
+      if (input && !input.value && currentUser?.email) input.value = currentUser.email;
+      if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
+    } else {
+      console.info('ADMIN AUTH FAILED: UID mismatch');
+    }
+    closeMobileNav();
   }
 
   async function runStripeDiagnostic() {
