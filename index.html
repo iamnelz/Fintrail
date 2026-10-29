@@ -8047,7 +8047,7 @@
         currentUser = nextUser;
         if (sameLoadedUser && _event !== 'SIGNED_IN') {
           setUserUI(currentUser);
-          if (isPro) setProUI();
+          if (hasProAccess()) setProUI();
           return;
         }
         showApp(currentUser);
@@ -8077,7 +8077,7 @@
     const btn = document.getElementById('mobile-profile-btn');
     if (btn) btn.textContent = name.charAt(0).toUpperCase();
     setAccountBannerStatus(`${name} · Free Plan`, user.email, 'user');
-    if (isPro) setProUI();
+    if (hasProAccess()) setProUI();
 
     // Update mobile account strip
     const initial = name.charAt(0).toUpperCase();
@@ -8088,7 +8088,7 @@
     if (mobileAvatar) mobileAvatar.textContent = initial;
     if (mobileUserName) mobileUserName.textContent = name;
     if (mobileUserPlan) mobileUserPlan.textContent = user.email;
-    if (mobilePlanBadge) mobilePlanBadge.textContent = isPro ? 'PRO' : 'FREE';
+    if (mobilePlanBadge) mobilePlanBadge.textContent = hasProAccess() ? (proEntitlement.ownerAdmin ? 'OWNER' : 'PRO') : 'FREE';
     if (typeof updateFoundingMemberUI === 'function') updateFoundingMemberUI();
     if (typeof refreshAdminBillingDiagnosticAccess === 'function') refreshAdminBillingDiagnosticAccess(true);
   }
@@ -8255,7 +8255,7 @@
 
     if (!sbClient || !currentUser) return { ok: false, skipped: true, reason: 'no Supabase session' };
     try {
-      const payload = { user_id: currentUser.id, transactions, bills, goals, plan_debts: planDebts, nw_assets: nwAssets, nw_liabilities: nwLiabilities, nw_history: nwHistory, game_data: gameData, is_pro: isPro, updated_at: new Date().toISOString() };
+      const payload = { user_id: currentUser.id, transactions, bills, goals, plan_debts: planDebts, nw_assets: nwAssets, nw_liabilities: nwLiabilities, nw_history: nwHistory, game_data: gameData, is_pro: shouldPersistProFlag(), updated_at: new Date().toISOString() };
       const result = await sbClient.from('user_data').upsert(payload, { onConflict: 'user_id' });
       if (result?.error) throw result.error;
       return { ok: true, field: 'user_data.game_data.currentCreditScore', currentCreditScore: gameData.currentCreditScore, creditScoreBaseline: gameData.creditScoreBaseline, result };
@@ -8266,7 +8266,9 @@
   }
 
   function handleProfileSubscriptionAction() {
-    if (isPro) {
+    if (proEntitlement.ownerAdmin) {
+      alert(currentLang === 'es' ? 'Cuenta owner — el acceso Pro está incluido.' : 'Owner account — Pro access is included.');
+    } else if (hasProAccess()) {
       cancelSubscription();
     } else {
       showPaywall('profile');
@@ -8290,13 +8292,23 @@
     });
     ['profile-subscription-desc','account-subscription-desc'].forEach(id => {
       const el = document.getElementById(id);
-      if (el) el.textContent = isPro ? proDesc : freeDesc;
+      if (el) {
+        if (proEntitlement.ownerAdmin) {
+          el.textContent = currentLang === 'es'
+            ? 'Cuenta owner — el acceso Pro está incluido.'
+            : 'Owner account — Pro access is included.';
+        } else {
+          el.textContent = hasProAccess() ? proDesc : freeDesc;
+        }
+      }
     });
     ['profile-subscription-btn','account-subscription-btn'].forEach(id => {
       const el = document.getElementById(id);
       if (!el) return;
-      el.textContent = isPro ? proBtn : freeBtn;
-      el.classList.toggle('secondary', !isPro);
+      el.textContent = proEntitlement.ownerAdmin
+        ? (currentLang === 'es' ? 'Acceso Pro Incluido' : 'Pro Access Included')
+        : hasProAccess() ? proBtn : freeBtn;
+      el.classList.toggle('secondary', !hasProAccess());
     });
     if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
     refreshAdminBillingDiagnosticAccess();
@@ -8338,14 +8350,19 @@
     const level = getCurrentLevel();
     const statusTitle = level.statusTitle || '';
 
-    if (isPro) {
+    if (hasProAccess()) {
       bar.classList.add('premium');
       badge.textContent = `${level.name}`;
       badge.classList.add('premium-plan');
       applyAccountBadgeTierClass(badge, level.tier);
-      setAccountBannerStatus(`${currentLang === 'es' ? 'Plan Pro' : 'Pro Plan'}${statusTitle ? ' · ' + statusTitle : ''} · ${currentUser?.email || ''}`, currentUser?.email || '', 'crown');
-      actionBtn.textContent = currentLang === 'es' ? 'Administrar Suscripción' : 'Manage Subscription';
-      actionBtn.onclick = cancelSubscription;
+      const entitlementLabel = getProAccessSourceLabel();
+      setAccountBannerStatus(`${entitlementLabel}${statusTitle ? ' · ' + statusTitle : ''} · ${currentUser?.email || ''}`, currentUser?.email || '', proEntitlement.ownerAdmin ? 'shield-check' : 'crown');
+      actionBtn.textContent = proEntitlement.ownerAdmin
+        ? (currentLang === 'es' ? 'Acceso Pro Incluido' : 'Pro Access Included')
+        : (currentLang === 'es' ? 'Administrar Suscripción' : 'Manage Subscription');
+      actionBtn.onclick = proEntitlement.ownerAdmin
+        ? () => alert(currentLang === 'es' ? 'Cuenta owner — el acceso Pro está incluido.' : 'Owner account — Pro access is included.')
+        : cancelSubscription;
     } else {
       bar.classList.remove('premium');
       badge.textContent = `${level.name}`;
@@ -8359,9 +8376,9 @@
     // Update mobile plan badge
     const mobilePlanBadge = document.getElementById('mobile-plan-badge');
     if (mobilePlanBadge) {
-      mobilePlanBadge.textContent = isPro ? 'PRO' : 'FREE';
-      mobilePlanBadge.style.background = isPro ? 'linear-gradient(135deg,#b8860b,#e9c46a)' : 'var(--surface2)';
-      mobilePlanBadge.style.color = isPro ? '#1a1a0f' : 'var(--muted)';
+      mobilePlanBadge.textContent = hasProAccess() ? (proEntitlement.ownerAdmin ? 'OWNER' : 'PRO') : 'FREE';
+      mobilePlanBadge.style.background = hasProAccess() ? 'linear-gradient(135deg,#b8860b,#e9c46a)' : 'var(--surface2)';
+      mobilePlanBadge.style.color = hasProAccess() ? '#1a1a0f' : 'var(--muted)';
     }
   }
 
@@ -8413,8 +8430,8 @@
           if (typeof loadAlertPrefs === 'function') loadAlertPrefs();
           if (typeof syncCreditScoreStorageFromGameData === 'function') syncCreditScoreStorageFromGameData();
         }
-        if (data.is_pro) {
-          isPro = true;
+        if (data.is_pro && data.subscription_status !== 'owner_included') {
+          setProEntitlementSource('stripe', true);
           applyProState();
           setProUI();
         }
@@ -8462,6 +8479,15 @@
 
   // PREMIUM STATE
   let isPro = false;
+  const proEntitlement = {
+    ownerAdmin: false,
+    stripePro: false,
+    approvedBypass: false,
+    source: 'none',
+    userId: null,
+    checked: false,
+    checking: false
+  };
   const ADMIN_PRO_BYPASS_EMAILS = [
     'lexymiranda2002.lg@gmail.com',
     'ewmx04@gmail.com'
@@ -8476,9 +8502,56 @@
     return !!email && ADMIN_PRO_BYPASS_EMAILS.includes(email);
   }
 
+  function resetProEntitlement() {
+    proEntitlement.ownerAdmin = false;
+    proEntitlement.stripePro = false;
+    proEntitlement.approvedBypass = false;
+    proEntitlement.source = 'none';
+    proEntitlement.userId = currentUser?.id || null;
+    proEntitlement.checked = false;
+    proEntitlement.checking = false;
+    isPro = false;
+  }
+
+  function setProEntitlementSource(source, value = true) {
+    if (source === 'owner_admin') proEntitlement.ownerAdmin = !!value;
+    if (source === 'stripe') proEntitlement.stripePro = !!value;
+    if (source === 'approved_bypass') proEntitlement.approvedBypass = !!value;
+    proEntitlement.userId = currentUser?.id || null;
+    if (hasProAccess()) {
+      proEntitlement.source = proEntitlement.ownerAdmin ? 'owner_admin' :
+        proEntitlement.stripePro ? 'stripe' :
+        proEntitlement.approvedBypass ? 'approved_bypass' : source;
+    } else {
+      proEntitlement.source = 'none';
+    }
+    isPro = hasProAccess();
+    return isPro;
+  }
+
+  function hasProAccess() {
+    return !!(
+      proEntitlement.ownerAdmin ||
+      proEntitlement.stripePro ||
+      proEntitlement.approvedBypass
+    );
+  }
+
+  function shouldPersistProFlag() {
+    return hasProAccess() && !proEntitlement.ownerAdmin;
+  }
+
+  function getProAccessSourceLabel() {
+    const es = currentLang === 'es';
+    if (proEntitlement.ownerAdmin) return es ? 'Acceso Pro Owner' : 'Owner Pro Access';
+    if (proEntitlement.stripePro) return es ? 'Plan Pro' : 'Pro Plan';
+    if (proEntitlement.approvedBypass) return es ? 'Acceso Pro Incluido' : 'Included Pro Access';
+    return es ? 'Plan Gratuito' : 'Free Plan';
+  }
+
   function refreshAdminProBypass() {
     if (!isAdminProBypassUser()) return false;
-    isPro = true;
+    setProEntitlementSource('approved_bypass', true);
     syncAdminProBypassAccess();
     return true;
   }
@@ -8501,10 +8574,16 @@
     })();
   }
 
-  function showPaywall(source) {
-    if (refreshAdminProBypass()) {
+  async function showPaywall(source) {
+    if (hasProAccess() || refreshAdminProBypass()) {
       applyProState();
       setProUI();
+      return;
+    }
+    if (await ensureProEntitlementReady()) {
+      applyProState();
+      setProUI();
+      alert(currentLang === 'es' ? 'Cuenta owner — el acceso Pro está incluido.' : 'Owner account — Pro access is included.');
       return;
     }
     document.getElementById('paywall-overlay').style.display = 'flex';
@@ -8551,6 +8630,10 @@
 
   async function activatePro() {
     if (checkoutLoading) return;
+    if (hasProAccess() || await ensureProEntitlementReady()) {
+      alert(currentLang === 'es' ? 'Cuenta owner — el acceso Pro está incluido.' : 'Owner account — Pro access is included.');
+      return;
+    }
     const btn = document.querySelector('.pw-cta.primary');
     checkoutLoading = true;
     if (btn) { btn.disabled = true; btn.textContent = getGoProCheckoutLoadingText(); }
@@ -8563,7 +8646,7 @@
       });
       const data = await response.json();
       if (data.ownerIncluded) {
-        isPro = true;
+        setProEntitlementSource('owner_admin', true);
         applyProState();
         setProUI();
         alert(data.message || 'Owner account — Pro access is included.');
@@ -8597,7 +8680,7 @@
       const tryActivate = setInterval(() => {
         if (currentUser) {
           clearInterval(tryActivate);
-          isPro = true;
+          setProEntitlementSource('stripe', true);
           applyProState();
           setProUI();
           saveUserData();
@@ -8680,12 +8763,14 @@
     };
     if (!card || !sbClient || !currentUser) {
       setVisible(false);
+      if (typeof setProEntitlementSource === 'function') setProEntitlementSource('owner_admin', false);
       if (!currentUser) console.info('ADMIN AUTH FAILED: session unavailable');
-      return;
+      return false;
     }
     const cacheKey = currentUser.id;
-    if (!force && refreshAdminBillingDiagnosticAccess._checkedUser === cacheKey) return;
+    if (!force && refreshAdminBillingDiagnosticAccess._checkedUser === cacheKey) return !!proEntitlement.ownerAdmin;
     refreshAdminBillingDiagnosticAccess._checkedUser = cacheKey;
+    proEntitlement.checking = true;
     setVisible(false);
     try {
       const headers = await getBillingRequestHeaders();
@@ -8696,22 +8781,41 @@
       });
       if (!response.ok) {
         console.info(`ADMIN AUTH FAILED: ${response.status}`);
-        return;
+        setProEntitlementSource('owner_admin', false);
+        return false;
       }
       const data = await response.json();
       if (!data.owner_admin) {
         console.info('ADMIN AUTH FAILED: UID mismatch');
-        return;
+        setProEntitlementSource('owner_admin', false);
+        return false;
       }
       console.info('ADMIN AUTH: authorized');
+      setProEntitlementSource('owner_admin', true);
       setVisible(true);
       const input = document.getElementById('admin-diag-email');
       if (input && !input.value) input.value = currentUser.email || '';
       if (typeof window.fintrailRefreshDesignIcons === 'function') window.fintrailRefreshDesignIcons();
+      applyProState();
+      setProUI();
+      return true;
     } catch (e) {
       console.info(`ADMIN AUTH FAILED: ${e?.message || 'request failed'}`);
+      setProEntitlementSource('owner_admin', false);
       setVisible(false);
+      return false;
+    } finally {
+      proEntitlement.checking = false;
+      proEntitlement.checked = true;
     }
+  }
+
+  async function ensureProEntitlementReady() {
+    if (!currentUser || !sbClient) return hasProAccess();
+    if (proEntitlement.userId !== currentUser.id) resetProEntitlement();
+    if (proEntitlement.checked) return hasProAccess();
+    await refreshAdminBillingDiagnosticAccess(true);
+    return hasProAccess();
   }
 
   async function openAdminTools() {
@@ -8958,20 +9062,21 @@
 
   function applyProState() {
     refreshAdminProBypass();
+    isPro = hasProAccess();
     // Null-safe — elements may not exist in all contexts
     const setDisplay = (id, show) => { const el = document.getElementById(id); if (el) el.style.display = show ? 'block' : 'none'; };
-    setDisplay('guide-gate',       !isPro);
-    setDisplay('guide-content',    isPro);
+    setDisplay('guide-gate',       !hasProAccess());
+    setDisplay('guide-content',    hasProAccess());
     // AI Advisor uses a soft paywall: free users can open it and use 5 prompts/day; Pro users get unlimited prompts.
     setDisplay('ai-gate',          false);
     setDisplay('ai-content',       true);
-    setDisplay('affiliate-gate',   !isPro);
-    setDisplay('affiliate-content', isPro);
+    setDisplay('affiliate-gate',   !hasProAccess());
+    setDisplay('affiliate-content', hasProAccess());
     updatePremiumTab();
     updateCreditSimTab();
     updateNegotiateTab();
     renderResources();
-    if (isPro) { renderRateBanner(); calcLoan(); }
+    if (hasProAccess()) { renderRateBanner(); calcLoan(); }
   }
 
   let activeDropdown = null;
@@ -9072,7 +9177,7 @@
     if (currentLang !== 'en') setTimeout(applyLanguage, 30);
   }
 
-  function guardedNavTo(tab, btn) {
+  async function guardedNavTo(tab, btn) {
     closeAllDropdowns();
     if (tab === 'premium') tab = 'healthscore'; // legacy desktop nav safeguard after splitting Debt Planner + Health Score
 
@@ -9080,7 +9185,7 @@
     // AI allows 5 prompts/day and Credit Simulator allows 3 simulations/month.
     if (tab === 'ai' || tab === 'creditsim') { navTo(tab, btn); return; }
 
-    if (!isPro) { showPaywall(tab); closeMobileNav(); return; }
+    if (!hasProAccess() && !(await ensureProEntitlementReady())) { showPaywall(tab); closeMobileNav(); return; }
     navTo(tab, btn);
   }
 
@@ -9140,18 +9245,18 @@
     if (currentLang !== 'en') setTimeout(applyLanguage, 30);
   }
 
-  function mobileGuardedTab(tab) {
+  async function mobileGuardedTab(tab) {
     // AI Advisor and Credit Simulator are soft-paywall features.
     // Free users get 5 AI prompts/day and 3 credit simulations/month.
     if (tab === 'ai' || tab === 'creditsim') { mobileTab(tab); return; }
 
-    if (!isPro) { showPaywall(tab); closeMobileNav(); return; }
+    if (!hasProAccess() && !(await ensureProEntitlementReady())) { showPaywall(tab); closeMobileNav(); return; }
     mobileTab(tab);
   }
 
   // TAB SWITCHING
-  function guardedTab(tab, btn) {
-    if (!isPro) { showPaywall(tab); return; }
+  async function guardedTab(tab, btn) {
+    if (!hasProAccess() && !(await ensureProEntitlementReady())) { showPaywall(tab); return; }
     showTab(tab, btn);
   }
 
@@ -11986,9 +12091,9 @@ Guidelines:
     const gate = document.getElementById('premium-tab-gate');
     const content = document.getElementById('premium-tab-content');
     if (gate && content) {
-      gate.style.display = isPro ? 'none' : 'block';
-      content.style.display = isPro ? 'block' : 'none';
-      if (isPro) calculateHealthScore();
+      gate.style.display = hasProAccess() ? 'none' : 'block';
+      content.style.display = hasProAccess() ? 'block' : 'none';
+      if (hasProAccess()) calculateHealthScore();
     }
   }
 
@@ -12121,11 +12226,14 @@ Guidelines:
     document.getElementById('profile-email-input').value = email;
 
     const badge = document.getElementById('profile-plan-badge');
-    if (isPro) {
+    if (hasProAccess()) {
+      const planLabel = proEntitlement.ownerAdmin
+        ? (currentLang === 'es' ? 'Owner Pro' : 'Owner Pro')
+        : 'Pro';
       if (level.tier === 'gold') {
-        badge.textContent = `${level.name} · Pro`;
+        badge.textContent = `${level.name} · ${planLabel}`;
       } else {
-        badge.innerHTML = `<span class="ft-reference-icon" data-fixed-icon="${level.badge || 'medal'}"></span><span>${level.name} · Pro</span>`;
+        badge.innerHTML = `<span class="ft-reference-icon" data-fixed-icon="${level.badge || 'medal'}"></span><span>${level.name} · ${planLabel}</span>`;
       }
       badge.classList.add('pro');
       applyAccountBadgeTierClass(badge, level.tier);
@@ -12583,8 +12691,7 @@ Guidelines:
   }
 
   async function getCreditSimulationUsage() {
-    if (isAdminProBypassUser()) return { unlimited: true };
-    if (isPro) return { unlimited: true };
+    if (hasProAccess() || await ensureProEntitlementReady()) return { unlimited: true };
 
     const month = getCurrentCreditSimMonth();
     if (!sbClient || !currentUser) {
@@ -12602,7 +12709,10 @@ Guidelines:
       return { used: 0, limit: FREE_MONTHLY_CREDIT_SIM_LIMIT, remaining: FREE_MONTHLY_CREDIT_SIM_LIMIT, month };
     }
 
-    if (data?.is_pro) return { unlimited: true };
+    if (data?.is_pro) {
+      setProEntitlementSource('stripe', true);
+      return { unlimited: true };
+    }
 
     if (!data) {
       await sbClient.from('user_data').upsert({
@@ -12635,7 +12745,7 @@ Guidelines:
     const el = document.getElementById('credit-sim-usage');
     if (!el) return;
 
-    if (isPro) {
+    if (hasProAccess()) {
       el.style.display = 'flex';
       el.style.alignItems = 'center';
       el.style.gap = '0.4rem';
@@ -12658,8 +12768,7 @@ Guidelines:
   }
 
   async function checkCreditSimulationLimit() {
-    if (isAdminProBypassUser()) return true;
-    if (isPro) return true;
+    if (hasProAccess() || await ensureProEntitlementReady()) return true;
 
     const month = getCurrentCreditSimMonth();
     const usage = await getCreditSimulationUsage();
@@ -13363,7 +13472,7 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     { id: 'budget_surplus', emoji: '💰', name: 'In the Black', desc: 'Have positive budget balance', xp: 100, condition: () => { const i=transactions.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0); const e=transactions.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0); return i > e && i > 0; } },
     { id: 'streak_7', emoji: '🔥', name: 'Week Warrior', desc: 'Maintain a 7-day login streak', xp: 100, condition: () => (gameData.loginStreak || 0) >= 7 },
     { id: 'streak_30', emoji: '⚡', name: 'Monthly Master', desc: 'Maintain a 30-day login streak', xp: 300, condition: () => (gameData.loginStreak || 0) >= 30 },
-    { id: 'pro_member', emoji: '⭐', name: 'Pro Member', desc: 'Upgrade to Fintrail Pro', xp: 100, condition: () => isPro },
+    { id: 'pro_member', emoji: '⭐', name: 'Pro Member', desc: 'Upgrade to Fintrail Pro', xp: 100, condition: () => hasProAccess() },
     { id: 'debt_planner', emoji: '💳', name: 'Debt Destroyer', desc: 'Create a debt payoff plan', xp: 250, condition: () => planDebts.length >= 1 },
     { id: 'invest_calc', emoji: '📈', name: 'Future Thinker', desc: 'Use the investment calculator', xp: 50, condition: () => (gameData.usedInvestCalc || false) },
     { id: 'credit_sim', emoji: '📊', name: 'Score Hacker', desc: 'Use the credit score simulator', xp: 75, condition: () => (gameData.usedCreditSim || false) },
@@ -13647,7 +13756,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     nwLiabilities = [];
     nwHistory = [];
     nwLoaded = false;
-    isPro = false;
+    if (typeof resetProEntitlement === 'function') resetProEntitlement();
+    else isPro = false;
     gameData = createDefaultGameData();
     if (typeof calCustomEvents !== 'undefined') calCustomEvents = [];
     if (typeof receiptContext !== 'undefined') receiptContext = null;
@@ -16220,8 +16330,8 @@ Use placeholders like YOUR_NAME, ACCOUNT_NUMBER, SPECIFIC_AMOUNT where needed. B
     const gate = document.getElementById('negotiate-gate');
     const content = document.getElementById('negotiate-content');
     if (gate && content) {
-      gate.style.display = isPro ? 'none' : 'block';
-      content.style.display = isPro ? 'block' : 'none';
+      gate.style.display = hasProAccess() ? 'none' : 'block';
+      content.style.display = hasProAccess() ? 'block' : 'none';
     }
   }
 
